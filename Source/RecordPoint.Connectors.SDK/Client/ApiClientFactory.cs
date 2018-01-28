@@ -1,6 +1,5 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
-using RecordPoint.Framework.Helpers;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -34,9 +33,7 @@ namespace RecordPoint.Connectors.Client
                 // pass a null token cache so that the token must be retrieved from the authority
                 new AuthenticationContext(authority, null);
             
-            // Hopefully this cleartext string won't linger for long enough to be a serious security gap
-            string clientSecretDecrypted = SecurityHelper.DecryptStringFromBytes(Convert.FromBase64String(settings.ClientSecret));
-            return await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId, clientSecretDecrypted)).ConfigureAwait(false);
+            return await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId, settings.ClientSecret)).ConfigureAwait(false);
         }
 
         private async Task<IApiClient> CreateApiClientAsync(ApiClientFactorySettings settings, bool useTokenCache = true)
