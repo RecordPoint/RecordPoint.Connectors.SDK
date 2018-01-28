@@ -88,11 +88,5 @@
     <None Include="Client\AutoRest.ps1" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RecordPoint.Framework\RecordPoint.Framework.csproj">
-      <Project>{24679684-C3E4-40C9-872C-69F863CA5D79}</Project>
-      <Name>RecordPoint.Framework</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
