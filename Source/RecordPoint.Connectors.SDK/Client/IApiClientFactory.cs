@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace RecordPoint.Connectors.Client
+namespace RecordPoint.Connectors.SDK.Client
 {
     public interface IApiClientFactory
     {

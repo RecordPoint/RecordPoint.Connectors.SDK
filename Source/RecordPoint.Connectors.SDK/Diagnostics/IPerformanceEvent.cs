@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RecordPoint.Connectors.Diagnostics
+namespace RecordPoint.Connectors.SDK.Diagnostics
 {
     /// <summary>
     /// Represents a single performance monitored event.

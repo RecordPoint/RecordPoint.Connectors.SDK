@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 
-namespace RecordPoint.Connectors
+namespace RecordPoint.Connectors.SDK
 {
     public static class HTTPRequestHelper
     {

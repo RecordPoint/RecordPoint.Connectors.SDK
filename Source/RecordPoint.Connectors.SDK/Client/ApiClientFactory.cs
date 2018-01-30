@@ -4,7 +4,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace RecordPoint.Connectors.Client
+namespace RecordPoint.Connectors.SDK.Client
 {
     public class ApiClientFactory : IApiClientFactory
     {

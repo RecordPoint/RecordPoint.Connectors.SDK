@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RecordPoint.Connectors.Diagnostics
+namespace RecordPoint.Connectors.SDK.Diagnostics
 {
     /// <summary>
     /// Provides a simple intrusive means of measuring how long it takes to execute a certain code path.

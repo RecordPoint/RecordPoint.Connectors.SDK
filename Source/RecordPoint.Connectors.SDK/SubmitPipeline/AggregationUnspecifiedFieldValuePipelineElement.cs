@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     public class AggregationUnspecifiedFieldValuePipelineElement : UnspecifiedFieldValuePipelineElementBase
     {

@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     public class HttpSubmitAuditEventPipelineElement : HttpSubmitPipelineElementBase
     {

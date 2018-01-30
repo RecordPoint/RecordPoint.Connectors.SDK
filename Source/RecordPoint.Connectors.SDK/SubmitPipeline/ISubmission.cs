@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     public interface ISubmission
     {

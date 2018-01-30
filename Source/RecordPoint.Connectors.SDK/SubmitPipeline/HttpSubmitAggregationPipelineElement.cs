@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using RecordPoint.Connectors.Client;
 using RecordPoint.Connectors.Client.Models;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     /// <summary>
     /// A submit pipeline element that submits aggregations via Records365 HTTP API.

@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     /// <summary>
     /// A submit pipeline element that submits items via Records365 vNext HTTP API.

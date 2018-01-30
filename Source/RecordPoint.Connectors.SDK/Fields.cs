@@ -1,4 +1,4 @@
-﻿namespace RecordPoint.Connectors
+﻿namespace RecordPoint.Connectors.SDK
 {
     public static class Fields
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     public class PipelineSelectorPipelineElement : SubmitPipelineElementBase
     {

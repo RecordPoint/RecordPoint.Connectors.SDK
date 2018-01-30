@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace RecordPoint.Connectors.Client
+namespace RecordPoint.Connectors.SDK.Client
 {
     public class ApiClientFactorySettings
     {

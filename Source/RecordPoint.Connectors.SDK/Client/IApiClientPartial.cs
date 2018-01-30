@@ -1,4 +1,4 @@
-﻿namespace RecordPoint.Connectors.Client
+﻿namespace RecordPoint.Connectors.SDK.Client
 {
     public partial interface IApiClient
     {

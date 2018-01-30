@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RecordPoint.Connectors.Client.Models;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     /// <summary>
     /// Ensures that a value is provided for all fields required by the Connector API.

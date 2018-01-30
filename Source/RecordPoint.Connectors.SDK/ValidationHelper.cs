@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace RecordPoint.Connectors
+namespace RecordPoint.Connectors.SDK
 {
     public static class ValidationHelper
     {

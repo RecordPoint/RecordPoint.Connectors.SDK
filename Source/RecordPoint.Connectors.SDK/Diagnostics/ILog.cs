@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RecordPoint.Connectors.Diagnostics
+namespace RecordPoint.Connectors.SDK.Diagnostics
 {
     /// <summary>
     /// Provides a generic log interface.

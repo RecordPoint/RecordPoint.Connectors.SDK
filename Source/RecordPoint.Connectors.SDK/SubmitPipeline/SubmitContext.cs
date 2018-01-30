@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using RecordPoint.Connectors.Client.Models;
 using RecordPoint.Connectors.Client;
 
-namespace RecordPoint.Connectors.SubmitPipeline
+namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     public class SubmitContext
     {

@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client
+namespace RecordPoint.Connectors.SDK.Client
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -1432,7 +1432,7 @@ namespace RecordPoint.Connectors.Client
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client
+namespace RecordPoint.Connectors.SDK.Client
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -1604,7 +1604,7 @@ namespace RecordPoint.Connectors.Client
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client
+namespace RecordPoint.Connectors.SDK.Client
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -1916,7 +1916,7 @@ namespace RecordPoint.Connectors.Client
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2000,7 +2000,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2266,7 +2266,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2355,7 +2355,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2533,7 +2533,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2632,7 +2632,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2687,7 +2687,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -2866,7 +2866,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -3132,7 +3132,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -3564,7 +3564,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
@@ -3814,7 +3814,7 @@ namespace RecordPoint.Connectors.Client.Models
 // regenerated.
 // </auto-generated>
 
-namespace RecordPoint.Connectors.Client.Models
+namespace RecordPoint.Connectors.SDK.Client.Models
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
