@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace RecordPoint.Connectors.Client
 {
@@ -7,7 +8,7 @@ namespace RecordPoint.Connectors.Client
         public string AuthenticationResource { get; set; }
         public string TenantDomainName { get; set; }
         public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
+        public SecureString ClientSecret { get; set; }
         public string ConnectorApiUrl { get; set; }
         public bool ServerCertificateValidation { get; set; } = false;
     }
