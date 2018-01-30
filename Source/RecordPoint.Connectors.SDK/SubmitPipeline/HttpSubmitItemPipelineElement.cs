@@ -1,6 +1,6 @@
 ﻿using Microsoft.Rest;
-using RecordPoint.Connectors.Client;
-using RecordPoint.Connectors.Client.Models;
+using RecordPoint.Connectors.SDK.Client;
+using RecordPoint.Connectors.SDK.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

@@ -1,4 +1,4 @@
-﻿using RecordPoint.Connectors.Diagnostics;
+﻿using RecordPoint.Connectors.SDK.Diagnostics;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

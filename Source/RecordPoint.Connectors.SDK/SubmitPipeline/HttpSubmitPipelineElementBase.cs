@@ -1,5 +1,5 @@
 ﻿using Microsoft.Rest;
-using RecordPoint.Connectors.Client.Models;
+using RecordPoint.Connectors.SDK.Client.Models;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;

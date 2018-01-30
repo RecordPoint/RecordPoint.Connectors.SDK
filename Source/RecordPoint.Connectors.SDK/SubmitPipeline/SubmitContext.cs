@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
-using RecordPoint.Connectors.Client.Models;
-using RecordPoint.Connectors.Client;
+using RecordPoint.Connectors.SDK.Client;
+using RecordPoint.Connectors.SDK.Client.Models;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {

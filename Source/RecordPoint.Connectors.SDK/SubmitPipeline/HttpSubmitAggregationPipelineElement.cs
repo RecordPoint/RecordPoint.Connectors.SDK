@@ -1,11 +1,11 @@
 ﻿using Microsoft.Rest;
+using RecordPoint.Connectors.SDK.Client;
+using RecordPoint.Connectors.SDK.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using RecordPoint.Connectors.Client;
-using RecordPoint.Connectors.Client.Models;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
