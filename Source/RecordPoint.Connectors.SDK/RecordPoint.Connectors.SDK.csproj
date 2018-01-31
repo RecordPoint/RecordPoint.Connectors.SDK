@@ -60,6 +60,8 @@
     <Compile Include="Diagnostics\ILog.cs" />
     <Compile Include="Diagnostics\IPerformance.cs" />
     <Compile Include="Diagnostics\IPerformanceEvent.cs" />
+    <Compile Include="Diagnostics\Performance.cs" />
+    <Compile Include="Diagnostics\PerformanceEvent.cs" />
     <Compile Include="Fields.cs" />
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
