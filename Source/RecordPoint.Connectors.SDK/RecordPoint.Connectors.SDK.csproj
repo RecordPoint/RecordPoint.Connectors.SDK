@@ -57,6 +57,8 @@
     <Compile Include="Client\AutoRestGenerated\ApiClient.cs" />
     <Compile Include="Client\IApiClientFactory.cs" />
     <Compile Include="Client\IApiClientPartial.cs" />
+    <Compile Include="Client\SubmissionMetaDataModel.cs" />
+    <Compile Include="Client\SubmissionMetaDataModelExtensions.cs" />
     <Compile Include="Diagnostics\ILog.cs" />
     <Compile Include="Diagnostics\IPerformance.cs" />
     <Compile Include="Diagnostics\IPerformanceEvent.cs" />
