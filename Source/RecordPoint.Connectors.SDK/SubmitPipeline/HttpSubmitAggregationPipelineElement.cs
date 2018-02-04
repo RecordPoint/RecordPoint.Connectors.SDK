@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     /// <summary>
-    /// A submit pipeline element that submits aggregations via Records365 HTTP API.
+    /// A submit pipeline element that submits aggregations via Records365 vNext Connector API.
     /// </summary>
     public class HttpSubmitAggregationPipelineElement
         : HttpSubmitPipelineElementBase

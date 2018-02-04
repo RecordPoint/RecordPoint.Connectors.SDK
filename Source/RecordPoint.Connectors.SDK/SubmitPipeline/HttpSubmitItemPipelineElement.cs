@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     /// <summary>
-    /// A submit pipeline element that submits items via Records365 vNext HTTP API.
+    /// A submit pipeline element that submits items via Records365 vNext Connector API.
     /// </summary>
     public class HttpSubmitItemPipelineElement
         : HttpSubmitPipelineElementBase
@@ -68,6 +68,19 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     ).ConfigureAwait(false);
 
                     await HandleSubmitResponse(submitContext, result, "Item").ConfigureAwait(false);
+
+                    if (result.Body is ItemAcceptanceModel resultBody)
+                    {
+                        if (!string.IsNullOrEmpty(resultBody.AggregationStatus) && 
+                            resultBody.AggregationStatus.ToLower() == "found")
+                        {
+                            submitContext.AggregationFoundDuringItemSubmission = true;
+                        }
+                        else
+                        {
+                            submitContext.AggregationFoundDuringItemSubmission = false;
+                        }
+                    }
                 }
                 catch (HttpOperationException ex)
                     when (ex.Response?.StatusCode == System.Net.HttpStatusCode.Conflict)

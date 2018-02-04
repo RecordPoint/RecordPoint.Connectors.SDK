@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// A submit pipeline element that ensures that required fields for aggregations have a value of "Unspecified".
+    /// </summary>
     public class AggregationUnspecifiedFieldValuePipelineElement : UnspecifiedFieldValuePipelineElementBase
     {
         public AggregationUnspecifiedFieldValuePipelineElement(ISubmission next) : base(next)

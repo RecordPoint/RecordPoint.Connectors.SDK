@@ -60,9 +60,7 @@
     <Compile Include="Client\SubmissionMetaDataModel.cs" />
     <Compile Include="Client\SubmissionMetaDataModelExtensions.cs" />
     <Compile Include="Diagnostics\ILog.cs" />
-    <Compile Include="Diagnostics\IPerformance.cs" />
     <Compile Include="Diagnostics\IPerformanceEvent.cs" />
-    <Compile Include="Diagnostics\Performance.cs" />
     <Compile Include="Diagnostics\PerformanceEvent.cs" />
     <Compile Include="Fields.cs" />
     <Compile Include="HttpRequestHelper.cs" />

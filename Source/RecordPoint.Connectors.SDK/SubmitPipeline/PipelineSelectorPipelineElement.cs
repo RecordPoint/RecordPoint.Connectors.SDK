@@ -3,6 +3,12 @@ using System.Linq;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// A submit pipeline element that branches the pipeline based on whether the submission is
+    /// for an item or an aggregation. The pipeline element decides which branch to take based on the 
+    /// ItemTypeId field in the core metadata. A value of "1" indicates that the item is an aggregation,
+    /// and the aggregation branch is used. Other values use the item branch.
+    /// </summary>
     public class PipelineSelectorPipelineElement : SubmitPipelineElementBase
     {
         private ISubmission _submitAggregation = null;

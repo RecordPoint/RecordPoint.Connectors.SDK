@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// A submit pipeline element that submits audit events via Records365 vNext Connector API.
+    /// </summary>
     public class HttpSubmitAuditEventPipelineElement : HttpSubmitPipelineElementBase
     {
         public IApiClientFactory ApiClientFactory { get; set; }

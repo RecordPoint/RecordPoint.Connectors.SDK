@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// A submit pipeline element that ensures that required fields for items have a value of "Unspecified".
+    /// </summary>
     public class ItemUnspecifiedFieldValuePipelineElement : UnspecifiedFieldValuePipelineElementBase
     {
         public ItemUnspecifiedFieldValuePipelineElement(ISubmission next) : base(next)

@@ -8,8 +8,6 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     public abstract class SubmitPipelineElementBase
         : ISubmission
     {
-        public IPerformance PerformanceMonitor { get; set; } = null;
-
         public ILog Log { get; set; } = null;
 
         private readonly ISubmission _next;
@@ -36,7 +34,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
         private IPerformanceEvent CreatePerformanceEvent(SubmitContext submitContext, string methodName)
         {
-            return PerformanceMonitor?.CreateEvent(_next.GetType(), methodName, submitContext.LogPrefix());
+            return new PerformanceEvent(_next.GetType(), methodName, submitContext.LogPrefix(), Log);
         }
 
         /// <summary>
