@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApiClientFactory : IApiClientFactory
     {
         private const string AuthEndpointPrefix = "https://login.microsoftonline.com/";
@@ -17,7 +20,7 @@ namespace RecordPoint.Connectors.SDK.Client
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;            
         }
 
-        public async Task<AuthenticationResult> AcquireTokenAsync(ApiClientFactorySettings settings, bool useTokenCache = true)
+        private async Task<AuthenticationResult> AcquireTokenAsync(ApiClientFactorySettings settings, bool useTokenCache = true)
         {
             ValidationHelper.ArgumentNotNull(settings, nameof(settings));
             ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.AuthenticationResource, nameof(settings.AuthenticationResource));
@@ -68,6 +71,11 @@ namespace RecordPoint.Connectors.SDK.Client
             return AuthEndpointPrefix + settings.TenantDomainName;
         }
 
+        /// <summary>
+        /// Creates an IApiClient.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public async Task<IApiClient> CreateApiClientAsync(ApiClientFactorySettings settings)
         {
             return await CreateApiClientAsync(settings, true).ConfigureAwait(false);

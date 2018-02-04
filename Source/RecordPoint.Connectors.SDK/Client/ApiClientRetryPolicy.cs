@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
-    public static class ApiClientRetryPolicy 
+    static class ApiClientRetryPolicy 
     {
         public static readonly List<HttpStatusCode> KnownRetriableWebResponseStatusCodes = new List<HttpStatusCode>()
         {

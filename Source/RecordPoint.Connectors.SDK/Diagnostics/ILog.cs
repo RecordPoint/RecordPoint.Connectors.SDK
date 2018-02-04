@@ -10,13 +10,17 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
         /// <summary>
         /// Logs a trace.
         /// </summary>
-        /// <param name="mesg"></param>
+        /// <param name="callerType"></param>
+        /// <param name="methodName"></param>
+        /// <param name="message"></param>
         void LogVerbose(Type callerType, string methodName, string message);
 
         /// <summary>
         /// Logs a message.
         /// </summary>
-        /// <param name="mesg"></param>
+        /// <param name="callerType"></param>
+        /// <param name="methodName"></param>
+        /// <param name="message"></param>
         void LogMessage(Type callerType, string methodName, string message);
 
         /// <summary>
@@ -49,7 +53,6 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>
         /// <param name="elapsedTimeTicks"></param>
-        /// <param name="eventId"></param>
         /// <param name="message"></param>
         void LogTimingEventTicks(Type callerType, string methodName, long elapsedTimeTicks, string message);
     }

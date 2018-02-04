@@ -3,7 +3,7 @@ using System.Security;
 
 namespace RecordPoint.Connectors.SDK
 {
-    public static class ValidationHelper
+    static class ValidationHelper
     {
         /// <summary>
         /// Throws an exception if the tested string argument is null or an empty string.
