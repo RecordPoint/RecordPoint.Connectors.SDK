@@ -5,7 +5,7 @@
     <version>0.0.0</version>
     <authors>RecordPoint Software Pty Ltd</authors>
     <owners>RecordPoint Software Pty Ltd</owners>
-    <licenseUrl></licenseUrl>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://www.records365.com/</projectUrl>
     <iconUrl>https://secure.gravatar.com/avatar/9ddfc83ada11273457e0e9a6d88a595d?s=64&amp;d=mm&amp;r=g</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
