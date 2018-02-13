@@ -30,9 +30,14 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public Guid CorrelationId { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// The settings used to create an ApiClient used for submission to the Records365 vNext Connector API.
+        /// The settings used to create an ApiClient
         /// </summary>
         public ApiClientFactorySettings ApiClientFactorySettings { get; set; }
+
+        /// <summary>
+        /// The settings used for submission to the Records365 vNext Connector API.
+        /// </summary>
+        public AuthenticationHelperSettings AuthenticationHelperSettings { get; set; }
 
         /// <summary>
         /// The core metadata fields of the submission.
@@ -63,7 +68,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// A cancellation token that can be used to cancel a submission while it is in the middle of the pipeline.
         /// </summary>
         public CancellationToken CancellationToken { get; set; }
-        
+
         public virtual string LogPrefix()
         {
             return

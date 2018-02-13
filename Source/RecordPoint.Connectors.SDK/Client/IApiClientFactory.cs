@@ -4,6 +4,7 @@ namespace RecordPoint.Connectors.SDK.Client
 {
     public interface IApiClientFactory
     {
-        Task<IApiClient> CreateApiClientAsync(ApiClientFactorySettings settings);
+        IApiClient CreateApiClient(ApiClientFactorySettings settings);
+        IAuthenticationHelper CreateAuthenticationHelper();
     }
 }

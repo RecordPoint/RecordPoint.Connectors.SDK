@@ -1,6 +1,8 @@
 ﻿using Microsoft.Rest;
+using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,6 +12,19 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     {
         protected HttpSubmitPipelineElementBase(ISubmission next) : base(next)
         {
+        }
+
+        public IApiClientFactory ApiClientFactory { get; set; }
+
+        protected async Task<Dictionary<string, List<string>>> GetHttpRequestHeaders(SubmitContext submitContext)
+        {
+            var headers = new Dictionary<string, List<string>>();
+            var authenticationResult = await ApiClientFactory
+                                        .CreateAuthenticationHelper()
+                                        .AcquireTokenAsync(submitContext.AuthenticationHelperSettings)
+                                        .ConfigureAwait(false);
+            headers.AddAuthorizationHeader(authenticationResult.AccessTokenType, authenticationResult.AccessToken);
+            return headers;
         }
 
         protected async Task HandleSubmitResponse<T>(SubmitContext submitContext, HttpOperationResponse<T> result, string itemTypeName)

@@ -58,11 +58,14 @@
   <ItemGroup>
     <Compile Include="Client\ApiClientFactory.cs" />
     <Compile Include="Client\ApiClientFactorySettings.cs" />
-    <Compile Include="Client\ApiClientPartial.cs" />
     <Compile Include="Client\ApiClientRetryPolicy.cs" />
+    <Compile Include="Client\AuthenticationHelper.cs" />
+    <Compile Include="Client\AuthenticationHelperSettings.cs" />
     <Compile Include="Client\AutoRestGenerated\ApiClient.cs" />
+    <Compile Include="Client\HttpHeaderExtension.cs" />
     <Compile Include="Client\IApiClientFactory.cs" />
-    <Compile Include="Client\IApiClientPartial.cs" />
+    <Compile Include="Client\IAuthenticationHelper.cs" />
+    <Compile Include="Client\NotSpecifiedCredentials.cs" />
     <Compile Include="Client\SubmissionMetaDataModel.cs" />
     <Compile Include="Client\SubmissionMetaDataModelExtensions.cs" />
     <Compile Include="Diagnostics\ILog.cs" />
