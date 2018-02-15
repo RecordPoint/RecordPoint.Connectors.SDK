@@ -1428,7 +1428,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Gets a collection of notifications that are awaiting processing and
         /// acknowledgement by the connector.
         /// </summary>
-        /// <param name='query'>
+        /// <param name='connectorId'>
         /// The query information
         /// </param>
         /// <param name='acceptLanguage'>
@@ -1445,14 +1445,20 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsGetWithHttpMessagesAsync(ConnectorNotificationQueryModel query = default(ConnectorNotificationQueryModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(string connectorId, string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (query != null)
+            if (connectorId == null)
             {
-                query.Validate();
+                throw new ValidationException(ValidationRules.CannotBeNull, "connectorId");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1461,14 +1467,15 @@ namespace RecordPoint.Connectors.SDK.Client
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("query", query);
+                tracingParameters.Add("connectorId", connectorId);
                 tracingParameters.Add("acceptLanguage", acceptLanguage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "ApiNotificationsGet", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiNotificationsByConnectorIdGet", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Notifications").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Notifications/{connectorId}").ToString();
+            _url = _url.Replace("{connectorId}", System.Uri.EscapeDataString(connectorId));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -1499,12 +1506,6 @@ namespace RecordPoint.Connectors.SDK.Client
 
             // Serialize Request
             string _requestContent = null;
-            if(query != null)
-            {
-                _requestContent = SafeJsonConvert.SerializeObject(query, SerializationSettings);
-                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
-            }
             // Set Credentials
             if (Credentials != null)
             {
@@ -1903,7 +1904,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Gets a collection of notifications that are awaiting processing and
         /// acknowledgement by the connector.
         /// </summary>
-        /// <param name='query'>
+        /// <param name='connectorId'>
         /// The query information
         /// </param>
         /// <param name='acceptLanguage'>
@@ -1914,7 +1915,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsGetWithHttpMessagesAsync(ConnectorNotificationQueryModel query = default(ConnectorNotificationQueryModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(string connectorId, string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Acknowledges a notification as having been processed by the
@@ -2252,14 +2253,14 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='query'>
+            /// <param name='connectorId'>
             /// The query information
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
-            public static IList<ConnectorNotificationModel> ApiNotificationsGet(this IApiClient operations, ConnectorNotificationQueryModel query = default(ConnectorNotificationQueryModel), string acceptLanguage = default(string))
+            public static IList<ConnectorNotificationModel> ApiNotificationsByConnectorIdGet(this IApiClient operations, string connectorId, string acceptLanguage = default(string))
             {
-                return operations.ApiNotificationsGetAsync(query, acceptLanguage).GetAwaiter().GetResult();
+                return operations.ApiNotificationsByConnectorIdGetAsync(connectorId, acceptLanguage).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -2269,7 +2270,7 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='query'>
+            /// <param name='connectorId'>
             /// The query information
             /// </param>
             /// <param name='acceptLanguage'>
@@ -2277,9 +2278,9 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<ConnectorNotificationModel>> ApiNotificationsGetAsync(this IApiClient operations, ConnectorNotificationQueryModel query = default(ConnectorNotificationQueryModel), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<ConnectorNotificationModel>> ApiNotificationsByConnectorIdGetAsync(this IApiClient operations, string connectorId, string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiNotificationsGetWithHttpMessagesAsync(query, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(connectorId, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -4315,79 +4316,6 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         [JsonProperty(PropertyName = "aggregationStatus")]
         public string AggregationStatus { get; set; }
 
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace RecordPoint.Connectors.SDK.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Information sent by a connector to query all pending notifications for
-    /// it.
-    /// </summary>
-    public partial class ConnectorNotificationQueryModel
-    {
-        /// <summary>
-        /// Initializes a new instance of the ConnectorNotificationQueryModel
-        /// class.
-        /// </summary>
-        public ConnectorNotificationQueryModel()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ConnectorNotificationQueryModel
-        /// class.
-        /// </summary>
-        /// <param name="connectorId">Id of the Connector that is querying for
-        /// pending notifications</param>
-        public ConnectorNotificationQueryModel(string connectorId)
-        {
-            ConnectorId = connectorId;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets id of the Connector that is querying for pending
-        /// notifications
-        /// </summary>
-        [JsonProperty(PropertyName = "connectorId")]
-        public string ConnectorId { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (ConnectorId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ConnectorId");
-            }
-        }
     }
 }
 // <auto-generated>
