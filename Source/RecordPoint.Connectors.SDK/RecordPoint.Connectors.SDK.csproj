@@ -61,6 +61,7 @@
     <Compile Include="Client\ApiClientRetryPolicy.cs" />
     <Compile Include="Client\AuthenticationHelper.cs" />
     <Compile Include="Client\AuthenticationHelperSettings.cs" />
+    <Compile Include="Client\AuthenticationResult.cs" />
     <Compile Include="Client\AutoRestGenerated\ApiClient.cs" />
     <Compile Include="Client\HttpHeaderExtension.cs" />
     <Compile Include="Client\IApiClientFactory.cs" />

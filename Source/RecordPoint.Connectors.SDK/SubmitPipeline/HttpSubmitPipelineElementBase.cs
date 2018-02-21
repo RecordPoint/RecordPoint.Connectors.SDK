@@ -20,9 +20,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         {
             var headers = new Dictionary<string, List<string>>();
             var authenticationResult = await ApiClientFactory
-                                        .CreateAuthenticationHelper()
-                                        .AcquireTokenAsync(submitContext.AuthenticationHelperSettings)
-                                        .ConfigureAwait(false);
+                .CreateAuthenticationHelper()
+                .AcquireTokenAsync(submitContext.AuthenticationHelperSettings)
+                .ConfigureAwait(false);
             headers.AddAuthorizationHeader(authenticationResult.AccessTokenType, authenticationResult.AccessToken);
             return headers;
         }

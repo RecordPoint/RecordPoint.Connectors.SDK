@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
@@ -27,7 +23,13 @@ namespace RecordPoint.Connectors.SDK.Client
                 // pass a null token cache so that the token must be retrieved from the authority
                 : new AuthenticationContext(authority, null);
 
-            return await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId, new SecureClientSecret(settings.ClientSecret))).ConfigureAwait(false);
+            var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId, new SecureClientSecret(settings.ClientSecret))).ConfigureAwait(false);
+
+            return new AuthenticationResult
+            {
+                AccessTokenType = aadAuthenticationResult.AccessTokenType,
+                AccessToken = aadAuthenticationResult.AccessToken
+            };
         }
 
         private string GetAuthority(AuthenticationHelperSettings settings)
