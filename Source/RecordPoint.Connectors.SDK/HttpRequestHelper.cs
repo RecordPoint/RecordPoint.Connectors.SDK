@@ -1,8 +1,10 @@
-﻿using System;
+﻿using RecordPoint.Connectors.SDK.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK
 {
@@ -50,6 +52,16 @@ namespace RecordPoint.Connectors.SDK
             }
 
             return false;
+        }
+
+        public static async Task<Dictionary<string, List<string>>> GetHttpRequestHeaders(this IAuthenticationHelper authenticationHelper, AuthenticationHelperSettings settings)
+        {
+            var headers = new Dictionary<string, List<string>>();
+            var authenticationResult = await authenticationHelper
+                .AcquireTokenAsync(settings)
+                .ConfigureAwait(false);
+            headers.AddAuthorizationHeader(authenticationResult.AccessTokenType, authenticationResult.AccessToken);
+            return headers;
         }
     }
 }

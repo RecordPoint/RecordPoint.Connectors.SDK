@@ -66,6 +66,7 @@
     <Compile Include="Client\HttpHeaderExtension.cs" />
     <Compile Include="Client\IApiClientFactory.cs" />
     <Compile Include="Client\IAuthenticationHelper.cs" />
+    <Compile Include="Client\NotificationType.cs" />
     <Compile Include="Client\NotSpecifiedCredentials.cs" />
     <Compile Include="Client\SubmissionMetaDataModel.cs" />
     <Compile Include="Client\SubmissionMetaDataModelExtensions.cs" />
@@ -74,6 +75,8 @@
     <Compile Include="Diagnostics\PerformanceEvent.cs" />
     <Compile Include="Fields.cs" />
     <Compile Include="HttpRequestHelper.cs" />
+    <Compile Include="Notifications\INotificationManager.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubmitPipeline\AggregationUnspecifiedFieldValuePipelineElement.cs" />
     <Compile Include="SubmitPipeline\HttpSubmitAggregationPipelineElement.cs" />

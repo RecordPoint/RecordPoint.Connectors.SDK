@@ -16,22 +16,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
         public IApiClientFactory ApiClientFactory { get; set; }
 
-        protected async Task<Dictionary<string, List<string>>> GetHttpRequestHeaders(SubmitContext submitContext)
-        {
-            var headers = new Dictionary<string, List<string>>();
-            var authenticationResult = await ApiClientFactory
-                .CreateAuthenticationHelper()
-                .AcquireTokenAsync(submitContext.AuthenticationHelperSettings)
-                .ConfigureAwait(false);
-            headers.AddAuthorizationHeader(authenticationResult.AccessTokenType, authenticationResult.AccessToken);
-            return headers;
-        }
-
         protected async Task HandleSubmitResponse<T>(SubmitContext submitContext, HttpOperationResponse<T> result, string itemTypeName)
         {
             if (result == null)
             {
-                throw new ArgumentNullException($"{submitContext.LogPrefix()}Invalid {itemTypeName} submission! Expecting a return type of {nameof(HttpOperationResponse<object>)} but got null!");
+                throw new ArgumentNullException($"{submitContext.LogPrefix()}Invalid {itemTypeName} submission! Expecting a return type of {nameof(HttpOperationResponse<T>)} but got null!");
             }
 
             if (result.Response == null)
