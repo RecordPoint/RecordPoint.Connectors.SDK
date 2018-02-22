@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Notifications
 {
+    /// <summary>
+    /// Manages pulling and acknowledging of connector notification messages.
+    /// Note this class only applies to connector types that use the "pull" notification method.
+    /// </summary>
     public class NotificationPullManager : INotificationPullManager
     {
-        public IApiClientFactory ApiClientFactory { get; set; }
+        private IApiClientFactory _apiClientFactory;
         
+        /// <summary>
+        /// Creates a new NotificationPullManager.
+        /// </summary>
         public NotificationPullManager()
         {
+            _apiClientFactory = new ApiClientFactory();
         }
 
         /// <summary>
@@ -28,14 +36,14 @@ namespace RecordPoint.Connectors.SDK.Notifications
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // Get Notifications
-            var client = ApiClientFactory.CreateApiClient(factorySettings);
+            var client = _apiClientFactory.CreateApiClient(factorySettings);
 
             var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
 
             var notificationQueryResponse = await policy.ExecuteAsync(
                 async () =>
                 {
-                    var authHelper = ApiClientFactory.CreateAuthenticationHelper();
+                    var authHelper = _apiClientFactory.CreateAuthenticationHelper();
                     var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
                     var response = await client.ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(connectorConfigId, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
                     return response;
@@ -62,14 +70,14 @@ namespace RecordPoint.Connectors.SDK.Notifications
             ConnectorNotificationAcknowledgeModel acknowledgement,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var client = ApiClientFactory.CreateApiClient(factorySettings);
+            var client = _apiClientFactory.CreateApiClient(factorySettings);
 
             var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
 
             var acknowledgementResponse = await policy.ExecuteAsync(
                 async () =>
                 {
-                    var authHelper = ApiClientFactory.CreateAuthenticationHelper();
+                    var authHelper = _apiClientFactory.CreateAuthenticationHelper();
                     var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
                     var response = await client.ApiNotificationsPostWithHttpMessagesAsync(acknowledgement, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
                     return response;
