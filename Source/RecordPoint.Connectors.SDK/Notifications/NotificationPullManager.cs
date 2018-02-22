@@ -9,9 +9,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
     public class NotificationPullManager : INotificationPullManager
     {
         public IApiClientFactory ApiClientFactory { get; set; }
-
-        public AuthenticationHelperSettings AuthenticationHelperSettings { get; set; }
-
+        
         public NotificationPullManager()
         {
         }
@@ -38,7 +36,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 async () =>
                 {
                     var authHelper = ApiClientFactory.CreateAuthenticationHelper();
-                    var headers = await authHelper.GetHttpRequestHeaders(AuthenticationHelperSettings).ConfigureAwait(false);
+                    var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
                     var response = await client.ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(connectorConfigId, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
                     return response;
                 }
@@ -72,7 +70,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 async () =>
                 {
                     var authHelper = ApiClientFactory.CreateAuthenticationHelper();
-                    var headers = await authHelper.GetHttpRequestHeaders(AuthenticationHelperSettings).ConfigureAwait(false);
+                    var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
                     var response = await client.ApiNotificationsPostWithHttpMessagesAsync(acknowledgement, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
                     return response;
                 }
