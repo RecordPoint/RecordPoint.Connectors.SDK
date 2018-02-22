@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Notifications
 {
-    public class NotificationManager : INotificationManager
+    public class NotificationPullManager : INotificationPullManager
     {
         public IApiClientFactory ApiClientFactory { get; set; }
 
         public AuthenticationHelperSettings AuthenticationHelperSettings { get; set; }
 
-        public NotificationManager()
+        public NotificationPullManager()
         {
         }
 

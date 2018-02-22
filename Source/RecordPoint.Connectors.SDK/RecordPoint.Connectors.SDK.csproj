@@ -75,8 +75,8 @@
     <Compile Include="Diagnostics\PerformanceEvent.cs" />
     <Compile Include="Fields.cs" />
     <Compile Include="HttpRequestHelper.cs" />
-    <Compile Include="Notifications\INotificationManager.cs" />
-    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Notifications\INotificationPullManager.cs" />
+    <Compile Include="Notifications\NotificationPullManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubmitPipeline\AggregationUnspecifiedFieldValuePipelineElement.cs" />
     <Compile Include="SubmitPipeline\HttpSubmitAggregationPipelineElement.cs" />

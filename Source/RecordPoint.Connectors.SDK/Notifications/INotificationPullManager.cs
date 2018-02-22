@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Notifications
 {
-    public interface INotificationManager
+    public interface INotificationPullManager
     {
         /// <summary>
         /// Queries for all connector notifications for a given connector instance that are pending acknowledgement.
@@ -19,6 +19,19 @@ namespace RecordPoint.Connectors.SDK.Notifications
         Task<IList<ConnectorNotificationModel>> GetAllPendingConnectorNotifications(ApiClientFactorySettings factorySettings,
             AuthenticationHelperSettings authenticationSettings,
             string connectorConfigId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Acknowledges a notification as having been processed.
+        /// </summary>
+        /// <param name="factorySettings"></param>
+        /// <param name="authenticationSettings"></param>
+        /// <param name="acknowledgement"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task AcknowledgeNotification(ApiClientFactorySettings factorySettings,
+            AuthenticationHelperSettings authenticationSettings,
+            ConnectorNotificationAcknowledgeModel acknowledgement,
             CancellationToken cancellationToken = default(CancellationToken));
     }
 }
