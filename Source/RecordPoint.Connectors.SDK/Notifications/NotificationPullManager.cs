@@ -1,6 +1,8 @@
 ﻿using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Exceptions;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -83,6 +85,11 @@ namespace RecordPoint.Connectors.SDK.Notifications
                     return response;
                 }
             ).ConfigureAwait(false);
+
+            if (acknowledgementResponse.Response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ResourceNotFoundException($"Notification with ID [{acknowledgement.NotificationId}] was not found. It may have already been acknowledged.");
+            }
 
             // TODO: add more comprehensive handling of the response codes
         }

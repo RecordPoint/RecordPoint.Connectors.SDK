@@ -75,6 +75,7 @@
     <Compile Include="Diagnostics\ILog.cs" />
     <Compile Include="Diagnostics\IPerformanceEvent.cs" />
     <Compile Include="Diagnostics\PerformanceEvent.cs" />
+    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="Fields.cs" />
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="Notifications\INotificationPullManager.cs" />
