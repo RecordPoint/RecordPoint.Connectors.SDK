@@ -43,6 +43,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 SourceCreatedBy = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.SourceCreatedBy)?.Value ?? "",
                 ConnectorId = submitContext.ConnectorConfigId.ToString(),
                 Location = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.Location)?.Value ?? "",
+                MediaType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.MediaType)?.Value ?? "Electronic",
                 SourceProperties = new List<SubmissionMetaDataModel>(),
             };
 

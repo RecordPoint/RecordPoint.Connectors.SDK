@@ -2483,7 +2483,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="location">A pointer to a aggregation's location.
         /// For example, the operating system path name or the location of a
         /// file cabinet</param>
-        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string location = default(string))
+        /// <param name="mediaType">The media type, if set to empty, then the
+        /// media type will default to "Electronic"</param>
+        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string location = default(string), string mediaType = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -2503,6 +2505,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedDate = sourceCreatedDate;
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
+            MediaType = mediaType;
             CustomInit();
         }
 
@@ -2634,6 +2637,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "location")]
         public string Location { get; set; }
+
+        /// <summary>
+        /// Gets or sets the media type, if set to empty, then the media type
+        /// will default to "Electronic"
+        /// </summary>
+        [JsonProperty(PropertyName = "mediaType")]
+        public string MediaType { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -2821,7 +2831,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="location">A pointer to a aggregation's location.
         /// For example, the operating system path name or the location of a
         /// file cabinet</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string))
+        /// <param name="mediaType">The media type, if set to empty, then the
+        /// media type will default to "Electronic"</param>
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string), string mediaType = default(string))
         {
             SourceProperties = sourceProperties;
             ExternalId = externalId;
@@ -2832,6 +2844,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedDate = sourceCreatedDate;
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
+            MediaType = mediaType;
             CustomInit();
         }
 
@@ -2901,6 +2914,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "location")]
         public string Location { get; set; }
+
+        /// <summary>
+        /// Gets or sets the media type, if set to empty, then the media type
+        /// will default to "Electronic"
+        /// </summary>
+        [JsonProperty(PropertyName = "mediaType")]
+        public string MediaType { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -4504,11 +4524,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="notificationId">Id of the Notification being
         /// acknowledged</param>
         /// <param name="processingResult">Processing result of the
-        /// notification</param>
+        /// notification. May be OK, Unknown, ConnectorDisabled,
+        /// ConnectorNotSubscribed, ConnectorNotReachable,
+        /// NotificationError</param>
         /// <param name="connectorStatusMessage">An optional message from the
         /// connector to be added to the items metadata on the
         /// "ConnectorStatusMessage" field</param>
-        public ConnectorNotificationAcknowledgeModel(string connectorId, string notificationId, string processingResult = default(string), string connectorStatusMessage = default(string))
+        public ConnectorNotificationAcknowledgeModel(string connectorId, string notificationId, string processingResult, string connectorStatusMessage = default(string))
         {
             ConnectorId = connectorId;
             NotificationId = notificationId;
@@ -4535,7 +4557,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string NotificationId { get; set; }
 
         /// <summary>
-        /// Gets or sets processing result of the notification
+        /// Gets or sets processing result of the notification. May be OK,
+        /// Unknown, ConnectorDisabled, ConnectorNotSubscribed,
+        /// ConnectorNotReachable, NotificationError
         /// </summary>
         [JsonProperty(PropertyName = "processingResult")]
         public string ProcessingResult { get; set; }
@@ -4562,6 +4586,10 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             if (NotificationId == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "NotificationId");
+            }
+            if (ProcessingResult == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ProcessingResult");
             }
         }
     }
