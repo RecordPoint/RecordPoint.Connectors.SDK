@@ -788,16 +788,16 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Submits a binary to be archived and protected by Records365 vNext.
         /// </summary>
         /// <param name='connectorId'>
-        /// The ID of the connector submitting the binary.
+        /// The ID of the connector submitting the binary
         /// </param>
         /// <param name='itemExternalId'>
-        /// The ExternalID of the item that the binary belongs to.
+        /// The ExternalID of the item that the binary belongs to
         /// </param>
         /// <param name='binaryExternalId'>
-        /// The ExternalID of the binary.
+        /// The ExternalID of the binary
         /// </param>
         /// <param name='fileName'>
-        /// An optional file name to associate with the binary.
+        /// An optional file name to associate with the binary
         /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
@@ -839,19 +839,19 @@ namespace RecordPoint.Connectors.SDK.Client
             List<string> _queryParameters = new List<string>();
             if (connectorId != null)
             {
-                _queryParameters.Add(string.Format("connectorId={0}", System.Uri.EscapeDataString(connectorId)));
+                _queryParameters.Add(string.Format("ConnectorId={0}", System.Uri.EscapeDataString(connectorId)));
             }
             if (itemExternalId != null)
             {
-                _queryParameters.Add(string.Format("itemExternalId={0}", System.Uri.EscapeDataString(itemExternalId)));
+                _queryParameters.Add(string.Format("ItemExternalId={0}", System.Uri.EscapeDataString(itemExternalId)));
             }
             if (binaryExternalId != null)
             {
-                _queryParameters.Add(string.Format("binaryExternalId={0}", System.Uri.EscapeDataString(binaryExternalId)));
+                _queryParameters.Add(string.Format("BinaryExternalId={0}", System.Uri.EscapeDataString(binaryExternalId)));
             }
             if (fileName != null)
             {
-                _queryParameters.Add(string.Format("fileName={0}", System.Uri.EscapeDataString(fileName)));
+                _queryParameters.Add(string.Format("FileName={0}", System.Uri.EscapeDataString(fileName)));
             }
             if (_queryParameters.Count > 0)
             {
@@ -907,7 +907,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 412)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2010,16 +2010,16 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Submits a binary to be archived and protected by Records365 vNext.
         /// </summary>
         /// <param name='connectorId'>
-        /// The ID of the connector submitting the binary.
+        /// The ID of the connector submitting the binary
         /// </param>
         /// <param name='itemExternalId'>
-        /// The ExternalID of the item that the binary belongs to.
+        /// The ExternalID of the item that the binary belongs to
         /// </param>
         /// <param name='binaryExternalId'>
-        /// The ExternalID of the binary.
+        /// The ExternalID of the binary
         /// </param>
         /// <param name='fileName'>
-        /// An optional file name to associate with the binary.
+        /// An optional file name to associate with the binary
         /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
@@ -2294,16 +2294,16 @@ namespace RecordPoint.Connectors.SDK.Client
             /// The operations group for this extension method.
             /// </param>
             /// <param name='connectorId'>
-            /// The ID of the connector submitting the binary.
+            /// The ID of the connector submitting the binary
             /// </param>
             /// <param name='itemExternalId'>
-            /// The ExternalID of the item that the binary belongs to.
+            /// The ExternalID of the item that the binary belongs to
             /// </param>
             /// <param name='binaryExternalId'>
-            /// The ExternalID of the binary.
+            /// The ExternalID of the binary
             /// </param>
             /// <param name='fileName'>
-            /// An optional file name to associate with the binary.
+            /// An optional file name to associate with the binary
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
@@ -2319,16 +2319,16 @@ namespace RecordPoint.Connectors.SDK.Client
             /// The operations group for this extension method.
             /// </param>
             /// <param name='connectorId'>
-            /// The ID of the connector submitting the binary.
+            /// The ID of the connector submitting the binary
             /// </param>
             /// <param name='itemExternalId'>
-            /// The ExternalID of the item that the binary belongs to.
+            /// The ExternalID of the item that the binary belongs to
             /// </param>
             /// <param name='binaryExternalId'>
-            /// The ExternalID of the binary.
+            /// The ExternalID of the binary
             /// </param>
             /// <param name='fileName'>
-            /// An optional file name to associate with the binary.
+            /// An optional file name to associate with the binary
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>

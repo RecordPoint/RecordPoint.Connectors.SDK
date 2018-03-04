@@ -82,6 +82,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     LogWarning(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was not found.");
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorNotFound;
                     break;
+                case System.Net.HttpStatusCode.PreconditionFailed:
+                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a precondition failed.");
+                    submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
+                    break;
                 default:
                     LogWarning(submitContext, nameof(HandleSubmitResponse),
                         $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted.");

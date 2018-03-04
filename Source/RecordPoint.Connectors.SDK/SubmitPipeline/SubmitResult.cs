@@ -26,7 +26,16 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             /// <summary>
             /// Indicates that the submission was skipped by the submission pipleline.
             /// </summary>
-            Skipped
+            Skipped,
+            /// <summary>
+            /// Indicates that the Records365 vNext platform rejected the submit
+            /// because it was not yet valid - for example, a dependent item may not yet
+            /// be processed and available in the platform. The connector implementation
+            /// should retry the submit at a later time. The connector should abandon the 
+            /// submit if Deferred is returned for the same submit for many repeated
+            /// attempts over a long period of time.
+            /// </summary>
+            Deferred 
         }
 
         public Status SubmitStatus { get; set; }
