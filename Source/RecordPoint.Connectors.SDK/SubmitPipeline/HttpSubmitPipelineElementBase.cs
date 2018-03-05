@@ -32,6 +32,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 case System.Net.HttpStatusCode.Conflict:
                     LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} already submitted.");
                     break;
+                case System.Net.HttpStatusCode.OK:
+                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} submitted.");
+                    break;
                 case System.Net.HttpStatusCode.Created:
                     LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} submitted.");
                     break;
