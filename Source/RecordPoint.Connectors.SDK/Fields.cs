@@ -14,6 +14,8 @@
         public static string ContentVersion = nameof(ContentVersion);
         public static string Location = nameof(Location);
         public static string MediaType = nameof(MediaType);
+        public static string BarcodeType = nameof(BarcodeType);
+        public static string BarcodeValue = nameof(BarcodeValue);
         public static string ConnectorId = nameof(ConnectorId);
         public static string ParentExternalId = nameof(ParentExternalId);
 

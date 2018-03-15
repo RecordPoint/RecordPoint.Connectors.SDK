@@ -2740,7 +2740,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// file cabinet</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string location = default(string), string mediaType = default(string))
+        /// <param name="barcodeType">The barcode type e.g. code 128, qr
+        /// code</param>
+        /// <param name="barcodeValue">The barcode value of the above barcode
+        /// type</param>
+        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -2761,6 +2765,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
             MediaType = mediaType;
+            BarcodeType = barcodeType;
+            BarcodeValue = barcodeValue;
             CustomInit();
         }
 
@@ -2899,6 +2905,18 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "mediaType")]
         public string MediaType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode type e.g. code 128, qr code
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeType")]
+        public string BarcodeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode value of the above barcode type
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeValue")]
+        public string BarcodeValue { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -3088,7 +3106,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// file cabinet</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string), string mediaType = default(string))
+        /// <param name="barcodeType">The barcode type e.g. code 128, qr
+        /// code</param>
+        /// <param name="barcodeValue">The barcode value of the above barcode
+        /// type</param>
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             SourceProperties = sourceProperties;
             ExternalId = externalId;
@@ -3100,6 +3122,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
             MediaType = mediaType;
+            BarcodeType = barcodeType;
+            BarcodeValue = barcodeValue;
             CustomInit();
         }
 
@@ -3176,6 +3200,18 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "mediaType")]
         public string MediaType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode type e.g. code 128, qr code
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeType")]
+        public string BarcodeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode value of the above barcode type
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeValue")]
+        public string BarcodeValue { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -3923,7 +3959,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="correlationId">An ID to be used to correlate an item
         /// with events in Records365 vNext</param>
         /// <param name="mimeType">The mime type of the submitted item</param>
-        public ItemSubmissionOutputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string id = default(string), string itemType = default(string), string itemNumber = default(string), string format = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), string contentSource = default(string), string connectorDisplayName = default(string), bool? isVitalRecord = default(bool?), string originatingOrganization = default(string), string previousDisposalAction = default(string), System.DateTime? previousDisposalDate = default(System.DateTime?), string previousDisposalBy = default(string), string previousDisposalById = default(string), string nextDisposalAction = default(string), System.DateTime? nextDisposalDate = default(System.DateTime?), string currentDisposalStatus = default(string), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string correlationId = default(string), string mimeType = default(string))
+        /// <param name="barcodeType">The barcode type, this can be
+        /// empty</param>
+        /// <param name="barcodeValue">The barcode value of the above barcode
+        /// type</param>
+        public ItemSubmissionOutputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string id = default(string), string itemType = default(string), string itemNumber = default(string), string format = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), string contentSource = default(string), string connectorDisplayName = default(string), bool? isVitalRecord = default(bool?), string originatingOrganization = default(string), string previousDisposalAction = default(string), System.DateTime? previousDisposalDate = default(System.DateTime?), string previousDisposalBy = default(string), string previousDisposalById = default(string), string nextDisposalAction = default(string), System.DateTime? nextDisposalDate = default(System.DateTime?), string currentDisposalStatus = default(string), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string correlationId = default(string), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -3959,6 +3999,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             Location = location;
             MediaType = mediaType;
             ParentExternalId = parentExternalId;
+            BarcodeType = barcodeType;
+            BarcodeValue = barcodeValue;
             CustomInit();
         }
 
@@ -4199,6 +4241,18 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ParentExternalId { get; set; }
 
         /// <summary>
+        /// Gets or sets the barcode type, this can be empty
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeType")]
+        public string BarcodeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode value of the above barcode type
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeValue")]
+        public string BarcodeValue { get; set; }
+
+        /// <summary>
         /// Validate the object.
         /// </summary>
         /// <exception cref="ValidationException">
@@ -4326,7 +4380,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
         /// <param name="mimeType">The mime type of the submitted item</param>
-        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string mimeType = default(string))
+        /// <param name="barcodeType">The barcode type, this can be
+        /// empty</param>
+        /// <param name="barcodeValue">The barcode value of the above barcode
+        /// type</param>
+        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             SourceProperties = sourceProperties;
             ExternalId = externalId;
@@ -4342,6 +4400,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             Location = location;
             MediaType = mediaType;
             ParentExternalId = parentExternalId;
+            BarcodeType = barcodeType;
+            BarcodeValue = barcodeValue;
             CustomInit();
         }
 
@@ -4447,6 +4507,18 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode type, this can be empty
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeType")]
+        public string BarcodeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barcode value of the above barcode type
+        /// </summary>
+        [JsonProperty(PropertyName = "barcodeValue")]
+        public string BarcodeValue { get; set; }
 
         /// <summary>
         /// Validate the object.
