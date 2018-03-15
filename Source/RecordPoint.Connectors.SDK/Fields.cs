@@ -2,32 +2,32 @@
 {
     public static class Fields
     {
-        public static string Title = nameof(Title);
-        public static string ItemTypeId = nameof(ItemTypeId);
-        public static string ExternalId = nameof(ExternalId);
-        public static string SourceLastModifiedBy = nameof(SourceLastModifiedBy);
-        public static string SourceLastModifiedDate = nameof(SourceLastModifiedDate);
-        public static string SourceCreatedBy = nameof(SourceCreatedBy);
-        public static string SourceCreatedDate = nameof(SourceCreatedDate);
-        public static string Author = nameof(Author);
-        public static string MimeType = nameof(MimeType);
-        public static string ContentVersion = nameof(ContentVersion);
-        public static string Location = nameof(Location);
-        public static string MediaType = nameof(MediaType);
-        public static string BarcodeType = nameof(BarcodeType);
-        public static string BarcodeValue = nameof(BarcodeValue);
-        public static string ConnectorId = nameof(ConnectorId);
-        public static string ParentExternalId = nameof(ParentExternalId);
+        public const string Title = nameof(Title);
+        public const string ItemTypeId = nameof(ItemTypeId);
+        public const string ExternalId = nameof(ExternalId);
+        public const string SourceLastModifiedBy = nameof(SourceLastModifiedBy);
+        public const string SourceLastModifiedDate = nameof(SourceLastModifiedDate);
+        public const string SourceCreatedBy = nameof(SourceCreatedBy);
+        public const string SourceCreatedDate = nameof(SourceCreatedDate);
+        public const string Author = nameof(Author);
+        public const string MimeType = nameof(MimeType);
+        public const string ContentVersion = nameof(ContentVersion);
+        public const string Location = nameof(Location);
+        public const string MediaType = nameof(MediaType);
+        public const string BarcodeType = nameof(BarcodeType);
+        public const string BarcodeValue = nameof(BarcodeValue);
+        public const string ConnectorId = nameof(ConnectorId);
+        public const string ParentExternalId = nameof(ParentExternalId);
 
         public static class AuditEvent
         {
-            public static string EventExternalId = nameof(EventExternalId);
-            public static string ExternalId = nameof(ExternalId);
-            public static string Created = nameof(Created);
-            public static string Description = nameof(Description);
-            public static string EventType = nameof(EventType);
-            public static string UserName= nameof(UserName);
-            public static string UserId = nameof(UserId);
+            public const string EventExternalId = nameof(EventExternalId);
+            public const string ExternalId = nameof(ExternalId);
+            public const string Created = nameof(Created);
+            public const string Description = nameof(Description);
+            public const string EventType = nameof(EventType);
+            public const string UserName= nameof(UserName);
+            public const string UserId = nameof(UserId);
         }
     }
 }
