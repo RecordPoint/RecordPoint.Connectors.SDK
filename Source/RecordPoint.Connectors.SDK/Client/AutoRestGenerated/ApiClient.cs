@@ -3099,6 +3099,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// ISO-8601 Round-trip format</param>
         /// <param name="sourceCreatedBy">The name of the user or principal who
         /// created the aggregation in the content source</param>
+        /// <param name="itemTypeId">The item type ID that corresponds to an
+        /// aggregation</param>
         /// <param name="sourceProperties">Source properties for the
         /// aggregation with DisplayName</param>
         /// <param name="location">A pointer to a aggregation's location.
@@ -3110,8 +3112,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
+            ItemTypeId = itemTypeId;
             SourceProperties = sourceProperties;
             ExternalId = externalId;
             ConnectorId = connectorId;
@@ -3131,6 +3134,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the item type ID that corresponds to an aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "itemTypeId")]
+        public int? ItemTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets source properties for the aggregation with DisplayName

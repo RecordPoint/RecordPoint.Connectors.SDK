@@ -35,6 +35,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             var aggregationModel = new AggregationSubmissionInputModel()
             {
+                ItemTypeId = submitContext.ItemTypeId,
                 ExternalId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.ExternalId)?.Value ?? "",
                 Title = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.Title)?.Value ?? "",
                 SourceLastModifiedDate = parseDateTime(submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.SourceLastModifiedDate)?.Value),

@@ -48,6 +48,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// The source metadata fields of the submission.
         /// </summary>
         public IList<SubmissionMetaDataModel> SourceMetaData { get; set; }
+        
+        /// <summary>
+        /// The item type id that corresponds to an aggregation can be folder or box
+        /// </summary>
+        /// [Required]
+        public int? ItemTypeId { get; set; }
 
         /// <summary>
         /// Value that indicates if Records365 vNext has an items aggregation.
