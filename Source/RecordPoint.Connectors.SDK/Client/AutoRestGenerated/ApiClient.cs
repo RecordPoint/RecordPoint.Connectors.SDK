@@ -2735,6 +2735,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// record, false otherwise</param>
         /// <param name="sourceProperties">Source properties for the
         /// aggregation as populated from the content source</param>
+        /// <param name="author">Used for Physical item aggregations</param>
         /// <param name="location">A pointer to a aggregation's location.
         /// For example, the operating system path name or the location of a
         /// file cabinet</param>
@@ -2744,7 +2745,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -2759,6 +2760,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             ExternalId = externalId;
             ConnectorId = connectorId;
             Title = title;
+            Author = author;
             SourceLastModifiedDate = sourceLastModifiedDate;
             SourceLastModifiedBy = sourceLastModifiedBy;
             SourceCreatedDate = sourceCreatedDate;
@@ -2861,6 +2863,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets used for Physical item aggregations
+        /// </summary>
+        [JsonProperty(PropertyName = "author")]
+        public string Author { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the aggregation was last
@@ -3103,6 +3111,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// aggregation</param>
         /// <param name="sourceProperties">Source properties for the
         /// aggregation with DisplayName</param>
+        /// <param name="author">Used for Physical item aggregations</param>
         /// <param name="location">A pointer to a aggregation's location.
         /// For example, the operating system path name or the location of a
         /// file cabinet</param>
@@ -3112,13 +3121,14 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             ItemTypeId = itemTypeId;
             SourceProperties = sourceProperties;
             ExternalId = externalId;
             ConnectorId = connectorId;
             Title = title;
+            Author = author;
             SourceLastModifiedDate = sourceLastModifiedDate;
             SourceLastModifiedBy = sourceLastModifiedBy;
             SourceCreatedDate = sourceCreatedDate;
@@ -3165,6 +3175,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets used for Physical item aggregations
+        /// </summary>
+        [JsonProperty(PropertyName = "author")]
+        public string Author { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the aggregation was last
