@@ -65,9 +65,13 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 }
             ).ConfigureAwait(false);
 
-            await HandleSubmitResponse(submitContext, result, "Binary").ConfigureAwait(false);
+            var shouldContinue = true;
+            shouldContinue = await HandleSubmitResponse(submitContext, result, "Binary").ConfigureAwait(false);
 
-            await InvokeNext(submitContext).ConfigureAwait(false);
+            if (shouldContinue)
+            {
+                await InvokeNext(submitContext).ConfigureAwait(false);
+            }
         }
     }
 }

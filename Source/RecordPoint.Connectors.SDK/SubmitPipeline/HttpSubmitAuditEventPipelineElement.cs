@@ -46,9 +46,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 auditEventModel.SourceProperties = submitContext.SourceMetaData;
             }
 
-            // try / catch here so I debug http auth or other issues raised by the call to the Eiger API by sticking a breakpoint in the catch
-            // in release builds there's no need for it as we should just let the exception bubble up the call stack until it is handled properly
-            // in the ConnectorTaskRunner
+            var shouldContinue = true;
+
             try
             {
                 var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, submitContext.CancellationToken);
@@ -63,7 +62,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     }
                 ).ConfigureAwait(false);
 
-                await HandleSubmitResponse(submitContext, result, "AuditEvent").ConfigureAwait(false);
+                shouldContinue = await HandleSubmitResponse(submitContext, result, "AuditEvent").ConfigureAwait(false);
             }
             catch (HttpOperationException ex)
                 when (ex.Response?.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -72,7 +71,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 LogVerbose(submitContext, nameof(Submit), $"Submission returned {ex.Response.StatusCode} : AuditEvent already submitted.");
             }
 
-            await InvokeNext(submitContext).ConfigureAwait(false);
+            if (shouldContinue)
+            {
+                await InvokeNext(submitContext).ConfigureAwait(false);
+            }
         }
     }
 }

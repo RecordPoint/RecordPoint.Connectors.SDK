@@ -15,8 +15,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
         public IApiClientFactory ApiClientFactory { get; set; }
 
-        protected async Task HandleSubmitResponse<T>(SubmitContext submitContext, HttpOperationResponse<T> result, string itemTypeName)
+        /// <summary>
+        /// Handles the result of a call to a submission API.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="submitContext">The context of the submission.</param>
+        /// <param name="result">The result of the submit API call.</param>
+        /// <param name="itemTypeName">A string that identifies the item type (e.g., "Aggregation"). Used only for constructing log strings.</param>
+        /// <returns>True if the submit pipeline should continue as a result of successful submission, false otherwise.</returns>
+        protected async Task<bool> HandleSubmitResponse<T>(SubmitContext submitContext, HttpOperationResponse<T> result, string itemTypeName)
         {
+            var shouldContinueSubmitPipeline = true;
+
             if (result == null)
             {
                 throw new ArgumentNullException($"{submitContext.LogPrefix()}Invalid {itemTypeName} submission! Expecting a return type of {nameof(HttpOperationResponse<T>)} but got null!");
@@ -30,6 +40,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             switch (result.Response.StatusCode)
             {
                 case System.Net.HttpStatusCode.Conflict:
+                    // shouldContinueSubmitPipeline should still be true on Conflict.
+                    // There may have been previous submissions of that item that failed at a later stage and need to be re-tried.
                     LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} already submitted.");
                     break;
                 case System.Net.HttpStatusCode.OK:
@@ -46,6 +58,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     break;
                 case System.Net.HttpStatusCode.BadRequest:
                     {
+                        shouldContinueSubmitPipeline = false;
+
                         // BadRequest (400) is returned in one of two scenarios:
                         // - The submit was invalid (e.g. missing required field)
                         // - the connector was disabled
@@ -82,14 +96,20 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                         break;
                     }
                 case System.Net.HttpStatusCode.Forbidden:
+                    shouldContinueSubmitPipeline = false;
+
                     LogWarning(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was not found.");
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorNotFound;
                     break;
                 case System.Net.HttpStatusCode.PreconditionFailed:
+                    shouldContinueSubmitPipeline = false;
+
                     LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a precondition failed.");
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
                     break;
                 default:
+                    shouldContinueSubmitPipeline = false;
+
                     LogWarning(submitContext, nameof(HandleSubmitResponse),
                         $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted.");
 
@@ -97,6 +117,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                                     $"Submission returned {result.Response.StatusCode} : NOT submitted. " +
                                     $"Http Content: {await result.Response.Content.ReadAsStringAsync().ConfigureAwait(false)}");
             }
+
+            return shouldContinueSubmitPipeline;
         }
     }
 }
