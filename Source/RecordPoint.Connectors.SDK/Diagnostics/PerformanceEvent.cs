@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace RecordPoint.Connectors.SDK.Diagnostics
 {
-    internal class PerformanceEvent : IPerformanceEvent
+    public class PerformanceEvent : IPerformanceEvent
     {
         private readonly string _message;
         private readonly Stopwatch _stopWatch = new Stopwatch();
