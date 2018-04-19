@@ -64,6 +64,7 @@
     <Compile Include="Client\AuthenticationHelperSettings.cs" />
     <Compile Include="Client\AuthenticationResult.cs" />
     <Compile Include="Client\AutoRestGenerated\ApiClient.cs" />
+    <Compile Include="Client\ConnectorConfigEnabledStateHistory.cs" />
     <Compile Include="Client\ConnectorConfigModel.cs" />
     <Compile Include="Client\ConnectorNotificationModelExtensions.cs" />
     <Compile Include="Client\HttpHeaderExtension.cs" />
