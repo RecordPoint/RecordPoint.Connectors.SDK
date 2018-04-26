@@ -1,9 +1,5 @@
 ﻿using RecordPoint.Connectors.SDK.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Providers
 {
@@ -12,7 +8,7 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// </summary>
     public sealed class DateTimeProvider : IDateTimeProvider
     {
-        private static Lazy<DateTimeProvider> _dateTimeHelper = new Lazy<DateTimeProvider>();
+        private static Lazy<DateTimeProvider> _dateTimeHelper = new Lazy<DateTimeProvider>(() => new DateTimeProvider());
         /// <summary>
         /// Singleton instance
         /// </summary>

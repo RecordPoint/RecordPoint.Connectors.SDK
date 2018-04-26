@@ -1,6 +1,7 @@
 ﻿using Moq;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Interfaces;
+using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.TaskRunner;
 using RecordPoint.Connectors.SDK.Test.Helpers;
 using System;
@@ -15,11 +16,6 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 {
     public class TaskRunnerBaseTest
     {
-        class DateTimeProvider: IDateTimeProvider
-        {
-            DateTime IDateTimeProvider.UtcNow => DateTime.UtcNow;
-        }
-
         [Fact]
         public async Task TaskRunnerBase_Awaits_AfterAllComplete()
         {
@@ -382,7 +378,7 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
             {
                 if (dateTimeProvider == null)
                 {
-                    dateTimeProvider = new DateTimeProvider();
+                    dateTimeProvider = RecordPoint.Connectors.SDK.Providers.DateTimeProvider.Instance;
                 }
 
                 _taskCreator = taskCreator;
