@@ -74,9 +74,11 @@
   <ItemGroup>
     <Compile Include="Client\ApiClientFactoryTest.cs" />
     <Compile Include="Client\HttpHeaderExtensionTest.cs" />
+    <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubmitPipeline\PipelineSelectorPipelineElementTest.cs" />
     <Compile Include="SubmitPipeline\SubmitContextTest.cs" />
+    <Compile Include="TaskRunner\TaskRunnerBaseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
