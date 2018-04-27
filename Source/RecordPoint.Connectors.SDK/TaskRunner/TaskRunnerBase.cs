@@ -17,17 +17,16 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
         public ILog Log { get; set; }
         public IDateTimeProvider DateTimeProvider { get; set; }
         public TaskRunnerBaseSettings Settings { get; set; }
+        /// <summary>
+        /// Determines if an exception should be permitted to kill a long running task
+        /// </summary>
+        public Func<Exception, CancellationToken, bool> IsKillerException { get; set; } = (x, y) => false;
 
         private CancellationTokenSource _cancellationTokenSource;
         private CancellationTokenSource _linkedCancellationTokenSource;
         private readonly object _cancellationTokenSourceSyncRoot = new object();
         private List<KeyValuePair<TaskRunnerInformationBase, Task>> _runningTasks = new List<KeyValuePair<TaskRunnerInformationBase, Task>>();
         private Guid _correlationGroup;
-
-        /// <summary>
-        /// Determines if an exception should be permitted to kill a long running task
-        /// </summary>
-        public static Func<Exception, CancellationToken, bool> IsKillerException { get; set; } = (x, y) => false;
         protected abstract Task<IEnumerable<TaskRunnerInformationBase>> GetTaskRunnerInformation(CancellationToken ct);
 
         public IList<TaskRunnerInformationBase> GetAllRunningTasks()
