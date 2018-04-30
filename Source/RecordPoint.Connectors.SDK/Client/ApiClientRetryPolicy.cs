@@ -1,5 +1,6 @@
 ﻿using Microsoft.Rest;
 using Polly;
+using RecordPoint.Connectors.SDK.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

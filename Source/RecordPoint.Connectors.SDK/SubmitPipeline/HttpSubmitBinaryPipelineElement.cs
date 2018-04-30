@@ -1,5 +1,6 @@
 ﻿using Microsoft.Rest;
 using RecordPoint.Connectors.SDK.Client;
+using RecordPoint.Connectors.SDK.Helpers;
 using System;
 using System.Threading.Tasks;
 

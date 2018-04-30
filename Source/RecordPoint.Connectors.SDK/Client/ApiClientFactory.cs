@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecordPoint.Connectors.SDK.Helpers;
+using System;
 using System.Net;
 
 namespace RecordPoint.Connectors.SDK.Client

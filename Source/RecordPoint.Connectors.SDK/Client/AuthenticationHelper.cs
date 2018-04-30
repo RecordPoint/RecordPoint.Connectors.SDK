@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using RecordPoint.Connectors.SDK.Helpers;
 using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client

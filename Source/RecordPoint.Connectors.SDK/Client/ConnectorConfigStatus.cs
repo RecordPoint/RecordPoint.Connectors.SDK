@@ -2,8 +2,8 @@
 {
     public static class ConnectorConfigStatus
     {
-        public static string Enabled = nameof(Enabled);
-        public static string Disabled = nameof(Disabled);
-        public static string Error = nameof(Error);
+        public const string Enabled = nameof(Enabled);
+        public const string Disabled = nameof(Disabled);
+        public const string Error = nameof(Error);
     }
 }
