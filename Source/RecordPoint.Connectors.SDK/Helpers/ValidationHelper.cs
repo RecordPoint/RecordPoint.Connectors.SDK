@@ -3,7 +3,7 @@ using System.Security;
 
 namespace RecordPoint.Connectors.SDK.Helpers
 {
-    static class ValidationHelper
+    public static class ValidationHelper
     {
         /// <summary>
         /// Throws an exception if the tested string argument is null or a string that contains only whitespace.
