@@ -15,7 +15,26 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
     public abstract class TaskRunnerBase
     {
         public ILog Log { get; set; }
-        public IDateTimeProvider DateTimeProvider { get; set; }
+
+        private IDateTimeProvider _dateTimeProvider;
+
+        public IDateTimeProvider DateTimeProvider
+        {
+            get
+            {
+                if(_dateTimeProvider == null)
+                {
+                    _dateTimeProvider = Providers.DateTimeProvider.Instance;
+                }
+
+                return _dateTimeProvider;
+            }
+
+            set
+            {
+                _dateTimeProvider = value;
+            }
+        }
         public TaskRunnerBaseSettings Settings { get; set; }
         /// <summary>
         /// Determines if an exception should be permitted to kill a long running task
