@@ -49,6 +49,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 MediaType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.MediaType)?.Value ?? "Electronic",
                 BarcodeType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeType)?.Value ?? "",
                 BarcodeValue = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeValue)?.Value ?? "",
+                RecordCategoryId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.RecordCategoryID)?.Value ?? "",
+
                 SourceProperties = new List<SubmissionMetaDataModel>(),
             };
 

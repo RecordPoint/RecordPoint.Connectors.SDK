@@ -2745,7 +2745,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        /// <param name="recordCategoryId">The Record Category Id assigned by
+        /// manual classification</param>
+        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -2769,6 +2771,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             MediaType = mediaType;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
+            RecordCategoryId = recordCategoryId;
             CustomInit();
         }
 
@@ -2925,6 +2928,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "barcodeValue")]
         public string BarcodeValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Record Category Id assigned by manual
+        /// classification
+        /// </summary>
+        [JsonProperty(PropertyName = "recordCategoryId")]
+        public string RecordCategoryId { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -3121,7 +3131,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        /// <param name="recordCategoryId">The Record Category Id assigned by
+        /// manual classification</param>
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             ItemTypeId = itemTypeId;
             SourceProperties = sourceProperties;
@@ -3137,6 +3149,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             MediaType = mediaType;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
+            RecordCategoryId = recordCategoryId;
             CustomInit();
         }
 
@@ -3237,6 +3250,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "barcodeValue")]
         public string BarcodeValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Record Category Id assigned by manual
+        /// classification
+        /// </summary>
+        [JsonProperty(PropertyName = "recordCategoryId")]
+        public string RecordCategoryId { get; set; }
 
         /// <summary>
         /// Validate the object.

@@ -16,6 +16,7 @@
         public const string MediaType = nameof(MediaType);
         public const string BarcodeType = nameof(BarcodeType);
         public const string BarcodeValue = nameof(BarcodeValue);
+        public const string RecordCategoryID = nameof(RecordCategoryID);
         public const string ConnectorId = nameof(ConnectorId);
         public const string ParentExternalId = nameof(ParentExternalId);
 
