@@ -10,14 +10,27 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
+    /// <summary>
+    /// Helpers for handling retries against the Records365 vNext Connector API.
+    /// </summary>
     public static class ApiClientRetryPolicy 
     {
+        /// <summary>
+        /// A list of HTTP response codes that are retriable.
+        /// </summary>
         public static readonly List<HttpStatusCode> KnownRetriableWebResponseStatusCodes = new List<HttpStatusCode>()
         {
             (HttpStatusCode)429,
             HttpStatusCode.InternalServerError
         };
 
+        /// <summary>
+        /// Gets a retry policy for use when calling the Records365 vNext Connector API.
+        /// </summary>
+        /// <param name="maxTryCount"></param>
+        /// <param name="retryDelayMilliseconds"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         public static Policy GetPolicy(int maxTryCount, int retryDelayMilliseconds, CancellationToken ct)
         {
             // TODO: Pass in a CancellationToken
@@ -29,6 +42,13 @@ namespace RecordPoint.Connectors.SDK.Client
                 });
         }
 
+        /// <summary>
+        /// Determines if the exception is considered retriable in the context of accessing the Records365 vNext
+        /// Connector API.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         public static bool IsRecords365ApiRetriableException(this Exception ex, CancellationToken ct)
         {
             if(ex is TaskCanceledException && !ct.IsCancellationRequested)

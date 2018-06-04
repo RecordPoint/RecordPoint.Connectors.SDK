@@ -13,6 +13,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     {
         private ISubmission _submitAggregation = null;
 
+        /// <summary>
+        /// Constructs a new PipelineSelectorPipelineElement.
+        /// </summary>
+        /// <param name="submitRecord"></param>
+        /// <param name="submitAggregation"></param>
         public PipelineSelectorPipelineElement(ISubmission submitRecord, ISubmission submitAggregation)
             : base(submitRecord)
         {

@@ -7,6 +7,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     /// </summary>
     public class AggregationUnspecifiedFieldValuePipelineElement : UnspecifiedFieldValuePipelineElementBase
     {
+        /// <summary>
+        /// Constructs a new AggregationUnspecifiedFieldValuePipelineElement with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         public AggregationUnspecifiedFieldValuePipelineElement(ISubmission next) : base(next)
         {
         }

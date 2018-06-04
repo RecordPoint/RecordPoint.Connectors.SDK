@@ -16,13 +16,21 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     public class HttpSubmitAggregationPipelineElement
         : HttpSubmitPipelineElementBase
     {
+        /// <summary>
+        /// Constructs a new HttpSubmitAggregationPipelineElement with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         public HttpSubmitAggregationPipelineElement(ISubmission next)
             : base(next)
         {
         }
 
-
-
+        /// <summary>
+        /// Submits an aggregation to the Records365 vNext Connector API.
+        /// </summary>
+        /// <param name="submitContext"></param>
+        /// <returns></returns>
         public async override Task Submit(SubmitContext submitContext)
         {
             // Submit via HTTP API Client that is generated with AutoRest

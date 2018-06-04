@@ -4,13 +4,14 @@ using System;
 namespace RecordPoint.Connectors.SDK.Providers
 {
     /// <summary>
-    /// Singleton implementation of IDateTimeProvider
+    /// Singleton implementation of IDateTimeProvider.
     /// </summary>
     public sealed class DateTimeProvider : IDateTimeProvider
     {
         private static Lazy<DateTimeProvider> _dateTimeHelper = new Lazy<DateTimeProvider>(() => new DateTimeProvider());
+        
         /// <summary>
-        /// Singleton instance
+        /// Singleton instance.
         /// </summary>
         public static DateTimeProvider Instance
         {
@@ -26,6 +27,10 @@ namespace RecordPoint.Connectors.SDK.Providers
         {
         }
 
+        /// <summary>
+        /// Gets a System.DateTime object that is set to the current date and time on this
+        /// computer, expressed as the Coordinated Universal Time (UTC).
+        /// </summary>
         public DateTime UtcNow
         {
             private set { }

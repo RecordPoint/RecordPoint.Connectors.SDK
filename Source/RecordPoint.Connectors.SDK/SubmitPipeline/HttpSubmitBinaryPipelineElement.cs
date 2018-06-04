@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// A submit pipeline element that submits item binaries via Records365 vNext Connector API.
+    /// </summary>
     public class HttpSubmitBinaryPipelineElement : HttpSubmitPipelineElementBase
     {
+        /// <summary>
+        /// Constructs a new HttpSubmitBinaryPipelineElement with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         public HttpSubmitBinaryPipelineElement(ISubmission next)
             : base(next)
         {
@@ -39,6 +47,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             }
         }
 
+        /// <summary>
+        /// Submits an item binary via the Records365 vNext Connector API.
+        /// </summary>
+        /// <param name="submitContext"></param>
+        /// <returns></returns>
         public async override Task Submit(SubmitContext submitContext)
         {
             var binarySubmitContext = submitContext as BinarySubmitContext;

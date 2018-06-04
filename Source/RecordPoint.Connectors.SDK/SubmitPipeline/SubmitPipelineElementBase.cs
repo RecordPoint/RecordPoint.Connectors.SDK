@@ -5,28 +5,57 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// Base class for submit pipeline elements.
+    /// </summary>
     public abstract class SubmitPipelineElementBase
         : ISubmission
     {
+        /// <summary>
+        /// A log.
+        /// </summary>
         public ILog Log { get; set; } = null;
 
         private readonly ISubmission _next;
 
+        /// <summary>
+        /// Constructs a new SubmitPipelineElementBase with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         protected SubmitPipelineElementBase(ISubmission next)
         {
             _next = next;
         }
-        
+
+        /// <summary>
+        /// Logs a verbose message, providing information from the SubmitContext.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="methodName"></param>
+        /// <param name="message"></param>
         protected void LogVerbose(SubmitContext context, string methodName, string message)
         {
             Log?.LogVerbose(GetType(), methodName, $"{context.LogPrefix()} {message}");
         }
 
+        /// <summary>
+        /// Logs a message, providing information from the SubmitContext.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="methodName"></param>
+        /// <param name="message"></param>
         protected void LogMessage(SubmitContext context, string methodName, string message)
         {
             Log?.LogMessage(GetType(), methodName, $"{context.LogPrefix()} {message}");
         }
 
+        /// <summary>
+        /// Logs a warning message, providing information from the SubmitContext.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="methodName"></param>
+        /// <param name="message"></param>
         protected void LogWarning(SubmitContext context, string methodName, string message)
         {
             Log?.LogWarning(GetType(), methodName, $"{context.LogPrefix()} {message}");
@@ -39,6 +68,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
         /// <summary>
         /// Indicates that this pipeline element is terminating the pipeline.
+        /// Note this method only performs the appropriate logging and sets the SubmitContext.SubmitResult to Skipped.
+        /// The calling method still needs to be careful to return early or otherwise skip the rest of the pipeline.
         /// </summary>
         /// <param name="submitContext"></param>
         /// <param name="reason"></param>
@@ -77,6 +108,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             }
         }
 
+        /// <summary>
+        /// Implement in a derived class to provide custom submit pipeline functionality.
+        /// </summary>
+        /// <param name="submitContext"></param>
+        /// <returns></returns>
         public abstract Task Submit(SubmitContext submitContext);
     }
 }

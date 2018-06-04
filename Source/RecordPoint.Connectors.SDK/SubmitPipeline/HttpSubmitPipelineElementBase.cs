@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
+    /// <summary>
+    /// Base class for submit pipeline elements that submit content to the Records365 vNext
+    /// Connector API.
+    /// </summary>
     public abstract class HttpSubmitPipelineElementBase : SubmitPipelineElementBase
     {
+        /// <summary>
+        /// Constructs a new HttpSubmitPipelineElementBase with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         protected HttpSubmitPipelineElementBase(ISubmission next) : base(next)
         {
         }

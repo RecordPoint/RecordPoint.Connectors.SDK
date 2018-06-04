@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Client
 {
+    /// <summary>
+    /// The result of an authentication attempt.
+    /// </summary>
     public class AuthenticationResult
     {
         /// <summary>

@@ -8,7 +8,7 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
     public interface ILog
     {
         /// <summary>
-        /// Logs a trace.
+        /// Logs a verbose message.
         /// </summary>
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>
@@ -24,7 +24,7 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
         void LogMessage(Type callerType, string methodName, string message);
 
         /// <summary>
-        /// Logs a Warning level message
+        /// Logs a warning message.
         /// </summary>
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>
@@ -32,7 +32,7 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
         void LogWarning(Type callerType, string methodName, string message);
 
         /// <summary>
-        /// Logs an Error level message
+        /// Logs an error message.
         /// </summary>
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>
@@ -40,7 +40,7 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
         void LogError(Type callerType, string methodName, Exception ex);
 
         /// <summary>
-        /// Logs a Critical level message
+        /// Logs a critical message.
         /// </summary>
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>
@@ -48,7 +48,7 @@ namespace RecordPoint.Connectors.SDK.Diagnostics
         void LogCritical(Type callerType, string methodName, Exception ex);
 
         /// <summary>
-        /// Logs a timing event with the elapsed time in ticks
+        /// Logs a timing event with the elapsed time in ticks.
         /// </summary>
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>

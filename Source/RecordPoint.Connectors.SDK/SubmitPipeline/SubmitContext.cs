@@ -50,9 +50,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public IList<SubmissionMetaDataModel> SourceMetaData { get; set; }
         
         /// <summary>
-        /// The item type id that corresponds to an aggregation can be folder or box
+        /// When submitting an aggregation, this value indicates whether the aggregation
+        /// is a record folder or a box.
         /// </summary>
-        /// [Required]
         public int? ItemTypeId { get; set; }
 
         /// <summary>

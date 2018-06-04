@@ -5,42 +5,49 @@ using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Helpers;
 using RecordPoint.Connectors.SDK.Notifications;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.NotificationTasks
 {
+    /// <summary>
+    /// A long-running task that handles pull notifications.
+    /// </summary>
     public class NotificationTask
     {
         /// <summary>
-        /// Settings which govern the behaviour of this long-running task
+        /// Settings which govern the behaviour of this long-running task.
         /// </summary>
         public NotificationRunnerSettings NotificationRunnerSettings { get; set; }
+
         /// <summary>
-        /// Settings used to call into the Records365 vNext API
+        /// Settings used to call into the Records365 vNext Connector API.
         /// </summary>
         public ApiClientFactorySettings ApiClientFactorySettings { get; set; }
+
         /// <summary>
         /// A function that can create a AuthenticationHelperSettings given a ConnectorConfigModel.
         /// This will be used to generate a token used to access Records365 vNext on behalf of the Connector
         /// for the purpose of acknowledging Notifications.
         /// </summary>
         public Func<ConnectorConfigModel, AuthenticationHelperSettings> AuthenticationHelperSettingsFactory { get; set; }
+
         /// <summary>
-        /// A INotificationPullManager that will handle the work of polling for new 
+        /// An INotificationPullManager that will handle the work of polling for new 
         /// Notifications and acknowledging them. Recommend injecting the NotificationPullManager
         /// for this.
         /// </summary>
         public INotificationPullManager NotificationPullManager { get; set; }
+
         /// <summary>
-        /// A INotificationHandler that will handle the work of processing Notifications 
+        /// An INotificationHandler that will handle the work of processing Notifications 
         /// for this Connector. Will require at least custom per-content source implementation for
         /// ItemDestroyed events.
         /// </summary>
         public INotificationHandler NotificationHandler { get; set; }
+
         /// <summary>
-        /// A logger.
+        /// A log.
         /// </summary>
         public ILog Log { get; set; }
 
@@ -50,9 +57,11 @@ namespace RecordPoint.Connectors.SDK.NotificationTasks
         private CancellationToken _cancellationToken;
 
         /// <summary>
-        /// 
+        /// Runs the notification task.
+        /// The task will continue to run indefinitely until the cancellationToken is canceled.
         /// </summary>
         /// <param name="connectorConfig"></param>
+        /// <param name="logPrefix"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public async Task RunAsync(ConnectorConfigModel connectorConfig, string logPrefix, CancellationToken cancellationToken)
@@ -99,7 +108,7 @@ namespace RecordPoint.Connectors.SDK.NotificationTasks
             }
             catch (Exception ex) when (!ex.IsTaskCancellation(_cancellationToken))
             {
-                Log.LogWarning(GetType(), nameof(ProcessNotification), $"{_logPrefix} - Unhandled exception encountered - [{ex}]");
+                Log?.LogWarning(GetType(), nameof(ProcessNotification), $"{_logPrefix} - Unhandled exception encountered - [{ex}]");
                 processingResult = ProcessingResult.NotificationError;
                 processingErrorMessage = ex.Message;
             }
@@ -121,8 +130,8 @@ namespace RecordPoint.Connectors.SDK.NotificationTasks
                 // The notification couldn't be acked because it wasn't found.
                 // This may happen if the notification was already acked - in this case,
                 // the next iteration of the poller won't receive this notification again.
-                Log.LogWarning(GetType(), nameof(AcknowledgeNotification), $"{_logPrefix} - Notification with ID [{model.Id}] was not acknowledged because it could not be found " +
-                    $"in the Records365 notification queue. It may have already been acknowledged.");
+                Log?.LogWarning(GetType(), nameof(AcknowledgeNotification), $"{_logPrefix} - Notification with ID [{model.Id}] was not acknowledged because it could not be found " +
+                    "in the Records365 notification queue. It may have already been acknowledged.");
             }
         }
     }

@@ -15,10 +15,20 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     /// </summary>
     public class HttpSubmitAuditEventPipelineElement : HttpSubmitPipelineElementBase
     {
+        /// <summary>
+        /// Constructs a new HttpSubmitAuditEventPipelineElement with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         public HttpSubmitAuditEventPipelineElement(ISubmission next) : base(next)
         {
         }
 
+        /// <summary>
+        /// Submits an audit event via the Records365 vNext Connector API.
+        /// </summary>
+        /// <param name="submitContext"></param>
+        /// <returns></returns>
         public override async Task Submit(SubmitContext submitContext)
         {
             // Submit via HTTP API Client that is generated with AutoRest

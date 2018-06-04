@@ -7,6 +7,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     /// </summary>
     public class ItemUnspecifiedFieldValuePipelineElement : UnspecifiedFieldValuePipelineElementBase
     {
+        /// <summary>
+        /// Constructs a new ItemUnspecifiedFieldValuePipelineElement with an optional next submit
+        /// pipeline element.
+        /// </summary>
+        /// <param name="next"></param>
         public ItemUnspecifiedFieldValuePipelineElement(ISubmission next) : base(next)
         {
         }
@@ -24,6 +29,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             Fields.MediaType
         };
 
+        /// <summary>
+        /// Specifies the fields that are required for items.
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<string> GetRequiredStringFields()
         {
             return _requiredFields;
