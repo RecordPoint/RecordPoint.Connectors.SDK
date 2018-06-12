@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>RecordPoint.Connectors.SDK</id>
+    <version>0.0.0</version>
+    <authors>RecordPoint Software Pty Ltd</authors>
+    <owners>RecordPoint Software Pty Ltd</owners>
+    <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://www.records365.com/</projectUrl>
+    <iconUrl>https://secure.gravatar.com/avatar/9ddfc83ada11273457e0e9a6d88a595d?s=64&amp;d=mm&amp;r=g</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SDK for developing Connectors for Records365 vNext.</description>
+    <tags>RecordPoint</tags>
+    <dependencies>
+      <dependency id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="[3.13.9,4)"/>
+      <dependency id="Microsoft.Rest.ClientRuntime" version="[2.3.8,3)"/>
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+	  <dependency id="Polly-Signed" version="5.3.1" />
+    </dependencies>
+  </metadata>
+  <files>
+	  <file src="bin\Release\RecordPoint.Connectors.SDK.dll" target="lib" />
+	  <file src="bin\Release\RecordPoint.Connectors.SDK.pdb" target="lib" />
+	  <file src="bin\Release\RecordPoint.Connectors.SDK.xml" target="lib" />
+  </files>
+</package>
