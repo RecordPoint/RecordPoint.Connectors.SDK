@@ -2745,7 +2745,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        /// <param name="recordCategoryId">The Record Category Id assigned by
+        /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
         public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
@@ -2930,7 +2930,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string BarcodeValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the Record Category Id assigned by manual
+        /// Gets or sets the Record Category ID assigned by manual
         /// classification
         /// </summary>
         [JsonProperty(PropertyName = "recordCategoryId")]
@@ -3131,7 +3131,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        /// <param name="recordCategoryId">The Record Category Id assigned by
+        /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
         public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
@@ -3252,7 +3252,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string BarcodeValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the Record Category Id assigned by manual
+        /// Gets or sets the Record Category ID assigned by manual
         /// classification
         /// </summary>
         [JsonProperty(PropertyName = "recordCategoryId")]
@@ -3713,7 +3713,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// an Azure AD Application) that represents this Connector.
         /// Is used instead of the Connector Type's Client ID if
         /// present</param>
-        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string))
+        /// <param name="protectionEnabled">Whether or not binary protection is
+        /// enabled for this connector</param>
+        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?))
         {
             Id = id;
             TransactionId = transactionId;
@@ -3732,6 +3734,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             HasSubmittedData = hasSubmittedData;
             Properties = properties;
             ClientId = clientId;
+            ProtectionEnabled = protectionEnabled;
             CustomInit();
         }
 
@@ -3857,6 +3860,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "clientId")]
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not binary protection is enabled for this
+        /// connector
+        /// </summary>
+        [JsonProperty(PropertyName = "protectionEnabled")]
+        public bool? ProtectionEnabled { get; set; }
 
         /// <summary>
         /// Validate the object.

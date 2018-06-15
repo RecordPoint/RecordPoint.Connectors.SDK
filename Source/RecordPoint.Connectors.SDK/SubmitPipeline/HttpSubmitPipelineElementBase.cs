@@ -4,6 +4,7 @@ using RecordPoint.Connectors.SDK.Client.Models;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using static RecordPoint.Connectors.SDK.Fields;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
@@ -69,15 +70,22 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     {
                         shouldContinueSubmitPipeline = false;
 
-                        // BadRequest (400) is returned in one of two scenarios:
+                        // BadRequest (400) is returned in one of three scenarios:
                         // - The submit was invalid (e.g. missing required field)
                         // - the connector was disabled
+                        // - we're submitting a binary but binary protection is disabled for this connector
                         var errorResponse = result.Body as ErrorResponseModel;
-                        if (errorResponse?.Error?.MessageCode == "ConnectorNotEnabled")
+                        if (errorResponse?.Error?.MessageCode == MessageCode.ConnectorNotEnabled)
                         {
                             // Connector was disabled
                             LogWarning(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was disabled.");
                             submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorDisabled;
+                        }
+                        else if (errorResponse?.Error?.MessageCode == MessageCode.ProtectionNotEnabled)
+                        {
+                            // Protection is disabled
+                            LogWarning(submitContext, nameof(HandleSubmitResponse), $"Binary submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector does not have protection enabled.");
+                            submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Skipped;
                         }
                         else
                         {
