@@ -2741,13 +2741,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// file cabinet</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
+        /// <param name="parentExternalId">Gets or sets a parent of an
+        /// aggregation</param>
         /// <param name="barcodeType">The barcode type e.g. code 128, qr
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
         /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
-        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
+        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string parentExternalId = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -2769,6 +2771,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
             MediaType = mediaType;
+            ParentExternalId = parentExternalId;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
             RecordCategoryId = recordCategoryId;
@@ -2916,6 +2919,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "mediaType")]
         public string MediaType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a parent of an aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "parentExternalId")]
+        public string ParentExternalId { get; set; }
 
         /// <summary>
         /// Gets or sets the barcode type e.g. code 128, qr code
@@ -3127,13 +3136,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// file cabinet</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
+        /// <param name="parentExternalId">Gets or sets a parent of an
+        /// aggregation</param>
         /// <param name="barcodeType">The barcode type e.g. code 128, qr
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
         /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string parentExternalId = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             ItemTypeId = itemTypeId;
             SourceProperties = sourceProperties;
@@ -3147,6 +3158,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
             MediaType = mediaType;
+            ParentExternalId = parentExternalId;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
             RecordCategoryId = recordCategoryId;
@@ -3238,6 +3250,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "mediaType")]
         public string MediaType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a parent of an aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "parentExternalId")]
+        public string ParentExternalId { get; set; }
 
         /// <summary>
         /// Gets or sets the barcode type e.g. code 128, qr code
