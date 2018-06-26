@@ -59,13 +59,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 BarcodeType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeType)?.Value ?? "",
                 BarcodeValue = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeValue)?.Value ?? "",
                 RecordCategoryId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.RecordCategoryID)?.Value ?? "",
-
                 SourceProperties = new List<SubmissionMetaDataModel>(),
+                Relationships = new List<RelationshipDataModel>()
             };
 
             if (submitContext.SourceMetaData != null)
             {
                 aggregationModel.SourceProperties = submitContext.SourceMetaData;
+            }
+
+            if (submitContext.Relationships != null)
+            {
+                aggregationModel.Relationships = submitContext.Relationships;
             }
 
             var shouldContinue = true;
