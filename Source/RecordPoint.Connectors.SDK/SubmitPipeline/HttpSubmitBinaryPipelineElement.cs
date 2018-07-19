@@ -23,12 +23,17 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
         private void ValidateFields(BinarySubmitContext submitContext)
         {
-            // Validate that the stream is not empty
-            if (submitContext.Stream.Length == 0)
+            if (submitContext.Stream.CanSeek)
             {
-                // Use the same validation style as we see in the autorest generated code
-                // (e.g., ItemSubmissionInputModel.Validate(), which is called on every submit)
-                throw new ValidationException(ValidationRules.MinLength, nameof(submitContext.Stream));
+                // Validate that the stream is not empty only when Stream CanSeek, 
+                // otherwise will throw NotSupportedException
+                // If not CanSeek, we have to rely on out API to do Length check.
+                if (submitContext.Stream.Length == 0)
+                {
+                    // Use the same validation style as we see in the autorest generated code
+                    // (e.g., ItemSubmissionInputModel.Validate(), which is called on every submit)
+                    throw new ValidationException(ValidationRules.MinLength, nameof(submitContext.Stream));
+                }
             }
 
             if (string.IsNullOrEmpty(submitContext.ItemExternalId))
