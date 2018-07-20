@@ -78,6 +78,7 @@
     <Compile Include="Client\SubmissionMetaDataModel.cs" />
     <Compile Include="Client\SubmissionMetaDataModelExtensions.cs" />
     <Compile Include="Client\ConnectorConfigStatus.cs" />
+    <Compile Include="ConnectorConfiguration\ConnectorConfigAccessor.cs" />
     <Compile Include="Diagnostics\ILog.cs" />
     <Compile Include="Diagnostics\IPerformanceEvent.cs" />
     <Compile Include="Diagnostics\PerformanceEvent.cs" />
