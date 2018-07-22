@@ -1,127 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1D37919C-DCCC-4D89-998B-D85904F37753}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RecordPoint.Connectors.SDK</RootNamespace>
-    <AssemblyName>RecordPoint.Connectors.SDK</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\RecordPoint.Connectors.SDK.xml</DocumentationFile>
-    <NoWarn>CS1591;CS1573</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\RecordPoint.Connectors.SDK.xml</DocumentationFile>
-    <NoWarn>CS1591;CS1573</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFramework>net461</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.13.9.1126, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.9\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.13.9.1126, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.9\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.8\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Polly, Version=5.3.1.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Polly-Signed.5.3.1\lib\net45\Polly.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.13.9" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="Polly-Signed" Version="5.3.1" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Client\ApiClientFactory.cs" />
-    <Compile Include="Client\ApiClientFactorySettings.cs" />
-    <Compile Include="Client\ApiClientPartial.cs" />
-    <Compile Include="Client\ApiClientRetryPolicy.cs" />
-    <Compile Include="Client\AuthenticationHelper.cs" />
-    <Compile Include="Client\AuthenticationHelperSettings.cs" />
-    <Compile Include="Client\AuthenticationResult.cs" />
-    <Compile Include="Client\AutoRestGenerated\ApiClient.cs" />
-    <Compile Include="Client\ConnectorConfigEnabledStateHistory.cs" />
-    <Compile Include="Client\ConnectorConfigModel.cs" />
-    <Compile Include="Client\ConnectorNotificationModelExtensions.cs" />
-    <Compile Include="Client\HttpHeaderExtension.cs" />
-    <Compile Include="Client\IApiClientFactory.cs" />
-    <Compile Include="Client\IApiClientPartial.cs" />
-    <Compile Include="Client\IAuthenticationHelper.cs" />
-    <Compile Include="Client\MetaDataModelListExtensions.cs" />
-    <Compile Include="Client\NotificationType.cs" />
-    <Compile Include="Client\NotSpecifiedCredentials.cs" />
-    <Compile Include="Client\ProcessingResult.cs" />
-    <Compile Include="Client\SubmissionMetaDataModel.cs" />
-    <Compile Include="Client\SubmissionMetaDataModelExtensions.cs" />
-    <Compile Include="Client\ConnectorConfigStatus.cs" />
-    <Compile Include="ConnectorConfiguration\ConnectorConfigAccessor.cs" />
-    <Compile Include="Diagnostics\ILog.cs" />
-    <Compile Include="Diagnostics\IPerformanceEvent.cs" />
-    <Compile Include="Diagnostics\PerformanceEvent.cs" />
-    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
-    <Compile Include="Fields.cs" />
-    <Compile Include="Helpers\ExceptionHelper.cs" />
-    <Compile Include="Helpers\HttpRequestHelper.cs" />
-    <Compile Include="Interfaces\IConnectorConfigAccessor.cs" />
-    <Compile Include="Interfaces\IDateTimeProvider.cs" />
-    <Compile Include="Notifications\INotificationHandler.cs" />
-    <Compile Include="Notifications\INotificationPullManager.cs" />
-    <Compile Include="Notifications\NotificationPullManager.cs" />
-    <Compile Include="NotificationTasks\NotificationRunnerSettings.cs" />
-    <Compile Include="NotificationTasks\NotificationTask.cs" />
-    <Compile Include="NotificationTasks\NotificationTaskRunner.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\DateTimeProvider.cs" />
-    <Compile Include="SubmitPipeline\AggregationUnspecifiedFieldValuePipelineElement.cs" />
-    <Compile Include="SubmitPipeline\BinarySubmitContext.cs" />
-    <Compile Include="SubmitPipeline\HttpSubmitAggregationPipelineElement.cs" />
-    <Compile Include="SubmitPipeline\HttpSubmitAuditEventPipelineElement.cs" />
-    <Compile Include="SubmitPipeline\HttpSubmitBinaryPipelineElement.cs" />
-    <Compile Include="SubmitPipeline\HttpSubmitItemPipelineElement.cs" />
-    <Compile Include="SubmitPipeline\HttpSubmitPipelineElementBase.cs" />
-    <Compile Include="SubmitPipeline\ISubmission.cs" />
-    <Compile Include="SubmitPipeline\ItemUnspecifiedFieldValuePipelineElement.cs" />
-    <Compile Include="SubmitPipeline\PipelineSelectorPipelineElement.cs" />
-    <Compile Include="SubmitPipeline\SubmitContext.cs" />
-    <Compile Include="SubmitPipeline\SubmitPipelineElementBase.cs" />
-    <Compile Include="SubmitPipeline\SubmitResult.cs" />
-    <Compile Include="SubmitPipeline\UnspecifiedFieldValuePipelineElementBase.cs" />
-    <Compile Include="TaskRunner\TaskRunnerBase.cs" />
-    <Compile Include="TaskRunner\TaskRunnerBaseSettings.cs" />
-    <Compile Include="TaskRunner\TaskRunnerInformation.cs" />
-    <Compile Include="TaskRunner\TaskRunnerInformationBase.cs" />
-    <Compile Include="Helpers\ValidationHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Client\AutoRest.ps1" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

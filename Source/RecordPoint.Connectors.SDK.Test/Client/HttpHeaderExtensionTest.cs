@@ -3,8 +3,6 @@ using RecordPoint.Connectors.SDK.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.Client
