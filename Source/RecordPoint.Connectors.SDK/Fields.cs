@@ -30,5 +30,11 @@
             public const string UserName= nameof(UserName);
             public const string UserId = nameof(UserId);
         }
+
+        public static class MessageCode
+        {
+            public const string ConnectorNotEnabled = "ConnectorNotEnabled";
+            public const string ProtectionNotEnabled = "ProtectionNotEnabled";
+        }
     }
 }

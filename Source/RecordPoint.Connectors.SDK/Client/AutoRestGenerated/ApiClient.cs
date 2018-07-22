@@ -2741,13 +2741,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// file cabinet</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
+        /// <param name="parentExternalId">Gets or sets a parent of an
+        /// aggregation</param>
         /// <param name="barcodeType">The barcode type e.g. code 128, qr
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        /// <param name="recordCategoryId">The Record Category Id assigned by
+        /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
-        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
+        public AggregationSubmissionOutputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, string id = default(string), string itemType = default(string), string itemNumber = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), string contentSource = default(string), bool? isVitalRecord = default(bool?), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string parentExternalId = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -2769,6 +2771,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
             MediaType = mediaType;
+            ParentExternalId = parentExternalId;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
             RecordCategoryId = recordCategoryId;
@@ -2918,6 +2921,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
+        /// Gets or sets a parent of an aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "parentExternalId")]
+        public string ParentExternalId { get; set; }
+
+        /// <summary>
         /// Gets or sets the barcode type e.g. code 128, qr code
         /// </summary>
         [JsonProperty(PropertyName = "barcodeType")]
@@ -2930,7 +2939,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string BarcodeValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the Record Category Id assigned by manual
+        /// Gets or sets the Record Category ID assigned by manual
         /// classification
         /// </summary>
         [JsonProperty(PropertyName = "recordCategoryId")]
@@ -3085,6 +3094,88 @@ namespace RecordPoint.Connectors.SDK.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents a relationship between the current item and a related one
+    /// </summary>
+    public partial class RelationshipDataModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the RelationshipDataModel class.
+        /// </summary>
+        public RelationshipDataModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the RelationshipDataModel class.
+        /// </summary>
+        /// <param name="relatedItemNumber">ItemNumber of the related
+        /// item</param>
+        /// <param name="relationshipType">Type of relationship, acceptable
+        /// values: Part</param>
+        public RelationshipDataModel(string relatedItemNumber, string relationshipType)
+        {
+            RelatedItemNumber = relatedItemNumber;
+            RelationshipType = relationshipType;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets itemNumber of the related item
+        /// </summary>
+        [JsonProperty(PropertyName = "relatedItemNumber")]
+        public string RelatedItemNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets type of relationship, acceptable values: Part
+        /// </summary>
+        [JsonProperty(PropertyName = "relationshipType")]
+        public string RelationshipType { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (RelatedItemNumber == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "RelatedItemNumber");
+            }
+            if (RelationshipType == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "RelationshipType");
+            }
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public partial class AggregationSubmissionInputModel
     {
         /// <summary>
@@ -3121,22 +3212,27 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// aggregation</param>
         /// <param name="sourceProperties">Source properties for the
         /// aggregation with DisplayName</param>
+        /// <param name="relationships">Relationships of the
+        /// aggregation</param>
         /// <param name="author">Used for Physical item aggregations</param>
         /// <param name="location">A pointer to a aggregation's location.
         /// For example, the operating system path name or the location of a
         /// file cabinet</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
+        /// <param name="parentExternalId">Gets or sets a parent of an
+        /// aggregation</param>
         /// <param name="barcodeType">The barcode type e.g. code 128, qr
         /// code</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        /// <param name="recordCategoryId">The Record Category Id assigned by
+        /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string parentExternalId = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             ItemTypeId = itemTypeId;
             SourceProperties = sourceProperties;
+            Relationships = relationships;
             ExternalId = externalId;
             ConnectorId = connectorId;
             Title = title;
@@ -3147,6 +3243,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             SourceCreatedBy = sourceCreatedBy;
             Location = location;
             MediaType = mediaType;
+            ParentExternalId = parentExternalId;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
             RecordCategoryId = recordCategoryId;
@@ -3169,6 +3266,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "sourceProperties")]
         public IList<SubmissionMetaDataModel> SourceProperties { get; set; }
+
+        /// <summary>
+        /// Gets or sets relationships of the aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "relationships")]
+        public IList<RelationshipDataModel> Relationships { get; set; }
 
         /// <summary>
         /// Gets or sets the unique identifier of the aggregation in the
@@ -3240,6 +3343,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
+        /// Gets or sets a parent of an aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "parentExternalId")]
+        public string ParentExternalId { get; set; }
+
+        /// <summary>
         /// Gets or sets the barcode type e.g. code 128, qr code
         /// </summary>
         [JsonProperty(PropertyName = "barcodeType")]
@@ -3252,7 +3361,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string BarcodeValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the Record Category Id assigned by manual
+        /// Gets or sets the Record Category ID assigned by manual
         /// classification
         /// </summary>
         [JsonProperty(PropertyName = "recordCategoryId")]
@@ -3293,6 +3402,16 @@ namespace RecordPoint.Connectors.SDK.Client.Models
                     if (element != null)
                     {
                         element.Validate();
+                    }
+                }
+            }
+            if (Relationships != null)
+            {
+                foreach (var element1 in Relationships)
+                {
+                    if (element1 != null)
+                    {
+                        element1.Validate();
                     }
                 }
             }
@@ -3713,7 +3832,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// an Azure AD Application) that represents this Connector.
         /// Is used instead of the Connector Type's Client ID if
         /// present</param>
-        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string))
+        /// <param name="protectionEnabled">Whether or not binary protection is
+        /// enabled for this connector</param>
+        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?))
         {
             Id = id;
             TransactionId = transactionId;
@@ -3732,6 +3853,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             HasSubmittedData = hasSubmittedData;
             Properties = properties;
             ClientId = clientId;
+            ProtectionEnabled = protectionEnabled;
             CustomInit();
         }
 
@@ -3857,6 +3979,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "clientId")]
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not binary protection is enabled for this
+        /// connector
+        /// </summary>
+        [JsonProperty(PropertyName = "protectionEnabled")]
+        public bool? ProtectionEnabled { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -4424,14 +4553,17 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// aggregation</param>
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
+        /// <param name="relationships">Relationships of the
+        /// aggregation</param>
         /// <param name="mimeType">The mime type of the submitted item</param>
         /// <param name="barcodeType">The barcode type, this can be
         /// empty</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
             SourceProperties = sourceProperties;
+            Relationships = relationships;
             ExternalId = externalId;
             ConnectorId = connectorId;
             Title = title;
@@ -4460,6 +4592,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "sourceProperties")]
         public IList<SubmissionMetaDataModel> SourceProperties { get; set; }
+
+        /// <summary>
+        /// Gets or sets relationships of the aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "relationships")]
+        public IList<RelationshipDataModel> Relationships { get; set; }
 
         /// <summary>
         /// Gets or sets the item external ID. This can be anything, but make
@@ -4620,6 +4758,16 @@ namespace RecordPoint.Connectors.SDK.Client.Models
                     if (element != null)
                     {
                         element.Validate();
+                    }
+                }
+            }
+            if (Relationships != null)
+            {
+                foreach (var element1 in Relationships)
+                {
+                    if (element1 != null)
+                    {
+                        element1.Validate();
                     }
                 }
             }

@@ -46,6 +46,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             {
                 ItemTypeId = submitContext.ItemTypeId,
                 ExternalId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.ExternalId)?.Value ?? "",
+                ParentExternalId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.ParentExternalId)?.Value ?? "",
                 Title = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.Title)?.Value ?? "",
                 Author = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.Author)?.Value ?? "",
                 SourceLastModifiedDate = parseDateTime(submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.SourceLastModifiedDate)?.Value),
@@ -58,13 +59,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 BarcodeType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeType)?.Value ?? "",
                 BarcodeValue = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeValue)?.Value ?? "",
                 RecordCategoryId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.RecordCategoryID)?.Value ?? "",
-
                 SourceProperties = new List<SubmissionMetaDataModel>(),
+                Relationships = new List<RelationshipDataModel>()
             };
 
             if (submitContext.SourceMetaData != null)
             {
                 aggregationModel.SourceProperties = submitContext.SourceMetaData;
+            }
+
+            if (submitContext.Relationships != null)
+            {
+                aggregationModel.Relationships = submitContext.Relationships;
             }
 
             var shouldContinue = true;

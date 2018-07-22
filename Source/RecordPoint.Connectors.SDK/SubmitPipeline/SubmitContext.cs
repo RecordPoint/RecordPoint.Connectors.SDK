@@ -48,6 +48,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// The source metadata fields of the submission.
         /// </summary>
         public IList<SubmissionMetaDataModel> SourceMetaData { get; set; }
+
+        /// <summary>
+        /// Relationship info of the submission
+        /// </summary>
+        public IList<RelationshipDataModel> Relationships { get; set; }
         
         /// <summary>
         /// When submitting an aggregation, this value indicates whether the aggregation
