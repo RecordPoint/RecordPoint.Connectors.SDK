@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RecordPoint.Connectors.SDK")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SDK for developing Connectors for Records365 vNext.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("RecordPoint Software Pty Ltd")]
 [assembly: AssemblyProduct("RecordPoint.Connectors.SDK")]

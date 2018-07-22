@@ -2,6 +2,15 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>RecordPoint.Connectors.SDK</PackageId>
+    <PackageIconUrl>https://secure.gravatar.com/avatar/9ddfc83ada11273457e0e9a6d88a595d?s=64&amp;amp;d=mm&amp;amp;r=g</PackageIconUrl>
+    <PackageTags>RecordPoint</PackageTags>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.records365.com/</PackageProjectUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PackageVersion>0.0.0</PackageVersion>
+    <Description>SDK for developing Connectors for Records365 vNext.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.13.9" />
