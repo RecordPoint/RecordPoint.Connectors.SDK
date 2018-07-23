@@ -24,7 +24,15 @@ namespace RecordPoint.Connectors.SDK.Client
                 // pass a null token cache so that the token must be retrieved from the authority
                 : new AuthenticationContext(authority, null);
 
-            var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId, new SecureClientSecret(settings.ClientSecret))).ConfigureAwait(false);
+            var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId,
+#if NET461 
+                new SecureClientSecret(settings.ClientSecret)
+#else
+                // SecureClientSecret isn't supported for netstandard2.0 yet
+                // https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/issues/1026
+                settings.ClientSecret.ToString()
+#endif
+            )).ConfigureAwait(false);
 
             return new AuthenticationResult
             {
