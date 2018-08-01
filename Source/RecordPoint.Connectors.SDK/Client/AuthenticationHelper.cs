@@ -1,5 +1,8 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using RecordPoint.Connectors.SDK.Helpers;
+using System;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client
@@ -25,12 +28,12 @@ namespace RecordPoint.Connectors.SDK.Client
                 : new AuthenticationContext(authority, null);
 
             var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId,
-#if NET461 
+#if NET461 || NET452
                 new SecureClientSecret(settings.ClientSecret)
 #else
                 // SecureClientSecret isn't supported for netstandard2.0 yet
                 // https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/issues/1026
-                settings.ClientSecret.ToString()
+                SecureStringToString(settings.ClientSecret)
 #endif
             )).ConfigureAwait(false);
 
@@ -39,6 +42,20 @@ namespace RecordPoint.Connectors.SDK.Client
                 AccessTokenType = aadAuthenticationResult.AccessTokenType,
                 AccessToken = aadAuthenticationResult.AccessToken
             };
+        }
+
+        private string SecureStringToString(SecureString value)
+        {
+            IntPtr valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
         }
 
         private string GetAuthority(AuthenticationHelperSettings settings)
