@@ -28,7 +28,7 @@ namespace RecordPoint.Connectors.SDK.Client
                 : new AuthenticationContext(authority, null);
 
             var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId,
-#if NET461 || NET452
+#if !NETSTANDARD2_0
                 new SecureClientSecret(settings.ClientSecret)
 #else
                 // SecureClientSecret isn't supported for netstandard2.0 yet
@@ -44,6 +44,7 @@ namespace RecordPoint.Connectors.SDK.Client
             };
         }
 
+#if NETSTANDARD2_0
         private string SecureStringToString(SecureString value)
         {
             IntPtr valuePtr = IntPtr.Zero;
@@ -57,6 +58,7 @@ namespace RecordPoint.Connectors.SDK.Client
                 Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
             }
         }
+#endif 
 
         private string GetAuthority(AuthenticationHelperSettings settings)
         {

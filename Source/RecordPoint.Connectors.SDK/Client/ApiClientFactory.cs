@@ -1,6 +1,7 @@
 ﻿using RecordPoint.Connectors.SDK.Helpers;
 using System;
 using System.Net;
+using System.Net.Http;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
@@ -9,7 +10,6 @@ namespace RecordPoint.Connectors.SDK.Client
     /// </summary>
     public class ApiClientFactory : IApiClientFactory
     {
-
         private const string ConnectorApiPrefix = "/connector";
         private static IApiClient _apiClient;
         private static Lazy<IAuthenticationHelper> _authenticationHelper;
@@ -67,7 +67,24 @@ namespace RecordPoint.Connectors.SDK.Client
                         {
                             connectorApiUrl = new Uri(connectorApiUrl, ConnectorApiPrefix);
                         }
-                        _apiClient = new ApiClient(connectorApiUrl, new NotSpecifiedCredentials());
+
+#if NETSTANDARD2_0
+                        if (settings.ServerCertificateValidation == false)
+                        {
+                            var certHandler = new HttpClientHandler
+                            {
+                                ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
+                            };
+
+                            _apiClient = new ApiClient(connectorApiUrl, new NotSpecifiedCredentials(), certHandler);
+                        }
+                        else
+                        {
+#endif
+                            _apiClient = new ApiClient(connectorApiUrl, new NotSpecifiedCredentials());
+#if NETSTANDARD2_0
+                        }
+#endif
                     }
                 }
             }
