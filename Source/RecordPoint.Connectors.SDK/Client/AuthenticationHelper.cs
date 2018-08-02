@@ -1,5 +1,8 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using RecordPoint.Connectors.SDK.Helpers;
+using System;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client
@@ -24,7 +27,15 @@ namespace RecordPoint.Connectors.SDK.Client
                 // pass a null token cache so that the token must be retrieved from the authority
                 : new AuthenticationContext(authority, null);
 
-            var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId, new SecureClientSecret(settings.ClientSecret))).ConfigureAwait(false);
+            var aadAuthenticationResult = await authenticationContext.AcquireTokenAsync(settings.AuthenticationResource, new ClientCredential(settings.ClientId,
+#if !NETSTANDARD2_0
+                new SecureClientSecret(settings.ClientSecret)
+#else
+                // SecureClientSecret isn't supported for netstandard2.0 yet
+                // https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/issues/1026
+                SecureStringToString(settings.ClientSecret)
+#endif
+            )).ConfigureAwait(false);
 
             return new AuthenticationResult
             {
@@ -32,6 +43,22 @@ namespace RecordPoint.Connectors.SDK.Client
                 AccessToken = aadAuthenticationResult.AccessToken
             };
         }
+
+#if NETSTANDARD2_0
+        private string SecureStringToString(SecureString value)
+        {
+            IntPtr valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
+        }
+#endif 
 
         private string GetAuthority(AuthenticationHelperSettings settings)
         {
