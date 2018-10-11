@@ -47,6 +47,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 throw new HttpOperationException($"{submitContext.LogPrefix()}Invalid {itemTypeName} submission! Expecting a return type of {nameof(HttpResponseMessage)} but got null!");
             }
 
+            // Default the SubmitStatus to OK first in case any developer reuse the same SubmitContext
+            // Then all the following SubmitContext will have the previous result
+            submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.OK;
+
             switch (result.Response.StatusCode)
             {
                 case System.Net.HttpStatusCode.Conflict:
