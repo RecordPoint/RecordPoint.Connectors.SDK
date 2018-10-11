@@ -167,8 +167,8 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 
             await RunSUT(sut, () =>
             {
-                sut.MockLog.Verify(x => x.LogWarning(It.IsAny<Type>(), "ClearTasks", It.IsAny<string>()), Times.Never);
-                sut.MockLog.Verify(x => x.LogWarning(It.IsAny<Type>(), "RunTask", It.IsRegex("Unhandled exception in final exception handler")), Times.Once);
+                sut.MockLog.Verify(x => x.LogWarning(It.IsAny<Type>(), "ClearTasks", It.IsAny<string>(), null), Times.Never);
+                sut.MockLog.Verify(x => x.LogWarning(It.IsAny<Type>(), "RunTask", It.IsRegex("Unhandled exception in final exception handler"), null), Times.Once);
 
                 Assert.True(exceptionHandlerCounter == 1, $"Expected exception handler to only run once, ran {exceptionHandlerCounter} times instead");
             }).ConfigureAwait(false);
