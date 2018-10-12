@@ -71,6 +71,13 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             var result = await policy.ExecuteAsync(
                 async () =>
                 {
+                    // In case a stream is reused during submission retry, it might not be in 0 Position
+                    // since the previous submission already read to the end. We should reset this value.
+                    if (binarySubmitContext.Stream.CanSeek)
+                    {
+                        binarySubmitContext.Stream.Position = 0;
+                    }
+
                     var authHelper = ApiClientFactory.CreateAuthenticationHelper();
                     var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
                     return await apiClient.ApiBinariesPostWithHttpMessagesAndStreamAsync(binarySubmitContext.ConnectorConfigId.ToString(),
