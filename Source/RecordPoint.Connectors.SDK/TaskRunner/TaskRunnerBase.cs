@@ -170,50 +170,54 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
 
         private async Task GetTask(TaskRunnerInformationBase info, CancellationToken ct)
         {
-            try
+            Log?.LogVerbose(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Starting task");
+
+            DateTime taskStartTime = DateTimeProvider.UtcNow;
+            var exceptionCount = 0;
+
+            while (!ct.IsCancellationRequested)
             {
-                Log?.LogVerbose(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Starting task");
-
-                DateTime taskStartTime = DateTimeProvider.UtcNow;
-                var exceptionCount = 0;
-
-                while (!ct.IsCancellationRequested)
+                try
                 {
-                    try
-                    {
-                        taskStartTime = DateTimeProvider.UtcNow;
-                        await info.Function().ConfigureAwait(false);
+                    taskStartTime = DateTimeProvider.UtcNow;
+                    await info.Function().ConfigureAwait(false);
 
-                        Log?.LogVerbose(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Task ran to completion");
-                        return;
-                    }
-                    catch (Exception ex) when (!IsKillerException(ex, ct) &&
-                        ShouldContinueRunTask(taskStartTime, GetRepeatedTaskFailureTime(ex, info, ct), ref exceptionCount, ct))
+                    Log?.LogVerbose(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Task ran to completion");
+                    return;
+                }
+                catch (Exception ex) when (!IsKillerException(ex, ct))
+                {
+                    var waitTime = Settings.GetWaitTime(exceptionCount);
+
+                    //If below the MaxUnhandledExceptions count, we simply log a warning.
+                    //Otherwise, if over the max, we attempt to handle via logging an error and calling Exceptionhandler.
+                    if (!ShouldRespondToException(taskStartTime, GetRepeatedTaskFailureTime(ex, info, ct), ref exceptionCount, ct))
                     {
-                        var waitTime = Settings.GetWaitTime(exceptionCount);
                         Log?.LogWarning(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Restarting task in [{waitTime.TotalSeconds}s] after [{exceptionCount}] exceptions due to unhandled exception: [{ex}]");
-
-                        exceptionCount++;
-                        await Task.Delay(waitTime, ct).ConfigureAwait(false);
                     }
-                }
-            }
-            catch (Exception ex) when (!IsKillerException(ex, ct))
-            {
-                if (info.ExceptionHandler != null)
-                {
-                    try
+                    else
                     {
-                        await info.ExceptionHandler(ex, info).ConfigureAwait(false);
-                    }
-                    catch (Exception iex) when (!IsKillerException(ex, ct))
-                    {
-                        // Can't let the killer exception throw out, it will restart all tasks
-                        Log?.LogWarning(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Unhandled exception in final exception handler: [{iex}]");
-                    }
-                }
+                        //Log an error, adding exception data to aid in debugging.
+                        Log?.LogError(GetType(), nameof(RunTask), ex, $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Restarting task in [{waitTime.TotalSeconds}s] after [{exceptionCount}] exceptions due to unhandled exception.");
 
-                Log?.LogWarning(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Stopping task due to unhandled exception: [{ex}]");
+                        //If an exceptionHandler was provided for the task, call it.
+                        if (info.ExceptionHandler != null)
+                        {
+                            try
+                            {
+                                await info.ExceptionHandler(ex, info).ConfigureAwait(false);
+                            }
+                            catch (Exception iex) when (!IsKillerException(ex, ct))
+                            {
+                                Log?.LogWarning(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Unhandled exception in final exception handler: [{iex}]");
+                            }
+                        }
+                    }
+
+                    //Increment the exception count regardless of scenario, and wait for an appropriate period
+                    exceptionCount++;
+                    await Task.Delay(waitTime, ct).ConfigureAwait(false);
+                }
             }
         }
 
@@ -240,7 +244,6 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
                     Log?.LogWarning(GetType(), nameof(GetRepeatedTaskFailureTime), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Unhandled exception: [{iex}]");
                 }
             }
-
             return Settings.DefaultRepeatedTaskFailureTime;
         }
 
@@ -253,27 +256,25 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
         /// <param name="exceptionCount">Count of exceptions encountered by this task PRIOR to this exception</param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        private bool ShouldContinueRunTask(DateTime taskStartTime, TimeSpan repeatedTaskFailureTime, ref int exceptionCount, CancellationToken ct)
+        private bool ShouldRespondToException(DateTime taskStartTime, TimeSpan repeatedTaskFailureTime, ref int exceptionCount, CancellationToken ct)
         {
-            // If first exception, always continue
-            if (exceptionCount == 0)
+            // If the number of exceptions is not above the max, continue without logging an error
+            if (exceptionCount < Settings.MaxUnhandledExceptions)
             {
-                return true;
+                return false;
             }
             // If the task has faulted repeatedly and has failed WITHIN the TaskFailureAllowanceTime after the wait period following an exception,
-            // evaluate whether or not we've reached our maximum retries
+            // and the number of exceptions is above the max, we should log an error
             else if ((taskStartTime + repeatedTaskFailureTime) > DateTimeProvider.UtcNow)
             {
-                // If the exceptionCount exceeds the maximum number of unhandled exceptions, return false.
-                return exceptionCount < Settings.MaxUnhandledExceptions;
+                return true;
             }
             // If the task has faulted repeatedly and has failed OUTSIDE the TaskFailureAllowanceTime after the wait period following an exception,
             // RESET the exception count
             else
             {
                 exceptionCount = 0;
-
-                return true;
+                return false;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Polly;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Interfaces;
 using RecordPoint.Connectors.SDK.Providers;
@@ -52,13 +53,13 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 
             await RunSUT(sut, () =>
             {
-                Assert.True(exceptionCounter == sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be run {sut.Settings.MaxUnhandledExceptions + 1} times, was run {exceptionCounter} times instead");
                 Assert.True(counter == 1, $"Expected thread to only run once, ran {counter} times instead");
+                Assert.True(exceptionCounter == sut.Settings.MaxUnhandledExceptions + 1, $"Expected exception handler to run {sut.Settings.MaxUnhandledExceptions + 1} times, was run {exceptionCounter} times instead");
             }).ConfigureAwait(false);
         }
 
         [Fact]
-        public async Task TaskRunnerBase_ShutsDownFaultedThread_AfterRepeatedFaultsWithOverriddenRepeatedTaskFailureTime()
+        public async Task TaskRunnerBase_DoesNotShutDownFaultedThread_AfterRepeatedFaultsWithOverriddenRepeatedTaskFailureTime()
         {
             var counter = 0;
             var exceptionHandlerCounter = 0;
@@ -84,8 +85,11 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 
             await RunSUT(sut, () =>
             {
-                Assert.True(counter == sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be tried once and retried {sut.Settings.MaxUnhandledExceptions} times, was retried {counter - 1} instead");
-                Assert.True(exceptionHandlerCounter == 1, $"Expected exception handler to only run once, ran {exceptionHandlerCounter} times instead");
+                Assert.True(counter > sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be tried once and retried many times, was run {counter} times instead");
+                //We expect the exception handler NOT to run on counter runs up to MaxUnhandledExceptions.
+                //For example, with MUH = 2, we expect an initial run (counter = 0), and 1 more (counter = 1) which do not call the exception handler
+                var expectedExceptionHandlerCount = counter - (sut.Settings.MaxUnhandledExceptions);
+                Assert.True(exceptionHandlerCounter == expectedExceptionHandlerCount, $"Expected exception handler to be run {expectedExceptionHandlerCount} times, was ran {exceptionHandlerCounter} times instead");
             }).ConfigureAwait(false);
         }
 
@@ -118,7 +122,7 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
         }
 
         [Fact]
-        public async Task TaskRunnerBase_ShutsDownFaultedThread_AfterRepeatedFaults()
+        public async Task TaskRunnerBase_DoesNotShutDownFaultedThread_AfterRepeatedFaults()
         {
             var counter = 0;
             var exceptionHandlerCounter = 0;
@@ -140,14 +144,18 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 
             await RunSUT(sut, () =>
             {
-                Assert.True(counter == sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be tried once and retried {sut.Settings.MaxUnhandledExceptions} times, was {counter - 1} instead");
-                Assert.True(exceptionHandlerCounter == 1, $"Expected exception handler to only run once, ran {exceptionHandlerCounter} times instead");
+                Assert.True(counter > sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be tried once and retried many times, was run {counter} times instead");
+                //We expect the exception handler NOT to run on counter runs up to MaxUnhandledExceptions.
+                //For example, with MUH = 2, we expect an initial run (counter = 0), and 1 more (counter = 1) which do not call the exception handler
+                var expectedExceptionHandlerCount = counter - (sut.Settings.MaxUnhandledExceptions);
+                Assert.True(exceptionHandlerCounter == expectedExceptionHandlerCount, $"Expected exception handler to be run {expectedExceptionHandlerCount} times, was ran {exceptionHandlerCounter} times instead");
             }).ConfigureAwait(false);
         }
 
         [Fact]
         public async Task TaskRunnerBase_DoesNotThrow_ExceptionsFromExceptionHandler()
         {
+            var counter = 0;
             var exceptionHandlerCounter = 0;
 
             var sut = new TaskRunnerActual((ct =>
@@ -155,7 +163,7 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
                 return new List<TaskRunnerInformationBase>()
                     {
                         GetTaskRunnerInformation<object>(
-                            () => { throw (new Exception()); },
+                            () => { counter++; throw (new Exception()); },
                             (ex, info) => { exceptionHandlerCounter++; throw (new Exception()); },
                             null,
                             null,
@@ -167,10 +175,11 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 
             await RunSUT(sut, () =>
             {
-                sut.MockLog.Verify(x => x.LogWarning(It.IsAny<Type>(), "ClearTasks", It.IsAny<string>(), null), Times.Never);
-                sut.MockLog.Verify(x => x.LogWarning(It.IsAny<Type>(), "RunTask", It.IsRegex("Unhandled exception in final exception handler"), null), Times.Once);
+                VerifySubmittedLogWarning(sut.MockLog, "ClearTasks", "", Times.Never());
+                VerifySubmittedLogError(sut.MockLog, "RunTask", Times.Exactly(counter - sut.Settings.MaxUnhandledExceptions + 1));
+                VerifySubmittedLogWarning(sut.MockLog, "RunTask", "Unhandled exception in final exception handler", Times.Exactly(counter - sut.Settings.MaxUnhandledExceptions));
 
-                Assert.True(exceptionHandlerCounter == 1, $"Expected exception handler to only run once, ran {exceptionHandlerCounter} times instead");
+                Assert.True(exceptionHandlerCounter == counter - sut.Settings.MaxUnhandledExceptions, $"Expected exception handler to run {counter - sut.Settings.MaxUnhandledExceptions} times, ran {exceptionHandlerCounter} times instead");
             }).ConfigureAwait(false);
         }
 
@@ -215,7 +224,11 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(x => x.UtcNow).Returns(() => {
                 // Half the time, return a value that makes it look like it's been a long time since the thread faulted
-                if (counter % 2 == 0)
+                //Note that the "+1" is required here to prevent the spoofed date occuring on the same counter as the
+                //first exceptionCount that is not under the MaxUnhandledExceptions, as this would erroneously cause
+                //the test to fail (as only the UtcNow used for the taskStartTime would be increased by the mock,
+                //not the one within ShouldRespondToException).
+                if ((counter + 1) % 2 == 0)
                 {
                     return DateTime.UtcNow.AddDays(counter);
                 }
@@ -296,8 +309,11 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
 
             await RunSUT(sut, () =>
             {
-                Assert.True(counter == sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be tried once and retried {sut.Settings.MaxUnhandledExceptions} times, was retried {counter - 1} instead");
-                Assert.True(exceptionHandlerCounter == 1, $"Expected exception handler to only run once, ran {exceptionHandlerCounter} times instead");
+                Assert.True(counter > sut.Settings.MaxUnhandledExceptions + 1, $"Expected thread to be tried once and retried many times, was run {counter} times instead");
+                //We expect the exception handler NOT to run on counter runs up to MaxUnhandledExceptions.
+                //For example, with MUH = 2, we expect an initial run (counter = 0), and 1 more (counter = 1) which do not call the exception handler
+                var expectedExceptionHandlerCount = counter - (sut.Settings.MaxUnhandledExceptions);
+                Assert.True(exceptionHandlerCounter == expectedExceptionHandlerCount, $"Expected exception handler to be run {expectedExceptionHandlerCount} times, was ran {exceptionHandlerCounter} times instead");
             }).ConfigureAwait(false);
         }
 
@@ -390,7 +406,7 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
                     MaxUnhandledExceptions = 2,
                     DefaultRepeatedTaskFailureTime = TimeSpan.FromSeconds(2),
                     WaitTimePowBase = 1,
-                    WaitTimeSecondsBase = 0
+                    WaitTimeSecondsBase = 1
                 };
                 IsKillerException = IsOutOfMemoryException;
             }
@@ -452,6 +468,41 @@ namespace RecordPoint.Connectors.SDK.Test.TaskRunner
         }
 
         private delegate IEnumerable<TaskRunnerInformationBase> TaskCreator(CancellationToken ct);
+
+        private static void VerifySubmittedLogWarning(Mock<ILog> log, string methodName, string messagePattern, Times times, int timeoutSeconds = 10)
+        {
+            var policy = GetMockVerificationRetryPolicy(timeoutSeconds);
+            policy.Execute(() =>
+            {
+                log.Verify(
+                    x => x.LogWarning(
+                        It.IsAny<Type>(),
+                        methodName,
+                        It.Is<string>(s => s.Contains(messagePattern)),
+                        null),
+                    times);
+            });
+        }
+
+        private static void VerifySubmittedLogError(Mock<ILog> log, string methodName, Times times, int timeoutSeconds = 10)
+        {
+            var policy = GetMockVerificationRetryPolicy(timeoutSeconds);
+            policy.Execute(() =>
+            {
+                log.Verify(
+                    x => x.LogError(
+                        It.IsAny<Type>(),
+                        methodName,
+                        It.IsAny<Exception>(),
+                        It.IsAny<string>()),
+                    times);
+            });
+        }
+
+        public static Policy GetMockVerificationRetryPolicy(int timeoutSeconds)
+        {
+            return Policy.Handle<MockException>().WaitAndRetry(timeoutSeconds, x => TimeSpan.FromSeconds(1));
+        }
 
     }
 }
