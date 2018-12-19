@@ -80,11 +80,24 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         public CancellationToken CancellationToken { get; set; }
 
+        /// <summary>
+        /// Defines any filtering to be done. If Filters are defined and the Connector makes use of the FilterPipelineElement,
+        /// then the Core and Source metadata of this SubmitContext will be checked against the Filters, as followds:
+        /// If the Excluded filter is defined and is matched, the submission will be skipped.
+        /// If the Included filter is not defined, any submission which does not match the Excluded filter will continue in the pipeline.
+        /// If the Included filter is defined, only submissions which match the Included filter will continue in the pipeline - All others will be skipped.
+        /// </summary>
+        public FiltersModel Filters { get; set; }
+
+        /// <summary>
+        /// A prefix that will be applied to all logs created using the SubmitPipelineElementBase Log* methods (e.g. LogMessage)
+        /// Any messages output by Log* methods will be prefixed with this string
+        /// </summary>
+        /// <returns></returns>
         public virtual string LogPrefix()
         {
             return
                 $"TenantId [{TenantId}] ConnectorConfigId [{ConnectorConfigId}] CorrelationId [{CorrelationId}] Title [{CoreMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.Title)?.Value ?? "<no title field in metadata found>"}] ";
         }
-
     }
 }
