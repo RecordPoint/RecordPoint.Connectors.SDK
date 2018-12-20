@@ -19,35 +19,35 @@ namespace RecordPoint.Connectors.SDK.Filters
                     }
                 case FilterConstants.CommonFieldOperators.Empty:
                     {
-                        throw new NotImplementedException();
+                        return string.IsNullOrEmpty(model?.Value);
                     }
                 case FilterConstants.CommonFieldOperators.NotEmpty:
                     {
-                        throw new NotImplementedException();
+                        return !string.IsNullOrEmpty(model?.Value);
                     }
                 case FilterConstants.StringFieldOperators.Contains:
                     {
-                        throw new NotImplementedException();
+                        return IsContains(model, filter.FieldValue);
                     }
                 case FilterConstants.StringFieldOperators.NotContains:
                     {
-                        throw new NotImplementedException();
+                        return !IsContains(model, filter.FieldValue);
                     }
                 case FilterConstants.StringFieldOperators.EndsWith:
                     {
-                        throw new NotImplementedException();
+                        return IsEndsWith(model, filter.FieldValue);
                     }
                 case FilterConstants.StringFieldOperators.NotEndsWith:
                     {
-                        throw new NotImplementedException();
+                        return !IsEndsWith(model, filter.FieldValue);
                     }
                 case FilterConstants.StringFieldOperators.StartsWith:
                     {
-                        throw new NotImplementedException();
+                        return IsStartsWith(model, filter.FieldValue);
                     }
                 case FilterConstants.StringFieldOperators.NotStartsWith:
                     {
-                        throw new NotImplementedException();
+                        return !IsStartsWith(model, filter.FieldValue);
                     }
                 default:
                     {
@@ -66,6 +66,36 @@ namespace RecordPoint.Connectors.SDK.Filters
                 return string.Equals(model.Value, expectedValue, StringComparison.InvariantCultureIgnoreCase);
             }
 
+            return false;
+        }
+
+        private static bool IsContains(SubmissionMetaDataModel model, string expectedValue)
+        {
+            if (!string.IsNullOrEmpty(model?.Value))
+            {
+                //string.Contains doesn't have option to check with ignoreCase, that's why used IndexOf method
+                //for reference https://stackoverflow.com/questions/444798/case-insensitive-containsstring/15464440#15464440
+                return model.Value.IndexOf(expectedValue, StringComparison.OrdinalIgnoreCase) >= 0;
+            }
+
+            return false;
+        }
+
+        private static bool IsEndsWith(SubmissionMetaDataModel model, string expectedValue)
+        {
+            if (!string.IsNullOrEmpty(model?.Value))
+            {
+                return model.Value.EndsWith(expectedValue, StringComparison.InvariantCultureIgnoreCase);
+            }
+            return false;
+        }
+
+        private static bool IsStartsWith(SubmissionMetaDataModel model, string expectedValue)
+        {
+            if (!string.IsNullOrEmpty(model?.Value))
+            {
+                return model.Value.StartsWith(expectedValue, StringComparison.InvariantCultureIgnoreCase);
+            }
             return false;
         }
     }

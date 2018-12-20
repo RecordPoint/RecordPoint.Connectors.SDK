@@ -99,6 +99,8 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
             Assert.True(MatchesFilterTest(FilterConstants.FilterFieldTypes.StringType, "Test"));
         }
 
+        
+
         [Fact(Skip = "Not Implemented yet")]
         public void MatchesFilter_CanMatchOnBoolean()
         {
@@ -231,5 +233,6 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
 
             return FilterHelpers.MatchesFilter(submitContext, filter).Result;
         }
+
     }
 }
