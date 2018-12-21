@@ -101,7 +101,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
 
         
 
-        [Fact(Skip = "Not Implemented yet")]
+        [Fact]
         public void MatchesFilter_CanMatchOnBoolean()
         {
             Assert.True(MatchesFilterTest(FilterConstants.FilterFieldTypes.BooleanType, "true"));

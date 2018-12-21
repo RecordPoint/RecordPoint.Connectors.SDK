@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
 
-namespace RecordPoint.Connectors.SDK.Test.Helpers
+namespace RecordPoint.Connectors.SDK.Test.Filters
 {
     public class BooleanFilterTest
     {
         [Theory]
-        [InlineData("", true, false)]
-        [InlineData("False", true, false)]
-        [InlineData(null, true, false)]
-        [InlineData("TRUE", true, true)]
-        [InlineData("true", true, true)]
+        [InlineData("", "true", false)]
+        [InlineData("False", "true", false)]
+        [InlineData(null, "true", false)]
+        [InlineData("TRUE", "true", true)]
+        [InlineData("true", "true", true)]
         public void MatchesBoolFilterTest(string submitValue, string fieldValue, bool expectedResult)
         {
             var expectedValue = new SubmissionMetaDataModel()
@@ -42,25 +42,25 @@ namespace RecordPoint.Connectors.SDK.Test.Helpers
         }
 
         [Theory]
-        [InlineData("", true, true)]
-        [InlineData(false, true, true)]
-        [InlineData(null, true, true)]
-        [InlineData("TruE", true, false)]
-        public void DoesNotMatchesBoolFilterTest(string submission, string filter, bool expectedResult)
+        [InlineData("", "true", true)]
+        [InlineData("false", "true", true)]
+        [InlineData(null, "true", true)]
+        [InlineData("TruE", "true", false)]
+        public void DoesNotMatchesBoolFilterTest(string submitValue, string fieldValue, bool expectedResult)
         {
             var expectedValue = new SubmissionMetaDataModel()
             {
                 DisplayName = nameof(String),
                 Name = nameof(String),
                 Type = nameof(String),
-                Value = submission
+                Value = submitValue
             };
 
             var filterValue = new SearchTermModel()
             {
                 FieldName = FilterConstants.FilterFieldTypes.StringType,
                 FieldType = FilterConstants.FilterFieldTypes.BooleanType,
-                FieldValue = filter,
+                FieldValue = fieldValue,
                 OperatorProperty = FilterConstants.CommonFieldOperators.NotEqual
             };
 
