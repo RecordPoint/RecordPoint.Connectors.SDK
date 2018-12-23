@@ -8,7 +8,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
 {
     public class FilterTestBase
     {
-        protected IList<string> FieldTypes = new List<String>()
+        protected static IList<string> FieldTypes = new List<String>()
         {
             nameof(String),
             nameof(Boolean),
@@ -16,7 +16,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
             nameof(Double)
         };
 
-        protected IList<string> FilterTypes = new List<String>()
+        protected static IList<string> FilterTypes = new List<String>()
         {
             FilterConstants.FilterFieldTypes.BooleanType,
             FilterConstants.FilterFieldTypes.DateType,
@@ -25,7 +25,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
         };
 
 
-        protected SubmitContext GetSubmitContext(FiltersModel filters = null)
+        protected static SubmitContext GetSubmitContext(FiltersModel filters = null)
         {
             var output = new SubmitContext()
             {
@@ -58,6 +58,16 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
         protected string GetSourceFieldName(Guid connectorTypeId, string fieldName, string fieldType)
         {
             return $"S|{connectorTypeId}|{fieldType}|{fieldName}";
+        }
+
+        protected static string GetTestString()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        protected static KeyValuePair<string, string> GetTestKeyValuePair()
+        {
+            return new KeyValuePair<string, string>(GetTestString(), GetTestString());
         }
     }
 }

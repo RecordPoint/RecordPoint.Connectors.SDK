@@ -12,7 +12,7 @@ namespace RecordPoint.Connectors.SDK.Filters
         private const string _sourceFieldPrefix = "S|";
         private const int _indexAfterSeparator = 39;
 
-        public static FilterResult MatchesFilter(SubmitContext submitContext, SearchTermModel filter)
+        public static MatchResult MatchesFilter(SubmitContext submitContext, SearchTermModel filter)
         {
             var fieldType = GetFieldType(filter);
             var field = GetField(submitContext, filter, fieldType);
@@ -52,15 +52,26 @@ namespace RecordPoint.Connectors.SDK.Filters
                     }
             }
 
-            if(result)
+            if(!result)
             {
-                return new FilterResult() { Result = true };
+                return new MatchResult() {
+                    Result = false,
+                    MatchReason = $"Field [{field?.Name ?? "<Null>"}] " +
+                        $"Value [{field?.Value ?? "<Null>"}] " +
+                        $"failed to match Filter: " +
+                        $"Field Name {filter.FieldName} " +
+                        $"Type [{filter.FieldType}] " +
+                        $"Operator [{filter.OperatorProperty}] " +
+                        $"Value [{filter?.FieldValue ?? "<Null>"}]"
+                };
             }
 
-            return new FilterResult()
+            return new MatchResult()
             {
-                Result = false,
-                FailureReason = $"Value [{field?.Name ?? "<Null>"}] failed to match Filter: " +
+                Result = true,
+                MatchReason = $"Field [{field?.Name ?? "<Null>"}] " +
+                    $"Value [{field?.Value ?? "<Null>"}] " +
+                    $"matched Filter: " +
                     $"Field Name {filter.FieldName} " +
                     $"Type [{filter.FieldType}] " +
                     $"Operator [{filter.OperatorProperty}] " +

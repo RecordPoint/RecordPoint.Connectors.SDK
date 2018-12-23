@@ -1,8 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Filters
 {
-    public class FilterResult
+    public class MatchResult
     {
         public bool Result { get; set; } = false;
-        public string FailureReason { get; set; } = string.Empty;
+        public string MatchReason { get; set; } = string.Empty;
     }
 }

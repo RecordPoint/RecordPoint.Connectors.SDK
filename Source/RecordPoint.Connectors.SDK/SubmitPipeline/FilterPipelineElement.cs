@@ -39,14 +39,14 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 var excludeResult = ShouldExclude();
                 if (excludeResult.Result)
                 {
-                    SkipNext(submitContext, excludeResult.FailureReason);
+                    SkipNext(submitContext, excludeResult.MatchReason);
                     return;
                 }
 
                 var includeResult = ShouldInclude();
                 if (!includeResult.Result)
                 {
-                    SkipNext(submitContext, includeResult.FailureReason);
+                    SkipNext(submitContext, includeResult.MatchReason);
                     return;
                 }
             }
@@ -58,29 +58,29 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             await InvokeNext(submitContext).ConfigureAwait(false);
         }
 
-        private FilterResult ShouldExclude()
+        private MatchResult ShouldExclude()
         {
             // If the Excluded filter is not present, ingest all content
             if (_submitContext?.Filters?.Excluded == null)
             {
-                return new FilterResult() { Result = false };
+                return new MatchResult() { Result = false };
             }
 
             return MatchesFilter(_submitContext.Filters.Excluded);
         }
 
-        private FilterResult ShouldInclude()
+        private MatchResult ShouldInclude()
         {
             // If the Included filter is not present, ingest all content
             if (_submitContext?.Filters?.Included == null)
             {
-                return new FilterResult() { Result = true };
+                return new MatchResult() { Result = true };
             }
 
             return MatchesFilter(_submitContext.Filters.Included);
         }
 
-        private FilterResult MatchesFilter(SearchTreeNodeModel filter)
+        private MatchResult MatchesFilter(SearchTreeNodeModel filter)
         {
             if(filter == null)
             {
@@ -105,20 +105,19 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             {
                 case FilterConstants.FilterBooleanOperators.And:
                     {
-                        var failures = results.Where(x => !x.Result);
-                        if(failures.Any())
+                        if(results.All(x => x.Result))
                         {
-                            return GetResult(failures);
+                            return GetResult(results);
                         }
 
                         break;
                     }
                 case FilterConstants.FilterBooleanOperators.Or:
                     {
-                        var failures = results.Where(x => !x.Result);
-                        if (failures.Count() == results.Count())
+                        var matches = results.Where(x => x.Result);
+                        if (matches.Any())
                         {
-                            return GetResult(failures);
+                            return GetResult(matches);
                         }
 
                         break;
@@ -129,20 +128,20 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     }
             }
 
-            return new FilterResult() { Result = true };
+            return new MatchResult() { Result = false };
         }
 
-        private FilterResult GetResult(IEnumerable<FilterResult> results)
+        private MatchResult GetResult(IEnumerable<MatchResult> results)
         {
             if (results.Count() == 1)
             {
                 return results.First();
             }
 
-            return new FilterResult()
+            return new MatchResult()
             {
-                Result = false,
-                FailureReason = string.Join(",", results.Select(x => x.FailureReason).ToArray())
+                Result = true,
+                MatchReason = string.Join(",", results.Select(x => x.MatchReason).ToArray())
             };
         }
     }
