@@ -45,6 +45,19 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <summary>
         /// Initializes a new instance of the ApiClient class.
         /// </summary>
+        /// <param name='httpClient'>
+        /// HttpClient to be used
+        /// </param>
+        /// <param name='disposeHttpClient'>
+        /// True: will dispose the provided httpClient on calling ApiClient.Dispose(). False: will not dispose provided httpClient</param>
+        protected ApiClient(HttpClient httpClient, bool disposeHttpClient) : base(httpClient, disposeHttpClient)
+        {
+            Initialize();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ApiClient class.
+        /// </summary>
         /// <param name='handlers'>
         /// Optional. The delegating handlers to add to the http client pipeline.
         /// </param>
@@ -125,6 +138,33 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Thrown when a required parameter is null
         /// </exception>
         public ApiClient(ServiceClientCredentials credentials, params DelegatingHandler[] handlers) : this(handlers)
+        {
+            if (credentials == null)
+            {
+                throw new System.ArgumentNullException("credentials");
+            }
+            Credentials = credentials;
+            if (Credentials != null)
+            {
+                Credentials.InitializeServiceClient(this);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ApiClient class.
+        /// </summary>
+        /// <param name='credentials'>
+        /// Required. Subscription credentials which uniquely identify client subscription.
+        /// </param>
+        /// <param name='httpClient'>
+        /// HttpClient to be used
+        /// </param>
+        /// <param name='disposeHttpClient'>
+        /// True: will dispose the provided httpClient on calling ApiClient.Dispose(). False: will not dispose provided httpClient</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        public ApiClient(ServiceClientCredentials credentials, HttpClient httpClient, bool disposeHttpClient) : this(httpClient, disposeHttpClient)
         {
             if (credentials == null)
             {
@@ -524,7 +564,7 @@ namespace RecordPoint.Connectors.SDK.Client
             {
                 _requestContent = SafeJsonConvert.SerializeObject(item, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Credentials != null)
@@ -693,7 +733,7 @@ namespace RecordPoint.Connectors.SDK.Client
             {
                 _requestContent = SafeJsonConvert.SerializeObject(auditEvent, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Credentials != null)
@@ -1489,7 +1529,7 @@ namespace RecordPoint.Connectors.SDK.Client
             {
                 _requestContent = SafeJsonConvert.SerializeObject(item, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Credentials != null)
@@ -1829,7 +1869,7 @@ namespace RecordPoint.Connectors.SDK.Client
             {
                 _requestContent = SafeJsonConvert.SerializeObject(acknowledge, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Credentials != null)
@@ -3212,7 +3252,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// aggregation</param>
         /// <param name="sourceProperties">Source properties for the
         /// aggregation with DisplayName</param>
-        /// <param name="relationships">Relationships of the
+        /// <param name="relationships">Relationship list of the
         /// aggregation</param>
         /// <param name="author">Used for Physical item aggregations</param>
         /// <param name="location">A pointer to a aggregation's location.
@@ -3268,7 +3308,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public IList<SubmissionMetaDataModel> SourceProperties { get; set; }
 
         /// <summary>
-        /// Gets or sets relationships of the aggregation
+        /// Gets or sets relationship list of the aggregation
         /// </summary>
         [JsonProperty(PropertyName = "relationships")]
         public IList<RelationshipDataModel> Relationships { get; set; }
@@ -3771,6 +3811,291 @@ namespace RecordPoint.Connectors.SDK.Client.Models
     using System.Threading.Tasks;
 
     /// <summary>
+    /// Represents a single search per field
+    /// eg. ItemTypeId:'0' would have FieldName="ItemTypeId", Operator="Equal"
+    /// and Value="0"
+    /// </summary>
+    public partial class SearchTermModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the SearchTermModel class.
+        /// </summary>
+        public SearchTermModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the SearchTermModel class.
+        /// </summary>
+        public SearchTermModel(string fieldName, string fieldType = default(string), string operatorProperty = default(string), string fieldValue = default(string))
+        {
+            FieldName = fieldName;
+            FieldType = fieldType;
+            OperatorProperty = operatorProperty;
+            FieldValue = fieldValue;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "fieldName")]
+        public string FieldName { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "fieldType")]
+        public string FieldType { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "operator")]
+        public string OperatorProperty { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "fieldValue")]
+        public string FieldValue { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (FieldName == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "FieldName");
+            }
+            if (FieldName != null)
+            {
+                if (FieldName.Length > 255)
+                {
+                    throw new ValidationException(ValidationRules.MaxLength, "FieldName", 255);
+                }
+                if (FieldName.Length < 0)
+                {
+                    throw new ValidationException(ValidationRules.MinLength, "FieldName", 0);
+                }
+            }
+            if (OperatorProperty != null)
+            {
+                if (OperatorProperty.Length > 20)
+                {
+                    throw new ValidationException(ValidationRules.MaxLength, "OperatorProperty", 20);
+                }
+                if (OperatorProperty.Length < 0)
+                {
+                    throw new ValidationException(ValidationRules.MinLength, "OperatorProperty", 0);
+                }
+            }
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Groups multiple filters to allow for complex searching
+    /// </summary>
+    public partial class SearchTreeNodeModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the SearchTreeNodeModel class.
+        /// </summary>
+        public SearchTreeNodeModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the SearchTreeNodeModel class.
+        /// </summary>
+        /// <param name="boolOperator">Boolean operators for building the
+        /// search expression
+        /// Must be "OR" or "AND"</param>
+        public SearchTreeNodeModel(string boolOperator, IList<SearchTreeNodeModel> children = default(IList<SearchTreeNodeModel>), SearchTermModel searchTerm = default(SearchTermModel))
+        {
+            BoolOperator = boolOperator;
+            Children = children;
+            SearchTerm = searchTerm;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets boolean operators for building the search expression
+        /// Must be "OR" or "AND"
+        /// </summary>
+        [JsonProperty(PropertyName = "boolOperator")]
+        public string BoolOperator { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "children")]
+        public IList<SearchTreeNodeModel> Children { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "searchTerm")]
+        public SearchTermModel SearchTerm { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (BoolOperator == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "BoolOperator");
+            }
+            if (BoolOperator != null)
+            {
+                if (BoolOperator.Length > 3)
+                {
+                    throw new ValidationException(ValidationRules.MaxLength, "BoolOperator", 3);
+                }
+            }
+            if (Children != null)
+            {
+                foreach (var element in Children)
+                {
+                    if (element != null)
+                    {
+                        element.Validate();
+                    }
+                }
+            }
+            if (SearchTerm != null)
+            {
+                SearchTerm.Validate();
+            }
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class FiltersModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the FiltersModel class.
+        /// </summary>
+        public FiltersModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the FiltersModel class.
+        /// </summary>
+        public FiltersModel(SearchTreeNodeModel included = default(SearchTreeNodeModel), SearchTreeNodeModel excluded = default(SearchTreeNodeModel))
+        {
+            Included = included;
+            Excluded = excluded;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "included")]
+        public SearchTreeNodeModel Included { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "excluded")]
+        public SearchTreeNodeModel Excluded { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (Included != null)
+            {
+                Included.Validate();
+            }
+            if (Excluded != null)
+            {
+                Excluded.Validate();
+            }
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
     /// Connector configuration.
     /// Connector configuration models are designed to be "one size fits all",
     /// that is, this model schema is designed to be able to be used for all
@@ -3834,7 +4159,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// present</param>
         /// <param name="protectionEnabled">Whether or not binary protection is
         /// enabled for this connector</param>
-        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?))
+        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?), FiltersModel filters = default(FiltersModel))
         {
             Id = id;
             TransactionId = transactionId;
@@ -3854,6 +4179,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             Properties = properties;
             ClientId = clientId;
             ProtectionEnabled = protectionEnabled;
+            Filters = filters;
             CustomInit();
         }
 
@@ -3988,6 +4314,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public bool? ProtectionEnabled { get; set; }
 
         /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "filters")]
+        public FiltersModel Filters { get; set; }
+
+        /// <summary>
         /// Validate the object.
         /// </summary>
         /// <exception cref="ValidationException">
@@ -4023,6 +4354,10 @@ namespace RecordPoint.Connectors.SDK.Client.Models
                         element.Validate();
                     }
                 }
+            }
+            if (Filters != null)
+            {
+                Filters.Validate();
             }
         }
     }
@@ -4553,8 +4888,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// aggregation</param>
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
-        /// <param name="relationships">Relationships of the
-        /// aggregation</param>
+        /// <param name="relationships">Relationship list of the item</param>
         /// <param name="mimeType">The mime type of the submitted item</param>
         /// <param name="barcodeType">The barcode type, this can be
         /// empty</param>
@@ -4594,7 +4928,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public IList<SubmissionMetaDataModel> SourceProperties { get; set; }
 
         /// <summary>
-        /// Gets or sets relationships of the aggregation
+        /// Gets or sets relationship list of the item
         /// </summary>
         [JsonProperty(PropertyName = "relationships")]
         public IList<RelationshipDataModel> Relationships { get; set; }
