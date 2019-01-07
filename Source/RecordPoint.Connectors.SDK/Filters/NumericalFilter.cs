@@ -2,7 +2,7 @@
 
 namespace RecordPoint.Connectors.SDK.Filters
 {
-    public static class NumericalFilter
+    static class NumericalFilter
     {
         public static bool MatchesFilter(SubmissionMetaDataModel model, SearchTermModel filter)
         {

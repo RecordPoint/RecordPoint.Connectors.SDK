@@ -1,12 +1,7 @@
-﻿using Microsoft.Rest;
-using Moq;
-using RecordPoint.Connectors.SDK.Client.Models;
+﻿using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Filters;
-using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System;
-using System.Threading.Tasks;
 using Xunit;
-using Xunit.Sdk;
 
 namespace RecordPoint.Connectors.SDK.Test.Filters
 {
@@ -46,7 +41,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
         [InlineData("false", "true", true)]
         [InlineData(null, "true", true)]
         [InlineData("TruE", "true", false)]
-        public void DoesNotMatchesBoolFilterTest(string submitValue, string fieldValue, bool expectedResult)
+        public void DoesNotMatchBoolFilterTest(string submitValue, string fieldValue, bool expectedResult)
         {
             var expectedValue = new SubmissionMetaDataModel()
             {
@@ -110,8 +105,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
                 FieldValue = FilterConstants.FilterFieldTypes.StringType,
                 OperatorProperty = null
             };
-
-
+            
             Assert.Throws<NotImplementedException>(() => BooleanFilter.MatchesFilter(expectedValue, filterValue));
         }
     }

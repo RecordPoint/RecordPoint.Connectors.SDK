@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Helpers
 {
+    /// <summary>
+    /// Provides helpers for dealing with exceptions.
+    /// </summary>
     public static class ExceptionHelper
     {
         /// <summary>

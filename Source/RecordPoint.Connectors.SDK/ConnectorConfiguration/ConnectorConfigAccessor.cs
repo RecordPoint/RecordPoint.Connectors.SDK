@@ -8,23 +8,27 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ConnectorConfiguration
 {
     /// <summary>
-    /// Gets access to the Records365 vNext Connector API, retrieves a ConnectorConfigModel with a ConnectorId
+    /// Gets a connector configuration by ID from the Records365 Connector API.
     /// </summary>
     public class ConnectorConfigAccessor
     {
+        /// <summary>
+        /// The ApiClientFactory to use to call the Records365 Connector API.
+        /// </summary>
         public IApiClientFactory ApiClientFactory { get; set; }
 
         /// <summary>
-        /// Settings used to call into the Records365 vNext Connector API.
+        /// Settings used to call into the Records365 Connector API.
         /// </summary>
         public ApiClientFactorySettings ApiClientFactorySettings { get; set; }
+
         /// <summary>
-        /// The configuration that ConnectorConfigAccessor uses authenticate to the Records365 vNext Connector API
+        /// The configuration that ConnectorConfigAccessor uses authenticate to the Records365 Connector API.
         /// </summary>
         public AuthenticationHelperSettings AuthenticationHelperSettings { get; set; }
 
         /// <summary>
-        /// Gets the ConnectorConfigModel from the Records365 vNext Connector API
+        /// Gets the ConnectorConfigModel from the Records365 Connector API.
         /// </summary>
         /// <param name="connectorConfigId"></param>
         /// <param name="cancellationToken"></param>

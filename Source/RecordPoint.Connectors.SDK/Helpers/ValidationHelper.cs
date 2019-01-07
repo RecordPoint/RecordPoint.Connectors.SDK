@@ -3,6 +3,9 @@ using System.Security;
 
 namespace RecordPoint.Connectors.SDK.Helpers
 {
+    /// <summary>
+    /// Provides helpers for validating arguments to methods.
+    /// </summary>
     public static class ValidationHelper
     {
         /// <summary>

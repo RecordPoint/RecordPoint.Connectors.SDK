@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RecordPoint.Connectors.SDK.Filters
+﻿namespace RecordPoint.Connectors.SDK.Filters
 {
-    public static class FilterConstants
+    internal static class FilterConstants
     {
         public static class FilterBooleanOperators
         {

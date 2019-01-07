@@ -1,16 +1,27 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using RecordPoint.Connectors.SDK.Helpers;
+#if NETSTANDARD2_0
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#endif
 using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
+    /// <summary>
+    /// Helper for acquiring access tokens from Azure AD.
+    /// </summary>
     public class AuthenticationHelper : IAuthenticationHelper
     {
         private const string AuthEndpointPrefix = "https://login.microsoftonline.com/";
 
+        /// <summary>
+        /// Acquires an OAuth 2.0 access token from Azure AD for use with the Records365 Connector API.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="useTokenCache"></param>
+        /// <returns></returns>
         public async Task<AuthenticationResult> AcquireTokenAsync(AuthenticationHelperSettings settings, bool useTokenCache = true)
         {
             ValidationHelper.ArgumentNotNull(settings, nameof(settings));
