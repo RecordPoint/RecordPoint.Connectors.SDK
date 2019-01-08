@@ -27,5 +27,14 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// A readable stream of binary data to be included in the submit.
         /// </summary>
         public Stream Stream { get; set; }
+
+        /// <summary>
+        /// Retrieve the title from the strongly typed FileName field instead of the Core Metadata for binaries
+        /// </summary>
+        /// <returns></returns>
+        protected override string GetTitle()
+        {
+            return !string.IsNullOrEmpty(FileName) ? FileName : NoTitleFound;
+        }
     }
 }
