@@ -4,7 +4,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>RecordPoint.Connectors.SDK</PackageId>
-    <PackageIconUrl>https://secure.gravatar.com/avatar/9ddfc83ada11273457e0e9a6d88a595d?s=64&amp;amp;d=mm&amp;amp;r=g</PackageIconUrl>
+    <PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
     <PackageTags>RecordPoint</PackageTags>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://www.records365.com/</PackageProjectUrl>
