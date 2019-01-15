@@ -39,5 +39,13 @@
             public const string After = nameof(After);
             public const string Before = nameof(Before);
         }
+
+        public static class NumericalFieldOperators
+        {
+            public const string GreaterThan = nameof(GreaterThan);
+            public const string GreaterThanOrEqualTo = nameof(GreaterThanOrEqualTo);
+            public const string LessThan = nameof(LessThan);
+            public const string LessThanOrEqualTo = nameof(LessThanOrEqualTo);
+        }
     }
 }
