@@ -5,7 +5,7 @@
         public static class FilterBooleanOperators
         {
             public const string Or = "OR";
-            public const string And = "And";
+            public const string And = "AND";
         }
 
         public static class FilterFieldTypes
