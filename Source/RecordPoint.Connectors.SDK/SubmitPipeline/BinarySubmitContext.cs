@@ -36,5 +36,14 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         {
             return !string.IsNullOrEmpty(FileName) ? FileName : NoTitleFound;
         }
+
+        /// <summary>
+        /// Retrieve the External ID from the strongly typed ExternalId field instead of the Core Metadata for binaries
+        /// </summary>
+        /// <returns></returns>
+        protected override string GetExternalId()
+        {
+            return !string.IsNullOrEmpty(ExternalId) ? ExternalId : NoExternalIdFound;
+        }
     }
 }

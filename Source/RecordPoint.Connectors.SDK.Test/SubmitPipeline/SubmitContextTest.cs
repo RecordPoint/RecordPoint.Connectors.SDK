@@ -9,6 +9,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
     public class SubmitContextTest
     {
         private const string _expectedNoTitleMessage = "<no title found>";
+        private const string _expectedNoExternalIdMessage = "<no external id found>";
 
         [Fact]
         public void DefaultSubmitContext_HasNonEmptyCorrelationId()
@@ -94,6 +95,76 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             submitContext.FileName = title;
 
             Assert.Contains(_expectedNoTitleMessage, submitContext.LogPrefix());
+        }
+
+        [Fact]
+        public void DefaultSubmitContext_CanLogNonNullExternalId()
+        {
+            var submitContext = new SubmitContext()
+            {
+                CoreMetaData = new List<SubmissionMetaDataModel>()
+            };
+
+            var externalId = Guid.NewGuid().ToString();
+
+            submitContext.CoreMetaData.Add(new SubmissionMetaDataModel()
+            {
+                Name = Fields.ExternalId,
+                Type = nameof(String),
+                Value = externalId
+            });
+
+            Assert.Contains(externalId, submitContext.LogPrefix());
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void DefaultSubmitContext_CanLogNullOrEmptyExternalId(string title)
+        {
+            var submitContext = new SubmitContext()
+            {
+                CoreMetaData = new List<SubmissionMetaDataModel>()
+            };
+
+            submitContext.CoreMetaData.Add(new SubmissionMetaDataModel()
+            {
+                Name = Fields.ExternalId,
+                Type = nameof(String),
+                Value = title
+            });
+            Assert.Contains(_expectedNoExternalIdMessage, submitContext.LogPrefix());
+        }
+
+        [Fact]
+        public void DefaultSubmitContext_CanLogMissingExternalId()
+        {
+            var submitContext = new SubmitContext();
+            Assert.Contains(_expectedNoExternalIdMessage, submitContext.LogPrefix());
+
+            submitContext.CoreMetaData = new List<SubmissionMetaDataModel>();
+            Assert.Contains(_expectedNoExternalIdMessage, submitContext.LogPrefix());
+        }
+
+        [Fact]
+        public void BinarySubmitContext_CanLogExternalId()
+        {
+            var externalId = Guid.NewGuid().ToString();
+            var submitContext = new BinarySubmitContext();
+            submitContext.ExternalId = externalId;
+
+            Assert.Contains(externalId, submitContext.LogPrefix());
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void BinarySubmitContext_CanLogMissingOrEmptyExternalId(string title)
+        {
+            var submitContext = new BinarySubmitContext();
+            submitContext.ExternalId = title;
+
+            Assert.Contains(_expectedNoExternalIdMessage, submitContext.LogPrefix());
         }
     }
 }
