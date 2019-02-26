@@ -173,7 +173,7 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
             Log?.LogVerbose(GetType(), nameof(RunTask), $"{info.LogPrefix} (CorrelationGroup [{_correlationGroup}]) - Starting task");
 
             DateTime taskStartTime = DateTimeProvider.UtcNow;
-            var exceptionCount = 0;
+            long exceptionCount = 0;
 
             while (!ct.IsCancellationRequested)
             {
@@ -256,7 +256,7 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
         /// <param name="exceptionCount">Count of exceptions encountered by this task PRIOR to this exception</param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        private bool ShouldRespondToException(DateTime taskStartTime, TimeSpan repeatedTaskFailureTime, ref int exceptionCount, CancellationToken ct)
+        private bool ShouldRespondToException(DateTime taskStartTime, TimeSpan repeatedTaskFailureTime, ref long exceptionCount, CancellationToken ct)
         {
             // If the number of exceptions is not above the max, continue without logging an error
             if (exceptionCount < Settings.MaxUnhandledExceptions)
