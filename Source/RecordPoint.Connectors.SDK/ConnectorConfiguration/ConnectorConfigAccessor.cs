@@ -39,18 +39,19 @@ namespace RecordPoint.Connectors.SDK.ConnectorConfiguration
             var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
 
             var connectorConfig = await policy.ExecuteAsync(
-                async () =>
+                async (ct) =>
                 {
                     var authHelper = ApiClientFactory.CreateAuthenticationHelper();
                     var headers = await authHelper.GetHttpRequestHeaders(AuthenticationHelperSettings).ConfigureAwait(false);
                     var response = await client.ApiConnectorConfigurationsByIdGetWithHttpMessagesAsync(
                         connectorConfigId,
                         customHeaders: headers,
-                        cancellationToken: cancellationToken
+                        cancellationToken: ct
                     ).ConfigureAwait(false);
 
                     return response.Body;
-                }
+                },
+                cancellationToken
             ).ConfigureAwait(false);
 
             return connectorConfig;

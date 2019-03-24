@@ -1,4 +1,5 @@
 ﻿using Microsoft.Rest;
+using Polly;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using System;
@@ -23,6 +24,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         {
         }
 
+        /// <summary>
+        /// Constructs the APIClientFactory used to communicate with Records365
+        /// </summary>
         public IApiClientFactory ApiClientFactory { get; set; }
 
         /// <summary>
@@ -140,6 +144,15 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             }
 
             return shouldContinueSubmitPipeline;
+        }
+
+        /// <summary>
+        /// Gets a retry policy which can be used for communicating with Records365
+        /// </summary>
+        /// <returns></returns>
+        protected Policy GetRetryPolicy(SubmitContext submitContext, string methodName = nameof(Submit))
+        {
+            return ApiClientRetryPolicy.GetPolicy(Log, GetType(), methodName, 4, 2000, submitContext.CancellationToken, submitContext.LogPrefix());
         }
     }
 }

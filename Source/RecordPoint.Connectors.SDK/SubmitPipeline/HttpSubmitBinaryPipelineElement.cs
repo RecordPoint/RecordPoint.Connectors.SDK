@@ -1,5 +1,4 @@
 ﻿using Microsoft.Rest;
-using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Helpers;
 using System;
 using System.Threading.Tasks;
@@ -65,11 +64,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             // Submit via HTTP API Client that is generated with AutoRest
             var apiClient = ApiClientFactory.CreateApiClient(submitContext.ApiClientFactorySettings);
-            
-            var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, submitContext.CancellationToken);
-
-            var result = await policy.ExecuteAsync(
-                async () =>
+            var result = await GetRetryPolicy(submitContext).ExecuteAsync(
+                async (ct) =>
                 {
                     // In case a stream is reused during submission retry, it might not be in 0 Position
                     // since the previous submission already read to the end. We should reset this value.
@@ -80,15 +76,17 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
                     var authHelper = ApiClientFactory.CreateAuthenticationHelper();
                     var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                    return await apiClient.ApiBinariesPostWithHttpMessagesAndStreamAsync(binarySubmitContext.ConnectorConfigId.ToString(),
+                    return await apiClient.ApiBinariesPostWithHttpMessagesAndStreamAsync(
+                        binarySubmitContext.ConnectorConfigId.ToString(),
                         binarySubmitContext.ItemExternalId,
                         binarySubmitContext.ExternalId,
                         binarySubmitContext.FileName,
                         inputStream: binarySubmitContext.Stream,
                         customHeaders: headers, 
-                        cancellationToken: binarySubmitContext.CancellationToken)
-                        .ConfigureAwait(false);
-                }
+                        cancellationToken: ct
+                    ).ConfigureAwait(false);
+                }, 
+                binarySubmitContext.CancellationToken
             ).ConfigureAwait(false);
 
             var shouldContinue = true;

@@ -61,16 +61,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             try
             {
-                var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, submitContext.CancellationToken);
-
-                var result = await policy.ExecuteAsync(
-                    async () =>
+                var result = await GetRetryPolicy(submitContext).ExecuteAsync(
+                    async (ct) =>
                     {
                         var authHelper = ApiClientFactory.CreateAuthenticationHelper();
                         var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                        return await apiClient.ApiAuditEventsPutWithHttpMessagesAsync(auditEventModel, customHeaders: headers, cancellationToken: submitContext.CancellationToken)
-                                              .ConfigureAwait(false);
-                    }
+                        return await apiClient.ApiAuditEventsPutWithHttpMessagesAsync(
+                            auditEventModel, 
+                            customHeaders: headers, 
+                            cancellationToken: ct
+                        ).ConfigureAwait(false);
+                    },
+                    submitContext.CancellationToken
                 ).ConfigureAwait(false);
 
                 shouldContinue = await HandleSubmitResponse(submitContext, result, "AuditEvent").ConfigureAwait(false);
