@@ -38,7 +38,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    output.CoreMetaData.Add(new SubmissionMetaDataModel()
+                    output.CoreMetaData.Add(new SubmissionMetaDataModel(Guid.NewGuid().ToString())
                     {
                         Type = dataType,
                         Value = Guid.NewGuid().ToString()
@@ -55,7 +55,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
             return output;
         }
 
-        protected string GetSourceFieldName(Guid connectorTypeId, string fieldName, string fieldType)
+        protected static string GetSourceFieldName(Guid connectorTypeId, string fieldName, string fieldType)
         {
             return $"S|{connectorTypeId}|{fieldType}|{fieldName}";
         }
