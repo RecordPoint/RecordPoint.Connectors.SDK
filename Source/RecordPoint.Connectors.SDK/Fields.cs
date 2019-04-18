@@ -36,5 +36,14 @@
             public const string ConnectorNotEnabled = "ConnectorNotEnabled";
             public const string ProtectionNotEnabled = "ProtectionNotEnabled";
         }
+
+        /// <summary>
+        /// Names of metadata keys must be valid C# identifiers:
+        /// https://docs.microsoft.com/en-us/rest/api/storageservices/Naming-and-Referencing-Containers--Blobs--and-Metadata#metadata-names
+        /// </summary>
+        public static class MetaDataKeys
+        {
+            public const string ItemBinary_FileName = nameof(ItemBinary_FileName);
+        }
     }
 }

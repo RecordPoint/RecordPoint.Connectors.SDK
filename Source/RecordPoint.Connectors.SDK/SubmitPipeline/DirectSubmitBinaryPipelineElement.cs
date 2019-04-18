@@ -4,27 +4,25 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
+using static RecordPoint.Connectors.SDK.Fields;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
-    /// <summary>
-    /// Names of metadata keys must be valid C# identifiers:
-    /// https://docs.microsoft.com/en-us/rest/api/storageservices/Naming-and-Referencing-Containers--Blobs--and-Metadata#metadata-names
-    /// </summary>
-    class MetaDataKeys
-    {
-        public const string ItemBinary_FileName = nameof(ItemBinary_FileName);
-    }
-
     /// <summary>
     /// Pipeline element stream binary directly to blob storage
     /// </summary>
     public class DirectSubmitBinaryPipelineElement : HttpSubmitBinaryPipelineElement
     {
+        /// <summary>
+        /// Function which returns a CloudBlob any binaries will be saved into.
+        /// Override the default for testing purposes.
+        /// Note that when resolving classes from LightInject, defaults are not respected and LightInject will be unable to 
+        /// resolve this class without the DefaultBlobFactory function being registered as well. 
+        /// </summary>
+        public Func<DirectBinarySubmissionResponseModel, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -51,23 +49,25 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 binarySubmitContext.ExternalId,
                 fileSize: binarySubmitContext.Stream.Length,
                 fileName: binarySubmitContext.FileName
-                );
+            );
 
             // Get token and URL via Autorest-generated API call
             var apiClient = ApiClientFactory.CreateApiClient(submitContext.ApiClientFactorySettings);
-            var result = await GetRetryPolicy(submitContext).ExecuteAsync(
-                    async (ct) =>
-                    {
-                        var authHelper = ApiClientFactory.CreateAuthenticationHelper();
-                        var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                        return await apiClient.ApiBinariesGetSASTokenPostWithHttpMessagesAsync(
-                            binarySubmissionInputModel: binarySubmissionInputModel,
-                            customHeaders: headers,
-                            cancellationToken: ct
-                        ).ConfigureAwait(false);
-                    },
-                    submitContext.CancellationToken
-                ).ConfigureAwait(false);
+            var retryPolicy = GetRetryPolicy(binarySubmitContext);
+
+            var result = await retryPolicy.ExecuteAsync(
+                async (ct) =>
+                {
+                    var authHelper = ApiClientFactory.CreateAuthenticationHelper();
+                    var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
+                    return await apiClient.ApiBinariesGetSASTokenPostWithHttpMessagesAsync(
+                        binarySubmissionInputModel: binarySubmissionInputModel,
+                        customHeaders: headers,
+                        cancellationToken: ct
+                    ).ConfigureAwait(false);
+                },
+                submitContext.CancellationToken
+            ).ConfigureAwait(false);
 
             if(result.Response.StatusCode == HttpStatusCode.MethodNotAllowed)
             {
@@ -93,14 +93,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     //TODO: Log that submission is was allowed to proceed since size could not be determined.
                 }
 
-                //Example of CloudBlockBlob with a SaS token: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
-                // Retrieve reference to a blob
-                CloudBlockBlob blockBlob = new CloudBlockBlob(new Uri(response.Url));
-
-                // Set Blob ContentType
-                blockBlob.Properties.ContentType = "application/octet-stream";
-
-                //Upload blob
+                // Retrieve reference to a blob. Use the DefaultBlobFactory if the BlobFactory on the pipeline element has not been set
+                var blockBlob = BlobFactory != null ? BlobFactory(response) : DefaultBlobFactory(response);
+                //Upload to blob
                 await blockBlob.UploadFromStreamAsync(binarySubmitContext.Stream, binarySubmitContext.CancellationToken).ConfigureAwait(false);
 
                 if (!string.IsNullOrWhiteSpace(binarySubmitContext.FileName))
@@ -109,7 +104,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     await blockBlob.SetMetadataAsync(binarySubmitContext.CancellationToken).ConfigureAwait(false);
                 }
 
-                var notifyResult = await GetRetryPolicy(submitContext).ExecuteAsync(
+                var notifyResult = await retryPolicy.ExecuteAsync(
                     async (ct) =>
                     {
                         //If the item corresponding to the submitted binary is not yet present, the platform will have to handle this.
@@ -137,6 +132,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 }
 
             }
+            else
+            {
+                return;
+            }
+
             await InvokeNext(submitContext).ConfigureAwait(false);
         }
 
@@ -176,7 +176,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-and-Retrieving-Properties-and-Metadata-for-Blob-Resources#Subheading1
         /// </summary>
-        /// <param name="blockBlobName"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         private string EscapeBlobMetaDataValue(string value)
         {
@@ -194,6 +194,22 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Default blob factory used for Production workloads
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static ICloudBlob DefaultBlobFactory(DirectBinarySubmissionResponseModel model)
+        {
+            ValidationHelper.ArgumentNotNullOrWhiteSpace(model?.Url, nameof(model.Url));
+            //Example of CloudBlockBlob with a SaS token: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
+            var blockBlob = new CloudBlockBlob(new Uri(model.Url));
+            // Set Blob ContentType
+            blockBlob.Properties.ContentType = "application/octet-stream";
+
+            return blockBlob;
         }
     }
 }
