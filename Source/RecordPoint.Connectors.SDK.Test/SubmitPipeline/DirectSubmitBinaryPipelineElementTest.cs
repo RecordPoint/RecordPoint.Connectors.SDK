@@ -32,7 +32,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         public DirectSubmitBinaryPipelineElementTest()
         {
             _mockBlob.Setup(x => x.Metadata).Returns(new Dictionary<string, string>());
-
+            _mockBlob.SetupGet(x => x.Properties).Returns(new BlobProperties());
             SetupDefaultsForClient();
 
             var mockAuthenticationHelper = new Mock<IAuthenticationHelper>();
@@ -263,7 +263,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<string>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<CancellationToken>()
-            )).ReturnsAsync(new HttpOperationResponse<object>()
+            )).ReturnsAsync(new HttpOperationResponse<ErrorResponseModel>()
             {
                 Response = new HttpResponseMessage(HttpStatusCode.OK),
                 Body = null
@@ -277,7 +277,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<string>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<CancellationToken>()
-            )).ReturnsAsync(new HttpOperationResponse<object>()
+            )).ReturnsAsync(new HttpOperationResponse<ErrorResponseModel>()
             {
                 Response = new HttpResponseMessage(statusCode),
                 Body = new ErrorResponseModel()

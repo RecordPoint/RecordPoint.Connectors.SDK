@@ -1221,7 +1221,7 @@ namespace RecordPoint.Connectors.SDK.Client
         }
 
         /// <summary>
-        /// Notification for binary submitted
+        /// Notifies Records365 that a new Binary has been uploaded
         /// </summary>
         /// <param name='binarySubmissionInputModel'>
         /// </param>
@@ -1236,10 +1236,13 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <exception cref="HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
+        /// <exception cref="SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (binarySubmissionInputModel != null)
             {
@@ -1316,7 +1319,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 405 && (int)_statusCode != 412)
+            if ((int)_statusCode != 200 && (int)_statusCode != 412)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1339,9 +1342,27 @@ namespace RecordPoint.Connectors.SDK.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationResponse<ErrorResponseModel>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2438,7 +2459,7 @@ namespace RecordPoint.Connectors.SDK.Client
         Task<HttpOperationResponse<object>> ApiBinariesGetSASTokenPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Notification for binary submitted
+        /// Notifies Records365 that a new Binary has been uploaded
         /// </summary>
         /// <param name='binarySubmissionInputModel'>
         /// </param>
@@ -2450,7 +2471,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets a connector configure model by its connector ID.
@@ -2801,7 +2822,7 @@ namespace RecordPoint.Connectors.SDK.Client
             }
 
             /// <summary>
-            /// Notification for binary submitted
+            /// Notifies Records365 that a new Binary has been uploaded
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -2810,13 +2831,13 @@ namespace RecordPoint.Connectors.SDK.Client
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
-            public static void ApiBinariesNotifyBinarySubmissionPost(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string))
+            public static ErrorResponseModel ApiBinariesNotifyBinarySubmissionPost(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string))
             {
-                operations.ApiBinariesNotifyBinarySubmissionPostAsync(binarySubmissionInputModel, acceptLanguage).GetAwaiter().GetResult();
+                return operations.ApiBinariesNotifyBinarySubmissionPostAsync(binarySubmissionInputModel, acceptLanguage).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Notification for binary submitted
+            /// Notifies Records365 that a new Binary has been uploaded
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -2828,9 +2849,12 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiBinariesNotifyBinarySubmissionPostAsync(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponseModel> ApiBinariesNotifyBinarySubmissionPostAsync(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(binarySubmissionInputModel, acceptLanguage, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                using (var _result = await operations.ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(binarySubmissionInputModel, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
 
             /// <summary>

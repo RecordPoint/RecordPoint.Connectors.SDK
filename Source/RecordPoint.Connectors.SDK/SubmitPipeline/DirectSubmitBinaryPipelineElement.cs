@@ -21,7 +21,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// Note that when resolving classes from LightInject, defaults are not respected and LightInject will be unable to 
         /// resolve this class without the DefaultBlobFactory function being registered as well. 
         /// </summary>
-        public Func<DirectBinarySubmissionResponseModel, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
+        public Func<string, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
 
         /// <summary>
         /// Constructor
@@ -94,7 +94,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 }
 
                 // Retrieve reference to a blob. Use the DefaultBlobFactory if the BlobFactory on the pipeline element has not been set
-                var blockBlob = BlobFactory != null ? BlobFactory(response) : DefaultBlobFactory(response);
+                var blockBlob = BlobFactory != null ? BlobFactory(response.Url) : DefaultBlobFactory(response.Url);
+                // Set Blob ContentType
+                blockBlob.Properties.ContentType = "application/octet-stream";
                 //Upload to blob
                 await blockBlob.UploadFromStreamAsync(binarySubmitContext.Stream, binarySubmitContext.CancellationToken).ConfigureAwait(false);
 
@@ -201,13 +203,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static ICloudBlob DefaultBlobFactory(DirectBinarySubmissionResponseModel model)
+        public static ICloudBlob DefaultBlobFactory(string url)
         {
-            ValidationHelper.ArgumentNotNullOrWhiteSpace(model?.Url, nameof(model.Url));
+            ValidationHelper.ArgumentNotNullOrWhiteSpace(url, nameof(url));
             //Example of CloudBlockBlob with a SaS token: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
-            var blockBlob = new CloudBlockBlob(new Uri(model.Url));
-            // Set Blob ContentType
-            blockBlob.Properties.ContentType = "application/octet-stream";
+            var blockBlob = new CloudBlockBlob(new Uri(url));
 
             return blockBlob;
         }
