@@ -1,5 +1,6 @@
 ﻿using Microsoft.Rest;
 using Polly;
+using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Helpers;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,37 @@ namespace RecordPoint.Connectors.SDK.Client
                 {
                    // Logger.WriteWarning($"Connector API client is retrying a transient failure, DelayMilliseconds = [{ts.TotalMilliseconds}], LastException = [{ex?.ToString() ?? "<null>"}");
                 });
+        }
+
+        /// <summary>
+        /// Gets a retry policy for use when calling the Records365 vNext Connector API.
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="callerType"></param>
+        /// <param name="methodName"></param>
+        /// <param name="maxTryCount"></param>
+        /// <param name="retryDelayMilliseconds"></param>
+        /// <param name="ct"></param>
+        /// <param name="logPrefix"></param>
+        /// <returns></returns>
+        public static Policy GetPolicy(ILog log, Type callerType, string methodName, int maxTryCount, int retryDelayMilliseconds, CancellationToken ct, string logPrefix)
+        {
+            return Policy
+                .Handle<Exception>(ex => ex.IsRecords365ApiRetriableException(ct))
+                .WaitAndRetryAsync(
+                    maxTryCount, x => TimeSpan.FromMilliseconds(retryDelayMilliseconds),
+                    (ex, waitTime, retryCount, context) =>
+                    {
+                        log?.LogMessage(
+                            callerType, 
+                            $"{methodName}_Retry", 
+                            $"Retrying a transient failure: {logPrefix}" +
+                            $"RetryCount [{retryCount}] " +
+                            $"WaitTime [{waitTime.TotalMilliseconds}ms] " +
+                            $"Exception [{ex?.ToString() ?? "<null>"}]"
+                        );
+                    }
+                );
         }
 
         /// <summary>

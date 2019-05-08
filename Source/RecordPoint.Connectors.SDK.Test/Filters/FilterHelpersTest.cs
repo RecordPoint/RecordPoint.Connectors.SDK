@@ -98,16 +98,14 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
         {
             Assert.True(MatchesFilterTest(FilterConstants.FilterFieldTypes.StringType, "Test"));
         }
-
         
-
         [Fact]
         public void MatchesFilter_CanMatchOnBoolean()
         {
             Assert.True(MatchesFilterTest(FilterConstants.FilterFieldTypes.BooleanType, "true"));
         }
 
-        [Fact(Skip = "Not Implemented yet")]
+        [Fact]
         public void MatchesFilter_CanMatchOnDateTime()
         {
             Assert.True(MatchesFilterTest(FilterConstants.FilterFieldTypes.DateType, DateTime.UtcNow.ToString("O")));

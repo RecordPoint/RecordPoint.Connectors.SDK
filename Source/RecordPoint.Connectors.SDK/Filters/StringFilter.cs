@@ -3,7 +3,7 @@ using System;
 
 namespace RecordPoint.Connectors.SDK.Filters
 {
-    public static class StringFilter
+    static class StringFilter
     {
         public static bool MatchesFilter(SubmissionMetaDataModel model, SearchTermModel filter)
         {

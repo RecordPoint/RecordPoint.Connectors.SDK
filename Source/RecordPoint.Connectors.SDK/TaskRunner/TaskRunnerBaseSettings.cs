@@ -2,6 +2,10 @@
 
 namespace RecordPoint.Connectors.SDK.TaskRunner
 {
+    /// <summary>
+    /// Defines the behaviour of a class derived from TaskRunnerBase in situations where long-running tasks
+    /// fault in either a one-off or a consistent fashion
+    /// </summary>
     public class TaskRunnerBaseSettings
     {
         /// <summary>
@@ -47,10 +51,17 @@ namespace RecordPoint.Connectors.SDK.TaskRunner
         /// </summary>
         /// <param name="exceptionCount"></param>
         /// <returns></returns>
-        public virtual TimeSpan GetWaitTime(int exceptionCount)
+        public virtual TimeSpan GetWaitTime(long exceptionCount)
         {
-            var waitTime = TimeSpan.FromSeconds(WaitTimeSecondsBase * Math.Pow(WaitTimePowBase, exceptionCount));
-            if(waitTime > MaxWaitTime){
+            // If the exceptionCount is more than the MaxUnhandledExceptions, use the wait time from the maximum unhandled exceptions instead
+            // of using the unhandled exceptionCount - We're about to use the exceptionCount as an exponent and can't let the exceptionCount
+            // grow  without bounds. The user should ensure that combination of WaitTimeSecondsBase / WaitTimePowBase / MaxUnhandledExceptions
+            // cannot exceed TimeSpan.MaxValue: https://docs.microsoft.com/en-us/dotnet/api/system.timespan.maxvalue
+            var restrictedExceptionCount = exceptionCount > MaxUnhandledExceptions ? MaxUnhandledExceptions : exceptionCount; 
+
+            var waitTime = TimeSpan.FromSeconds(WaitTimeSecondsBase * Math.Pow(WaitTimePowBase, restrictedExceptionCount));
+            // The MaxWaitTime is respected regardless of whether or not we've overridden the exceptionCount
+            if (waitTime > MaxWaitTime){
                 return MaxWaitTime;
             }
             return waitTime;

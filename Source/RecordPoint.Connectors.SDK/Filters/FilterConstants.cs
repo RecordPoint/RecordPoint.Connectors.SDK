@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RecordPoint.Connectors.SDK.Filters
+﻿namespace RecordPoint.Connectors.SDK.Filters
 {
-    public static class FilterConstants
+    internal static class FilterConstants
     {
         public static class FilterBooleanOperators
         {
             public const string Or = "OR";
-            public const string And = "And";
+            public const string And = "AND";
         }
 
         public static class FilterFieldTypes
@@ -44,6 +38,14 @@ namespace RecordPoint.Connectors.SDK.Filters
         {
             public const string After = nameof(After);
             public const string Before = nameof(Before);
+        }
+
+        public static class NumericalFieldOperators
+        {
+            public const string GreaterThan = nameof(GreaterThan);
+            public const string GreaterThanOrEqualTo = nameof(GreaterThanOrEqualTo);
+            public const string LessThan = nameof(LessThan);
+            public const string LessThanOrEqualTo = nameof(LessThanOrEqualTo);
         }
     }
 }

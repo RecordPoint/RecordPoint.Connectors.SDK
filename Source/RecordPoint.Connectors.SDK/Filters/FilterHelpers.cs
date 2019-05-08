@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RecordPoint.Connectors.SDK.Filters
 {
-    public static class FilterHelpers
+    internal static class FilterHelpers
     {
         private const char _separator = '|';
         private const string _sourceFieldPrefix = "S|";

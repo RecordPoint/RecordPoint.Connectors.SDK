@@ -44,13 +44,19 @@ namespace RecordPoint.Connectors.SDK.Notifications
             var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
 
             var notificationQueryResponse = await policy.ExecuteAsync(
-                async () =>
+                async (ct) =>
                 {
                     var authHelper = _apiClientFactory.CreateAuthenticationHelper();
                     var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
-                    var response = await client.ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(connectorConfigId, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    var response = await client.ApiNotificationsByConnectorIdGetWithHttpMessagesAsync(
+                        connectorConfigId, 
+                        customHeaders: headers, 
+                        cancellationToken: ct
+                    ).ConfigureAwait(false);
+
                     return response;
-                }
+                },
+                cancellationToken
             ).ConfigureAwait(false);
 
             // TODO: add more comprehensive handling of the response codes
