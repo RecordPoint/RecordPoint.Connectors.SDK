@@ -15,6 +15,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     public class SubmitContext
     {
         /// <summary>
+        /// String to be returned if the SubmitContext's LogPrefix method is called and no
+        /// title is present on the SubmitContext
+        /// </summary>
+        protected const string NoTitleFound = "<no title found>";
+
+        /// <summary>
+        /// String to be returned if the SubmitContext's LogPrefix method is called and no
+        /// External ID is present on the SubmitContext
+        /// </summary>
+        protected const string NoExternalIdFound = "<no external id found>";
+
+        /// <summary>
         /// The ID of the Records365 vNext connector that this submission is being made through.
         /// </summary>
         public Guid ConnectorConfigId { get; set; }
@@ -97,7 +109,31 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public virtual string LogPrefix()
         {
             return
-                $"TenantId [{TenantId}] ConnectorConfigId [{ConnectorConfigId}] CorrelationId [{CorrelationId}] Title [{CoreMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.Title)?.Value ?? "<no title field in metadata found>"}] ";
+                $"TenantId [{TenantId}] ConnectorConfigId [{ConnectorConfigId}] CorrelationId [{CorrelationId}] ExternalId [{GetExternalId()}] Title [{GetTitle()}] ";
+        }
+
+        /// <summary>
+        /// Returns the title of the object the SubmitContext is related to. Typically this is sourced from the Core metadata on the 
+        /// SubmitContext, but in some cases (e.g. on the BinarySubmitContext) it may be stored in a strongly typed field
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetTitle()
+        {
+            var fileName = CoreMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.Title)?.Value;
+
+            return !string.IsNullOrEmpty(fileName) ? fileName : NoTitleFound;
+        }
+
+        /// <summary>
+        /// Returns the External ID of the object the SubmitContext is related to. Typically this is sourced from the Core metadata on the 
+        /// SubmitContext, but in some cases (e.g. on the BinarySubmitContext) it may be stored in a strongly typed field
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetExternalId()
+        {
+            var externalId = CoreMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.ExternalId)?.Value;
+
+            return !string.IsNullOrEmpty(externalId) ? externalId : NoExternalIdFound;
         }
     }
 }

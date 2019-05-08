@@ -418,6 +418,64 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             await AssertFiltered(AddOrUpdateCoreMetadata(submitContext, c.Key, c.Value), false);
         }
 
+        [Theory]
+        [MemberData(nameof(ExcludedFilterAndIncludedFilter_WorkTogetherTestData))]
+        public async Task ExcludedFilterAndIncludedFilter_WorkTogether(SubmitContext submitContext, bool expectFilter)
+        {
+            await AssertFiltered(submitContext, expectFilter);
+        }
+
+        public static IEnumerable<object[]> ExcludedFilterAndIncludedFilter_WorkTogetherTestData()
+        {
+            var connectorTypeId = Guid.NewGuid();
+            var excludeFieldName = "folderPath";
+            var includeFieldName = "subject";
+
+            var excludeSourceFieldName = GetSourceFieldName(connectorTypeId, excludeFieldName, nameof(String));
+            var includeSourceFieldName = GetSourceFieldName(connectorTypeId, includeFieldName, nameof(String));
+
+            var filter = new FiltersModel()
+            {
+                Excluded = new SearchTreeNodeModel()
+                {
+                    BoolOperator = FilterConstants.FilterBooleanOperators.Or,
+                    SearchTerm = null,
+                    Children = new List<SearchTreeNodeModel>()
+                    {
+                        GetSearchTreeNodeModel(excludeSourceFieldName, "inbox", FilterConstants.StringFieldOperators.Contains),
+                        GetSearchTreeNodeModel(excludeSourceFieldName, "sent", FilterConstants.StringFieldOperators.Contains)
+,                   }
+                },
+                Included = new SearchTreeNodeModel()
+                {
+                    BoolOperator = null,
+                    SearchTerm = GetSearchTermModel(includeSourceFieldName, "meeting", FilterConstants.StringFieldOperators.Contains),
+                    Children = null
+                }
+            };
+
+            // Item in one of the excluded folders and does not match include - Expect item to be filtered
+            var test1 = GetSubmitContext(filter);
+            AddOrUpdateSourceMetadata(test1, excludeFieldName, "inbox");
+            AddOrUpdateSourceMetadata(test1, includeFieldName, Guid.NewGuid().ToString());
+            yield return new object[] { test1, true };
+            // Item in one of the excluded folders and matches include - Expect item to be filtered
+            var test2 = GetSubmitContext(filter);
+            AddOrUpdateSourceMetadata(test2, excludeFieldName, "sent");
+            AddOrUpdateSourceMetadata(test2, includeFieldName, "meeting");
+            yield return new object[] { test2, true };
+            // Item not in one of the excluded folders and does not match include - Expect item to be filtered
+            var test3 = GetSubmitContext(filter);
+            AddOrUpdateSourceMetadata(test3, excludeFieldName, "Sandstorm");
+            AddOrUpdateSourceMetadata(test3, includeFieldName, "PROJECT ON HOLD");
+            yield return new object[] { test3, true };
+            // Item not in one of the excluded folders and does match include - Expect item to not be filtered
+            var test4 = GetSubmitContext(filter);
+            AddOrUpdateSourceMetadata(test4, excludeFieldName, "Sandstorm");
+            AddOrUpdateSourceMetadata(test4, includeFieldName, "Project Sandstorm - Crisis Management Meeting");
+            yield return new object[] { test4, false };
+        }
+
         private async Task AssertFiltered(SubmitContext submitContext, bool expectFiltered)
         {
             // We might reuse the same submit context id in the same run - Let's just reset
@@ -446,22 +504,22 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             _mockNext.Verify(x => x.Submit(It.Is<SubmitContext>((sc) => sc.CorrelationId == submitContext.CorrelationId)), Times.Never);
         }
 
-        private static SearchTermModel GetSearchTermModel(string fieldName, string expectedValue = _expectedValue)
+        private static SearchTermModel GetSearchTermModel(string fieldName, string expectedValue = _expectedValue, string operatorProperty = FilterConstants.CommonFieldOperators.Equal)
         {
             return new SearchTermModel()
             {
                 FieldName = fieldName,
                 FieldType = FilterConstants.FilterFieldTypes.StringType,
                 FieldValue = expectedValue,
-                OperatorProperty = FilterConstants.CommonFieldOperators.Equal
+                OperatorProperty = operatorProperty
             };
         }
 
-        private static SearchTreeNodeModel GetSearchTreeNodeModel(string fieldName, string expectedValue = _expectedValue)
+        private static SearchTreeNodeModel GetSearchTreeNodeModel(string fieldName, string expectedValue = _expectedValue, string operatorProperty = FilterConstants.CommonFieldOperators.Equal)
         {
             return new SearchTreeNodeModel()
             {
-                SearchTerm = GetSearchTermModel(fieldName, expectedValue)
+                SearchTerm = GetSearchTermModel(fieldName, expectedValue, operatorProperty)
             };
         }
 
@@ -494,6 +552,18 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         private static SubmitContext AddOrUpdateCoreMetadata(SubmitContext submitContext, string fieldName, string fieldValue, string fieldType = nameof(String))
         {
             submitContext.CoreMetaData.AddOrUpdate(new SubmissionMetaDataModel()
+            {
+                Name = fieldName,
+                Type = fieldType,
+                Value = fieldValue
+            });
+
+            return submitContext;
+        }
+
+        private static SubmitContext AddOrUpdateSourceMetadata(SubmitContext submitContext, string fieldName, string fieldValue, string fieldType = nameof(String))
+        {
+            submitContext.SourceMetaData.AddOrUpdate(new SubmissionMetaDataModel()
             {
                 Name = fieldName,
                 Type = fieldType,

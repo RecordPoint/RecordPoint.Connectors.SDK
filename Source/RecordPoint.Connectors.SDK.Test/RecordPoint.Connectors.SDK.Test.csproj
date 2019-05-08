@@ -13,4 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
 </Project>

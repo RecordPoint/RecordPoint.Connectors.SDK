@@ -1,5 +1,4 @@
 ﻿using Microsoft.Rest;
-using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Helpers;
 using System;
@@ -77,17 +76,19 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             try
             {
-                var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, submitContext.CancellationToken);
-
-                var result = await policy.ExecuteAsync(
-                    async () =>
+                var result = await GetRetryPolicy(submitContext).ExecuteAsync(
+                    async (ct ) =>
                     {
                         var authHelper = ApiClientFactory.CreateAuthenticationHelper();
                         var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                        return await apiClient.ApiAggregationsPostWithHttpMessagesAsync(aggregationModel, customHeaders: headers, cancellationToken: submitContext.CancellationToken)
-                                              .ConfigureAwait(false);
-                    })
-                    .ConfigureAwait(false);
+                        return await apiClient.ApiAggregationsPostWithHttpMessagesAsync(
+                            aggregationModel, 
+                            customHeaders: headers, 
+                            cancellationToken: ct
+                        ).ConfigureAwait(false);
+                    },
+                    submitContext.CancellationToken
+                ).ConfigureAwait(false);
 
                 shouldContinue = await HandleSubmitResponse(submitContext, result, "Aggregation").ConfigureAwait(false);
             }

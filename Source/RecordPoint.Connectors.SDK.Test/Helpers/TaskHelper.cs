@@ -25,7 +25,7 @@ namespace RecordPoint.Connectors.SDK.Test.Helpers
             {
 
             }
-            catch (OperationCanceledException oce)
+            catch (OperationCanceledException)
             {
 
             }

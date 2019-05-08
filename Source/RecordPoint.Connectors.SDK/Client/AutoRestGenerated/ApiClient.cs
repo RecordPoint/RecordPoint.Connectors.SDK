@@ -991,6 +991,378 @@ namespace RecordPoint.Connectors.SDK.Client
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            // Deserialize Response
+            if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
+        /// <summary>
+        /// Get SAS Token for blob Resource
+        /// </summary>
+        /// <param name='binarySubmissionInputModel'>
+        /// </param>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<object>> ApiBinariesGetSASTokenPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (binarySubmissionInputModel != null)
+            {
+                binarySubmissionInputModel.Validate();
+            }
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("binarySubmissionInputModel", binarySubmissionInputModel);
+                tracingParameters.Add("acceptLanguage", acceptLanguage);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiBinariesGetSASTokenPost", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Binaries/GetSASToken").ToString();
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+            if (acceptLanguage != null)
+            {
+                if (_httpRequest.Headers.Contains("Accept-Language"))
+                {
+                    _httpRequest.Headers.Remove("Accept-Language");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
+            }
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            if(binarySubmissionInputModel != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(binarySubmissionInputModel, SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
+            // Set Credentials
+            if (Credentials != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 202 && (int)_statusCode != 400 && (int)_statusCode != 405 && (int)_statusCode != 412)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<object>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 202)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<DirectBinarySubmissionResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 400)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 405)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
+        /// <summary>
+        /// Notifies Records365 that a new Binary has been uploaded
+        /// </summary>
+        /// <param name='binarySubmissionInputModel'>
+        /// </param>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (binarySubmissionInputModel != null)
+            {
+                binarySubmissionInputModel.Validate();
+            }
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("binarySubmissionInputModel", binarySubmissionInputModel);
+                tracingParameters.Add("acceptLanguage", acceptLanguage);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiBinariesNotifyBinarySubmissionPost", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Binaries/NotifyBinarySubmission").ToString();
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+            if (acceptLanguage != null)
+            {
+                if (_httpRequest.Headers.Contains("Accept-Language"))
+                {
+                    _httpRequest.Headers.Remove("Accept-Language");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
+            }
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            if(binarySubmissionInputModel != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(binarySubmissionInputModel, SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
+            // Set Credentials
+            if (Credentials != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200 && (int)_statusCode != 412)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<ErrorResponseModel>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2072,6 +2444,36 @@ namespace RecordPoint.Connectors.SDK.Client
         Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Get SAS Token for blob Resource
+        /// </summary>
+        /// <param name='binarySubmissionInputModel'>
+        /// </param>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> ApiBinariesGetSASTokenPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Notifies Records365 that a new Binary has been uploaded
+        /// </summary>
+        /// <param name='binarySubmissionInputModel'>
+        /// </param>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Gets a connector configure model by its connector ID.
         /// </summary>
         /// <param name='id'>
@@ -2378,6 +2780,78 @@ namespace RecordPoint.Connectors.SDK.Client
             public static async Task<ErrorResponseModel> ApiBinariesPostAsync(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiBinariesPostWithHttpMessagesAsync(connectorId, itemExternalId, binaryExternalId, fileName, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Get SAS Token for blob Resource
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='binarySubmissionInputModel'>
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            public static object ApiBinariesGetSASTokenPost(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string))
+            {
+                return operations.ApiBinariesGetSASTokenPostAsync(binarySubmissionInputModel, acceptLanguage).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get SAS Token for blob Resource
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='binarySubmissionInputModel'>
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> ApiBinariesGetSASTokenPostAsync(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiBinariesGetSASTokenPostWithHttpMessagesAsync(binarySubmissionInputModel, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Notifies Records365 that a new Binary has been uploaded
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='binarySubmissionInputModel'>
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            public static ErrorResponseModel ApiBinariesNotifyBinarySubmissionPost(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string))
+            {
+                return operations.ApiBinariesNotifyBinarySubmissionPostAsync(binarySubmissionInputModel, acceptLanguage).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Notifies Records365 that a new Binary has been uploaded
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='binarySubmissionInputModel'>
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ErrorResponseModel> ApiBinariesNotifyBinarySubmissionPostAsync(this IApiClient operations, DirectBinarySubmissionInputModel binarySubmissionInputModel = default(DirectBinarySubmissionInputModel), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(binarySubmissionInputModel, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -3810,6 +4284,196 @@ namespace RecordPoint.Connectors.SDK.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    public partial class DirectBinarySubmissionInputModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the DirectBinarySubmissionInputModel
+        /// class.
+        /// </summary>
+        public DirectBinarySubmissionInputModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the DirectBinarySubmissionInputModel
+        /// class.
+        /// </summary>
+        /// <param name="connectorId">The ID of the connector submitting the
+        /// binary</param>
+        /// <param name="itemExternalId">The ExternalID of the item that the
+        /// binary belongs to</param>
+        /// <param name="binaryExternalId">The ExternalID of the binary</param>
+        /// <param name="mimeType">Mime type of the binary to submit into
+        /// blob</param>
+        /// <param name="fileSize">FileSize of the binary to submit into
+        /// blob</param>
+        /// <param name="fileHash">FileHash of the binary to use in ML</param>
+        /// <param name="fileName">An optional file name to associate with the
+        /// binary</param>
+        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), string fileName = default(string))
+        {
+            MimeType = mimeType;
+            FileSize = fileSize;
+            FileHash = fileHash;
+            ConnectorId = connectorId;
+            ItemExternalId = itemExternalId;
+            BinaryExternalId = binaryExternalId;
+            FileName = fileName;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets mime type of the binary to submit into blob
+        /// </summary>
+        [JsonProperty(PropertyName = "mimeType")]
+        public string MimeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets fileSize of the binary to submit into blob
+        /// </summary>
+        [JsonProperty(PropertyName = "fileSize")]
+        public long? FileSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets fileHash of the binary to use in ML
+        /// </summary>
+        [JsonProperty(PropertyName = "fileHash")]
+        public string FileHash { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ID of the connector submitting the binary
+        /// </summary>
+        [JsonProperty(PropertyName = "connectorId")]
+        public string ConnectorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExternalID of the item that the binary belongs to
+        /// </summary>
+        [JsonProperty(PropertyName = "itemExternalId")]
+        public string ItemExternalId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExternalID of the binary
+        /// </summary>
+        [JsonProperty(PropertyName = "binaryExternalId")]
+        public string BinaryExternalId { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional file name to associate with the binary
+        /// </summary>
+        [JsonProperty(PropertyName = "fileName")]
+        public string FileName { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (ConnectorId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ConnectorId");
+            }
+            if (ItemExternalId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ItemExternalId");
+            }
+            if (BinaryExternalId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "BinaryExternalId");
+            }
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class DirectBinarySubmissionResponseModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the
+        /// DirectBinarySubmissionResponseModel class.
+        /// </summary>
+        public DirectBinarySubmissionResponseModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the
+        /// DirectBinarySubmissionResponseModel class.
+        /// </summary>
+        /// <param name="url">Url of the binary resource</param>
+        /// <param name="maxFileSize">Length of MaxFileSize in bytes</param>
+        public DirectBinarySubmissionResponseModel(string url = default(string), long? maxFileSize = default(long?))
+        {
+            Url = url;
+            MaxFileSize = maxFileSize;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets url of the binary resource
+        /// </summary>
+        [JsonProperty(PropertyName = "url")]
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Gets or sets length of MaxFileSize in bytes
+        /// </summary>
+        [JsonProperty(PropertyName = "maxFileSize")]
+        public long? MaxFileSize { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Represents a single search per field
     /// eg. ItemTypeId:'0' would have FieldName="ItemTypeId", Operator="Equal"
@@ -4022,6 +4686,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Filters records based on Excluded and Included properties.
+    /// </summary>
     public partial class FiltersModel
     {
         /// <summary>
@@ -4159,6 +4826,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// present</param>
         /// <param name="protectionEnabled">Whether or not binary protection is
         /// enabled for this connector</param>
+        /// <param name="filters">Filters records based on Excluded and
+        /// Included properties</param>
         public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?), FiltersModel filters = default(FiltersModel))
         {
             Id = id;
@@ -4314,6 +4983,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public bool? ProtectionEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets filters records based on Excluded and Included
+        /// properties
         /// </summary>
         [JsonProperty(PropertyName = "filters")]
         public FiltersModel Filters { get; set; }
@@ -4419,12 +5090,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a record???s location.
+        /// <param name="location">A pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a record???s
+        /// <param name="parentExternalId">A pointer to a record’s
         /// aggregation</param>
         /// <param name="id">Internal unique ID for the item</param>
         /// <param name="itemType">Defines the type of the item</param>
@@ -4729,7 +5400,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s location.
+        /// Gets or sets a pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -4744,7 +5415,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s aggregation
+        /// Gets or sets a pointer to a record’s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
@@ -4879,12 +5550,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a record???s location.
+        /// <param name="location">A pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a record???s
+        /// <param name="parentExternalId">A pointer to a record’s
         /// aggregation</param>
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
@@ -5005,7 +5676,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s location.
+        /// Gets or sets a pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5020,7 +5691,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s aggregation
+        /// Gets or sets a pointer to a record’s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
