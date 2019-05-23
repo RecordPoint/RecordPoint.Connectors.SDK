@@ -586,7 +586,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 202 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 202 && (int)_statusCode != 400 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -632,6 +632,24 @@ namespace RecordPoint.Connectors.SDK.Client
             }
             // Deserialize Response
             if ((int)_statusCode == 400)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -755,7 +773,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 204 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 204 && (int)_statusCode != 400 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -801,6 +819,24 @@ namespace RecordPoint.Connectors.SDK.Client
             }
             // Deserialize Response
             if ((int)_statusCode == 400)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -947,7 +983,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 412)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 412 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -993,6 +1029,24 @@ namespace RecordPoint.Connectors.SDK.Client
             }
             // Deserialize Response
             if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1115,7 +1169,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 202 && (int)_statusCode != 400 && (int)_statusCode != 405 && (int)_statusCode != 412)
+            if ((int)_statusCode != 202 && (int)_statusCode != 400 && (int)_statusCode != 405 && (int)_statusCode != 412 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1197,6 +1251,24 @@ namespace RecordPoint.Connectors.SDK.Client
             }
             // Deserialize Response
             if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1319,7 +1391,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 412)
+            if ((int)_statusCode != 200 && (int)_statusCode != 412 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1347,6 +1419,24 @@ namespace RecordPoint.Connectors.SDK.Client
             _result.Response = _httpResponse;
             // Deserialize Response
             if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1923,7 +2013,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 202 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 202 && (int)_statusCode != 400 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1987,6 +2077,24 @@ namespace RecordPoint.Connectors.SDK.Client
             }
             // Deserialize Response
             if ((int)_statusCode == 400)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -2263,7 +2371,7 @@ namespace RecordPoint.Connectors.SDK.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            if ((int)_statusCode != 200 && (int)_statusCode != 404 && (int)_statusCode != 429)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2291,6 +2399,24 @@ namespace RecordPoint.Connectors.SDK.Client
             _result.Response = _httpResponse;
             // Deserialize Response
             if ((int)_statusCode == 404)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -5090,12 +5216,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a recordâ€™s location.
+        /// <param name="location">A pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a recordâ€™s
+        /// <param name="parentExternalId">A pointer to a record’s
         /// aggregation</param>
         /// <param name="id">Internal unique ID for the item</param>
         /// <param name="itemType">Defines the type of the item</param>
@@ -5400,7 +5526,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a recordâ€™s location.
+        /// Gets or sets a pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5415,7 +5541,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a recordâ€™s aggregation
+        /// Gets or sets a pointer to a record’s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
@@ -5550,12 +5676,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a recordâ€™s location.
+        /// <param name="location">A pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a recordâ€™s
+        /// <param name="parentExternalId">A pointer to a record’s
         /// aggregation</param>
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
@@ -5676,7 +5802,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a recordâ€™s location.
+        /// Gets or sets a pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5691,7 +5817,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a recordâ€™s aggregation
+        /// Gets or sets a pointer to a record’s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }

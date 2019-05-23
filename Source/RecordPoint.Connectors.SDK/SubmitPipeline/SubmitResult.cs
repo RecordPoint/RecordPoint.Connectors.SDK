@@ -35,7 +35,14 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             /// submit if Deferred is returned for the same submit for many repeated
             /// attempts over a long period of time.
             /// </summary>
-            Deferred 
+            Deferred,
+            /// <summary>
+            /// Indicates that the Records365 vNext platform rejected the submit
+            /// because a part of the submission chain is experiencing heavy load.
+            /// The connector implementation should use a circuit breaker to wait 
+            /// on all submissions and retry the submit at a later time. 
+            /// </summary>
+            TooManyRequests
         }
 
         public Status SubmitStatus { get; set; }
