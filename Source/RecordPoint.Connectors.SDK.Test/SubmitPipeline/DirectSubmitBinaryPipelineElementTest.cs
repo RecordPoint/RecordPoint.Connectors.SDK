@@ -137,6 +137,20 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         }
 
         [Fact]
+        public async Task ReturnsTooManyRequestsIf429ErrorIsReceived()
+        {
+            var submitContext = GetSubmitContext();
+
+            SetupGetSASTokenResponseWithError((System.Net.HttpStatusCode)429, "TooManyRequests");
+
+            await _pipelineElement.Submit(submitContext);
+
+            VerifyNotSubmitted();
+
+            Assert.Equal(SubmitResult.Status.TooManyRequests, submitContext.SubmitResult.SubmitStatus);
+        }
+
+        [Fact]
         public async Task ThrowsIfNotificationResultIsNotOk()
         {
             var submitContext = GetSubmitContext();

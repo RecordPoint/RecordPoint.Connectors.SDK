@@ -132,6 +132,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a precondition failed.");
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
                     break;
+                case (System.Net.HttpStatusCode)429:
+                    shouldContinueSubmitPipeline = false;
+
+                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a part of the system is experiencing heavy load.");
+                    submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
+                    break;
                 default:
                     shouldContinueSubmitPipeline = false;
 
