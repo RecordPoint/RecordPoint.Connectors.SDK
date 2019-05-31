@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
     public class SubmitResult
@@ -46,6 +48,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         }
 
         public Status SubmitStatus { get; set; }
+
+        public DateTime? WaitUntilTime { get; set; } = null;
 
         public SubmitResult()
         {
