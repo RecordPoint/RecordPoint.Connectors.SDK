@@ -145,7 +145,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                         var timeValue = values?.FirstOrDefault();
                         if (!string.IsNullOrEmpty(timeValue) && DateTime.TryParse(timeValue, out var time))
                         {
-                            submitContext.SubmitResult.WaitUntilTime = time;
+                            submitContext.SubmitResult.WaitUntilTime = time.ToUniversalTime();
                         }
                     }
 
