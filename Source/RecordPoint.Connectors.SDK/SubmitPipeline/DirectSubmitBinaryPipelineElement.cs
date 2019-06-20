@@ -2,7 +2,10 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Diagnostics;
+using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Helpers;
+using RecordPoint.Connectors.SDK.Providers;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -24,11 +27,34 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public Func<string, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
 
         /// <summary>
+        /// Circuit breaker for handling backpressure for Azure Blob Storage
+        /// </summary>
+        public AzureBlobRetryProviderWithCircuitBreaker CircuitBreaker { get; set; }
+        
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="next"></param>
         public DirectSubmitBinaryPipelineElement(ISubmission next) : base(next)
         {
+            CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(new CircuitBreakerOptions(), false)
+            {
+                Log = Log
+            };
+        }
+
+        /// <summary>
+        /// Constructor - pass in parameters to customize a circuit breaker
+        /// </summary>
+        /// <param name="next"></param>
+        /// <param name="options"></param>
+        /// <param name="useCircuit"></param>
+        public DirectSubmitBinaryPipelineElement(ISubmission next, CircuitBreakerOptions options, bool useCircuit) : base(next)
+        {
+            CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(options, useCircuit)
+            {
+                Log = Log
+            };
         }
 
         /// <summary>
@@ -39,8 +65,13 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public override async Task Submit(SubmitContext submitContext)
         {
             var binarySubmitContext = submitContext as BinarySubmitContext;
-
             ValidateFields(binarySubmitContext);
+            
+            if (!CircuitBreaker.IsCircuitClosed(out var tmp))
+            {
+                submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
+                return;
+            }
 
             //Create the DirectBinarySubmissionInputModel needed for the SaS token call
             var binarySubmissionInputModel = new DirectBinarySubmissionInputModel(
@@ -97,13 +128,50 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 var blockBlob = BlobFactory != null ? BlobFactory(response.Url) : DefaultBlobFactory(response.Url);
                 // Set Blob ContentType
                 blockBlob.Properties.ContentType = "application/octet-stream";
-                //Upload to blob
-                await blockBlob.UploadFromStreamAsync(binarySubmitContext.Stream, binarySubmitContext.CancellationToken).ConfigureAwait(false);
 
+                // If catch TooManyRequestsException, make it return a TooManyRequests Status
+                try
+                {
+                    await CircuitBreaker.ExecuteWithRetry(
+                    blockBlob.ServiceClient,
+                    //Upload to blob
+                    async () =>
+                    {
+                        await blockBlob.UploadFromStreamAsync(binarySubmitContext.Stream, binarySubmitContext.CancellationToken).ConfigureAwait(false);
+                    },
+                    GetType(),
+                    nameof(Submit)).ConfigureAwait(false);
+                }
+                catch (TooManyRequestsException ex)
+                {
+                    submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
+                    submitContext.SubmitResult.WaitUntilTime = ex.WaitUntilTime;
+                    return;
+                }
+                
                 if (!string.IsNullOrWhiteSpace(binarySubmitContext.FileName))
                 {
                     blockBlob.Metadata[MetaDataKeys.ItemBinary_FileName] = EscapeBlobMetaDataValue(binarySubmitContext.FileName);
-                    await blockBlob.SetMetadataAsync(binarySubmitContext.CancellationToken).ConfigureAwait(false);
+
+                    // If catch TooManyRequestsException, make it return a TooManyRequests Status
+                    try
+                    {
+                        await CircuitBreaker.ExecuteWithRetry(
+                        blockBlob.ServiceClient,
+                        async () =>
+                        {
+                            await blockBlob.SetMetadataAsync(binarySubmitContext.CancellationToken).ConfigureAwait(false);
+                        },
+                        GetType(),
+                        nameof(Submit)).ConfigureAwait(false);
+                    }
+                    catch(TooManyRequestsException ex)
+                    {
+                        submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
+                        submitContext.SubmitResult.WaitUntilTime = ex.WaitUntilTime;
+                        return;
+                    }
+                    
                 }
 
                 var notifyResult = await retryPolicy.ExecuteAsync(
@@ -201,7 +269,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// Default blob factory used for Production workloads
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="url"></param>
         /// <returns></returns>
         public static ICloudBlob DefaultBlobFactory(string url)
         {

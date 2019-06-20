@@ -1,9 +1,12 @@
 ﻿using Microsoft.Rest;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Diagnostics;
+using RecordPoint.Connectors.SDK.Interfaces;
+using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System;
 using System.Collections.Generic;
@@ -31,8 +34,13 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         public DirectSubmitBinaryPipelineElementTest()
         {
+            var _mockDateTimeProvider = new Mock<IDateTimeProvider>();
+            _mockDateTimeProvider
+                .Setup(o => o.UtcNow)
+                .Returns(DateTime.UtcNow);
             _mockBlob.Setup(x => x.Metadata).Returns(new Dictionary<string, string>());
             _mockBlob.SetupGet(x => x.Properties).Returns(new BlobProperties());
+            _mockBlob.Setup(x => x.ServiceClient).Returns(new CloudBlobClient(new Uri("http://fake.com")));
             SetupDefaultsForClient();
 
             var mockAuthenticationHelper = new Mock<IAuthenticationHelper>();
@@ -46,12 +54,17 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
             _mockClientFactory.Setup(x => x.CreateAuthenticationHelper()).Returns(mockAuthenticationHelper.Object);
             _mockClientFactory.Setup(x => x.CreateApiClient(It.IsAny<ApiClientFactorySettings>())).Returns(_mockClient.Object);
-
-            _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object)
+            
+            _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object, GetCircuitBreakerOptions(), true)
             {
                 ApiClientFactory = _mockClientFactory.Object,
                 Log = _mockLog.Object,
-                BlobFactory = (uri) => _mockBlob.Object 
+                BlobFactory = (uri) => _mockBlob.Object
+            };
+
+            _pipelineElement.CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(GetCircuitBreakerOptions(), true)
+            {
+                DateTimeProvider = _mockDateTimeProvider.Object
             };
         }
 
@@ -65,7 +78,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<CancellationToken>()));
             _mockSubmission.Verify(x => x.Submit(It.IsAny<SubmitContext>()));
         }
-
+        
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -186,6 +199,23 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             await _pipelineElement.Submit(submitContext);
 
             VerifyNotSubmitted();
+        }
+
+        [Fact]
+        public async Task CircuitBreaksIfBlobExceptionReceived()
+        {
+            _mockBlob.Setup(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Throws(Throw503Exception());
+
+            var submitContext = GetSubmitContext();
+            await _pipelineElement.Submit(submitContext);
+
+            _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()));
+            WaitUntilComplete(() => 
+            {
+                Assert.False(_pipelineElement.CircuitBreaker.IsCircuitClosed(out var tmp));
+                return true;
+            }, 10, 1000, "Circuit remains closed when it's supposed to be open.");
+            Assert.Equal(SubmitResult.Status.TooManyRequests, submitContext.SubmitResult.SubmitStatus);
         }
 
         private BinarySubmitContext GetSubmitContext(long length = 10)
@@ -340,6 +370,47 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                     }
                 }
             });
+        }
+
+        private StorageException Throw503Exception()
+        {
+            var requestResult = new RequestResult()
+            {
+                HttpStatusCode = 503
+            };
+            return new StorageException(requestResult, "503 test", new Exception("503 test Inner"));
+        }
+
+        private CircuitBreakerOptions GetCircuitBreakerOptions()
+        {
+            return new CircuitBreakerOptions()
+            {
+                FailureThreshold = 0.5,
+                MinimumAttempts = 2,
+                SamplingDurationS = 100,
+                DurationOfBreakS = 10
+            };
+        }
+
+        private void WaitUntilComplete(Func<bool> code, int retry, int sleepms, string errorMessage)
+        {
+            int count = 0;
+            while (!code())
+            {
+                if (count > retry)
+                {
+                    var output = "The code executed [" + count + "] times and did not complete";
+
+                    if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        output += $": {errorMessage}";
+                    }
+
+                    throw new ApplicationException(output);
+                }
+                count++;
+                System.Threading.Thread.Sleep(sleepms);
+            }
         }
     }
 }
