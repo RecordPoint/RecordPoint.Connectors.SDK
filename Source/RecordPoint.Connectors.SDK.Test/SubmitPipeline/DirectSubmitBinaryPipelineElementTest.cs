@@ -34,10 +34,6 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         public DirectSubmitBinaryPipelineElementTest()
         {
-            var _mockDateTimeProvider = new Mock<IDateTimeProvider>();
-            _mockDateTimeProvider
-                .Setup(o => o.UtcNow)
-                .Returns(DateTime.UtcNow);
             _mockBlob.Setup(x => x.Metadata).Returns(new Dictionary<string, string>());
             _mockBlob.SetupGet(x => x.Properties).Returns(new BlobProperties());
             _mockBlob.Setup(x => x.ServiceClient).Returns(new CloudBlobClient(new Uri("http://fake.com")));
@@ -55,16 +51,15 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             _mockClientFactory.Setup(x => x.CreateAuthenticationHelper()).Returns(mockAuthenticationHelper.Object);
             _mockClientFactory.Setup(x => x.CreateApiClient(It.IsAny<ApiClientFactorySettings>())).Returns(_mockClient.Object);
             
-            _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object, GetCircuitBreakerOptions(), true)
+            _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object)
             {
                 ApiClientFactory = _mockClientFactory.Object,
                 Log = _mockLog.Object,
-                BlobFactory = (uri) => _mockBlob.Object
-            };
-
-            _pipelineElement.CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(GetCircuitBreakerOptions(), true)
-            {
-                DateTimeProvider = _mockDateTimeProvider.Object
+                BlobFactory = (uri) => _mockBlob.Object,
+                CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(GetCircuitBreakerOptions(), true)
+                {
+                    Log = _mockLog.Object
+                }
             };
         }
 

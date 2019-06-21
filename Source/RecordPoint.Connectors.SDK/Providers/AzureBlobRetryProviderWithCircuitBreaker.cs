@@ -17,11 +17,6 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// </summary>
     public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider
     {
-        /// <summary>
-        /// DateTimeProvider used for setting the waiting time
-        /// </summary>
-        public IDateTimeProvider DateTimeProvider { get; set; }
-
         private TimeSpan WaitFor { get; set; }
 
         // The CircuitBreakerPolicy needs to be a singleton - Either the implementing class needs to be a singleton, or the policy needs to be a
@@ -39,6 +34,7 @@ namespace RecordPoint.Connectors.SDK.Providers
         /// Constructor
         /// </summary>
         /// <param name="options"></param>
+        /// <param name="useCircuit"></param>
         public AzureBlobRetryProviderWithCircuitBreaker(CircuitBreakerOptions options, bool useCircuit)
         {
             _options = options;
@@ -66,7 +62,9 @@ namespace RecordPoint.Connectors.SDK.Providers
                 internalWaitUntil = _waitUntil;
             };
 
-            var waitTime = internalWaitUntil - DateTimeProvider.UtcNow;
+            // We can use a DateTime (rather than a Provider) as this class only uses it internally. 
+            // I.e. it just uses it relatively to keep track of how much time has passed.
+            var waitTime = internalWaitUntil - DateTime.UtcNow;
             // If circuit state changes or issue arrises with date time, this could be in the past.
             // Thus, if the timespan is negative, we return zero instead.
             waitFor = waitTime > TimeSpan.Zero ? waitTime : TimeSpan.Zero;
@@ -76,7 +74,7 @@ namespace RecordPoint.Connectors.SDK.Providers
         // Returns a Task to match the parameter requirements of FallbackAsync
         private Exception ThrowTooManyRequests()
         {
-            var waitUntil = DateTimeProvider.UtcNow.AddSeconds(_options.DurationOfBreakS);
+            var waitUntil = DateTime.UtcNow.AddSeconds(_options.DurationOfBreakS);
 
             // Lock the waitUntil value while it is set.
             lock (_waitUntilLock)
