@@ -62,6 +62,8 @@ namespace RecordPoint.Connectors.SDK.Providers
                 internalWaitUntil = _waitUntil;
             };
 
+            // We can use a DateTime (rather than a Provider) as this class only uses it internally. 
+            // I.e. it just uses it relatively to keep track of how much time has passed.
             var waitTime = internalWaitUntil - DateTime.UtcNow;
             // If circuit state changes or issue arrises with date time, this could be in the past.
             // Thus, if the timespan is negative, we return zero instead.
@@ -72,7 +74,6 @@ namespace RecordPoint.Connectors.SDK.Providers
         // Returns a Task to match the parameter requirements of FallbackAsync
         private Exception ThrowTooManyRequests()
         {
-            // It is only using DateTime but not a Provider because it's only compared against internally within the class
             var waitUntil = DateTime.UtcNow.AddSeconds(_options.DurationOfBreakS);
 
             // Lock the waitUntil value while it is set.
