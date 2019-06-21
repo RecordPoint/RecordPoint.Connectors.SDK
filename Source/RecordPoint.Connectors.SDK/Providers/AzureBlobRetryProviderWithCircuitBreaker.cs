@@ -72,6 +72,7 @@ namespace RecordPoint.Connectors.SDK.Providers
         // Returns a Task to match the parameter requirements of FallbackAsync
         private Exception ThrowTooManyRequests()
         {
+            // It is only using DateTime but not a Provider because it's only compared against internally within the class
             var waitUntil = DateTime.UtcNow.AddSeconds(_options.DurationOfBreakS);
 
             // Lock the waitUntil value while it is set.
