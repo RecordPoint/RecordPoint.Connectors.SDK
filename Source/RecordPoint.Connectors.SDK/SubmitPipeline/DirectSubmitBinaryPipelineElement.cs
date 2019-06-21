@@ -33,28 +33,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         
         /// <summary>
         /// Constructor
-        /// </summary>
         /// <param name="next"></param>
         public DirectSubmitBinaryPipelineElement(ISubmission next) : base(next)
         {
-            CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(new CircuitBreakerOptions(), false)
-            {
-                Log = Log
-            };
-        }
-
-        /// <summary>
-        /// Constructor - pass in parameters to customize a circuit breaker
-        /// </summary>
-        /// <param name="next"></param>
-        /// <param name="options"></param>
-        /// <param name="useCircuit"></param>
-        public DirectSubmitBinaryPipelineElement(ISubmission next, CircuitBreakerOptions options, bool useCircuit) : base(next)
-        {
-            CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(options, useCircuit)
-            {
-                Log = Log
-            };
         }
 
         /// <summary>
