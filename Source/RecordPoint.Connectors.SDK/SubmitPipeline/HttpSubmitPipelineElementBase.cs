@@ -3,6 +3,8 @@ using Polly;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static RecordPoint.Connectors.SDK.Fields;
@@ -15,6 +17,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     /// </summary>
     public abstract class HttpSubmitPipelineElementBase : SubmitPipelineElementBase
     {
+        private const string waitUntilTime = "wait-until-time";
+        private const int defaultWaitTimeSeconds = 30;
+
         /// <summary>
         /// Constructs a new HttpSubmitPipelineElementBase with an optional next submit
         /// pipeline element.
@@ -134,8 +139,23 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     break;
                 case (System.Net.HttpStatusCode)429:
                     shouldContinueSubmitPipeline = false;
+                    
+                    if (result.Response.Headers.TryGetValues(waitUntilTime, out var values)) 
+                    {
+                        var timeValue = values?.FirstOrDefault();
+                        if (!string.IsNullOrEmpty(timeValue) && DateTime.TryParse(timeValue, out var time))
+                        {
+                            submitContext.SubmitResult.WaitUntilTime = time.ToUniversalTime();
+                        }
+                    }
 
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a part of the system is experiencing heavy load.");
+                    if (submitContext.SubmitResult.WaitUntilTime == null)
+                    {
+                        submitContext.SubmitResult.WaitUntilTime = DateTime.UtcNow.AddSeconds(defaultWaitTimeSeconds);
+                    }
+
+                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a part of the system is experiencing heavy load. " +
+                        $"Try again after {submitContext.SubmitResult.WaitUntilTime}.");
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
                     break;
                 default:
