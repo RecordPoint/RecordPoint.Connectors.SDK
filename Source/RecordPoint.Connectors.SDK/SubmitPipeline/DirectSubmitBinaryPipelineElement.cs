@@ -5,6 +5,7 @@ using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Helpers;
+using RecordPoint.Connectors.SDK.Interfaces;
 using RecordPoint.Connectors.SDK.Providers;
 using System;
 using System.Net;
@@ -29,7 +30,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// Circuit breaker for handling backpressure for Azure Blob Storage
         /// </summary>
-        public AzureBlobRetryProviderWithCircuitBreaker CircuitBreaker { get; set; }
+        public IAzureBlobRetryProvider CircuitBreaker { get; set; }
         
         /// <summary>
         /// Constructor

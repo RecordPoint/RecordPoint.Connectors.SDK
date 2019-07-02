@@ -15,10 +15,9 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// <summary>
     /// Retry provider with circuit breaker for Azure blob storage 
     /// </summary>
-    public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider
+    public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider, IAzureBlobRetryProvider, ICircuitEventHandler
     {
         private TimeSpan WaitFor { get; set; }
-
         // The CircuitBreakerPolicy needs to be a singleton - Either the implementing class needs to be a singleton, or the policy needs to be a
         // singleton. Static would be good for ensuring the policy is a singleton even if we mess up our IoC, but this would:
         // - Prevent RetryProviderWithCircuitBreaker being abstracted into a base class for multiple resources, as they would all share the same underlying circuit
@@ -29,6 +28,8 @@ namespace RecordPoint.Connectors.SDK.Providers
         private DateTime _waitUntil = DateTime.MinValue;
         private CircuitBreakerOptions _options;
         private bool _useCircuit;
+
+        public event EventHandler<TimeSpan> BreakEvent;
 
         /// <summary>
         /// Constructor
@@ -103,6 +104,7 @@ namespace RecordPoint.Connectors.SDK.Providers
                         durationOfBreak: TimeSpan.FromSeconds(_options.DurationOfBreakS),
                         onBreak: (ex, ts) =>
                         {
+                            BreakEvent?.Invoke(this, ts);
                             // Performed when the Circuit breaks
                             Log?.LogWarning(
                                 typeof(AzureBlobRetryProviderWithCircuitBreaker),
