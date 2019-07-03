@@ -12,7 +12,7 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// <summary>
     /// Retry provider for Azure blob storage 
     /// </summary>
-    public class AzureBlobRetryProvider : IAzureStorageRetryProvider
+    public class AzureBlobRetryProvider : ISdkAzureBlobRetryProvider
     {
         private const int MaxAttempts = 3;
         private const double PowBase = 2;

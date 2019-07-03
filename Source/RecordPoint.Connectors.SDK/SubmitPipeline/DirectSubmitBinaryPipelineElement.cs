@@ -30,12 +30,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// Circuit provider for handling backpressure for Azure Blob Storage
         /// </summary>
-        public IAzureStorageCircuitProvider CircuitProvider { get; set; }
+        public ISdkAzureBlobCircuitProvider CircuitProvider { get; set; }
 
         /// <summary>
         /// Retry Provider for handling backpressure for Azure Blob Storage
         /// </summary>
-        public IAzureStorageRetryProvider RetryProvider { get; set; }
+        public ISdkAzureBlobRetryProvider RetryProvider { get; set; }
 
         /// <summary>
         /// Constructor

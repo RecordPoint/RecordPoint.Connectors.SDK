@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Interfaces
 {
-    public interface IAzureStorageRetryProvider
+    public interface ISdkAzureBlobRetryProvider
     {
         Task ExecuteWithRetry(
             CloudBlobClient blobClient,
