@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Interfaces
 {
-    public interface IAzureStorageRetryProvider
+    public interface IAzureStorageRetryProvider : ICircuitEventHandler
     {
         bool IsCircuitClosed(out TimeSpan waitFor);
-
+        
         Task ExecuteWithRetry(
             CloudBlobClient blobClient,
             Func<Task> codeToExecute,

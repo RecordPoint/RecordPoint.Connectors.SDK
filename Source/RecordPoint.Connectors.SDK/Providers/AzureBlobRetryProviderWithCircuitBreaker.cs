@@ -15,7 +15,7 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// <summary>
     /// Retry provider with circuit breaker for Azure blob storage 
     /// </summary>
-    public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider, IAzureStorageRetryProvider, ICircuitEventHandler
+    public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider, IAzureStorageRetryProvider
     {
         private TimeSpan WaitFor { get; set; }
         // The CircuitBreakerPolicy needs to be a singleton - Either the implementing class needs to be a singleton, or the policy needs to be a
