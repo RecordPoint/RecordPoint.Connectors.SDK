@@ -5,6 +5,7 @@ using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Helpers;
+using RecordPoint.Connectors.SDK.Interfaces;
 using RecordPoint.Connectors.SDK.Providers;
 using System;
 using System.Net;
@@ -27,10 +28,15 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public Func<string, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
 
         /// <summary>
-        /// Circuit breaker for handling backpressure for Azure Blob Storage
+        /// Circuit provider for handling backpressure for Azure Blob Storage
         /// </summary>
-        public AzureBlobRetryProviderWithCircuitBreaker CircuitBreaker { get; set; }
-        
+        public ISdkAzureBlobCircuitProvider CircuitProvider { get; set; }
+
+        /// <summary>
+        /// Retry Provider for handling backpressure for Azure Blob Storage
+        /// </summary>
+        public ISdkAzureBlobRetryProvider RetryProvider { get; set; }
+
         /// <summary>
         /// Constructor
         /// <param name="next"></param>
@@ -48,7 +54,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             var binarySubmitContext = submitContext as BinarySubmitContext;
             ValidateFields(binarySubmitContext);
             
-            if (!CircuitBreaker.IsCircuitClosed(out var tmp))
+            if (!CircuitProvider.IsCircuitClosed(out var tmp))
             {
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
                 return;
@@ -113,7 +119,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 // If catch TooManyRequestsException, make it return a TooManyRequests Status
                 try
                 {
-                    await CircuitBreaker.ExecuteWithRetry(
+                    await RetryProvider.ExecuteWithRetry(
                     blockBlob.ServiceClient,
                     //Upload to blob
                     async () =>
@@ -137,7 +143,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     // If catch TooManyRequestsException, make it return a TooManyRequests Status
                     try
                     {
-                        await CircuitBreaker.ExecuteWithRetry(
+                        await RetryProvider.ExecuteWithRetry(
                         blockBlob.ServiceClient,
                         async () =>
                         {
