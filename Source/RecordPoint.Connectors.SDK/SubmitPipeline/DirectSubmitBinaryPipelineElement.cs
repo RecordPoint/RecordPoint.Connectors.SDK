@@ -28,10 +28,13 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public Func<string, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
 
         /// <summary>
-        /// Circuit breaker for handling backpressure for Azure Blob Storage
+        /// Circuit provider for handling backpressure for Azure Blob Storage
         /// </summary>
         public IAzureStorageCircuitProvider CircuitProvider { get; set; }
 
+        /// <summary>
+        /// Retry Provider for handling backpressure for Azure Blob Storage
+        /// </summary>
         public IAzureStorageRetryProvider RetryProvider { get; set; }
 
         /// <summary>
