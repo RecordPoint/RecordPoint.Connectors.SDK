@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Interfaces
 {
-    public interface IAzureBlobRetryProvider
+    public interface IAzureStorageRetryProvider
     {
         bool IsCircuitClosed(out TimeSpan waitFor);
 
