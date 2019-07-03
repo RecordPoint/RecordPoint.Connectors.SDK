@@ -3,11 +3,8 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Polly;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Helpers;
-using RecordPoint.Connectors.SDK.SubmitPipeline;
+using RecordPoint.Connectors.SDK.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Providers
@@ -15,7 +12,7 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// <summary>
     /// Retry provider for Azure blob storage 
     /// </summary>
-    public class AzureBlobRetryProvider
+    public class AzureBlobRetryProvider : IAzureStorageRetryProvider
     {
         private const int MaxAttempts = 3;
         private const double PowBase = 2;

@@ -3,19 +3,14 @@ using Polly;
 using Polly.CircuitBreaker;
 using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Interfaces;
-using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Providers
 {
     /// <summary>
     /// Retry provider with circuit breaker for Azure blob storage 
     /// </summary>
-    public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider, IAzureStorageRetryProvider
+    public class AzureBlobRetryProviderWithCircuitBreaker : AzureBlobRetryProvider, IAzureStorageCircuitProvider
     {
         private TimeSpan WaitFor { get; set; }
         // The CircuitBreakerPolicy needs to be a singleton - Either the implementing class needs to be a singleton, or the policy needs to be a

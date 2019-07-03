@@ -30,8 +30,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// Circuit breaker for handling backpressure for Azure Blob Storage
         /// </summary>
-        public IAzureStorageRetryProvider CircuitBreaker { get; set; }
-        
+        public IAzureStorageCircuitProvider CircuitProvider { get; set; }
+
+        public IAzureStorageRetryProvider RetryProvider { get; set; }
+
         /// <summary>
         /// Constructor
         /// <param name="next"></param>
@@ -49,7 +51,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             var binarySubmitContext = submitContext as BinarySubmitContext;
             ValidateFields(binarySubmitContext);
             
-            if (!CircuitBreaker.IsCircuitClosed(out var tmp))
+            if (!CircuitProvider.IsCircuitClosed(out var tmp))
             {
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
                 return;
@@ -114,7 +116,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 // If catch TooManyRequestsException, make it return a TooManyRequests Status
                 try
                 {
-                    await CircuitBreaker.ExecuteWithRetry(
+                    await RetryProvider.ExecuteWithRetry(
                     blockBlob.ServiceClient,
                     //Upload to blob
                     async () =>
@@ -138,7 +140,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     // If catch TooManyRequestsException, make it return a TooManyRequests Status
                     try
                     {
-                        await CircuitBreaker.ExecuteWithRetry(
+                        await RetryProvider.ExecuteWithRetry(
                         blockBlob.ServiceClient,
                         async () =>
                         {
