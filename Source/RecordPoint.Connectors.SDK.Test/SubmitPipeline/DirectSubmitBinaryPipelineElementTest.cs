@@ -50,16 +50,19 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
             _mockClientFactory.Setup(x => x.CreateAuthenticationHelper()).Returns(mockAuthenticationHelper.Object);
             _mockClientFactory.Setup(x => x.CreateApiClient(It.IsAny<ApiClientFactorySettings>())).Returns(_mockClient.Object);
-            
+
+            var circuit = new AzureBlobRetryProviderWithCircuitBreaker(GetCircuitBreakerOptions(), true)
+            {
+                Log = _mockLog.Object
+            };
+
             _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object)
             {
                 ApiClientFactory = _mockClientFactory.Object,
                 Log = _mockLog.Object,
                 BlobFactory = (uri) => _mockBlob.Object,
-                CircuitBreaker = new AzureBlobRetryProviderWithCircuitBreaker(GetCircuitBreakerOptions(), true)
-                {
-                    Log = _mockLog.Object
-                }
+                CircuitProvider = circuit,
+                RetryProvider = circuit
             };
         }
 
@@ -207,7 +210,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()));
             WaitUntilComplete(() => 
             {
-                Assert.False(_pipelineElement.CircuitBreaker.IsCircuitClosed(out var tmp));
+                Assert.False(_pipelineElement.CircuitProvider.IsCircuitClosed(out var tmp));
                 return true;
             }, 10, 1000, "Circuit remains closed when it's supposed to be open.");
             Assert.Equal(SubmitResult.Status.TooManyRequests, submitContext.SubmitResult.SubmitStatus);
