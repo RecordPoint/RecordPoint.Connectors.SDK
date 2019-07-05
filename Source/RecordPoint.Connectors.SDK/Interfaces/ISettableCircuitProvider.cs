@@ -8,7 +8,7 @@ namespace RecordPoint.Connectors.SDK.Interfaces
     /// To use:
     /// * Inject into dependant code as a singleton.
     /// * Call IsCircuitClosed before accessing protected resources.
-    /// * If the protected resouce indicates it is under heavy load, call SetOpenUntil.
+    /// * If the protected resource indicates it is under heavy load, call SetOpenUntil.
     /// </summary>
     public interface ISettableCircuitProvider : ICircuitProvider
     {
