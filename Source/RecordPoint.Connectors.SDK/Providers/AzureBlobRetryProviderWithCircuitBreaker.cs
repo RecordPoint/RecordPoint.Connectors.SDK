@@ -2,6 +2,7 @@
 using Polly;
 using Polly.CircuitBreaker;
 using RecordPoint.Connectors.SDK.Exceptions;
+using RecordPoint.Connectors.SDK.Extensions;
 using RecordPoint.Connectors.SDK.Interfaces;
 using System;
 
@@ -24,6 +25,9 @@ namespace RecordPoint.Connectors.SDK.Providers
         private CircuitBreakerOptions _options;
         private bool _useCircuit;
 
+        /// <summary>
+        /// Invoked when the circuit breaks
+        /// </summary>
         public event EventHandler<TimeSpan> BreakEvent;
 
         /// <summary>
@@ -67,8 +71,7 @@ namespace RecordPoint.Connectors.SDK.Providers
             return false;
         }
 
-        // Returns a Task to match the parameter requirements of FallbackAsync
-        private Exception ThrowTooManyRequests()
+        private void ThrowTooManyRequests()
         {
             var waitUntil = DateTime.UtcNow.AddSeconds(_options.DurationOfBreakS);
 
@@ -78,15 +81,12 @@ namespace RecordPoint.Connectors.SDK.Providers
                 _waitUntil = waitUntil;
             }
 
-            return new TooManyRequestsException(string.Empty, _waitUntil);
+            throw new TooManyRequestsException(nameof(AzureBlobRetryProviderWithCircuitBreaker), _waitUntil);
         }
 
         private Policy GetFallbackPolicy()
         {
-            return Policy.Handle<BrokenCircuitException>().FallbackAsync((ct) =>
-            {
-                throw ThrowTooManyRequests();
-            });
+            return CustomFallbackPolicy.CustomFallbackAsync<BrokenCircuitException>((ct) => ThrowTooManyRequests());
         }
 
         private CircuitBreakerPolicy GetCircuitBreakerPolicy()
