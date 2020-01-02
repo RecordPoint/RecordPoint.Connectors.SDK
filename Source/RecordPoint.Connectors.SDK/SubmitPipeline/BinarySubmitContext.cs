@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace RecordPoint.Connectors.SDK.SubmitPipeline
 {
@@ -22,6 +23,22 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// An optional FileName for the binary.
         /// </summary>
         public string FileName { get; set; }
+
+        /// <summary>
+        /// An optional MD5 hash of the binary content.
+        /// </summary>
+        public string FileHash { get; set; }
+
+        /// <summary>
+        /// An optional MimeType for the binary.
+        /// </summary>
+        public string MimeType { get; set; }
+
+        /// <summary>
+        /// The Source Last Modified date for the record, used to assocate the item version to the binary.
+        /// </summary>
+        public DateTime? SourceLastModifiedDate { get; set; }
+
 
         /// <summary>
         /// A readable stream of binary data to be included in the submit.

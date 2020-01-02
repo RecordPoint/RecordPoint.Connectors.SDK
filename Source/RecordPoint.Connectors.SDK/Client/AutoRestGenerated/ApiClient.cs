@@ -3850,6 +3850,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// created the aggregation in the content source</param>
         /// <param name="itemTypeId">The item type ID that corresponds to an
         /// aggregation</param>
+        /// <param name="securityProfileIdentifier">The SECURITY PROFILE
+        /// IDENTIFIER of an aggregation</param>
         /// <param name="sourceProperties">Source properties for the
         /// aggregation with DisplayName</param>
         /// <param name="relationships">Relationship list of the
@@ -3868,9 +3870,10 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// type</param>
         /// <param name="recordCategoryId">The Record Category ID assigned by
         /// manual classification</param>
-        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string parentExternalId = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
+        public AggregationSubmissionInputModel(string externalId, string connectorId, string title, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, System.DateTime sourceCreatedDate, string sourceCreatedBy, int? itemTypeId = default(int?), string securityProfileIdentifier = default(string), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string author = default(string), string location = default(string), string mediaType = default(string), string parentExternalId = default(string), string barcodeType = default(string), string barcodeValue = default(string), string recordCategoryId = default(string))
         {
             ItemTypeId = itemTypeId;
+            SecurityProfileIdentifier = securityProfileIdentifier;
             SourceProperties = sourceProperties;
             Relationships = relationships;
             ExternalId = externalId;
@@ -3900,6 +3903,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "itemTypeId")]
         public int? ItemTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SECURITY PROFILE IDENTIFIER of an aggregation
+        /// </summary>
+        [JsonProperty(PropertyName = "securityProfileIdentifier")]
+        public string SecurityProfileIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets source properties for the aggregation with DisplayName
@@ -4435,13 +4444,17 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="fileSize">FileSize of the binary to submit into
         /// blob</param>
         /// <param name="fileHash">FileHash of the binary to use in ML</param>
+        /// <param name="sourceLastModifiedDate">The date and time that the
+        /// item was last modified in the content source. Must be in UTC and
+        /// ISO-8601 Round-trip format</param>
         /// <param name="fileName">An optional file name to associate with the
         /// binary</param>
-        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), string fileName = default(string))
+        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string))
         {
             MimeType = mimeType;
             FileSize = fileSize;
             FileHash = fileHash;
+            SourceLastModifiedDate = sourceLastModifiedDate;
             ConnectorId = connectorId;
             ItemExternalId = itemExternalId;
             BinaryExternalId = binaryExternalId;
@@ -4471,6 +4484,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "fileHash")]
         public string FileHash { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time that the item was last modified in
+        /// the content source. Must be in UTC and ISO-8601 Round-trip format
+        /// </summary>
+        [JsonProperty(PropertyName = "sourceLastModifiedDate")]
+        public System.DateTime? SourceLastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the connector submitting the binary
@@ -4618,12 +4638,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <summary>
         /// Initializes a new instance of the SearchTermModel class.
         /// </summary>
-        public SearchTermModel(string fieldName, string fieldType = default(string), string operatorProperty = default(string), string fieldValue = default(string))
+        public SearchTermModel(string fieldName, string fieldType = default(string), string operatorProperty = default(string), string fieldValue = default(string), string searchContextIdentifier = default(string))
         {
             FieldName = fieldName;
             FieldType = fieldType;
             OperatorProperty = operatorProperty;
             FieldValue = fieldValue;
+            SearchContextIdentifier = searchContextIdentifier;
             CustomInit();
         }
 
@@ -4651,6 +4672,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "fieldValue")]
         public string FieldValue { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "searchContextIdentifier")]
+        public string SearchContextIdentifier { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -5216,12 +5242,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a record’s location.
+        /// <param name="location">A pointer to a record???s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a record’s
+        /// <param name="parentExternalId">A pointer to a record???s
         /// aggregation</param>
         /// <param name="id">Internal unique ID for the item</param>
         /// <param name="itemType">Defines the type of the item</param>
@@ -5526,7 +5552,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record’s location.
+        /// Gets or sets a pointer to a record???s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5541,7 +5567,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record’s aggregation
+        /// Gets or sets a pointer to a record???s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
@@ -5676,13 +5702,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a record’s location.
+        /// <param name="location">A pointer to a record???s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a record’s
+        /// <param name="parentExternalId">A pointer to a record???s
         /// aggregation</param>
+        /// <param name="securityProfileIdentifier">The SECURITY PROFILE
+        /// IDENTIFIER of the item</param>
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
         /// <param name="relationships">Relationship list of the item</param>
@@ -5691,8 +5719,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// empty</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string securityProfileIdentifier = default(string), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
         {
+            SecurityProfileIdentifier = securityProfileIdentifier;
             SourceProperties = sourceProperties;
             Relationships = relationships;
             ExternalId = externalId;
@@ -5717,6 +5746,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the SECURITY PROFILE IDENTIFIER of the item
+        /// </summary>
+        [JsonProperty(PropertyName = "securityProfileIdentifier")]
+        public string SecurityProfileIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the MetaDataModel list with DisplayName
@@ -5802,7 +5837,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record’s location.
+        /// Gets or sets a pointer to a record???s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5817,7 +5852,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record’s aggregation
+        /// Gets or sets a pointer to a record???s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }

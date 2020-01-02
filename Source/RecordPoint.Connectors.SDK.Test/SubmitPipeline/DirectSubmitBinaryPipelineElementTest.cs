@@ -226,6 +226,9 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 ConnectorConfigId = Guid.NewGuid(),
                 ExternalId = Guid.NewGuid().ToString(),
                 FileName = Guid.NewGuid().ToString(),
+                FileHash = Guid.NewGuid().ToString(),
+                MimeType = "text/plain",
+                SourceLastModifiedDate = DateTime.Now,
                 ItemExternalId = Guid.NewGuid().ToString(),
                 Stream = GetStream(length),
                 TenantId = Guid.NewGuid()

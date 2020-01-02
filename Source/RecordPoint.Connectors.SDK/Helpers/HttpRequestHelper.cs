@@ -54,6 +54,12 @@ namespace RecordPoint.Connectors.SDK.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Get Headers with Bearer Token
+        /// </summary>
+        /// <param name="authenticationHelper"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public static async Task<Dictionary<string, List<string>>> GetHttpRequestHeaders(this IAuthenticationHelper authenticationHelper, AuthenticationHelperSettings settings)
         {
             var headers = new Dictionary<string, List<string>>();

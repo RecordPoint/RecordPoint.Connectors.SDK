@@ -8,6 +8,7 @@ using RecordPoint.Connectors.SDK.Helpers;
 using RecordPoint.Connectors.SDK.Interfaces;
 using RecordPoint.Connectors.SDK.Providers;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using static RecordPoint.Connectors.SDK.Fields;
@@ -66,7 +67,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 binarySubmitContext.ItemExternalId,
                 binarySubmitContext.ExternalId,
                 fileSize: binarySubmitContext.Stream.Length,
-                fileName: binarySubmitContext.FileName
+                fileName: binarySubmitContext.FileName,
+                fileHash: binarySubmitContext.FileHash,
+                mimeType: binarySubmitContext.MimeType ?? binarySubmitContext.SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.MimeType)?.Value
             );
 
             // Get token and URL via Autorest-generated API call

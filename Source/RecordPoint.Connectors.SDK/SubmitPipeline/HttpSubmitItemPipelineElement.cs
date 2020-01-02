@@ -57,6 +57,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 ParentExternalId = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.ParentExternalId)?.Value ?? "",
                 BarcodeType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeType)?.Value ?? "",
                 BarcodeValue = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeValue)?.Value ?? "",
+                SecurityProfileIdentifier = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.SecurityProfileIdentifier)?.Value ?? "",
                 SourceProperties = new List<SubmissionMetaDataModel>(),
                 Relationships = new List<RelationshipDataModel>()
             };
