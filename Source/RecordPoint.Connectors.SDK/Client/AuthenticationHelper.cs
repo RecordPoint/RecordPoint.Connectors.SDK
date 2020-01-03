@@ -27,7 +27,6 @@ namespace RecordPoint.Connectors.SDK.Client
             ValidationHelper.ArgumentNotNull(settings, nameof(settings));
             ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.AuthenticationResource, nameof(settings.AuthenticationResource));
             ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.ClientId, nameof(settings.ClientId));
-            ValidationHelper.ArgumentNotNullOrEmpty(settings.ClientSecret, nameof(settings.ClientSecret));
 
             var authority = GetAuthority(settings);
 

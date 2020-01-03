@@ -19,6 +19,7 @@
         public const string RecordCategoryID = nameof(RecordCategoryID);
         public const string ConnectorId = nameof(ConnectorId);
         public const string ParentExternalId = nameof(ParentExternalId);
+        public const string SecurityProfileIdentifier = nameof(SecurityProfileIdentifier);
 
         public static class AuditEvent
         {
