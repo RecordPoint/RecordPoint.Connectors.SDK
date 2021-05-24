@@ -16,27 +16,29 @@ namespace RecordPoint.Connectors.SDK.Client
     /// </summary>
     public static class ApiClientRetryPolicy 
     {
+        private const int RetryPolicyBaseSeconds = 2;
         /// <summary>
         /// A list of HTTP response codes that are retriable.
         /// </summary>
         public static readonly List<HttpStatusCode> KnownRetriableWebResponseStatusCodes = new List<HttpStatusCode>()
         {
             (HttpStatusCode)429,
-            HttpStatusCode.InternalServerError
+            HttpStatusCode.RequestTimeout,
+            HttpStatusCode.ServiceUnavailable,
+            HttpStatusCode.GatewayTimeout
         };
 
         /// <summary>
         /// Gets a retry policy for use when calling the Records365 vNext Connector API.
         /// </summary>
         /// <param name="maxTryCount"></param>
-        /// <param name="retryDelayMilliseconds"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static Policy GetPolicy(int maxTryCount, int retryDelayMilliseconds, CancellationToken ct)
+        public static Policy GetPolicy(int maxTryCount, CancellationToken ct)
         {
             // TODO: Pass in a CancellationToken
             return Policy.Handle<Exception>(ex => ex.IsRecords365ApiRetriableException(ct))
-                .WaitAndRetryAsync(maxTryCount, x => TimeSpan.FromMilliseconds(retryDelayMilliseconds),
+                .WaitAndRetryAsync(maxTryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(RetryPolicyBaseSeconds, retryAttempt)),
                 (ex, ts) =>
                 {
                    // Logger.WriteWarning($"Connector API client is retrying a transient failure, DelayMilliseconds = [{ts.TotalMilliseconds}], LastException = [{ex?.ToString() ?? "<null>"}");
@@ -50,16 +52,15 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name="callerType"></param>
         /// <param name="methodName"></param>
         /// <param name="maxTryCount"></param>
-        /// <param name="retryDelayMilliseconds"></param>
         /// <param name="ct"></param>
         /// <param name="logPrefix"></param>
         /// <returns></returns>
-        public static Policy GetPolicy(ILog log, Type callerType, string methodName, int maxTryCount, int retryDelayMilliseconds, CancellationToken ct, string logPrefix)
+        public static Policy GetPolicy(ILog log, Type callerType, string methodName, int maxTryCount, CancellationToken ct, string logPrefix)
         {
             return Policy
                 .Handle<Exception>(ex => ex.IsRecords365ApiRetriableException(ct))
                 .WaitAndRetryAsync(
-                    maxTryCount, x => TimeSpan.FromMilliseconds(retryDelayMilliseconds),
+                    maxTryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(RetryPolicyBaseSeconds, retryAttempt)),
                     (ex, waitTime, retryCount, context) =>
                     {
                         log?.LogMessage(

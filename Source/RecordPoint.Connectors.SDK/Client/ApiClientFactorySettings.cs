@@ -11,9 +11,9 @@
         public string ConnectorApiUrl { get; set; }
 
         /// <summary>
-        /// Set to true to perform validation of the server SSL certificate at the
-        /// Records365 vNext Connector API endpoint, false otherwise.
+        /// Set to false to skip validation of the server SSL certificate at the
+        /// Records365 vNext Connector API endpoint, true otherwise.
         /// </summary>
-        public bool ServerCertificateValidation { get; set; } = false;
+        public bool ServerCertificateValidation { get; set; } = true;
     }
 }

@@ -7,10 +7,11 @@
     <PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
     <PackageTags>RecordPoint</PackageTags>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <PackageProjectUrl>https://www.records365.com/</PackageProjectUrl>
+    <PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <PackageVersion>1.6.4</PackageVersion>
+    <PackageVersion>1.6.12</PackageVersion>
     <Description>SDK for developing Connectors for Records365 vNext.</Description>
+    <PackageReleaseNotes>The Item Submission Input model accepts a list of binary items that will be submitted as part of the record metadata.</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="9.4.1" />

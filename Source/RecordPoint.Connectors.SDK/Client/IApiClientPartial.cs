@@ -19,6 +19,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name="itemExternalId"></param>
         /// <param name="binaryExternalId"></param>
         /// <param name="fileName"></param>
+        /// <param name="correlationId"></param>
         /// <param name="acceptLanguage"></param>
         /// <param name="customHeaders"></param>
         /// <param name="inputStream"></param>
@@ -28,6 +29,7 @@ namespace RecordPoint.Connectors.SDK.Client
             string itemExternalId = default(string),
             string binaryExternalId = default(string),
             string fileName = default(string),
+            string correlationId = default(string),
             string acceptLanguage = default(string),
             Dictionary<string, List<string>> customHeaders = null,
             Stream inputStream = null,

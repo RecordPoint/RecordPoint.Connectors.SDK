@@ -39,7 +39,6 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         public DateTime? SourceLastModifiedDate { get; set; }
 
-
         /// <summary>
         /// A readable stream of binary data to be included in the submit.
         /// </summary>

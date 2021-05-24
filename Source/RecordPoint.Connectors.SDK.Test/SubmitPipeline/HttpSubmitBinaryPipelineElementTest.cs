@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.Rest;
+﻿using Microsoft.Rest;
 using Moq;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
@@ -103,6 +102,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
+                It.IsAny<string>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
@@ -125,6 +125,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
+                It.IsAny<string>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
@@ -140,6 +141,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         private void Setup429ResponseWithInvalidTime()
         {
             _mockApiClient.Setup(x => x.ApiBinariesPostWithHttpMessagesAndStreamAsync(
+                It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),

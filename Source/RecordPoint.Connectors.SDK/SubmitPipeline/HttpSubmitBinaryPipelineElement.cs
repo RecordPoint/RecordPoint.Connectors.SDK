@@ -8,6 +8,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     /// <summary>
     /// A submit pipeline element that submits item binaries via Records365 vNext Connector API.
     /// </summary>
+    [Obsolete("Please use DirectSubmitBinaryPipelineElement instead (if possible to do so) ", false)]
+    
     public class HttpSubmitBinaryPipelineElement : HttpSubmitPipelineElementBase
     {
         /// <summary>
@@ -56,7 +58,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         /// <param name="submitContext"></param>
         /// <returns></returns>
-        public async override Task Submit(SubmitContext submitContext)
+        public override async Task Submit(SubmitContext submitContext)
         {
             var binarySubmitContext = submitContext as BinarySubmitContext;
 
@@ -81,6 +83,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                         binarySubmitContext.ItemExternalId,
                         binarySubmitContext.ExternalId,
                         binarySubmitContext.FileName,
+                        binarySubmitContext.CorrelationId.ToString(),
                         inputStream: binarySubmitContext.Stream,
                         customHeaders: headers, 
                         cancellationToken: ct

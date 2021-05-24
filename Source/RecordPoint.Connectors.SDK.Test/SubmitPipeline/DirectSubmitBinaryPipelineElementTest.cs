@@ -5,13 +5,11 @@ using Moq;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Diagnostics;
-using RecordPoint.Connectors.SDK.Interfaces;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -103,6 +101,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             await _pipelineElement.Submit(submitContext);
 
             _mockClient.Verify(x => x.ApiBinariesPostWithHttpMessagesAndStreamAsync(
+                It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -243,6 +242,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
+                It.IsAny<string>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
@@ -286,6 +286,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         private void SetupDefaultBinariesPostForClient()
         {
             _mockClient.Setup(x => x.ApiBinariesPostWithHttpMessagesAndStreamAsync(
+                It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),

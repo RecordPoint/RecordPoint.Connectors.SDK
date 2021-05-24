@@ -65,7 +65,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// Relationship info of the submission
         /// </summary>
         public IList<RelationshipDataModel> Relationships { get; set; }
-        
+
         /// <summary>
         /// When submitting an aggregation, this value indicates whether the aggregation
         /// is a record folder or a box.

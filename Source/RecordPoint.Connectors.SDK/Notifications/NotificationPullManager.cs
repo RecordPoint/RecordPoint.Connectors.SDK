@@ -16,6 +16,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
     public class NotificationPullManager : INotificationPullManager
     {
         private IApiClientFactory _apiClientFactory;
+        private const int MaxRetryAttempts = 4;
         
         /// <summary>
         /// Creates a new NotificationPullManager.
@@ -41,7 +42,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
             // Get Notifications
             var client = _apiClientFactory.CreateApiClient(factorySettings);
 
-            var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
+            var policy = ApiClientRetryPolicy.GetPolicy(MaxRetryAttempts, cancellationToken);
 
             var notificationQueryResponse = await policy.ExecuteAsync(
                 async (ct) =>
@@ -81,7 +82,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
         {
             var client = _apiClientFactory.CreateApiClient(factorySettings);
 
-            var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
+            var policy = ApiClientRetryPolicy.GetPolicy(MaxRetryAttempts, cancellationToken);
 
             var acknowledgementResponse = await policy.ExecuteAsync(
                 async () =>
