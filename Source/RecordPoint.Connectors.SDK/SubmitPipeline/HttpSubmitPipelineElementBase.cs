@@ -3,7 +3,6 @@ using Polly;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,6 +18,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     {
         private const string waitUntilTime = "wait-until-time";
         private const int defaultWaitTimeSeconds = 30;
+        private const int MaxRetryAttempts = 4;
 
         /// <summary>
         /// Constructs a new HttpSubmitPipelineElementBase with an optional next submit
@@ -178,7 +178,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <returns></returns>
         protected Policy GetRetryPolicy(SubmitContext submitContext, string methodName = nameof(Submit))
         {
-            return ApiClientRetryPolicy.GetPolicy(Log, GetType(), methodName, 4, 2000, submitContext.CancellationToken, submitContext.LogPrefix());
+            return ApiClientRetryPolicy.GetPolicy(Log, GetType(), methodName, MaxRetryAttempts, submitContext.CancellationToken, submitContext.LogPrefix());
         }
     }
 }

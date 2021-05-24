@@ -1,12 +1,9 @@
 ﻿using Microsoft.Rest;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using RecordPoint.Connectors.SDK.Client.Models;
-using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Helpers;
 using RecordPoint.Connectors.SDK.Interfaces;
-using RecordPoint.Connectors.SDK.Providers;
 using System;
 using System.Linq;
 using System.Net;
@@ -41,6 +38,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// Constructor
         /// <param name="next"></param>
+        /// </summary>
         public DirectSubmitBinaryPipelineElement(ISubmission next) : base(next)
         {
         }
@@ -55,7 +53,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             var binarySubmitContext = submitContext as BinarySubmitContext;
             ValidateFields(binarySubmitContext);
             
-            if (!CircuitProvider.IsCircuitClosed(out var tmp))
+            if (!CircuitProvider.IsCircuitClosed(out _))
             {
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
                 return;
@@ -66,10 +64,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 binarySubmitContext.ConnectorConfigId.ToString(),
                 binarySubmitContext.ItemExternalId,
                 binarySubmitContext.ExternalId,
+                sourceLastModifiedDate: binarySubmitContext?.SourceLastModifiedDate,
                 fileSize: binarySubmitContext.Stream.Length,
                 fileName: binarySubmitContext.FileName,
                 fileHash: binarySubmitContext.FileHash,
-                mimeType: binarySubmitContext.MimeType ?? binarySubmitContext.SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.MimeType)?.Value
+                mimeType: binarySubmitContext.MimeType ?? binarySubmitContext.SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.MimeType)?.Value,
+                correlationId: binarySubmitContext.CorrelationId.ToString()
             );
 
             // Get token and URL via Autorest-generated API call
@@ -109,7 +109,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Skipped;
                     return;
                 }
-                else if (!binarySubmitContext.Stream.CanSeek)
+                
+                if (!binarySubmitContext.Stream.CanSeek)
                 {
                     //TODO: Log that submission is was allowed to proceed since size could not be determined.
                 }
@@ -142,6 +143,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 if (!string.IsNullOrWhiteSpace(binarySubmitContext.FileName))
                 {
                     blockBlob.Metadata[MetaDataKeys.ItemBinary_FileName] = EscapeBlobMetaDataValue(binarySubmitContext.FileName);
+                    blockBlob.Metadata[MetaDataKeys.ItemBinary_CorrelationId] = EscapeBlobMetaDataValue(binarySubmitContext.CorrelationId.ToString());
 
                     // If catch TooManyRequestsException, make it return a TooManyRequests Status
                     try
@@ -186,7 +188,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     {
                         notificationStatusCode = result.Response.StatusCode.ToString();
                     }
-                    // An issue with notification occured, so we must throw
+                    // An issue with notification occurred, so we must throw
                     throw new HttpOperationException(submitContext.LogPrefix() +
                             $"Submission returned {notificationStatusCode} : Notification of binary submission failed.");
                 }

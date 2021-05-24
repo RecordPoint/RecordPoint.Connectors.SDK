@@ -40,6 +40,9 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='fileName'>
         /// An optional file name to associate with the binary
         /// </param>
+        /// <param name="correlationId">
+        /// An optional ID used to track the binary as it moves through the pipeline
+        /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
         /// <param name='customHeaders'>
@@ -64,6 +67,7 @@ namespace RecordPoint.Connectors.SDK.Client
             string itemExternalId = default(string),
             string binaryExternalId = default(string),
             string fileName = default(string),
+            string correlationId = default(string),
             string acceptLanguage = default(string),
             Dictionary<string, List<string>> customHeaders = null,
             Stream inputStream = null,
@@ -103,6 +107,10 @@ namespace RecordPoint.Connectors.SDK.Client
             if (fileName != null)
             {
                 _queryParameters.Add(string.Format("FileName={0}", System.Uri.EscapeDataString(fileName)));
+            }
+            if (correlationId != null)
+            {
+                _queryParameters.Add(string.Format("CorrelationId={0}", System.Uri.EscapeDataString(correlationId)));
             }
             if (_queryParameters.Count > 0)
             {

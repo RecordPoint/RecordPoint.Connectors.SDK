@@ -30,7 +30,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         /// <param name="submitContext"></param>
         /// <returns></returns>
-        public async override Task Submit(SubmitContext submitContext)
+        public override async Task Submit(SubmitContext submitContext)
         {
             // Submit via HTTP API Client that is generated with AutoRest
             var apiClient = ApiClientFactory.CreateApiClient(submitContext.ApiClientFactorySettings);
@@ -58,9 +58,15 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 BarcodeType = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeType)?.Value ?? "",
                 BarcodeValue = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.BarcodeValue)?.Value ?? "",
                 SecurityProfileIdentifier = submitContext.CoreMetaData?.FirstOrDefault(metadata => metadata.Name == Fields.SecurityProfileIdentifier)?.Value ?? "",
+                CorrelationId = submitContext.CorrelationId.ToString(),
                 SourceProperties = new List<SubmissionMetaDataModel>(),
                 Relationships = new List<RelationshipDataModel>()
             };
+
+            if (submitContext is ItemSubmitContext)
+            {
+                itemModel.BinariesSubmitted = ((ItemSubmitContext)submitContext).BinariesSubmitted;
+            }
 
             if (submitContext.SourceMetaData != null)
             {
@@ -108,7 +114,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             catch (HttpOperationException ex)
                 when (ex.Response?.StatusCode == System.Net.HttpStatusCode.Conflict)
             {
-                // submitted item already exists!  Nothing to do but continue with the submission pipeline
+                // Submitted item already exists! Nothing to do but continue with the submission pipeline
                 LogVerbose(submitContext, nameof(Submit), $"Submission returned {ex.Response.StatusCode} : Item already submitted.");
             }
 

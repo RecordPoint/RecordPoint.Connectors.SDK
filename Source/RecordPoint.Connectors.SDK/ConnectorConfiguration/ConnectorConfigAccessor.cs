@@ -36,7 +36,7 @@ namespace RecordPoint.Connectors.SDK.ConnectorConfiguration
         public async Task<ConnectorConfigModel> GetConnectorConfig(Guid connectorConfigId, CancellationToken cancellationToken)
         {
             var client = ApiClientFactory.CreateApiClient(ApiClientFactorySettings);
-            var policy = ApiClientRetryPolicy.GetPolicy(4, 2000, cancellationToken);
+            var policy = ApiClientRetryPolicy.GetPolicy(4, cancellationToken);
 
             var connectorConfig = await policy.ExecuteAsync(
                 async (ct) =>

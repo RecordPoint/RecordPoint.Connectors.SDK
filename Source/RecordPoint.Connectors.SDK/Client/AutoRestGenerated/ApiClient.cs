@@ -875,6 +875,10 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='fileName'>
         /// An optional file name to associate with the binary
         /// </param>
+        /// <param name='correlationId'>
+        /// An optional ID used to track the binary version as it moves through the
+        /// pipeline
+        /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
         /// <param name='customHeaders'>
@@ -892,7 +896,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -905,6 +909,7 @@ namespace RecordPoint.Connectors.SDK.Client
                 tracingParameters.Add("itemExternalId", itemExternalId);
                 tracingParameters.Add("binaryExternalId", binaryExternalId);
                 tracingParameters.Add("fileName", fileName);
+                tracingParameters.Add("correlationId", correlationId);
                 tracingParameters.Add("acceptLanguage", acceptLanguage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "ApiBinariesPost", tracingParameters);
@@ -928,6 +933,10 @@ namespace RecordPoint.Connectors.SDK.Client
             if (fileName != null)
             {
                 _queryParameters.Add(string.Format("FileName={0}", System.Uri.EscapeDataString(fileName)));
+            }
+            if (correlationId != null)
+            {
+                _queryParameters.Add(string.Format("CorrelationId={0}", System.Uri.EscapeDataString(correlationId)));
             }
             if (_queryParameters.Count > 0)
             {
@@ -2559,6 +2568,10 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='fileName'>
         /// An optional file name to associate with the binary
         /// </param>
+        /// <param name='correlationId'>
+        /// An optional ID used to track the binary version as it moves through
+        /// the pipeline
+        /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
         /// <param name='customHeaders'>
@@ -2567,7 +2580,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get SAS Token for blob Resource
@@ -2873,11 +2886,15 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='fileName'>
             /// An optional file name to associate with the binary
             /// </param>
+            /// <param name='correlationId'>
+            /// An optional ID used to track the binary version as it moves through the
+            /// pipeline
+            /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
-            public static ErrorResponseModel ApiBinariesPost(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string acceptLanguage = default(string))
+            public static ErrorResponseModel ApiBinariesPost(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string))
             {
-                return operations.ApiBinariesPostAsync(connectorId, itemExternalId, binaryExternalId, fileName, acceptLanguage).GetAwaiter().GetResult();
+                return operations.ApiBinariesPostAsync(connectorId, itemExternalId, binaryExternalId, fileName, correlationId, acceptLanguage).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -2898,14 +2915,18 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='fileName'>
             /// An optional file name to associate with the binary
             /// </param>
+            /// <param name='correlationId'>
+            /// An optional ID used to track the binary version as it moves through the
+            /// pipeline
+            /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponseModel> ApiBinariesPostAsync(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponseModel> ApiBinariesPostAsync(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiBinariesPostWithHttpMessagesAsync(connectorId, itemExternalId, binaryExternalId, fileName, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ApiBinariesPostWithHttpMessagesAsync(connectorId, itemExternalId, binaryExternalId, fileName, correlationId, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -4449,7 +4470,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// ISO-8601 Round-trip format</param>
         /// <param name="fileName">An optional file name to associate with the
         /// binary</param>
-        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string))
+        /// <param name="correlationId">An optional ID used to track the binary
+        /// version as it moves through the pipeline</param>
+        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string), string correlationId = default(string))
         {
             MimeType = mimeType;
             FileSize = fileSize;
@@ -4459,6 +4482,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             ItemExternalId = itemExternalId;
             BinaryExternalId = binaryExternalId;
             FileName = fileName;
+            CorrelationId = correlationId;
             CustomInit();
         }
 
@@ -4515,6 +4539,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "fileName")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional ID used to track the binary version as it
+        /// moves through the pipeline
+        /// </summary>
+        [JsonProperty(PropertyName = "correlationId")]
+        public string CorrelationId { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -4638,12 +4669,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <summary>
         /// Initializes a new instance of the SearchTermModel class.
         /// </summary>
-        public SearchTermModel(string fieldName, string fieldType = default(string), string operatorProperty = default(string), string fieldValue = default(string), string searchContextIdentifier = default(string))
+        public SearchTermModel(string fieldName, string fieldType = default(string), string operatorProperty = default(string), string fieldValue = default(string), string categoricalValueType = default(string), string searchContextIdentifier = default(string))
         {
             FieldName = fieldName;
             FieldType = fieldType;
             OperatorProperty = operatorProperty;
             FieldValue = fieldValue;
+            CategoricalValueType = categoricalValueType;
             SearchContextIdentifier = searchContextIdentifier;
             CustomInit();
         }
@@ -4672,6 +4704,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "fieldValue")]
         public string FieldValue { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "categoricalValueType")]
+        public string CategoricalValueType { get; set; }
 
         /// <summary>
         /// </summary>
@@ -4753,6 +4790,10 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="boolOperator">Boolean operators for building the
         /// search expression
         /// Must be "OR" or "AND"</param>
+        /// <param name="children">Children search tree nodes for the search
+        /// expression</param>
+        /// <param name="searchTerm">Search term including the field name,
+        /// value and operator</param>
         public SearchTreeNodeModel(string boolOperator, IList<SearchTreeNodeModel> children = default(IList<SearchTreeNodeModel>), SearchTermModel searchTerm = default(SearchTermModel))
         {
             BoolOperator = boolOperator;
@@ -4774,11 +4815,14 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string BoolOperator { get; set; }
 
         /// <summary>
+        /// Gets or sets children search tree nodes for the search expression
         /// </summary>
         [JsonProperty(PropertyName = "children")]
         public IList<SearchTreeNodeModel> Children { get; set; }
 
         /// <summary>
+        /// Gets or sets search term including the field name, value and
+        /// operator
         /// </summary>
         [JsonProperty(PropertyName = "searchTerm")]
         public SearchTermModel SearchTerm { get; set; }
@@ -4854,10 +4898,16 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <summary>
         /// Initializes a new instance of the FiltersModel class.
         /// </summary>
-        public FiltersModel(SearchTreeNodeModel included = default(SearchTreeNodeModel), SearchTreeNodeModel excluded = default(SearchTreeNodeModel))
+        /// <param name="includedExpression">Holds user's input included
+        /// expression</param>
+        /// <param name="excludedExpression">Holds user's input excluded
+        /// expression</param>
+        public FiltersModel(SearchTreeNodeModel included = default(SearchTreeNodeModel), SearchTreeNodeModel excluded = default(SearchTreeNodeModel), string includedExpression = default(string), string excludedExpression = default(string))
         {
             Included = included;
             Excluded = excluded;
+            IncludedExpression = includedExpression;
+            ExcludedExpression = excludedExpression;
             CustomInit();
         }
 
@@ -4875,6 +4925,18 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "excluded")]
         public SearchTreeNodeModel Excluded { get; set; }
+
+        /// <summary>
+        /// Gets or sets holds user's input included expression
+        /// </summary>
+        [JsonProperty(PropertyName = "includedExpression")]
+        public string IncludedExpression { get; set; }
+
+        /// <summary>
+        /// Gets or sets holds user's input excluded expression
+        /// </summary>
+        [JsonProperty(PropertyName = "excludedExpression")]
+        public string ExcludedExpression { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -5242,12 +5304,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a record???s location.
+        /// <param name="location">A pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a record???s
+        /// <param name="parentExternalId">A pointer to a record’s
         /// aggregation</param>
         /// <param name="id">Internal unique ID for the item</param>
         /// <param name="itemType">Defines the type of the item</param>
@@ -5288,14 +5350,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// etc</param>
         /// <param name="sourceProperties">Source properties for the item as
         /// populated from the content source</param>
-        /// <param name="correlationId">An ID to be used to correlate an item
-        /// with events in Records365 vNext</param>
         /// <param name="mimeType">The mime type of the submitted item</param>
         /// <param name="barcodeType">The barcode type, this can be
         /// empty</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public ItemSubmissionOutputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string id = default(string), string itemType = default(string), string itemNumber = default(string), string format = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), string contentSource = default(string), string connectorDisplayName = default(string), bool? isVitalRecord = default(bool?), string originatingOrganization = default(string), string previousDisposalAction = default(string), System.DateTime? previousDisposalDate = default(System.DateTime?), string previousDisposalBy = default(string), string previousDisposalById = default(string), string nextDisposalAction = default(string), System.DateTime? nextDisposalDate = default(System.DateTime?), string currentDisposalStatus = default(string), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string correlationId = default(string), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        /// <param name="correlationId">An optional ID used to track the item
+        /// version as it moves through Records365 vNext's processing
+        /// pipeline</param>
+        public ItemSubmissionOutputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string id = default(string), string itemType = default(string), string itemNumber = default(string), string format = default(string), System.DateTime? lastModifiedDate = default(System.DateTime?), string lastModifiedBy = default(string), System.DateTime? createdDate = default(System.DateTime?), string createdBy = default(string), string contentSource = default(string), string connectorDisplayName = default(string), bool? isVitalRecord = default(bool?), string originatingOrganization = default(string), string previousDisposalAction = default(string), System.DateTime? previousDisposalDate = default(System.DateTime?), string previousDisposalBy = default(string), string previousDisposalById = default(string), string nextDisposalAction = default(string), System.DateTime? nextDisposalDate = default(System.DateTime?), string currentDisposalStatus = default(string), IList<MetaDataModel> sourceProperties = default(IList<MetaDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string correlationId = default(string))
         {
             Id = id;
             ItemType = itemType;
@@ -5317,7 +5380,6 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             NextDisposalDate = nextDisposalDate;
             CurrentDisposalStatus = currentDisposalStatus;
             SourceProperties = sourceProperties;
-            CorrelationId = correlationId;
             ExternalId = externalId;
             ConnectorId = connectorId;
             Title = title;
@@ -5333,6 +5395,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             ParentExternalId = parentExternalId;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
+            CorrelationId = correlationId;
             CustomInit();
         }
 
@@ -5474,13 +5537,6 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public IList<MetaDataModel> SourceProperties { get; set; }
 
         /// <summary>
-        /// Gets or sets an ID to be used to correlate an item with events in
-        /// Records365 vNext
-        /// </summary>
-        [JsonProperty(PropertyName = "correlationId")]
-        public string CorrelationId { get; set; }
-
-        /// <summary>
         /// Gets or sets the item external ID. This can be anything, but make
         /// sure it's unique to the external content source
         /// </summary>
@@ -5552,7 +5608,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s location.
+        /// Gets or sets a pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5567,7 +5623,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s aggregation
+        /// Gets or sets a pointer to a record’s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
@@ -5583,6 +5639,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "barcodeValue")]
         public string BarcodeValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional ID used to track the item version as it
+        /// moves through Records365 vNext's processing pipeline
+        /// </summary>
+        [JsonProperty(PropertyName = "correlationId")]
+        public string CorrelationId { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -5664,6 +5727,116 @@ namespace RecordPoint.Connectors.SDK.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    public partial class BinarySubmissionInputModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the BinarySubmissionInputModel class.
+        /// </summary>
+        public BinarySubmissionInputModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the BinarySubmissionInputModel class.
+        /// </summary>
+        /// <param name="connectorId">The ID of the connector submitting the
+        /// binary</param>
+        /// <param name="itemExternalId">The ExternalID of the item that the
+        /// binary belongs to</param>
+        /// <param name="binaryExternalId">The ExternalID of the binary</param>
+        /// <param name="fileName">An optional file name to associate with the
+        /// binary</param>
+        /// <param name="correlationId">An optional ID used to track the binary
+        /// version as it moves through the pipeline</param>
+        public BinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string fileName = default(string), string correlationId = default(string))
+        {
+            ConnectorId = connectorId;
+            ItemExternalId = itemExternalId;
+            BinaryExternalId = binaryExternalId;
+            FileName = fileName;
+            CorrelationId = correlationId;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the ID of the connector submitting the binary
+        /// </summary>
+        [JsonProperty(PropertyName = "connectorId")]
+        public string ConnectorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExternalID of the item that the binary belongs to
+        /// </summary>
+        [JsonProperty(PropertyName = "itemExternalId")]
+        public string ItemExternalId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExternalID of the binary
+        /// </summary>
+        [JsonProperty(PropertyName = "binaryExternalId")]
+        public string BinaryExternalId { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional file name to associate with the binary
+        /// </summary>
+        [JsonProperty(PropertyName = "fileName")]
+        public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional ID used to track the binary version as it
+        /// moves through the pipeline
+        /// </summary>
+        [JsonProperty(PropertyName = "correlationId")]
+        public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (ConnectorId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ConnectorId");
+            }
+            if (ItemExternalId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ItemExternalId");
+            }
+            if (BinaryExternalId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "BinaryExternalId");
+            }
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace RecordPoint.Connectors.SDK.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public partial class ItemSubmissionInputModel
     {
         /// <summary>
@@ -5702,28 +5875,34 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// Round-trip format</param>
         /// <param name="contentVersion">The version as stored in the content
         /// source</param>
-        /// <param name="location">A pointer to a record???s location.
+        /// <param name="location">A pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="mediaType">The media type, if set to empty, then the
         /// media type will default to "Electronic"</param>
-        /// <param name="parentExternalId">A pointer to a record???s
+        /// <param name="parentExternalId">A pointer to a record’s
         /// aggregation</param>
         /// <param name="securityProfileIdentifier">The SECURITY PROFILE
         /// IDENTIFIER of the item</param>
         /// <param name="sourceProperties">The MetaDataModel list with
         /// DisplayName</param>
         /// <param name="relationships">Relationship list of the item</param>
+        /// <param name="binariesSubmitted">List of binaries sent to binary
+        /// pipeline and linked to this item</param>
         /// <param name="mimeType">The mime type of the submitted item</param>
         /// <param name="barcodeType">The barcode type, this can be
         /// empty</param>
         /// <param name="barcodeValue">The barcode value of the above barcode
         /// type</param>
-        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string securityProfileIdentifier = default(string), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string))
+        /// <param name="correlationId">An optional ID used to track the item
+        /// version as it moves through Records365 vNext's processing
+        /// pipeline</param>
+        public ItemSubmissionInputModel(string externalId, string connectorId, string title, string author, System.DateTime sourceLastModifiedDate, string sourceLastModifiedBy, string sourceCreatedBy, System.DateTime sourceCreatedDate, string contentVersion, string location, string mediaType, string parentExternalId, string securityProfileIdentifier = default(string), IList<SubmissionMetaDataModel> sourceProperties = default(IList<SubmissionMetaDataModel>), IList<RelationshipDataModel> relationships = default(IList<RelationshipDataModel>), IList<DirectBinarySubmissionInputModel> binariesSubmitted = default(IList<DirectBinarySubmissionInputModel>), string mimeType = default(string), string barcodeType = default(string), string barcodeValue = default(string), string correlationId = default(string))
         {
             SecurityProfileIdentifier = securityProfileIdentifier;
             SourceProperties = sourceProperties;
             Relationships = relationships;
+            BinariesSubmitted = binariesSubmitted;
             ExternalId = externalId;
             ConnectorId = connectorId;
             Title = title;
@@ -5739,6 +5918,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             ParentExternalId = parentExternalId;
             BarcodeType = barcodeType;
             BarcodeValue = barcodeValue;
+            CorrelationId = correlationId;
             CustomInit();
         }
 
@@ -5764,6 +5944,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "relationships")]
         public IList<RelationshipDataModel> Relationships { get; set; }
+
+        /// <summary>
+        /// Gets or sets list of binaries sent to binary pipeline and linked to
+        /// this item
+        /// </summary>
+        [JsonProperty(PropertyName = "binariesSubmitted")]
+        public IList<DirectBinarySubmissionInputModel> BinariesSubmitted { get; set; }
 
         /// <summary>
         /// Gets or sets the item external ID. This can be anything, but make
@@ -5837,7 +6024,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string ContentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s location.
+        /// Gets or sets a pointer to a record’s location.
         /// Examples: an operating system path and filename, the location cited
         /// within a file plan, or the location of a magnetic tape rack
         /// </summary>
@@ -5852,7 +6039,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string MediaType { get; set; }
 
         /// <summary>
-        /// Gets or sets a pointer to a record???s aggregation
+        /// Gets or sets a pointer to a record’s aggregation
         /// </summary>
         [JsonProperty(PropertyName = "parentExternalId")]
         public string ParentExternalId { get; set; }
@@ -5868,6 +6055,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "barcodeValue")]
         public string BarcodeValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional ID used to track the item version as it
+        /// moves through Records365 vNext's processing pipeline
+        /// </summary>
+        [JsonProperty(PropertyName = "correlationId")]
+        public string CorrelationId { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -5934,6 +6128,16 @@ namespace RecordPoint.Connectors.SDK.Client.Models
                     if (element1 != null)
                     {
                         element1.Validate();
+                    }
+                }
+            }
+            if (BinariesSubmitted != null)
+            {
+                foreach (var element2 in BinariesSubmitted)
+                {
+                    if (element2 != null)
+                    {
+                        element2.Validate();
                     }
                 }
             }
@@ -6065,7 +6269,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="notificationType">Gets or sets type of notification.
         /// Possible values include:
         /// 'ItemDestroyed', 'Ping', 'ConnectorConfigAdded',
-        /// 'ConnectorConfigUpdated', 'ConnectorConfigDeleted'</param>
+        /// 'ConnectorConfigUpdated', 'ConnectorConfigDeleted',
+        /// 'GenerateReport'</param>
         /// <param name="timestamp">Gets or sets UTC timestamp that indicates
         /// when the event occured in
         /// Records365 vNext</param>
@@ -6108,7 +6313,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <summary>
         /// Gets or sets type of notification. Possible values include:
         /// 'ItemDestroyed', 'Ping', 'ConnectorConfigAdded',
-        /// 'ConnectorConfigUpdated', 'ConnectorConfigDeleted'
+        /// 'ConnectorConfigUpdated', 'ConnectorConfigDeleted',
+        /// 'GenerateReport'
         /// </summary>
         [JsonProperty(PropertyName = "notificationType")]
         public string NotificationType { get; set; }

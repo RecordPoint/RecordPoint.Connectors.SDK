@@ -45,6 +45,7 @@
         public static class MetaDataKeys
         {
             public const string ItemBinary_FileName = nameof(ItemBinary_FileName);
+            public const string ItemBinary_CorrelationId = nameof(ItemBinary_CorrelationId);
         }
     }
 }
