@@ -110,6 +110,7 @@ To submit your first record to Records365 vNext, use the `HttpSubmitItemPipeline
     submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.MediaType, value: "Electronic"));
     submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.ParentExternalId, value: "12345-12345"));
     submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.ContentVersion, value: "1.0"));
+    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.MimeType, value: ""));
 
     await submitPipeline.Submit(submitContext);
 
