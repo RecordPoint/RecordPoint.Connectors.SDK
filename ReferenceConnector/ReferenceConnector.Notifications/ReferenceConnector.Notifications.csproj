@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Databases.Cosmos\RecordPoint.Connectors.SDK.Databases.Cosmos.csproj" />
+		<ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Notifications\RecordPoint.Connectors.SDK.Notifications.csproj" />
+		<ProjectReference Include="..\..\RecordPoint.Connectors.SDK.WebHost\RecordPoint.Connectors.SDK.WebHost.csproj" />
+		<ProjectReference Include="..\..\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.csproj" />
+		<ProjectReference Include="..\ReferenceConnector.Common\ReferenceConnector.Common.csproj" />
+	</ItemGroup>
+
+</Project>

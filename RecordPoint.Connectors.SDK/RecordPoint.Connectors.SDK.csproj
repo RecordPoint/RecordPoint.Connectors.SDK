@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net6.0</TargetFrameworks>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_doc.md</DocumentationMarkdown>
+		<PackageId>RecordPoint.Connectors.SDK</PackageId>
+		<PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+		<PackageTags>RecordPoint</PackageTags>
+		<PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+		<PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<PackageVersion>2.0</PackageVersion>
+		<Description>SDK for developing Connectors for Records365 vNext.</Description>
+		<UserSecretsId>070b6a92-1a77-4a7c-b097-720a29777cb6</UserSecretsId>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="ContentManager\ContentDiscoveryOperation.cs" />
+	  <Compile Remove="ContentManager\SubmitBatchOperation.cs" />
+	  <Compile Remove="Work\QueueableManagedWorkBase.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="3.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Polly" Version="6.1.2" />
+		<PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\RecordPoint.Connectors.SDK.Abstractions\RecordPoint.Connectors.SDK.Abstractions.csproj" />
+	  <ProjectReference Include="..\RecordPoint.Connectors.SDK.Caching\RecordPoint.Connectors.SDK.Caching.csproj" />
+	  <ProjectReference Include="..\RecordPoint.Connectors.SDK.Client\RecordPoint.Connectors.SDK.Client.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,414 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK", "RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj", "{1D37919C-DCCC-4D89-998B-D85904F37753}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Notifications", "RecordPoint.Connectors.SDK.Notifications\RecordPoint.Connectors.SDK.Notifications.csproj", "{7DB18AFF-69DC-447F-91C0-C01F0FCCA317}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49826810-3ACB-494E-AEF8-911C20AAB4A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Test", "Tests\RecordPoint.Connectors.SDK.Test\RecordPoint.Connectors.SDK.Test.csproj", "{0F9FB86F-34B5-4E3D-A065-77B090843C14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Test.Common", "Tests\RecordPoint.Connectors.SDK.Test.Common\RecordPoint.Connectors.SDK.Test.Common.csproj", "{3989EB30-496F-4943-A4AB-611E5BD82506}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Toggles.LaunchDarkly", "RecordPoint.Connectors.SDK.Toggles.LaunchDarkly\RecordPoint.Connectors.SDK.Toggles.LaunchDarkly.csproj", "{E77D5130-3D0B-413A-92AF-92C7B030720E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Abstractions", "RecordPoint.Connectors.SDK.Abstractions\RecordPoint.Connectors.SDK.Abstractions.csproj", "{204EC705-94E9-46BA-826A-4B175252B90B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases", "RecordPoint.Connectors.SDK.Databases\RecordPoint.Connectors.SDK.Databases.csproj", "{BA5ABAF6-30FA-4F13-AFD3-90AEC8073BD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus", "RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.csproj", "{E0C386FC-F090-4E72-AF75-3A4FAA8202E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReferenceConnector", "ReferenceConnector", "{FD61984E-DE6A-4D15-88CC-1346A633B9E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.WebHost", "RecordPoint.Connectors.SDK.WebHost\RecordPoint.Connectors.SDK.WebHost.csproj", "{2EF38CD6-EE1F-4025-970B-7008176A95D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Health.Windows", "RecordPoint.Connectors.SDK.Health.Windows\RecordPoint.Connectors.SDK.Health.Windows.csproj", "{A3182C63-F9D9-4B30-95BC-B4DFDA66EE0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.ContentReport", "RecordPoint.Connectors.SDK.ContentReport\RecordPoint.Connectors.SDK.ContentReport.csproj", "{64E3C368-6A0C-4A2C-9DC1-5FDE22D04500}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Configuration.AzureKeyVault", "RecordPoint.Connectors.SDK.Configuration.AzureKeyVault\RecordPoint.Connectors.SDK.Configuration.AzureKeyVault.csproj", "{32318553-66B1-4F72-A16B-8CEC9637AF23}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.AggregationSubmission", "ReferenceConnector\ReferenceConnector.AggregationSubmission\ReferenceConnector.AggregationSubmission.csproj", "{D797132F-DF27-4437-80BF-5C70425C7B76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.AuditEventSubmission", "ReferenceConnector\ReferenceConnector.AuditEventSubmission\ReferenceConnector.AuditEventSubmission.csproj", "{233D800B-4679-4B8D-A77E-22CBBC56D477}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.BinarySubmission", "ReferenceConnector\ReferenceConnector.BinarySubmission\ReferenceConnector.BinarySubmission.csproj", "{6BE6D72D-EFEA-4AC4-932C-2BD3F4ED4B08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.Notifications", "ReferenceConnector\ReferenceConnector.Notifications\ReferenceConnector.Notifications.csproj", "{EA99D66A-E611-4846-9708-3D192918C65E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.RecordDisposal", "ReferenceConnector\ReferenceConnector.RecordDisposal\ReferenceConnector.RecordDisposal.csproj", "{774B8B17-2C3F-42F1-B84E-9050561B0FE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.ChannelDiscovery", "ReferenceConnector\ReferenceConnector.ChannelDiscovery\ReferenceConnector.ChannelDiscovery.csproj", "{1FFF1398-DE40-4A49-ABFB-83E3DB843DBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Client", "RecordPoint.Connectors.SDK.Client\RecordPoint.Connectors.SDK.Client.csproj", "{7C2391D9-D605-418E-9203-C92ECC009CEB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Client.Abstractions", "RecordPoint.Connectors.SDK.Client.Abstractions\RecordPoint.Connectors.SDK.Client.Abstractions.csproj", "{CE87C9F8-F443-4430-84D6-1E7E42C39429}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.RecordSubmission", "ReferenceConnector\ReferenceConnector.RecordSubmission\ReferenceConnector.RecordSubmission.csproj", "{0743333B-71C1-441E-BA14-1FC883668BE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WIP", "WIP", "{D0E40A69-B8C6-4CF1-96A0-F845BB950332}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.LocalDb", "RecordPoint.Connectors.SDK.Databases.LocalDb\RecordPoint.Connectors.SDK.Databases.LocalDb.csproj", "{F799C349-E0DA-4CD9-BCA3-BE0C95FE91B8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.Sqlite", "RecordPoint.Connectors.SDK.Databases.Sqlite\RecordPoint.Connectors.SDK.Databases.Sqlite.csproj", "{DD770D05-76CC-450A-BCFD-7CE82AF97D99}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.Cosmos", "RecordPoint.Connectors.SDK.Databases.Cosmos\RecordPoint.Connectors.SDK.Databases.Cosmos.csproj", "{FA44122E-CDE5-44DA-89C8-DEF2171A80EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Caching", "RecordPoint.Connectors.SDK.Caching\RecordPoint.Connectors.SDK.Caching.csproj", "{46352C94-1F32-43BF-946E-6D843B51F428}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Logging.Serilog", "RecordPoint.Connectors.SDK.Logging.Serilog\RecordPoint.Connectors.SDK.Logging.Serilog.csproj", "{2009E4AB-C931-44F1-806E-1B5D84412709}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.AzureSql", "RecordPoint.Connectors.SDK.Databases.AzureSql\RecordPoint.Connectors.SDK.Databases.AzureSql.csproj", "{8D6DB924-262C-4560-9DF0-92640D29CCB8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.PostgreSql", "RecordPoint.Connectors.SDK.Databases.PostgreSql\RecordPoint.Connectors.SDK.Databases.PostgreSql.csproj", "{CCC3098A-994C-48EC-BE89-3DEB7B88BC31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{50020019-9FF4-4B2F-B8FF-33A986EC7D7B}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.yml = build\build.yml
+		GitVersion.yml = GitVersion.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.ContentRegistration", "ReferenceConnector\ReferenceConnector.ContentRegistration\ReferenceConnector.ContentRegistration.csproj", "{F376D498-4625-4031-BE82-30B0C1543F50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.Common", "ReferenceConnector\ReferenceConnector.Common\ReferenceConnector.Common.csproj", "{A3804DC0-D847-45FA-A4A2-9F5674AFF1DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2BBBC975-DA1E-4714-B4B2-BF776D515537}"
+	ProjectSection(SolutionItems) = preProject
+		docs\connector_architecture.png = docs\connector_architecture.png
+		docs\dependency_injection.md = docs\dependency_injection.md
+		docs\managedworkqueue.md = docs\managedworkqueue.md
+		docs\quick_start.md = docs\quick_start.md
+		README.md = README.md
+		docs\semaphore_lock.md = docs\semaphore_lock.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.ContentManager", "ReferenceConnector\ReferenceConnector.ContentManager\ReferenceConnector.ContentManager.csproj", "{22AC4835-4700-4AEF-AA55-16386ACD0AA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Client.Test", "Tests\RecordPoint.Connectors.SDK.Client.Test\RecordPoint.Connectors.SDK.Client.Test.csproj", "{C25B015D-60B5-47AD-801F-F811607BD0C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Caching.Test", "Tests\RecordPoint.Connectors.SDK.Caching.Test\RecordPoint.Connectors.SDK.Caching.Test.csproj", "{4E34462A-0869-410D-B75A-E84D4D33A57A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Configuration.AzureKeyVault.Test", "Tests\RecordPoint.Connectors.SDK.Configuration.AzureKeyVault.Test\RecordPoint.Connectors.SDK.Configuration.AzureKeyVault.Test.csproj", "{76C7B559-C7C2-4E15-8520-1204F67C4350}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.ContentReport.Test", "Tests\RecordPoint.Connectors.SDK.ContentReport.Test\RecordPoint.Connectors.SDK.ContentReport.Test.csproj", "{A8479167-7AE8-4896-A60B-415808C18C9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.Test", "Tests\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.Test\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.Test.csproj", "{60B68B8C-B90A-4E17-AE3E-5159A0E4F43A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.AzureSql.Test", "Tests\RecordPoint.Connectors.SDK.Databases.AzureSql.Test\RecordPoint.Connectors.SDK.Databases.AzureSql.Test.csproj", "{14B22D49-205C-4E6E-9A05-8130D5BA09B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.Cosmos.Test", "Tests\RecordPoint.Connectors.SDK.Databases.Cosmos.Test\RecordPoint.Connectors.SDK.Databases.Cosmos.Test.csproj", "{880F5F5B-B1A5-461B-A413-9C1E83ADFA5A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.LocalDb.Test", "Tests\RecordPoint.Connectors.SDK.Databases.LocalDb.Test\RecordPoint.Connectors.SDK.Databases.LocalDb.Test.csproj", "{3DB6B0CD-B487-44A2-A8D5-6212BED97BFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.PostgreSql.Test", "Tests\RecordPoint.Connectors.SDK.Databases.PostgreSql.Test\RecordPoint.Connectors.SDK.Databases.PostgreSql.Test.csproj", "{AB878F76-2DD9-457A-8ADF-D4005A2ED061}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.Sqlite.Test", "Tests\RecordPoint.Connectors.SDK.Databases.Sqlite.Test\RecordPoint.Connectors.SDK.Databases.Sqlite.Test.csproj", "{8807938A-8ED3-48E4-8BF0-0B7E71BB173F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Databases.Test", "Tests\RecordPoint.Connectors.SDK.Databases.Test\RecordPoint.Connectors.SDK.Databases.Test.csproj", "{DBDD4E3F-E89A-408D-B764-7A313E7086F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.Notifications.Test", "Tests\RecordPoint.Connectors.SDK.Notifications.Test\RecordPoint.Connectors.SDK.Notifications.Test.csproj", "{4DD5CE0A-1BCF-47F5-A768-725A5DEA6743}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{8C0A4A57-8893-4A3A-97A5-973B7F97A1F1}"
+	ProjectSection(SolutionItems) = preProject
+		docs\packages\recordpoint_connectors_sdk.md = docs\packages\recordpoint_connectors_sdk.md
+		docs\packages\recordpoint_connectors_sdk_abstractions.md = docs\packages\recordpoint_connectors_sdk_abstractions.md
+		docs\packages\recordpoint_connectors_sdk_abstractions_doc.md = docs\packages\recordpoint_connectors_sdk_abstractions_doc.md
+		docs\packages\recordpoint_connectors_sdk_caching.md = docs\packages\recordpoint_connectors_sdk_caching.md
+		docs\packages\recordpoint_connectors_sdk_caching_doc.md = docs\packages\recordpoint_connectors_sdk_caching_doc.md
+		docs\packages\recordpoint_connectors_sdk_client.md = docs\packages\recordpoint_connectors_sdk_client.md
+		docs\packages\recordpoint_connectors_sdk_client_abstractions.md = docs\packages\recordpoint_connectors_sdk_client_abstractions.md
+		docs\packages\recordpoint_connectors_sdk_client_abstractions_doc.md = docs\packages\recordpoint_connectors_sdk_client_abstractions_doc.md
+		docs\packages\recordpoint_connectors_sdk_client_doc.md = docs\packages\recordpoint_connectors_sdk_client_doc.md
+		docs\packages\recordpoint_connectors_sdk_configuration_azurekeyvault.md = docs\packages\recordpoint_connectors_sdk_configuration_azurekeyvault.md
+		docs\packages\recordpoint_connectors_sdk_configuration_azurekeyvault_doc.md = docs\packages\recordpoint_connectors_sdk_configuration_azurekeyvault_doc.md
+		docs\packages\recordpoint_connectors_sdk_contentreport.md = docs\packages\recordpoint_connectors_sdk_contentreport.md
+		docs\packages\recordpoint_connectors_sdk_databases.md = docs\packages\recordpoint_connectors_sdk_databases.md
+		docs\packages\recordpoint_connectors_sdk_databases_azuresql.md = docs\packages\recordpoint_connectors_sdk_databases_azuresql.md
+		docs\packages\recordpoint_connectors_sdk_databases_azuresql_doc.md = docs\packages\recordpoint_connectors_sdk_databases_azuresql_doc.md
+		docs\packages\recordpoint_connectors_sdk_databases_cosmos.md = docs\packages\recordpoint_connectors_sdk_databases_cosmos.md
+		docs\packages\recordpoint_connectors_sdk_databases_cosmos_doc.md = docs\packages\recordpoint_connectors_sdk_databases_cosmos_doc.md
+		docs\packages\recordpoint_connectors_sdk_databases_doc.md = docs\packages\recordpoint_connectors_sdk_databases_doc.md
+		docs\packages\recordpoint_connectors_sdk_databases_localdb.md = docs\packages\recordpoint_connectors_sdk_databases_localdb.md
+		docs\packages\recordpoint_connectors_sdk_databases_localdb_doc.md = docs\packages\recordpoint_connectors_sdk_databases_localdb_doc.md
+		docs\packages\recordpoint_connectors_sdk_databases_postgresql.md = docs\packages\recordpoint_connectors_sdk_databases_postgresql.md
+		docs\packages\recordpoint_connectors_sdk_databases_postgresql_doc.md = docs\packages\recordpoint_connectors_sdk_databases_postgresql_doc.md
+		docs\packages\recordpoint_connectors_sdk_databases_sqlite.md = docs\packages\recordpoint_connectors_sdk_databases_sqlite.md
+		docs\packages\recordpoint_connectors_sdk_databases_sqlite_doc.md = docs\packages\recordpoint_connectors_sdk_databases_sqlite_doc.md
+		docs\packages\recordpoint_connectors_sdk_doc.md = docs\packages\recordpoint_connectors_sdk_doc.md
+		docs\packages\recordpoint_connectors_sdk_health_windows.md = docs\packages\recordpoint_connectors_sdk_health_windows.md
+		docs\packages\recordpoint_connectors_sdk_health_windows_doc.md = docs\packages\recordpoint_connectors_sdk_health_windows_doc.md
+		docs\packages\recordpoint_connectors_sdk_logging_serilog.md = docs\packages\recordpoint_connectors_sdk_logging_serilog.md
+		docs\packages\recordpoint_connectors_sdk_logging_serilog_doc.md = docs\packages\recordpoint_connectors_sdk_logging_serilog_doc.md
+		docs\packages\recordpoint_connectors_sdk_notifications.md = docs\packages\recordpoint_connectors_sdk_notifications.md
+		docs\packages\recordpoint_connectors_sdk_notifications_doc.md = docs\packages\recordpoint_connectors_sdk_notifications_doc.md
+		docs\packages\recordpoint_connectors_sdk_toggles_launchdarkly.md = docs\packages\recordpoint_connectors_sdk_toggles_launchdarkly.md
+		docs\packages\recordpoint_connectors_sdk_toggles_launchdarkly_doc.md = docs\packages\recordpoint_connectors_sdk_toggles_launchdarkly_doc.md
+		docs\packages\recordpoint_connectors_sdk_webhost.md = docs\packages\recordpoint_connectors_sdk_webhost.md
+		docs\packages\recordpoint_connectors_sdk_webhost_doc.md = docs\packages\recordpoint_connectors_sdk_webhost_doc.md
+		docs\packages\recordpoint_connectors_sdk_workqueue_azureservicebus.md = docs\packages\recordpoint_connectors_sdk_workqueue_azureservicebus.md
+		docs\packages\recordpoint_connectors_sdk_workqueue_azureservicebus_doc.md = docs\packages\recordpoint_connectors_sdk_workqueue_azureservicebus_doc.md
+		docs\packages\recordpoint_connectors_sdk_workqueue_rabbitmq.md = docs\packages\recordpoint_connectors_sdk_workqueue_rabbitmq.md
+		docs\packages\recordpoint_connectors_sdk_workqueue_rabbitmq_doc.md = docs\packages\recordpoint_connectors_sdk_workqueue_rabbitmq_doc.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "operations", "operations", "{FF52797B-1CBA-4AED-ABA0-BC3794BF75AE}"
+	ProjectSection(SolutionItems) = preProject
+		docs\operations\aggregation_submission.md = docs\operations\aggregation_submission.md
+		docs\operations\binary_submission.md = docs\operations\binary_submission.md
+		docs\operations\channel_discovery.md = docs\operations\channel_discovery.md
+		docs\operations\content_manager.md = docs\operations\content_manager.md
+		docs\operations\content_registration.md = docs\operations\content_registration.md
+		docs\operations\content_report.md = docs\operations\content_report.md
+		docs\operations\content_synchronisation.md = docs\operations\content_synchronisation.md
+		docs\operations\operations.md = docs\operations\operations.md
+		docs\operations\record_disposal.md = docs\operations\record_disposal.md
+		docs\operations\record_submission.md = docs\operations\record_submission.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "observability", "observability", "{0129C5C9-C2C2-4ACF-90B4-095AB7CD4E8E}"
+	ProjectSection(SolutionItems) = preProject
+		docs\observability\application_insights.md = docs\observability\application_insights.md
+		docs\observability\health.md = docs\observability\health.md
+		docs\observability\logging.md = docs\observability\logging.md
+		docs\observability\scopes.md = docs\observability\scopes.md
+		docs\observability\status.md = docs\observability\status.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceConnector.ContentSynchronisation", "ReferenceConnector\ReferenceConnector.ContentSynchronisation\ReferenceConnector.ContentSynchronisation.csproj", "{4FF57CD7-6F0F-4B56-8BFA-F1C4F093DA75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecordPoint.Connectors.SDK.WorkQueue.RabbitMq", "RecordPoint.Connectors.SDK.WorkQueue.RabbitMq\RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.csproj", "{CF422F91-CA7F-4FCF-9A85-9EDF44645D0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test", "Tests\RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test\RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test.csproj", "{12A1AC8B-E5AB-4F18-B536-EB0F6F21433E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D37919C-DCCC-4D89-998B-D85904F37753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D37919C-DCCC-4D89-998B-D85904F37753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D37919C-DCCC-4D89-998B-D85904F37753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D37919C-DCCC-4D89-998B-D85904F37753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DB18AFF-69DC-447F-91C0-C01F0FCCA317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DB18AFF-69DC-447F-91C0-C01F0FCCA317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DB18AFF-69DC-447F-91C0-C01F0FCCA317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DB18AFF-69DC-447F-91C0-C01F0FCCA317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F9FB86F-34B5-4E3D-A065-77B090843C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F9FB86F-34B5-4E3D-A065-77B090843C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F9FB86F-34B5-4E3D-A065-77B090843C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F9FB86F-34B5-4E3D-A065-77B090843C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3989EB30-496F-4943-A4AB-611E5BD82506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3989EB30-496F-4943-A4AB-611E5BD82506}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3989EB30-496F-4943-A4AB-611E5BD82506}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3989EB30-496F-4943-A4AB-611E5BD82506}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E77D5130-3D0B-413A-92AF-92C7B030720E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E77D5130-3D0B-413A-92AF-92C7B030720E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E77D5130-3D0B-413A-92AF-92C7B030720E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E77D5130-3D0B-413A-92AF-92C7B030720E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{204EC705-94E9-46BA-826A-4B175252B90B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{204EC705-94E9-46BA-826A-4B175252B90B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{204EC705-94E9-46BA-826A-4B175252B90B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{204EC705-94E9-46BA-826A-4B175252B90B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA5ABAF6-30FA-4F13-AFD3-90AEC8073BD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA5ABAF6-30FA-4F13-AFD3-90AEC8073BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA5ABAF6-30FA-4F13-AFD3-90AEC8073BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA5ABAF6-30FA-4F13-AFD3-90AEC8073BD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0C386FC-F090-4E72-AF75-3A4FAA8202E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0C386FC-F090-4E72-AF75-3A4FAA8202E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0C386FC-F090-4E72-AF75-3A4FAA8202E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0C386FC-F090-4E72-AF75-3A4FAA8202E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF38CD6-EE1F-4025-970B-7008176A95D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF38CD6-EE1F-4025-970B-7008176A95D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF38CD6-EE1F-4025-970B-7008176A95D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF38CD6-EE1F-4025-970B-7008176A95D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3182C63-F9D9-4B30-95BC-B4DFDA66EE0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3182C63-F9D9-4B30-95BC-B4DFDA66EE0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3182C63-F9D9-4B30-95BC-B4DFDA66EE0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3182C63-F9D9-4B30-95BC-B4DFDA66EE0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64E3C368-6A0C-4A2C-9DC1-5FDE22D04500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E3C368-6A0C-4A2C-9DC1-5FDE22D04500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E3C368-6A0C-4A2C-9DC1-5FDE22D04500}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32318553-66B1-4F72-A16B-8CEC9637AF23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32318553-66B1-4F72-A16B-8CEC9637AF23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32318553-66B1-4F72-A16B-8CEC9637AF23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32318553-66B1-4F72-A16B-8CEC9637AF23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D797132F-DF27-4437-80BF-5C70425C7B76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D797132F-DF27-4437-80BF-5C70425C7B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D797132F-DF27-4437-80BF-5C70425C7B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D797132F-DF27-4437-80BF-5C70425C7B76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{233D800B-4679-4B8D-A77E-22CBBC56D477}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{233D800B-4679-4B8D-A77E-22CBBC56D477}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{233D800B-4679-4B8D-A77E-22CBBC56D477}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{233D800B-4679-4B8D-A77E-22CBBC56D477}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BE6D72D-EFEA-4AC4-932C-2BD3F4ED4B08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BE6D72D-EFEA-4AC4-932C-2BD3F4ED4B08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BE6D72D-EFEA-4AC4-932C-2BD3F4ED4B08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BE6D72D-EFEA-4AC4-932C-2BD3F4ED4B08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA99D66A-E611-4846-9708-3D192918C65E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA99D66A-E611-4846-9708-3D192918C65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA99D66A-E611-4846-9708-3D192918C65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA99D66A-E611-4846-9708-3D192918C65E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{774B8B17-2C3F-42F1-B84E-9050561B0FE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{774B8B17-2C3F-42F1-B84E-9050561B0FE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{774B8B17-2C3F-42F1-B84E-9050561B0FE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{774B8B17-2C3F-42F1-B84E-9050561B0FE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FFF1398-DE40-4A49-ABFB-83E3DB843DBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FFF1398-DE40-4A49-ABFB-83E3DB843DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FFF1398-DE40-4A49-ABFB-83E3DB843DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FFF1398-DE40-4A49-ABFB-83E3DB843DBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C2391D9-D605-418E-9203-C92ECC009CEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C2391D9-D605-418E-9203-C92ECC009CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C2391D9-D605-418E-9203-C92ECC009CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C2391D9-D605-418E-9203-C92ECC009CEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE87C9F8-F443-4430-84D6-1E7E42C39429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE87C9F8-F443-4430-84D6-1E7E42C39429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE87C9F8-F443-4430-84D6-1E7E42C39429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE87C9F8-F443-4430-84D6-1E7E42C39429}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0743333B-71C1-441E-BA14-1FC883668BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0743333B-71C1-441E-BA14-1FC883668BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0743333B-71C1-441E-BA14-1FC883668BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0743333B-71C1-441E-BA14-1FC883668BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F799C349-E0DA-4CD9-BCA3-BE0C95FE91B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F799C349-E0DA-4CD9-BCA3-BE0C95FE91B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F799C349-E0DA-4CD9-BCA3-BE0C95FE91B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F799C349-E0DA-4CD9-BCA3-BE0C95FE91B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD770D05-76CC-450A-BCFD-7CE82AF97D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD770D05-76CC-450A-BCFD-7CE82AF97D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD770D05-76CC-450A-BCFD-7CE82AF97D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD770D05-76CC-450A-BCFD-7CE82AF97D99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA44122E-CDE5-44DA-89C8-DEF2171A80EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA44122E-CDE5-44DA-89C8-DEF2171A80EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA44122E-CDE5-44DA-89C8-DEF2171A80EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA44122E-CDE5-44DA-89C8-DEF2171A80EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46352C94-1F32-43BF-946E-6D843B51F428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46352C94-1F32-43BF-946E-6D843B51F428}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46352C94-1F32-43BF-946E-6D843B51F428}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46352C94-1F32-43BF-946E-6D843B51F428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2009E4AB-C931-44F1-806E-1B5D84412709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2009E4AB-C931-44F1-806E-1B5D84412709}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2009E4AB-C931-44F1-806E-1B5D84412709}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2009E4AB-C931-44F1-806E-1B5D84412709}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6DB924-262C-4560-9DF0-92640D29CCB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6DB924-262C-4560-9DF0-92640D29CCB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6DB924-262C-4560-9DF0-92640D29CCB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6DB924-262C-4560-9DF0-92640D29CCB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCC3098A-994C-48EC-BE89-3DEB7B88BC31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC3098A-994C-48EC-BE89-3DEB7B88BC31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC3098A-994C-48EC-BE89-3DEB7B88BC31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC3098A-994C-48EC-BE89-3DEB7B88BC31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F376D498-4625-4031-BE82-30B0C1543F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F376D498-4625-4031-BE82-30B0C1543F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F376D498-4625-4031-BE82-30B0C1543F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F376D498-4625-4031-BE82-30B0C1543F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3804DC0-D847-45FA-A4A2-9F5674AFF1DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3804DC0-D847-45FA-A4A2-9F5674AFF1DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3804DC0-D847-45FA-A4A2-9F5674AFF1DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3804DC0-D847-45FA-A4A2-9F5674AFF1DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22AC4835-4700-4AEF-AA55-16386ACD0AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22AC4835-4700-4AEF-AA55-16386ACD0AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22AC4835-4700-4AEF-AA55-16386ACD0AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22AC4835-4700-4AEF-AA55-16386ACD0AA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C25B015D-60B5-47AD-801F-F811607BD0C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C25B015D-60B5-47AD-801F-F811607BD0C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C25B015D-60B5-47AD-801F-F811607BD0C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C25B015D-60B5-47AD-801F-F811607BD0C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E34462A-0869-410D-B75A-E84D4D33A57A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E34462A-0869-410D-B75A-E84D4D33A57A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E34462A-0869-410D-B75A-E84D4D33A57A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E34462A-0869-410D-B75A-E84D4D33A57A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76C7B559-C7C2-4E15-8520-1204F67C4350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76C7B559-C7C2-4E15-8520-1204F67C4350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76C7B559-C7C2-4E15-8520-1204F67C4350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76C7B559-C7C2-4E15-8520-1204F67C4350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8479167-7AE8-4896-A60B-415808C18C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8479167-7AE8-4896-A60B-415808C18C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8479167-7AE8-4896-A60B-415808C18C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8479167-7AE8-4896-A60B-415808C18C9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B68B8C-B90A-4E17-AE3E-5159A0E4F43A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B68B8C-B90A-4E17-AE3E-5159A0E4F43A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B68B8C-B90A-4E17-AE3E-5159A0E4F43A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B68B8C-B90A-4E17-AE3E-5159A0E4F43A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B22D49-205C-4E6E-9A05-8130D5BA09B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B22D49-205C-4E6E-9A05-8130D5BA09B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B22D49-205C-4E6E-9A05-8130D5BA09B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B22D49-205C-4E6E-9A05-8130D5BA09B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{880F5F5B-B1A5-461B-A413-9C1E83ADFA5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{880F5F5B-B1A5-461B-A413-9C1E83ADFA5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{880F5F5B-B1A5-461B-A413-9C1E83ADFA5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{880F5F5B-B1A5-461B-A413-9C1E83ADFA5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DB6B0CD-B487-44A2-A8D5-6212BED97BFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DB6B0CD-B487-44A2-A8D5-6212BED97BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DB6B0CD-B487-44A2-A8D5-6212BED97BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DB6B0CD-B487-44A2-A8D5-6212BED97BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB878F76-2DD9-457A-8ADF-D4005A2ED061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB878F76-2DD9-457A-8ADF-D4005A2ED061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB878F76-2DD9-457A-8ADF-D4005A2ED061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB878F76-2DD9-457A-8ADF-D4005A2ED061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8807938A-8ED3-48E4-8BF0-0B7E71BB173F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8807938A-8ED3-48E4-8BF0-0B7E71BB173F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8807938A-8ED3-48E4-8BF0-0B7E71BB173F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8807938A-8ED3-48E4-8BF0-0B7E71BB173F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBDD4E3F-E89A-408D-B764-7A313E7086F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDD4E3F-E89A-408D-B764-7A313E7086F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDD4E3F-E89A-408D-B764-7A313E7086F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDD4E3F-E89A-408D-B764-7A313E7086F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DD5CE0A-1BCF-47F5-A768-725A5DEA6743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DD5CE0A-1BCF-47F5-A768-725A5DEA6743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DD5CE0A-1BCF-47F5-A768-725A5DEA6743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DD5CE0A-1BCF-47F5-A768-725A5DEA6743}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF57CD7-6F0F-4B56-8BFA-F1C4F093DA75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF57CD7-6F0F-4B56-8BFA-F1C4F093DA75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF57CD7-6F0F-4B56-8BFA-F1C4F093DA75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF57CD7-6F0F-4B56-8BFA-F1C4F093DA75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF422F91-CA7F-4FCF-9A85-9EDF44645D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF422F91-CA7F-4FCF-9A85-9EDF44645D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF422F91-CA7F-4FCF-9A85-9EDF44645D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF422F91-CA7F-4FCF-9A85-9EDF44645D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12A1AC8B-E5AB-4F18-B536-EB0F6F21433E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12A1AC8B-E5AB-4F18-B536-EB0F6F21433E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12A1AC8B-E5AB-4F18-B536-EB0F6F21433E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12A1AC8B-E5AB-4F18-B536-EB0F6F21433E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F9FB86F-34B5-4E3D-A065-77B090843C14} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{3989EB30-496F-4943-A4AB-611E5BD82506} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{D797132F-DF27-4437-80BF-5C70425C7B76} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{233D800B-4679-4B8D-A77E-22CBBC56D477} = {D0E40A69-B8C6-4CF1-96A0-F845BB950332}
+		{6BE6D72D-EFEA-4AC4-932C-2BD3F4ED4B08} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{EA99D66A-E611-4846-9708-3D192918C65E} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{774B8B17-2C3F-42F1-B84E-9050561B0FE2} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{1FFF1398-DE40-4A49-ABFB-83E3DB843DBB} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{0743333B-71C1-441E-BA14-1FC883668BE5} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{D0E40A69-B8C6-4CF1-96A0-F845BB950332} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{F376D498-4625-4031-BE82-30B0C1543F50} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{A3804DC0-D847-45FA-A4A2-9F5674AFF1DD} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{22AC4835-4700-4AEF-AA55-16386ACD0AA5} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{C25B015D-60B5-47AD-801F-F811607BD0C5} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{4E34462A-0869-410D-B75A-E84D4D33A57A} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{76C7B559-C7C2-4E15-8520-1204F67C4350} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{A8479167-7AE8-4896-A60B-415808C18C9F} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{60B68B8C-B90A-4E17-AE3E-5159A0E4F43A} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{14B22D49-205C-4E6E-9A05-8130D5BA09B5} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{880F5F5B-B1A5-461B-A413-9C1E83ADFA5A} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{3DB6B0CD-B487-44A2-A8D5-6212BED97BFA} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{AB878F76-2DD9-457A-8ADF-D4005A2ED061} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{8807938A-8ED3-48E4-8BF0-0B7E71BB173F} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{DBDD4E3F-E89A-408D-B764-7A313E7086F0} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{4DD5CE0A-1BCF-47F5-A768-725A5DEA6743} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+		{8C0A4A57-8893-4A3A-97A5-973B7F97A1F1} = {2BBBC975-DA1E-4714-B4B2-BF776D515537}
+		{FF52797B-1CBA-4AED-ABA0-BC3794BF75AE} = {2BBBC975-DA1E-4714-B4B2-BF776D515537}
+		{0129C5C9-C2C2-4ACF-90B4-095AB7CD4E8E} = {2BBBC975-DA1E-4714-B4B2-BF776D515537}
+		{4FF57CD7-6F0F-4B56-8BFA-F1C4F093DA75} = {FD61984E-DE6A-4D15-88CC-1346A633B9E7}
+		{12A1AC8B-E5AB-4F18-B536-EB0F6F21433E} = {49826810-3ACB-494E-AEF8-911C20AAB4A4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8FFB4964-F2E9-4339-A290-8D4D3963DFBA}
+	EndGlobalSection
+EndGlobal

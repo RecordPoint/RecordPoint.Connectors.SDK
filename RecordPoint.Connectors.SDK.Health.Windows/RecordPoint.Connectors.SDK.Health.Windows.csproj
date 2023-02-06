@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_health_windows_doc.md</DocumentationMarkdown>
+	  <PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+	  <PackageTags>RecordPoint</PackageTags>
+	  <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+	  <PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
+	  <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+	  <Description>Windows Health Check extensions for the Connectors SDK.</Description>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Management" Version="6.0.0" />
+    <PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	</ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\RecordPoint.Connectors.SDK.Abstractions\RecordPoint.Connectors.SDK.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

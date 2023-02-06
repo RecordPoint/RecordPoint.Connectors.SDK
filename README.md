@@ -1,119 +1,161 @@
-# Records365 vNext Connectors SDK 
-Get started quickly with writing new connectors for Records365 vNext using this .NET library.
+# Records365 Connectors SDK 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=alert_status&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
 
-This library uses [Semantic Versioning](https://semver.org/).
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=security_rating&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=sqale_rating&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=reliability_rating&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
+ 
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=vulnerabilities&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=bugs&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=code_smells&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
 
-# Quickstart Guide
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=coverage&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=duplicated_lines_density&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=ncloc&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) 
 
-If you're a developer looking to quickly get up and running with the basics of Records365 vNext Connector development, this is the guide for you. 
-You must have access to a Records365 vNext tenant before you begin.
+Get started quickly with writing new connectors for Records365 using this .NET library.
+
+To jump straight in to building a Connector, see the [Quick Start Guide](./docs/quick_start.md).
 
 ## Overview 
+The Records365 Connectors SDK has the following features:
 
-In this guide you will create a simple connector that
+*  Separate and invididually scalable responsiblities
+*  Clearly defined interfaces for implementing record ingestion logic
+*  Modularised and easily extendable
+*  Utilises Dependecy Injection
+*  Submits content to the Records365 Connector API with Back-Off & Retry logic
+*  Receive notifications from Records365 (via webhook or by polling the Connector API)
 
-*  Submits items to the Records365 vNext Connector API
-*  Polls for notifications from Records365 vNext (via the Connector API)
+The Connectors SDK is consists of numerous packages that provide various functionality as required by a connector.
+It includes multiple resource provider implementations, giving you different options for building and deploying your connector.
 
-### Authentication 
+## Versioning
+This project uses [semantic versioning](https://semver.org/) which is automated through the build process.
 
-Records365 vNext Connectors use Azure Active Directory to authenticate to the Records365 vNext Connector API. 
-Connectors use the [OAuth 2.0 client credentials grant flow](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-service-to-service) 
-to obtain a bearer token from Azure Active Directory. The bearer token is then used in each call to the Connector API.
+Semantic Versioning: [MAJOR].[MINOR].[PATCH]
 
-# Let's Get Started! 
+To increment various version segments, include "+semver: xxxx" in your commit message:
+* MAJOR: use "+semver: major" or "+semver: breaking"
+* MINOR: use "+semver: minor" or "+semver: feature"
+* PATCH: use "+semver: patch" or "+semver: fix"
 
-## Create an App in Azure Active Directory 
-
-In the [Azure Portal](https://portal.azure.com), create a new App Registration in the Azure Active Directory that is linked to your Records365 vNext tenant. 
-For example, if you log in to your Records365 vNext tenant as `john.doe@mytenant.onmicrosoft.com`, then create 
-a new App Registration in the `mytenant.onmicrosoft.com` directory. Provide the following details when creating the App Registration:
-
-*  **Name**: Anything you like
-*  **Application type**: Web app/API
-*  **Sign on URL**: Any valid URL - it doesn't really matter, this value isn't used anywhere
-
-Once the App Registration is created, take note of the value for `Application ID` and then navigate to `Settings`.
-
-Finally, under `Keys`, create a new Key and take note of its value. 
-
-## Register a Connector Type in Records365 vNext
-
-In Records365 vNext, log in as an Application Administrator. Click the settings cog, then click "Connectors" on the left navigation menu. 
-Click "Add Connector", then click the ellipsis menu in the top right and select "New Connector Type". Provide the following details:
-
-*  **Name**: Name of your connector type.
-*  **Short Name**: Short name of your connector type.
-*  **Content Source**: Name of the content source that your connector adapts to. 
-*  **Publisher**: Name of the organization that publishes your connector type.
-*  **Client ID**: The `Application ID` from the Azure Active Directory App Registration created above.
-*  **Allow Client ID Override**: No.
-*  **Notification Method**: Pull.
-*  **Notification Types**: Check "Item Destroyed", and leave all others unchecked.
-*  **Logo**: Upload a 360px by 160px image.
-*  **Icon**: Upload a 70px by 70px image.
-
-Click Save. Your custom connector type will now appear in the Connectors Gallery.
-
-## Create a Connector 
-
-Click the Add button on your new custom connector type. A new instance of the connector will be created. 
-
-In the flyout pane on the right, click the "Download Settings" button. Take note of the json file that is downloaded.
-
-## Submit Some Records
-
-Any interaction with the Records365 vNext Connector API via this SDK requires two objects - an `AuthenticationHelperSettings` and an `ApiClientFactorySettings`. 
-
-Create an `AuthenticationHelperSettings` object:
-
-    var authenticationHelperSettings = new AuthenticationHelperSettings
-    {
-        AuthenticationResource = <audience from the connector settings json>,
-        ClientId = <clientId from the connector settings json>,
-        ClientSecret = <Key value Azure AD App Registration>,
-        TenantDomainName = <tenantDomainName from the connector settings json>
-    };
-
-Create an `ApiClientFactorySettings` object:
-
-    var apiClientFactorySettings = new ApiClientFactorySettings
-    {
-        ConnectorApiUrl = <connectorApiUrl from the connector settings json>,
-        ServerCertificateValidation = true
-    };
-
-To submit your first record to Records365 vNext, use the `HttpSubmitItemPipelineElement` class...
-
-    var submitPipeline = new HttpSubmitItemPipelineElement(null);
-    submitPipeline.ApiClientFactory = new ApiClientFactory();
-
-... and submit a record like so:
-
-    var submitContext = new SubmitContext
-    {
-        ConnectorConfigId = Guid.Parse("<connectorId from connector settings json"),
-        TenantId = Guid.Parse("<tenantId from connector settings json>"),
-        ApiClientFactorySettings = apiClientFactorySettings,
-        AuthenticationHelperSettings = authenticationHelperSettings,
-        CoreMetaData = new List<SubmissionMetaDataModel>()
-    };
-
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.ExternalId, value: "12345"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.Title, value: "Record title"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.Author, value: "Record author"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.SourceCreatedDate, value: DateTime.UtcNow.ToString("O")));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.SourceLastModifiedDate, value: DateTime.UtcNow.ToString("O")));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.SourceCreatedBy, value: "Me"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.SourceLastModifiedBy, value: "Me"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.Location, value: "C:\\record.txt"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.MediaType, value: "Electronic"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.MimeType, value: "text/plain"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.ParentExternalId, value: "12345-12345"));
-    submitContext.CoreMetaData.Add(new SubmissionMetaDataModel(Fields.ContentVersion, value: "1.0"));
-
-    await submitPipeline.Submit(submitContext);
-
-The result of the submission can be checked on the `SubmitResult` field on the `submitContext`.
+To explicitly set a version, tag the commit with the desired semantic version.
 
 
+## Packages
+
+*  [RecordPoint.Connectors.SDK](./docs/packages/recordpoint_connectors_sdk.md)
+*  [RecordPoint.Connectors.SDK.Abstractions](./docs/packages/recordpoint_connectors_sdk_abstractions.md)
+*  [RecordPoint.Connectors.SDK.Caching](./docs/packages/recordpoint_connectors_sdk_caching.md)
+*  [RecordPoint.Connectors.SDK.Client](./docs/packages/recordpoint_connectors_sdk_client.md)
+*  [RecordPoint.Connectors.SDK.Client.Abstractions](./docs/packages/recordpoint_connectors_sdk_client_abstractions.md)
+*  [RecordPoint.Connectors.SDK.Configuration.AzurekeyVault](./docs/packages/recordpoint_connectors_sdk_configuration_azurekeyvault.md)
+*  [RecordPoint.Connectors.SDK.ContentReport](./docs/packages/recordpoint_connectors_sdk_contentreport.md)
+*  [RecordPoint.Connectors.SDK.Databases](./docs/packages/recordpoint_connectors_sdk_databases.md)
+*  [RecordPoint.Connectors.SDK.Databases.AzureSql](./docs/packages/recordpoint_connectors_sdk_databases_azuresql.md)
+*  [RecordPoint.Connectors.SDK.Databases.Cosmos](./docs/packages/recordpoint_connectors_sdk_databases_cosmos.md)
+*  [RecordPoint.Connectors.SDK.Databases.LocalDb](./docs/packages/recordpoint_connectors_sdk_databases_localdb.md)
+*  [RecordPoint.Connectors.SDK.Databases.PostgreSql](./docs/packages/recordpoint_connectors_sdk_databases_postgresql.md)
+*  [RecordPoint.Connectors.SDK.Databases.Sqlite](./docs/packages/recordpoint_connectors_sdk_databases_sqlite.md)
+*  [RecordPoint.Connectors.SDK.Health.Windows](./docs/packages/recordpoint_connectors_sdk_health_windows.md)
+*  [RecordPoint.Connectors.SDK.Logging.Serilog](./docs/packages/recordpoint_connectors_sdk_logging_serilog.md)
+*  [RecordPoint.Connectors.SDK.Notifications](./docs/packages/recordpoint_connectors_sdk_notifications.md)
+*  [RecordPoint.Connectors.SDK.Toggles.LaunchDarkly](./docs/packages/recordpoint_connectors_sdk_toggles_launchdarkly.md)
+*  [RecordPoint.Connectors.SDK.WebHost](./docs/packages/recordpoint_connectors_sdk_webhost.md)
+*  [RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus](./docs/packages/recordpoint_connectors_sdk_workqueue_azureservicebus.md)
+
+## What is a Connector?
+Records 365 is a Data Intelligent platform that analyses content from external content sources and produces various meta data about the 
+content that can then be used within an organisation for classification.
+
+A Connector is a set of services that integrate the content source to Records 365.  These services a broken up in to functional domains
+that implement a given responsibility covering various aspects such as content discovery and submission.
+
+![Connector Architecture](./docs/connector_architecture.png)
+
+## How the Connectors SDK Works
+
+### Background Services
+The Connectors SDK consists of various [BackgroundService](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.backgroundservice?view=dotnet-plat-ext-6.0) implementations that provide the main execution layer for the connector features.
+These services can be included in your connector via dependency injction extentions available within the relevant SDK packages.
+
+Each connector service typically implements logic that executes "Work Operations".
+
+### Work
+The Connectors SDK is based on a work system.
+There are different types of work that are responsible for fulfilling the logic required by the varying aspects of a Connector.
+Work typically contains a context for which the work is being executed within.
+
+#### Work Operations
+Each implementation for a type of work is a Work Operation.
+Depending on the logic of a Work Operation, it can be derived from one of the following base Work classes:
+*  `WorkBase<TParameter>`: Single execution Work that can be run immediately from within the calling service instance
+*  `QueueableWorkBase<TParameter>`: Work that is submitted to a queue for one-time execution by any consuming service instance
+*  `ManagedQueueableWorkBase<TConfiguration, TState>`: Work that is submitted to a queue for repeated executions over a long period of time
+
+The Connectors SDK contains various 'Work Operation' implementations that provide the operational logic for the connector features.
+These operations can be included in your connector via dependency injection extensions available within the relevant SDK packages.
+
+For a detailed explanation of every Work Operation within the SDK, see [The Record Ingestion Process](./docs/operations/operations.md).
+
+##### Queued Work Operations
+Queued Work is a type of work that is submitted to a queue for future execution on any available instance of the relevant consuming service.
+Each different type of work has its own queue on the underlying queueing resource so each connector responsbility can be self contained and independently scalable.
+
+The Work Queue is implemented via the `RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus` package and uses Azure Service Bus as the underlying queueing resource.
+
+A future package should be developed to provide RabbitMq as an underlying queueing resource for On-Premise connector deployments.
+
+##### Managed Queueable Work
+See [Managed Work Queue](./docs/managedworkqueue.md)
+The work operations that derive from `ManagedQueueableWorkBase` are operations that run within a defined context and share state between subsequent executions.
+
+Executions should be quick and process a limited amount of information.
+An instance of a work operation can be requeued within the same unmodifiable context, with modifiable state information being shared between executions.
+When an operation is "continued", the work is resubmitted to the queue for execution at a later time based on configurable delay settings, including exponential back-off.
+
+#### Work Actions
+Some work operations have a related work action that is required to be implemented within your connector.
+The work action is where you implement the logic to retrieve content/data from the content source for the given connector function, and return it to the SDK for processing.
+
+### Configuration
+There are various configurable options within the Connector SDK,  with each functional aspect of the Connector SDK having its own configuration options.
+
+There are some global configuration settings (default values shown):
+```json
+"Connector": {
+    "BinariesEnabled": true,
+    "BinarySkipThreshold": 500,
+    "SubmissionEnabled": true,
+    "RetryOnFailure": true,
+    "MaxRetries": 5,
+    "RetryDelay": 30,
+    "ExponentialRetryDelay": true
+}
+```
+
+See [ConnectorOptions](./docs/packages/recordpoint_connectors_sdk_abstractions_doc.md?anchor=T-RecordPoint-Connectors-SDK-Connectors-ConnectorOptions)
+
+### State Information
+A database is used for storing state information such as connector configurations, work status, and channel information.
+
+Some state information is also stored within work queue messages.
+
+The SDK includes several different database providers allowing flexibility when implementing your Connector:
+*  RecordPoint.Connectors.SDK.Databases.AzureSql
+*  RecordPoint.Connectors.SDK.Databases.Cosmos
+*  RecordPoint.Connectors.SDK.Databases.LocalDb
+*  RecordPoint.Connectors.SDK.Databases.PostgreSql
+*  RecordPoint.Connectors.SDK.Databases.Sqlite
+
+### Integration with Records365
+See [Record.Connectors.SDK.Notifications](./docs/packages/recordpoint_connectors_sdk_notifications.md)
+
+Records365 generates notifications for connectors that can require the connector to perform some spcified logic.
+For example, connector configuration chnages (add,edit,delete) are received via notifications from Records365, and instruct the connector to apply the configuration change.
+
+There are two ways to receive notifications from Records365.
+You can instruct your connector to use either method by calling the relevant dependency injection extension from within the 'RecordPoint.Connectors.SDK.Notifications' package.
+
+##### Push Notifications
+Push notifications are implemented via a web-hook to the Connector.
+Records365 will push notificatons directly to the Connector as they are generated.
+
+##### Poll Notifications
+Poll based notifications are implemented via a service that periodically calls the Records365 Connector Api.
+The current implementation of poll based notifications is functionaly limited in comparison to push notifications and should not be used until the Records365 functionality is improved.

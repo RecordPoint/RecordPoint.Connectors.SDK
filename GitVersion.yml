@@ -1,0 +1,12 @@
+mode: Mainline
+branches:
+  master:
+    tag: ''
+  develop:
+    regex: ^(?!main$)
+    tag: 'preview-{BranchName}'
+    is-release-branch: false
+    is-mainline: false
+ignore:
+  sha: []
+merge-message-formats: {}

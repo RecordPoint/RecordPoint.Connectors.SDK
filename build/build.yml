@@ -1,0 +1,123 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  BuildConfiguration: Release
+  ArtifactNuGetName: 'packages-nuget'
+
+stages:
+- stage: build
+  displayName: 'Build NuGet Package'
+  jobs:
+  - job: CI_Build
+    displayName: 'NuGet - Build, Pack and Test'    
+    steps:
+
+    - task: DotNetCoreInstaller@1
+      displayName: Install DotNetCore 3.1.x
+      inputs:
+        packageType: runtime
+        version: 3.1.x
+
+    - task: gitversion/setup@0
+      displayName: Install GitVersion
+      inputs:
+        versionSpec: '5.5.0'
+        
+    - task: gitversion/execute@0
+      displayName: Determine Version
+
+    - task: SonarCloudPrepare@1
+      displayName: 'Prepare analysis on SonarCloud'
+      inputs:
+        SonarCloud: SonarCloud
+        organization: 'recordpoint-1'
+        projectKey: 'RecordPoint_RecordPoint.Connectors.SDK'
+        projectName: 'RecordPoint.Connectors.SDK'
+        extraProperties: |
+          sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+          sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+          sonar.verbose=true
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore packages'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'config'
+        nugetConfigPath: 'NuGet.config'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Build solution'
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '-c $(BuildConfiguration) --no-restore'
+
+    - task: DotNetCoreCLI@2
+      displayName: Run tests
+      inputs:
+        command: 'test'        
+        arguments: '/p:CollectCoverage=true --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover'
+        projects: 'Tests/**/*.Test.csproj'
+
+    - task: reportgenerator@4
+      displayName: Generate reports
+      inputs:
+        reports: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+        targetdir: 'Coverage'
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage'
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: 'Coverage/Cobertura.xml'
+        reportDirectory: 'Coverage'
+
+    - task: SonarCloudAnalyze@1
+      displayName: 'Run Code Analysis'
+    
+    - task: SonarCloudPublish@1
+      displayName: 'Publish Quality Gate Result'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Create nuget packages'
+      inputs:
+        command: 'pack'
+        packagesToPack: '**/*.csproj;!**/*.Test.csproj;!ReferenceConnector/**/*.csproj'
+        packDirectory: '$(Build.ArtifactStagingDirectory)/packages/nuget'
+        nobuild: true
+        versioningScheme: 'byEnvVar'
+        versionEnvVar: 'GitVersion.NuGetVersion'
+
+    - publish: '$(Build.ArtifactStagingDirectory)/packages/nuget'
+      displayName: 'Publish Artifact: $(ArtifactNuGetName)'
+      artifact: 'packages-nuget'
+      #condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- stage: publishinternal
+  dependsOn: build
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  displayName: 'Nuget - Publish Internal Packages'
+  jobs:
+  - deployment: publishinternal
+    displayName: 'Nuget - Publish packages to internal feed'
+    environment: RecordPoint-Connectors-SDK-Internal
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: '$(ArtifactNugetName)'
+            displayName: 'Download nuget packages'
+
+          - task: DotNetCoreCLI@2
+            displayName: "Publish nuget packages to internal feed"
+            inputs:
+              command: 'push'
+              packagesToPush: '$(Agent.BuildDirectory)/$(ArtifactNugetName)/*.nupkg'
+              nuGetFeedType: 'internal'
+              publishVstsFeed: '607bbd8a-5bd5-4ec1-8180-3593f0ff5a1f'

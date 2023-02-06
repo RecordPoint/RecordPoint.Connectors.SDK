@@ -1,0 +1,9 @@
+{
+  "ConnectorId": "8aab38f9-8710-4b8f-b3c1-a0e0d5068af1",
+  "ConnectorTypeId": "d911e3a8-8280-4daa-9ef6-c4254349f9ff",
+  "TenantId": "ba446754-442d-4f16-a946-b18a237248cb",
+  "DisplayName": "Test Connector",
+  "Status": "Enabled",
+  "Data": "",
+  "ReportLocation": ""
+}

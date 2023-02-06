@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Configuration.AzureKeyVault\RecordPoint.Connectors.SDK.Configuration.AzureKeyVault.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Databases.AzureSql\RecordPoint.Connectors.SDK.Databases.AzureSql.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Databases.Cosmos\RecordPoint.Connectors.SDK.Databases.Cosmos.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Databases.LocalDb\RecordPoint.Connectors.SDK.Databases.LocalDb.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Databases.PostgreSql\RecordPoint.Connectors.SDK.Databases.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Databases.Sqlite\RecordPoint.Connectors.SDK.Databases.Sqlite.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.Logging.Serilog\RecordPoint.Connectors.SDK.Logging.Serilog.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus\RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK.WorkQueue.RabbitMq\RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.csproj" />
+    <ProjectReference Include="..\..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_databases_localdb_doc.md</DocumentationMarkdown>
+		<PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+		<PackageTags>RecordPoint</PackageTags>
+		<PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+		<PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<Description>LocalDb Database provider for the Connectors SDK.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="LocalDb_DbAttach.sql" />
+		<None Remove="LocalDb_DbCreate.sql" />
+		<None Remove="LocalDb_DbDetach.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="LocalDb_DbAttach.sql" />
+		<EmbeddedResource Include="LocalDb_DbCreate.sql" />
+		<EmbeddedResource Include="LocalDb_DbDetach.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+    <PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RecordPoint.Connectors.SDK.Databases\RecordPoint.Connectors.SDK.Databases.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
+</Project>

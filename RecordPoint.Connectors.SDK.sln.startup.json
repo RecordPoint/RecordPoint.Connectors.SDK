@@ -1,0 +1,56 @@
+{
+  "Version": 3,
+  "ListAllProjects": false,
+  "MultiProjectConfigurations": {
+    "Notifications": {
+      "Projects": {
+        "ReferenceConnector.Notifications": {}
+      }
+    },
+    "ContentManager + Notifications": {
+      "Projects": {
+        "ReferenceConnector.ContentManager": {},
+        "ReferenceConnector.Notifications": {}
+      }
+    },
+    "ChannelDiscovery": {
+      "Projects": {
+        "ReferenceConnector.ChannelDiscovery": {}
+      }
+    },
+    "ContentSync": {
+      "Projects": {
+        "ReferenceConnector.ContentSyncronisation": {}
+      }
+    },
+    "ChannelDiscovery + ContentSyncronisation": {
+      "Projects": {
+        "ReferenceConnector.ChannelDiscovery": {},
+        "ReferenceConnector.ContentSyncronisation": {}
+      }
+    },
+    "ContentManager + Notifications + CollectionScanner + ContentSyncronisation + RecordSubmission + BinarySubmission + AggregationSubmission": {
+      "Projects": {
+        "ReferenceConnector.ContentManager": {},
+        "ReferenceConnector.Notifications": {},
+        "ReferenceConnector.ChannelDiscovery": {},
+        "ReferenceConnector.ContentSyncronisation": {},
+        "ReferenceConnector.RecordSubmission": {},
+        "ReferenceConnector.BinarySubmission": {},
+        "ReferenceConnector.AggregationSubmission": {}
+      }
+    },
+    "ContentManager + Notifications + CollectionScanner + ContentSyncronisation + RecordSubmission + BinarySubmission + RecordDisposal + AggregationSubmission": {
+      "Projects": {
+        "ReferenceConnector.ContentManager": {},
+        "ReferenceConnector.Notifications": {},
+        "ReferenceConnector.ChannelDiscovery": {},
+        "ReferenceConnector.ContentSyncronisation": {},
+        "ReferenceConnector.RecordSubmission": {},
+        "ReferenceConnector.BinarySubmission": {},
+        "ReferenceConnector.RecordDisposal": {},
+        "ReferenceConnector.AggregationSubmission": {}
+      }
+    }
+  }
+}

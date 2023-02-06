@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_toggles_launchdarkly_doc.md</DocumentationMarkdown>
+		<PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+		<PackageTags>RecordPoint</PackageTags>
+		<PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+		<PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<Description>Launch Darkly Feature Toggle provider for the Connectors SDK.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
+		<PackageReference Include="LaunchDarkly.Client" Version="5.6.3" />
+		<PackageReference Include="Optional" Version="4.0.0" />
+    <PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	</ItemGroup>
+
+</Project>

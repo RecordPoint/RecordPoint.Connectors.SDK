@@ -1,0 +1,71 @@
+{
+  "Id": "8aab38f9-8710-4b8f-b3c1-a0e0d5068af1",
+  "TransactionId": "37593b83-a78a-4df6-b282-49094f9161d8",
+  "ConnectorTypeId": "d911e3a8-8280-4daa-9ef6-c4254349f9ff",
+  "Status": "Enabled",
+  "StatusCode": "",
+  "CreatedDate": "2020-06-09T00:45:39.7317035Z",
+  "ModifiedDate": "2020-06-11T10:07:10.0362185Z",
+  "CreatedBy": "admin@olympusmons.onmicrosoft.com",
+  "ModifiedBy": "admin@olympusmons.onmicrosoft.com",
+  "TenantId": "ba446754-442d-4f16-a946-b18a237248cb",
+  "TenantDomainName": "olympusmons.onmicrosoft.com",
+  "OriginatingOrganization": "Record Point",
+  "EnabledHistory": "HasBeenEnabled",
+  "DisplayName": "MCoad Test Connector",
+  "HasSubmittedData": false,
+  "Properties": [
+    {
+      "Name": "CreationState",
+      "Type": "String",
+      "Value": ""
+    },
+    {
+      "Name": "ConsentAuthorizedOn",
+      "Type": "String",
+      "Value": ""
+    },
+    {
+      "Name": "ConsentAuthorizedBy",
+      "Type": "String",
+      "Value": ""
+    },
+    {
+      "Name": "ContentSourceUrl",
+      "Type": "String",
+      "Value": ""
+    },
+    {
+      "Name": "AzureAdTenantId",
+      "Type": "String",
+      "Value": ""
+    },
+    {
+      "Name": "IsCustom",
+      "Type": "String",
+      "Value": "true"
+    },
+    {
+      "Name": "ProtectionEnabled",
+      "Type": "String",
+      "Value": "true"
+    }
+  ],
+  "ClientId": "9fee5a8e-3dec-45d0-ae83-cc71ff9265bd",
+  "ProtectionEnabled": true,
+  "Filters": {
+    "Included": {
+      "BoolOperator": "AND",
+      "Children": [],
+      "SearchTerm": null
+    },
+    "Excluded": {
+      "BoolOperator": "AND",
+      "Children": [],
+      "SearchTerm": null
+    }
+  },
+  "IdAsGuid": "8aab38f9-8710-4b8f-b3c1-a0e0d5068af1",
+  "TenantIdAsGuid": "ba446754-442d-4f16-a946-b18a237248cb",
+  "ConnectorTypeIdAsGuid": "d911e3a8-8280-4daa-9ef6-c4254349f9ff"
+}
