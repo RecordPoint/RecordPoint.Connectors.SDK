@@ -1,41 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_client_doc.md</DocumentationMarkdown>
-	  <PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
-	  <PackageTags>RecordPoint</PackageTags>
-	  <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-	  <PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
-	  <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-	  <Description>Records365 Connector Api Client for the Connectors SDK.</Description>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Notifications\Tasks\**" />
-    <Compile Remove="TaskRunner\**" />
-    <EmbeddedResource Remove="Notifications\Tasks\**" />
-    <EmbeddedResource Remove="TaskRunner\**" />
-    <None Remove="Notifications\Tasks\**" />
-    <None Remove="TaskRunner\**" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_client_doc.md</DocumentationMarkdown>
+		<PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+		<PackageTags>RecordPoint</PackageTags>
+		<PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+		<PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<Description>Records365 Connector Api Client for the Connectors SDK.</Description>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.49.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />
-		<PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
-    <PackageReference Include="Polly" Version="6.1.2" />
-    <PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+		<Compile Remove="Notifications\Tasks\**" />
+		<Compile Remove="TaskRunner\**" />
+		<EmbeddedResource Remove="Notifications\Tasks\**" />
+		<EmbeddedResource Remove="TaskRunner\**" />
+		<None Remove="Notifications\Tasks\**" />
+		<None Remove="TaskRunner\**" />
 	</ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\RecordPoint.Connectors.SDK.Client.Abstractions\RecordPoint.Connectors.SDK.Client.Abstractions.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.53.0" />
+		<PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
+		<PackageReference Include="Polly" Version="6.1.2" />
+		<PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RecordPoint.Connectors.SDK.Client.Abstractions\RecordPoint.Connectors.SDK.Client.Abstractions.csproj" />
+	</ItemGroup>
 
 </Project>

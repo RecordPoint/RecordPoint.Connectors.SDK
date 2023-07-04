@@ -1,5 +1,5 @@
-﻿using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+﻿using Azure;
+using Azure.Storage.Blobs;
 using Polly;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Helpers;
@@ -30,19 +30,14 @@ namespace RecordPoint.Connectors.SDK.Providers
         /// Execute the code with a retry policy
         /// </summary>
         public async Task ExecuteWithRetry(
-            CloudBlobClient blobClient,
             Func<Task> codeToExecute,
             Type type,
             string methodName)
         {
-            //Cancel the existing default retry policy provided by Azure Blob before executing using our own retry policy.
-            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.Azure.Storage.RetryPolicies.NoRetry();
-
             await GetRetryPolicy(type, methodName).ExecuteAsync(async () =>
             {
                 await codeToExecute().ConfigureAwait(false);
             }).ConfigureAwait(false);
-
         }
 
         /// <summary>
@@ -71,15 +66,15 @@ namespace RecordPoint.Connectors.SDK.Providers
             // All AzureBlob exceptions should be of type StorageException or AggregateException containing StorageException
             // Documentation indicates this will handle all transient/retriable exceptions (That is, anything that isn't: >=400 && <500, 501, 505).
             // See for more detail: https://blogs.msdn.microsoft.com/windowsazurestorage/2011/02/02/overview-of-retry-policies-in-the-windows-azure-storage-client-library/
-            if (e.IsAssignableFrom<StorageException>(ex =>
-                (ex.RequestInformation.HttpStatusCode >= 400
-                && ex.RequestInformation.HttpStatusCode < 500)
-                || ex.RequestInformation.HttpStatusCode == 501
-                || ex.RequestInformation.HttpStatusCode == 505))
+            if (e.IsAssignableFrom<RequestFailedException>(ex =>
+                (ex.Status >= 400
+                && ex.Status < 500)
+                || ex.Status == 501
+                || ex.Status == 505))
             {
                 return false;
             }
-            else if (e.IsAssignableFrom<StorageException>(ex =>
+            else if (e.IsAssignableFrom<RequestFailedException>(ex =>
                 (ex != null)))
             {
                 // Known Retriables:

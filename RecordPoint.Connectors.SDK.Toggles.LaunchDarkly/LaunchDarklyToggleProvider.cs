@@ -1,4 +1,5 @@
-﻿using LaunchDarkly.Client;
+﻿using LaunchDarkly.Sdk;
+using LaunchDarkly.Sdk.Server;
 using Microsoft.Extensions.Options;
 using Optional;
 using Optional.Unsafe;

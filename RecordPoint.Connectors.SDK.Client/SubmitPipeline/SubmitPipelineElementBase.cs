@@ -74,6 +74,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         {
             var title = submitContext.CoreMetaData?.Where(x => x.Name == Fields.Title)?.FirstOrDefault()?.Value;
             submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Skipped;
+            submitContext.SubmitResult.Reason = reason;
             LogVerbose(submitContext, nameof(SkipNext), $"not submitting item [{title}] because of reason [{reason}]");
         }
 

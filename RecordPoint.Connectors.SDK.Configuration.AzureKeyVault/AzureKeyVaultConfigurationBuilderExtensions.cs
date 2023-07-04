@@ -17,23 +17,32 @@ namespace RecordPoint.Connectors.SDK.Configuration.AzureKeyVault
         /// If the UseVSCredentials is True, the connection will be attempted using the VisualStudioCredential.
         /// </summary>
         /// <param name="configuration">Configuration builder to target</param>
-        public static IConfigurationBuilder UseAzureKeyVaultConfigurationProvider(this IConfigurationBuilder configuration)
+        /// <param name="rootConfigSectionName">The (optional) root section name of the configuration hierarchy to obtain the KeyVault configuration</param>
+        public static IConfigurationBuilder UseAzureKeyVaultConfigurationProvider(this IConfigurationBuilder configuration, string? rootConfigSectionName = null)
         {
             var builtConfig = configuration.Build();
-            var keyVaultOptions = builtConfig.GetSection(AzureKeyVaultOptions.SECTION_NAME).Get<AzureKeyVaultOptions>();
+
+            var keyVaultOptions = string.IsNullOrEmpty(rootConfigSectionName)
+                ? builtConfig.GetSection(AzureKeyVaultOptions.SECTION_NAME).Get<AzureKeyVaultOptions>()
+                : builtConfig.GetSection(rootConfigSectionName).GetSection(AzureKeyVaultOptions.SECTION_NAME).Get<AzureKeyVaultOptions>();
+
             if (keyVaultOptions == null)
                 return configuration;
 
             var uri = new Uri($"https://{keyVaultOptions.KeyVaultName}.vault.azure.net");
 
-            var azureAuthenticationOptions = builtConfig.GetSection(AzureAuthenticationOptions.SECTION_NAME).Get<AzureAuthenticationOptions>();
+            var azureAuthenticationOptions = string.IsNullOrEmpty(rootConfigSectionName)
+                ? builtConfig.GetSection(AzureAuthenticationOptions.SECTION_NAME).Get<AzureAuthenticationOptions>()
+                : builtConfig.GetSection(rootConfigSectionName).GetSection(AzureAuthenticationOptions.SECTION_NAME).Get<AzureAuthenticationOptions>();
+
+            azureAuthenticationOptions ??= new AzureAuthenticationOptions();
             var credential = azureAuthenticationOptions.GetTokenCredential();
 
             var secretClient = new SecretClient(uri, credential);
             configuration.AddAzureKeyVault(secretClient, new AzureKeyVaultConfigurationOptions
             {
-                ReloadInterval = keyVaultOptions.ReloadInterval == 0 
-                    ? null 
+                ReloadInterval = keyVaultOptions.ReloadInterval == 0
+                    ? null
                     : TimeSpan.FromSeconds(keyVaultOptions.ReloadInterval)
             });
 

@@ -30,12 +30,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         public const int DEFAULT_BACKOFF_SECONDS = 60;
 
         #region Observability
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override Dimensions GetCoreKeyDimensions()
         {
             var dimensions = base.GetCoreKeyDimensions();
             dimensions[nameof(ContentItem.ExternalId)] = ContentItem.ExternalId;
-            dimensions[nameof(ContentItem.Title)] = ContentItem.Title;
             return dimensions;
         }
 

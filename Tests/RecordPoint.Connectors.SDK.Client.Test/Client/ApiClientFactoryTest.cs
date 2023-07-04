@@ -75,28 +75,16 @@ namespace RecordPoint.Connectors.SDK.Test.Client
         }
 
         [Fact]
-        public void CreateAuthenticationHelper_WhenCalledInParallel_CreatesASingletonObject()
+        public void CreateAuthenticationHelper_WhenCalledInParallel_ClientIdIsntShared()
         {
             // Arrange
             var sutApiClientFactory = new ApiClientFactory();
-            var settings = new AuthenticationHelperSettings() { AuthenticationResource = "test1", ClientId = "tes2", ClientSecret = MakeSecureString("test3") };
-
+            var settings1 = new AuthenticationHelperSettings() { AuthenticationResource = "test1", ClientId = "tes1", ClientSecret = MakeSecureString("test1") };
+            var settings2 = new AuthenticationHelperSettings() { AuthenticationResource = "test2", ClientId = "tes2", ClientSecret = MakeSecureString("test2") };
             // Act
-            Func<IAuthenticationProvider> func = () => sutApiClientFactory.CreateAuthenticationProvider(settings);
-            int parallelTaskCount = 100;
-            Task<IAuthenticationProvider>[] tasks = new Task<IAuthenticationProvider>[parallelTaskCount];
-            for (int i = 0; i < parallelTaskCount; i++)
-            {
-                tasks[i] = Task.Factory.StartNew<IAuthenticationProvider>(func);
-            }
-            Task.WaitAll(tasks);
-            var results = tasks.Select(t => t.GetAwaiter().GetResult()).ToList();
-
-            // Assert
-            results.Count.Should().Be(parallelTaskCount);
-            var firstResult = results.First();
-            // Make sure that it's a singleton object
-            results.ForEach(result => result.Should().BeSameAs(firstResult));
+            var authProvider1 = sutApiClientFactory.CreateAuthenticationProvider(settings1);
+            var authProvider2 = sutApiClientFactory.CreateAuthenticationProvider(settings2);
+            authProvider1.Should().NotBe(authProvider2);
         }
 
         private static SecureString MakeSecureString(string inputString)

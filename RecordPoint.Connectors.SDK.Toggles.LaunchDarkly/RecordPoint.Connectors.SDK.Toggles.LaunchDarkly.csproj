@@ -15,7 +15,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
-		<PackageReference Include="LaunchDarkly.Client" Version="5.6.3" />
+		<PackageReference Include="LaunchDarkly.ServerSdk" Version="7.0.3" />
 		<PackageReference Include="Optional" Version="4.0.0" />
     <PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
       <PrivateAssets>all</PrivateAssets>

@@ -1,6 +1,4 @@
 ﻿using Microsoft.Rest;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using Moq;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
@@ -11,12 +9,17 @@ using System.Net;
 using System.Text;
 using Xunit;
 using static RecordPoint.Connectors.SDK.Fields;
+using RecordPoint.Connectors.SDK.Exceptions;
+using Azure.Storage.Blobs;
+using Azure;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage;
 
 namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 {
     public class DirectSubmitBinaryPipelineElementTest
     {
-        private readonly Mock<ICloudBlob> _mockBlob = new Mock<ICloudBlob>();
+        private readonly Mock<BlobClient> _mockBlob = new Mock<BlobClient>();
         private readonly Mock<ILog> _mockLog = new Mock<ILog>();
         private readonly Mock<ISubmission> _mockSubmission = new Mock<ISubmission>();
         private readonly Mock<IApiClient> _mockClient = new Mock<IApiClient>();
@@ -26,9 +29,6 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         public DirectSubmitBinaryPipelineElementTest()
         {
-            _mockBlob.Setup(x => x.Metadata).Returns(new Dictionary<string, string>());
-            _mockBlob.SetupGet(x => x.Properties).Returns(new BlobProperties());
-            _mockBlob.Setup(x => x.ServiceClient).Returns(new CloudBlobClient(new Uri("http://fake.com")));
             SetupDefaultsForClient();
 
             var mockAuthenticationHelper = new Mock<IAuthenticationProvider>();
@@ -64,8 +64,8 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             var submitContext = GetSubmitContext();
             await _pipelineElement.Submit(submitContext);
 
-            _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()));
-            _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<CancellationToken>()));
+            _mockBlob.Verify(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<IProgress<long>>(), It.IsAny<AccessTier?>(), It.IsAny<StorageTransferOptions>(), It.IsAny<CancellationToken>()));
+            _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<Dictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<CancellationToken>()));
             _mockSubmission.Verify(x => x.Submit(It.IsAny<SubmitContext>()));
         }
 
@@ -79,10 +79,11 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
             await _pipelineElement.Submit(submitContext);
 
-            _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()));
+            _mockBlob.Verify(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<IProgress<long>>(), It.IsAny<AccessTier?>(), It.IsAny<StorageTransferOptions>(), It.IsAny<CancellationToken>()));
             _mockSubmission.Verify(x => x.Submit(It.IsAny<SubmitContext>()));
 
             Assert.Equal(SubmitResult.Status.OK, submitContext.SubmitResult.SubmitStatus);
+            Assert.Equal("Submission returned Accepted : Binary accepted for submission.", submitContext.SubmitResult.Reason);
         }
 
         [Fact]
@@ -105,11 +106,12 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
             ));
-            _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()), Times.Never);
-            _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<CancellationToken>()), Times.Never);
+            _mockBlob.Verify(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<IProgress<long>>(), It.IsAny<AccessTier?>(), It.IsAny<StorageTransferOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<Dictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<CancellationToken>()), Times.Never);
             _mockSubmission.Verify(x => x.Submit(It.IsAny<SubmitContext>()));
 
             Assert.Equal(SubmitResult.Status.OK, submitContext.SubmitResult.SubmitStatus);
+            Assert.Equal("Submission returned Accepted : Binary accepted for submission.", submitContext.SubmitResult.Reason);
         }
 
         [Fact]
@@ -124,6 +126,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             VerifyNotSubmitted();
 
             Assert.Equal(SubmitResult.Status.Skipped, submitContext.SubmitResult.SubmitStatus);
+            Assert.Equal("Binary submission returned BadRequest : Binary NOT submitted because the connector does not have protection enabled.", submitContext.SubmitResult.Reason);
         }
 
         [Fact]
@@ -138,6 +141,8 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             VerifyNotSubmitted();
 
             Assert.Equal(SubmitResult.Status.Deferred, submitContext.SubmitResult.SubmitStatus);
+            Assert.Equal("Submission returned PreconditionFailed : Binary NOT submitted because a precondition failed.", submitContext.SubmitResult.Reason);
+
         }
 
         [Fact]
@@ -152,6 +157,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             VerifyNotSubmitted();
 
             Assert.Equal(SubmitResult.Status.TooManyRequests, submitContext.SubmitResult.SubmitStatus);
+            Assert.StartsWith("Submission returned TooManyRequests : Binary NOT submitted because a part of the system is experiencing heavy load", submitContext.SubmitResult.Reason);
         }
 
         [Fact]
@@ -195,18 +201,20 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         [Fact]
         public async Task CircuitBreaksIfBlobExceptionReceived()
         {
-            _mockBlob.Setup(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Throws(Throw503Exception());
+            _mockBlob.Setup(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<IProgress<long>>(), It.IsAny<AccessTier?>(), It.IsAny<StorageTransferOptions>(), It.IsAny<CancellationToken>())).Throws(Throw503Exception());
 
             var submitContext = GetSubmitContext();
             await _pipelineElement.Submit(submitContext);
 
-            _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()));
+            _mockBlob.Verify(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<IProgress<long>>(), It.IsAny<AccessTier?>(), It.IsAny<StorageTransferOptions>(), It.IsAny<CancellationToken>()));
             WaitUntilComplete(() =>
             {
                 Assert.False(_pipelineElement.CircuitProvider.IsCircuitClosed(out var tmp));
                 return true;
             }, 10, 1000, "Circuit remains closed when it's supposed to be open.");
             Assert.Equal(SubmitResult.Status.TooManyRequests, submitContext.SubmitResult.SubmitStatus);
+            Assert.IsType<TooManyRequestsException>(submitContext.SubmitResult.Exception);
+            Assert.Equal(submitContext.SubmitResult.Exception.Message, submitContext.SubmitResult.Reason);
         }
 
         private static BinarySubmitContext GetSubmitContext(long length = 10)
@@ -241,8 +249,8 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
             ), Times.Never);
-            _mockBlob.Verify(x => x.UploadFromStreamAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()), Times.Never);
-            _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<CancellationToken>()), Times.Never);
+            _mockBlob.Verify(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<IProgress<long>>(), It.IsAny<AccessTier?>(), It.IsAny<StorageTransferOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mockBlob.Verify(x => x.SetMetadataAsync(It.IsAny<Dictionary<string, string>>(), It.IsAny<BlobRequestConditions>(), It.IsAny<CancellationToken>()), Times.Never);
             _mockSubmission.Verify(x => x.Submit(It.IsAny<SubmitContext>()), Times.Never);
         }
 
@@ -368,13 +376,9 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             });
         }
 
-        private static StorageException Throw503Exception()
+        private static RequestFailedException Throw503Exception()
         {
-            var requestResult = new RequestResult()
-            {
-                HttpStatusCode = 503
-            };
-            return new StorageException(requestResult, "503 test", new Exception("503 test Inner"));
+            return new RequestFailedException(503, "503 test", new Exception("503 test Inner"));
         }
 
         private static CircuitBreakerOptions GetCircuitBreakerOptions()

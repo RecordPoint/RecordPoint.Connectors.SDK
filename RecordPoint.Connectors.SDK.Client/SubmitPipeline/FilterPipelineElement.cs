@@ -63,33 +63,25 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             // Otherwise, evaluate using the boolean operator and all the children of the SearchTerm
             var results = filter.Children.Select(x => MatchesFilter(submitContext, x, nullResult));
-            switch (filter.BoolOperator)
+            if (filter.BoolOperator.Equals(FilterConstants.FilterBooleanOperators.And.ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
-                case FilterConstants.FilterBooleanOperators.And:
-                    {
-                        if (results.All(x => x.Result))
-                        {
-                            return GetResult(results);
-                        }
-
-                        break;
-                    }
-                case FilterConstants.FilterBooleanOperators.Or:
-                    {
-                        var matches = results.Where(x => x.Result);
-                        if (matches.Any())
-                        {
-                            return GetResult(matches);
-                        }
-
-                        break;
-                    }
-                default:
-                    {
-                        throw new NotImplementedException($"Filter has invalid BoolOperator [{filter.BoolOperator}]");
-                    }
+                if (results.All(x => x.Result))
+                {
+                    return GetResult(results);
+                }
             }
-
+            else if (filter.BoolOperator.Equals(FilterConstants.FilterBooleanOperators.Or.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                var matches = results.Where(x => x.Result);
+                if (matches.Any())
+                {
+                    return GetResult(matches);
+                }
+            }
+            else
+            {
+                throw new NotImplementedException($"Filter has invalid BoolOperator [{filter.BoolOperator}]");
+            }
             return new MatchResult() { Result = false };
         }
 

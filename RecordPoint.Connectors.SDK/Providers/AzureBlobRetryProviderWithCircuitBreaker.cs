@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Storage;
+﻿using Azure;
 using Polly;
 using Polly.CircuitBreaker;
 using RecordPoint.Connectors.SDK.Exceptions;
@@ -89,7 +89,7 @@ namespace RecordPoint.Connectors.SDK.Providers
 
         private CircuitBreakerPolicy GetCircuitBreakerPolicy()
         {
-            return Policy.Handle<StorageException>(ex => IsCircuitBreakerAzureBlobException(ex))
+            return Policy.Handle<RequestFailedException>(ex => IsCircuitBreakerAzureBlobException(ex))
                     .AdvancedCircuitBreakerAsync(
                         failureThreshold: _options.FailureThreshold,
                         samplingDuration: TimeSpan.FromSeconds(_options.SamplingDurationS),
@@ -133,9 +133,9 @@ namespace RecordPoint.Connectors.SDK.Providers
             return base.GetRetryPolicy(type, methodName);
         }
 
-        private bool IsCircuitBreakerAzureBlobException(StorageException ex)
+        private bool IsCircuitBreakerAzureBlobException(RequestFailedException ex)
         {
-            if (ex.RequestInformation.HttpStatusCode == 503)
+            if (ex.Status == 503)
             {
                 /* Returned from blob in the following variations:
                  *  "The server is busy."
@@ -146,7 +146,7 @@ namespace RecordPoint.Connectors.SDK.Providers
                 */
                 return true;
             }
-            else if (ex.RequestInformation.HttpStatusCode == 500)
+            else if (ex.Status == 500)
             {
                 /* Returned from blob in the following variations:
                  *  "The operation could not be completed within the permitted time."

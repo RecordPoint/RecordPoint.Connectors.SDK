@@ -16,9 +16,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
-		<PackageReference Include="Azure.Identity" Version="1.7.0-beta.1" />
-		<PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="Azure.Identity" Version="1.8.2" />
+		<PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.5.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

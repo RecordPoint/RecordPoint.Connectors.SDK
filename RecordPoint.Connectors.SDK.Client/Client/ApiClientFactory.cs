@@ -10,14 +10,12 @@ namespace RecordPoint.Connectors.SDK.Client
     {
         private const string ConnectorApiPrefix = "/connector";
         private static IApiClient _apiClient;
-        private static readonly Lazy<IAuthenticationProvider> _authenticationHelper;
         private static readonly object _apiClientSyncLock = new object();
 
         static ApiClientFactory()
         {
             // default security is SecurityProtocolType.Ssl3
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
-            _authenticationHelper = new Lazy<IAuthenticationProvider>(() => new ConfidentialClientAuthenticationProvider(), true);
         }
 
         /// <summary>
@@ -39,8 +37,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <returns></returns>
         public IAuthenticationProvider CreateAuthenticationProvider(AuthenticationHelperSettings settings)
         {
-            var authProvider = _authenticationHelper.Value;
-            authProvider.Initialize(settings);
+            var authProvider = new ConfidentialClientAuthenticationProvider(settings);
             return authProvider;
         }
 

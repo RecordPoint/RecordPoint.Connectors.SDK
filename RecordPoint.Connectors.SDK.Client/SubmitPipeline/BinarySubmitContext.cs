@@ -42,6 +42,11 @@
         public Stream Stream { get; set; }
 
         /// <summary>
+        /// (Optional) Indicates whether the binary is the latest or an older version
+        /// </summary>
+        public bool? IsOldVersion { get; set; }
+
+        /// <summary>
         /// Retrieve the title from the strongly typed FileName field instead of the Core Metadata for binaries
         /// </summary>
         /// <returns></returns>
