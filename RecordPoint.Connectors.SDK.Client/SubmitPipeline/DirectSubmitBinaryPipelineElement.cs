@@ -1,5 +1,7 @@
-﻿using Microsoft.Rest;
-using Microsoft.Azure.Storage.Blob;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
+using Microsoft.Rest;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Exceptions;
@@ -21,7 +23,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// Note that when resolving classes from LightInject, defaults are not respected and LightInject will be unable to 
         /// resolve this class without the DefaultBlobFactory function being registered as well. 
         /// </summary>
-        public Func<string, ICloudBlob> BlobFactory { get; set; } = DefaultBlobFactory;
+        public Func<string, BlobClient> BlobFactory { get; set; } = DefaultBlobFactory;
 
         /// <summary>
         /// Circuit provider for handling backpressure for Azure Blob Storage
@@ -54,6 +56,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             if (!CircuitProvider.IsCircuitClosed(out _))
             {
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
+                submitContext.SubmitResult.Reason = "Azure blob storage back pressure circuit open";
                 return;
             }
 
@@ -67,7 +70,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 fileName: binarySubmitContext.FileName,
                 fileHash: binarySubmitContext.FileHash,
                 mimeType: binarySubmitContext.MimeType ?? binarySubmitContext.SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.MimeType)?.Value,
-                correlationId: binarySubmitContext.CorrelationId.ToString()
+                correlationId: binarySubmitContext.CorrelationId.ToString(),
+                isOldVersion: binarySubmitContext.IsOldVersion ?? default(bool)
             );
 
             // Get token and URL via Autorest-generated API call
@@ -131,6 +135,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 // we attempt to get the length of an unseekable stream.
                 // If we cannot seek the stream, we assume it's under the maxFileSize and allow submission.
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Skipped;
+                submitContext.SubmitResult.Reason = $"Binary file length {binarySubmitContext.Stream.Length} exceeds the maximum permitted";
                 return false;
             }
 
@@ -141,18 +146,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             // Retrieve reference to a blob. Use the DefaultBlobFactory if the BlobFactory on the pipeline element has not been set
             var blockBlob = BlobFactory != null ? BlobFactory(response.Url) : DefaultBlobFactory(response.Url);
-            // Set Blob ContentType
-            blockBlob.Properties.ContentType = "application/octet-stream";
 
             // If catch TooManyRequestsException, make it return a TooManyRequests Status
             try
             {
                 await RetryProvider.ExecuteWithRetry(
-                blockBlob.ServiceClient,
                 //Upload to blob
                 async () =>
                 {
-                    await blockBlob.UploadFromStreamAsync(binarySubmitContext.Stream, binarySubmitContext.CancellationToken).ConfigureAwait(false);
+                    await blockBlob.UploadAsync(binarySubmitContext.Stream, new BlobHttpHeaders()
+                    {
+                        ContentType = "application/octet-stream"
+                    }, cancellationToken: binarySubmitContext.CancellationToken).ConfigureAwait(false);
                 },
                 GetType(),
                 nameof(Submit)).ConfigureAwait(false);
@@ -161,22 +166,26 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             {
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
                 submitContext.SubmitResult.WaitUntilTime = ex.WaitUntilTime;
+                submitContext.SubmitResult.Reason = ex.Message;
+                submitContext.SubmitResult.Exception = ex;
                 return false;
             }
 
             if (!string.IsNullOrWhiteSpace(binarySubmitContext.FileName))
             {
-                blockBlob.Metadata[MetaDataKeys.ItemBinary_FileName] = EscapeBlobMetaDataValue(binarySubmitContext.FileName);
-                blockBlob.Metadata[MetaDataKeys.ItemBinary_CorrelationId] = EscapeBlobMetaDataValue(binarySubmitContext.CorrelationId.ToString());
+                var metaData = new Dictionary<string, string>()
+                {
+                    { MetaDataKeys.ItemBinary_FileName, EscapeBlobMetaDataValue(binarySubmitContext.FileName) },
+                    { MetaDataKeys.ItemBinary_CorrelationId, EscapeBlobMetaDataValue(binarySubmitContext.CorrelationId.ToString()) }
+                };
 
                 // If catch TooManyRequestsException, make it return a TooManyRequests Status
                 try
                 {
                     await RetryProvider.ExecuteWithRetry(
-                    blockBlob.ServiceClient,
                     async () =>
                     {
-                        await blockBlob.SetMetadataAsync(binarySubmitContext.CancellationToken).ConfigureAwait(false);
+                        await blockBlob.SetMetadataAsync(metaData, cancellationToken: binarySubmitContext.CancellationToken).ConfigureAwait(false);
                     },
                     GetType(),
                     nameof(Submit)).ConfigureAwait(false);
@@ -185,6 +194,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 {
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
                     submitContext.SubmitResult.WaitUntilTime = ex.WaitUntilTime;
+                    submitContext.SubmitResult.Reason = ex.Message;
+                    submitContext.SubmitResult.Exception = ex;
                     return false;
                 }
 
@@ -282,12 +293,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static ICloudBlob DefaultBlobFactory(string url)
+        public static BlobClient DefaultBlobFactory(string url)
         {
             ValidationHelper.ArgumentNotNullOrWhiteSpace(url, nameof(url));
-            //Example of CloudBlockBlob with a SaS token: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
-            var blockBlob = new CloudBlockBlob(new Uri(url));
-
+            var blobClientOptions = new BlobClientOptions();
+            blobClientOptions.Retry.MaxRetries = 0;
+            var blockBlob = new BlobClient(new Uri(url), options: blobClientOptions);
             return blockBlob;
         }
     }

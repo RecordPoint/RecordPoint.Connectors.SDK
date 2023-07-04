@@ -224,6 +224,11 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             // All three Fields present, but one field has a value which does not match - Expect item to not be filtered
             var submitContext = GetSubmitContext(3, 3, FilterConstants.FilterBooleanOperators.And);
             yield return new object[] { AddOrUpdateCoreMetadata(submitContext, submitContext.CoreMetaData.Last().Name, "Test"), false };
+
+            // Fields not present - Capitalized casing - Expect item to not be filtered
+            yield return new object[] { GetSubmitContext(3, 0, "And"), false };
+            // All three Fields present - Capitalized casing - Expect item to be filtered
+            yield return new object[] { GetSubmitContext(3, 3, "And"), true };
         }
 
         [Theory]
@@ -261,6 +266,13 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             yield return new object[] { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or), true };
             // All of the three Fields present - Expect item to be filtered 
             yield return new object[] { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or), true };
+
+
+            // Fields not present - Capitalized casing - Expect item to not be filtered
+            yield return new object[] { GetSubmitContext(3, 0, "Or"), false };
+            // One of the three Fields present - Capitalized casing - Expect item to be filtered
+            yield return new object[] { GetSubmitContext(3, 1, "Or"), true };
+
         }
 
         [Fact]

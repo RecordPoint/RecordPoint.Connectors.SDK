@@ -2,7 +2,6 @@
 {
     public interface IAuthenticationProvider
     {
-        void Initialize(AuthenticationHelperSettings settings);
         Task<AuthenticationResult> AcquireTokenAsync(AuthenticationHelperSettings settings);
     }
 }

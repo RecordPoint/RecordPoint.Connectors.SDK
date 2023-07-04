@@ -1061,6 +1061,9 @@ namespace RecordPoint.Connectors.SDK.Client
         /// An optional ID used to track the binary version as it moves through the
         /// pipeline
         /// </param>
+        /// <param name='isOldVersion'>
+        /// (Optional) Indicates whether the binary is the latest or an older version
+        /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1078,7 +1081,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1092,6 +1095,7 @@ namespace RecordPoint.Connectors.SDK.Client
                 tracingParameters.Add("binaryExternalId", binaryExternalId);
                 tracingParameters.Add("fileName", fileName);
                 tracingParameters.Add("correlationId", correlationId);
+                tracingParameters.Add("isOldVersion", isOldVersion);
                 tracingParameters.Add("acceptLanguage", acceptLanguage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "ApiBinariesPost", tracingParameters);
@@ -1119,6 +1123,10 @@ namespace RecordPoint.Connectors.SDK.Client
             if (correlationId != null)
             {
                 _queryParameters.Add(string.Format("CorrelationId={0}", System.Uri.EscapeDataString(correlationId)));
+            }
+            if (isOldVersion != null)
+            {
+                _queryParameters.Add(string.Format("IsOldVersion={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(isOldVersion, SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -3262,6 +3270,10 @@ namespace RecordPoint.Connectors.SDK.Client
         /// An optional ID used to track the binary version as it moves through
         /// the pipeline
         /// </param>
+        /// <param name='isOldVersion'>
+        /// (Optional) Indicates whether the binary is the latest or an older
+        /// version
+        /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
         /// <param name='customHeaders'>
@@ -3270,7 +3282,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesPostWithHttpMessagesAsync(string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get SAS Token for blob Resource
@@ -3694,11 +3706,14 @@ namespace RecordPoint.Connectors.SDK.Client
             /// An optional ID used to track the binary version as it moves through the
             /// pipeline
             /// </param>
+            /// <param name='isOldVersion'>
+            /// (Optional) Indicates whether the binary is the latest or an older version
+            /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
-            public static ErrorResponseModel ApiBinariesPost(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string))
+            public static ErrorResponseModel ApiBinariesPost(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?), string acceptLanguage = default(string))
             {
-                return operations.ApiBinariesPostAsync(connectorId, itemExternalId, binaryExternalId, fileName, correlationId, acceptLanguage).GetAwaiter().GetResult();
+                return operations.ApiBinariesPostAsync(connectorId, itemExternalId, binaryExternalId, fileName, correlationId, isOldVersion, acceptLanguage).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -3723,14 +3738,17 @@ namespace RecordPoint.Connectors.SDK.Client
             /// An optional ID used to track the binary version as it moves through the
             /// pipeline
             /// </param>
+            /// <param name='isOldVersion'>
+            /// (Optional) Indicates whether the binary is the latest or an older version
+            /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponseModel> ApiBinariesPostAsync(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponseModel> ApiBinariesPostAsync(this IApiClient operations, string connectorId = default(string), string itemExternalId = default(string), string binaryExternalId = default(string), string fileName = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiBinariesPostWithHttpMessagesAsync(connectorId, itemExternalId, binaryExternalId, fileName, correlationId, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ApiBinariesPostWithHttpMessagesAsync(connectorId, itemExternalId, binaryExternalId, fileName, correlationId, isOldVersion, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

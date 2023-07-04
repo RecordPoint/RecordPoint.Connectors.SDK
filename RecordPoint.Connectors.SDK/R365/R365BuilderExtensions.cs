@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Storage.Blob;
+﻿using Azure.Storage.Blobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Client;
@@ -61,9 +61,11 @@ namespace RecordPoint.Connectors.SDK.R365
                 return provider.GetService<AzureBlobRetryProviderWithCircuitBreaker>();
             });
 
-            var cloudBlobFactory = new Func<string, ICloudBlob>(SASToken =>
+            var cloudBlobFactory = new Func<string, BlobClient>(SASToken =>
             {
-                return new CloudBlockBlob(new Uri(SASToken));
+                var blobClientOptions = new BlobClientOptions();
+                blobClientOptions.Retry.MaxRetries = 0;
+                return new BlobClient(new Uri(SASToken), options: blobClientOptions);
             });
             services.AddSingleton(cloudBlobFactory);
 
@@ -118,7 +120,7 @@ namespace RecordPoint.Connectors.SDK.R365
         {
             var pipeline = new DirectSubmitBinaryPipelineElement(null)
             {
-                BlobFactory = provider.GetRequiredService<Func<string, ICloudBlob>>(),
+                BlobFactory = provider.GetRequiredService<Func<string, BlobClient>>(),
                 ApiClientFactory = provider.GetRequiredService<IApiClientFactory>(),
                 CircuitProvider = provider.GetRequiredService<ISdkAzureBlobCircuitProvider>(),
                 RetryProvider = provider.GetRequiredService<ISdkAzureBlobRetryProvider>(),

@@ -21,22 +21,22 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
-		<PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="3.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="6.0.8" />
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="6.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.8" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="6.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="7.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.5" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Polly" Version="6.1.2" />
 		<PackageReference Include="RecordPoint.Code.Documentation" Version="0.1.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
+		<PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
+		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="7.0.1" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\RecordPoint.Connectors.SDK.Abstractions\RecordPoint.Connectors.SDK.Abstractions.csproj" />

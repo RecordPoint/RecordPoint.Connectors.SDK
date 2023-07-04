@@ -36,11 +36,14 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="name">Internal name for the field</param>
         /// <param name="type">Type of the metadata entry.</param>
         /// <param name="value">Value of the metadata entry.</param>
-        public MetaDataModel(string name, string type = default(string), string value = default(string))
+        /// <param name="isSysAdminOnly">Determine whether a value can only be
+        /// set by a sysadmin</param>
+        public MetaDataModel(string name, string type = default(string), string value = default(string), bool? isSysAdminOnly = default(bool?))
         {
             Name = name;
             Type = type;
             Value = value;
+            IsSysAdminOnly = isSysAdminOnly;
             CustomInit();
         }
 
@@ -66,6 +69,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "value")]
         public string Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets determine whether a value can only be set by a
+        /// sysadmin
+        /// </summary>
+        [JsonProperty(PropertyName = "isSysAdminOnly")]
+        public bool? IsSysAdminOnly { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -450,12 +460,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// <param name="displayName">Display name for the field</param>
         /// <param name="type">Type of the metadata entry.</param>
         /// <param name="value">Value of the metadata entry.</param>
-        public SubmissionMetaDataModel(string name, string displayName = default(string), string type = default(string), string value = default(string))
+        /// <param name="isSysAdminOnly">Determine whether a value can only be
+        /// set by a sysadmin</param>
+        public SubmissionMetaDataModel(string name, string displayName = default(string), string type = default(string), string value = default(string), bool? isSysAdminOnly = default(bool?))
         {
             DisplayName = displayName;
             Name = name;
             Type = type;
             Value = value;
+            IsSysAdminOnly = isSysAdminOnly;
             CustomInit();
         }
 
@@ -487,6 +500,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "value")]
         public string Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets determine whether a value can only be set by a
+        /// sysadmin
+        /// </summary>
+        [JsonProperty(PropertyName = "isSysAdminOnly")]
+        public bool? IsSysAdminOnly { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -1250,7 +1270,9 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// binary</param>
         /// <param name="correlationId">An optional ID used to track the binary
         /// version as it moves through the pipeline</param>
-        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string), string correlationId = default(string))
+        /// <param name="isOldVersion">(Optional) Indicates whether the binary
+        /// is the latest or an older version</param>
+        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?))
         {
             MimeType = mimeType;
             FileSize = fileSize;
@@ -1261,6 +1283,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             BinaryExternalId = binaryExternalId;
             FileName = fileName;
             CorrelationId = correlationId;
+            IsOldVersion = isOldVersion;
             CustomInit();
         }
 
@@ -1324,6 +1347,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "correlationId")]
         public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// Gets or sets (Optional) Indicates whether the binary is the latest
+        /// or an older version
+        /// </summary>
+        [JsonProperty(PropertyName = "isOldVersion")]
+        public bool? IsOldVersion { get; set; }
 
         /// <summary>
         /// Validate the object.

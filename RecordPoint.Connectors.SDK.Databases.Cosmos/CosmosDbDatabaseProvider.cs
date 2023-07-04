@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Context;
-using RecordPoint.Connectors.SDK.Databases.Cosmos.TokenCredentials;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos
 {

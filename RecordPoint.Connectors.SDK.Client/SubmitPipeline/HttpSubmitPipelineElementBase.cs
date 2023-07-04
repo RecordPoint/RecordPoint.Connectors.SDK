@@ -52,19 +52,19 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 case System.Net.HttpStatusCode.Conflict:
                     // shouldContinueSubmitPipeline should still be true on Conflict.
                     // There may have been previous submissions of that item that failed at a later stage and need to be re-tried.
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} already submitted.");
+                    HandleSuccessfulRequest(submitContext, $"Submission returned {result.Response.StatusCode} : {itemTypeName} already submitted.");
                     break;
                 case System.Net.HttpStatusCode.OK:
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} submitted.");
+                    HandleSuccessfulRequest(submitContext, $"Submission returned {result.Response.StatusCode} : {itemTypeName} submitted.");
                     break;
                 case System.Net.HttpStatusCode.Created:
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} submitted.");
+                    HandleSuccessfulRequest(submitContext, $"Submission returned {result.Response.StatusCode} : {itemTypeName} submitted.");
                     break;
                 case System.Net.HttpStatusCode.Accepted:
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} accepted for submission.");
+                    HandleSuccessfulRequest(submitContext, $"Submission returned {result.Response.StatusCode} : {itemTypeName} accepted for submission.");
                     break;
                 case System.Net.HttpStatusCode.NoContent:
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} accepted for submission.");
+                    HandleSuccessfulRequest(submitContext, $"Submission returned {result.Response.StatusCode} : {itemTypeName} accepted for submission.");
                     break;
                 case System.Net.HttpStatusCode.BadRequest:
                     shouldContinueSubmitPipeline = false;
@@ -72,13 +72,17 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     break;
                 case System.Net.HttpStatusCode.Forbidden:
                     shouldContinueSubmitPipeline = false;
-                    LogWarning(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was not found.");
+                    var forbiddenReason = $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was not found.";
+                    LogWarning(submitContext, nameof(HandleSubmitResponse), forbiddenReason);
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorNotFound;
+                    submitContext.SubmitResult.Reason = forbiddenReason;
                     break;
                 case System.Net.HttpStatusCode.PreconditionFailed:
                     shouldContinueSubmitPipeline = false;
-                    LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a precondition failed.");
+                    var preconditionReason = $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a precondition failed.";
+                    LogVerbose(submitContext, nameof(HandleSubmitResponse), preconditionReason);
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Deferred;
+                    submitContext.SubmitResult.Reason = preconditionReason;
                     break;
                 case System.Net.HttpStatusCode.TooManyRequests:
                     shouldContinueSubmitPipeline = false;
@@ -106,6 +110,13 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             }
         }
 
+        private void HandleSuccessfulRequest(SubmitContext submitContext, string reason)
+        {
+            LogVerbose(submitContext, nameof(HandleSuccessfulRequest), reason);
+            submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.OK;
+            submitContext.SubmitResult.Reason = reason;
+        }
+
         private async Task HandleBadRequestAsync<T>(SubmitContext submitContext, HttpOperationResponse<T> result, string itemTypeName)
         {
             // BadRequest (400) is returned in one of three scenarios:
@@ -116,14 +127,18 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             if (errorResponse?.Error?.MessageCode == MessageCode.ConnectorNotEnabled)
             {
                 // Connector was disabled
-                LogWarning(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was disabled.");
+                var connectorDisabledReason = $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was disabled.";
+                LogWarning(submitContext, nameof(HandleSubmitResponse), connectorDisabledReason);
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorDisabled;
+                submitContext.SubmitResult.Reason = connectorDisabledReason;
             }
             else if (errorResponse?.Error?.MessageCode == MessageCode.ProtectionNotEnabled)
             {
                 // Protection is disabled
-                LogWarning(submitContext, nameof(HandleSubmitResponse), $"Binary submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector does not have protection enabled.");
+                var protectionDisabledReason = $"Binary submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector does not have protection enabled.";
+                LogWarning(submitContext, nameof(HandleSubmitResponse), protectionDisabledReason);
                 submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.Skipped;
+                submitContext.SubmitResult.Reason = protectionDisabledReason;
             }
             else
             {
@@ -169,9 +184,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 submitContext.SubmitResult.WaitUntilTime = DateTime.UtcNow.AddSeconds(defaultWaitTimeSeconds);
             }
 
-            LogVerbose(submitContext, nameof(HandleSubmitResponse), $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a part of the system is experiencing heavy load. " +
-                $"Try again after {submitContext.SubmitResult.WaitUntilTime}.");
+            var reason = $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because a part of the system is experiencing heavy load. " +
+                $"Try again after {submitContext.SubmitResult.WaitUntilTime}.";
+            LogVerbose(submitContext, nameof(HandleSubmitResponse), reason);
             submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.TooManyRequests;
+            submitContext.SubmitResult.Reason = reason;
+
         }
 
         /// <summary>

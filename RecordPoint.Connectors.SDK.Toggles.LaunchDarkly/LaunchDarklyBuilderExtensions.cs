@@ -9,11 +9,11 @@ namespace RecordPoint.Connectors.SDK.Toggles.LaunchDarkly
     public static class LaunchDarklyBuilderExtensions
     {
 
-        ///// <summary>
-        ///// Configure the host to use the launch darkly toggle provider
-        ///// </summary>
-        ///// <param name="hostBuilder">Host builder to update</param>
-        ///// <returns>Updated host builder</returns>
+        /// <summary>
+        /// Configure the host to use the launch darkly toggle provider
+        /// </summary>
+        /// <param name="hostBuilder">Host builder to update</param>
+        /// <returns>Updated host builder</returns>
         public static IHostBuilder UseLaunchDarklyToggles(this IHostBuilder hostBuilder)
         {
             hostBuilder.ConfigureServices((hostContext, serviceCollection) =>

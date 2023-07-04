@@ -12,23 +12,24 @@ namespace RecordPoint.Connectors.SDK.Client
     {
         private const string AuthEndpointPrefix = "https://login.microsoftonline.com/";
 
-        private static IConfidentialClientApplication clientApp;
+        private IConfidentialClientApplication clientApp;
 
-        public void Initialize(AuthenticationHelperSettings settings)
+        /// <summary>
+        /// Creates and initilizes a ConfidentialClientApplication
+        /// </summary>
+        /// <param name="settings"></param>
+        public ConfidentialClientAuthenticationProvider(AuthenticationHelperSettings settings)
         {
-            if (clientApp == null)
-            {
-                ValidationHelper.ArgumentNotNull(settings, nameof(settings));
-                ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.AuthenticationResource, nameof(settings.AuthenticationResource));
-                ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.ClientId, nameof(settings.ClientId));
+            ValidationHelper.ArgumentNotNull(settings, nameof(settings));
+            ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.AuthenticationResource, nameof(settings.AuthenticationResource));
+            ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.ClientId, nameof(settings.ClientId));
 
 
-                // sign in & get an authentication token...
-                clientApp = ConfidentialClientApplicationBuilder.Create(settings.ClientId)
-                        .WithClientSecret(SecureStringToString(settings.ClientSecret))
-                        .WithCacheOptions(CacheOptions.EnableSharedCacheOptions)
-                        .Build();
-            }
+            // sign in & get an authentication token...
+            clientApp = ConfidentialClientApplicationBuilder.Create(settings.ClientId)
+                    .WithClientSecret(SecureStringToString(settings.ClientSecret))
+                    .WithCacheOptions(CacheOptions.EnableSharedCacheOptions)
+                    .Build();
         }
 
         /// <summary>
