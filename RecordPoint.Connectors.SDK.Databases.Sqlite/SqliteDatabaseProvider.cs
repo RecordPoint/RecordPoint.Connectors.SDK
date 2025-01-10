@@ -4,17 +4,37 @@ using RecordPoint.Connectors.SDK.Context;
 
 namespace RecordPoint.Connectors.SDK.Databases.Sqlite
 {
+    /// <summary>
+    /// The sqlite database provider.
+    /// </summary>
+    /// <typeparam name="TDbContext"/>
     public abstract class SqliteDatabaseProvider<TDbContext> : ISqliteDatabaseProvider<TDbContext>
         where TDbContext : DbContext
     {
 
+        /// <summary>
+        /// The SQLITE SYSTEM NAME.
+        /// </summary>
         public const string SQLITE_SYSTEM_NAME = "Sqlite";
+        /// <summary>
+        /// The SQLITE EXTENSION.
+        /// </summary>
         public const string SQLITE_EXTENSION = "sqlite";
 
+        /// <summary>
+        /// The system context.
+        /// </summary>
         private readonly ISystemContext _systemContext;
 
+        /// <summary>
+        /// The ready source.
+        /// </summary>
         private readonly TaskCompletionSource<Exception> _readySource = new();
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="systemContext">The system context.</param>
         protected SqliteDatabaseProvider(ISystemContext systemContext)
         {
             _systemContext = systemContext;
@@ -57,6 +77,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite
             return builder.ConnectionString;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task PrepareAsync(CancellationToken cancellationToken)
         {
             // Make sure the data directory exists
@@ -66,6 +91,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite
             await dbContext.Database.MigrateAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task CleanupAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
@@ -81,6 +111,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite
             return filePath.Exists;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task RemoveAsync(CancellationToken cancellationToken)
         {
             File.Delete(GetDatabasePath());
@@ -115,6 +150,10 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite
             _readySource.SetResult(exception);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual DbContextOptionsBuilder<TDbContext> GetContextOptionsBuilder()
         {
             var builder = new DbContextOptionsBuilder<TDbContext>()

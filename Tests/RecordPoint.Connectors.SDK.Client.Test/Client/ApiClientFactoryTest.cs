@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using RecordPoint.Connectors.SDK.Client;
-using RecordPoint.Connectors.SDK.Test.Helpers;
 using System.Net;
 using System.Security;
 using Xunit;
@@ -26,11 +25,10 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             result.Should().NotBeNull();
             ServicePointManager.SecurityProtocol.Should().Be(SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13);
             result.BaseUri.Should().Be(new Uri(DummyEndPointUrl), "Base URL is incorrect");
-            ServicePointManager.ServerCertificateValidationCallback(null, null, null, System.Net.Security.SslPolicyErrors.None).Should().BeTrue();
         }
 
         [Fact]
-        public void CreateApiClient_WhenCalledInParallel_CreatesTheRightSingletonApiClientAndSetsSecurityProtocolCorrectly()
+        public async Task CreateApiClient_WhenCalledInParallel_CreatesTheRightSingletonApiClientAndSetsSecurityProtocolCorrectly()
         {
             // Arrange
             var sutApiClientFactory = new ApiClientFactory();
@@ -48,7 +46,7 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             {
                 tasks[i] = Task.Factory.StartNew<IApiClient>(func);
             }
-            Task.WaitAll(tasks);
+            await Task.WhenAll(tasks);
             var results = tasks.Select(t => t.GetAwaiter().GetResult()).ToList();
 
             // Assert
@@ -58,7 +56,6 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             ServicePointManager.SecurityProtocol.Should().Be(SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13);
             // Make sure that it's a singleton object
             results.ForEach(result => result.Should().BeSameAs(firstResult));
-            ServicePointManager.ServerCertificateValidationCallback(null, null, null, System.Net.Security.SslPolicyErrors.None).Should().BeTrue();
         }
 
         [Fact]

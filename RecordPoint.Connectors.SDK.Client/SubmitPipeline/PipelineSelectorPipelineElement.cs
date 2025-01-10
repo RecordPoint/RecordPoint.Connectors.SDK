@@ -21,6 +21,11 @@
             _submitAggregation = submitAggregation;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="submitContext"></param>
+        /// <returns></returns>
         public override async Task Submit(SubmitContext submitContext)
         {
             var rawItemType = submitContext.CoreMetaData?.Where(x => x.Name == Fields.ItemTypeId)?.FirstOrDefault()?.Value;

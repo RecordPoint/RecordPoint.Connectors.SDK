@@ -24,7 +24,7 @@ namespace RecordPoint.Connectors.SDK.Test.Content
                 SourceLastModifiedDate = DateTime.UtcNow,
                 Title = Guid.NewGuid().ToString(),
                 ContentToken = Guid.NewGuid().ToString(),
-                ContentTokenType = Guid.NewGuid().ToString(),   
+                ContentTokenType = Guid.NewGuid().ToString(),
                 FileHash = Guid.NewGuid().ToString(),
                 FileName = Guid.NewGuid().ToString(),
                 ItemExternalId = Guid.NewGuid().ToString(),

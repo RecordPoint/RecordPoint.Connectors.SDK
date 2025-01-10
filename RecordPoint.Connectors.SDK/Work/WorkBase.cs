@@ -141,6 +141,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// Record that this work item has critically failed and should not be reattempted
         /// </summary>
         /// <param name="reason">Reason why the work item has failed</param>
+        /// <param name="cancellationToken"></param>
         protected virtual Task FailAsync(string reason, CancellationToken cancellationToken)
         {
             EnsureIncomplete();
@@ -155,6 +156,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// Record that this work item has critically failed due to an exception and should not be reattempted
         /// </summary>
         /// <param name="exception">Exception that is cause of the failure</param>
+        /// <param name="cancellationToken"></param>
         protected virtual Task FailAsync(Exception exception, CancellationToken cancellationToken)
         {
             EnsureIncomplete();

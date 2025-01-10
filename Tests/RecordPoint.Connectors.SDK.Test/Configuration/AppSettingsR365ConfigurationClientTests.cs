@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Configuration;
 using Xunit;
-using Microsoft.Extensions.Configuration;
 
 namespace RecordPoint.Connectors.SDK.Test.Configuration
 {
@@ -27,7 +27,8 @@ namespace RecordPoint.Connectors.SDK.Test.Configuration
 
             return base
                 .CreateSutBuilder()
-                .ConfigureServices(svcs => {
+                .ConfigureServices(svcs =>
+                {
                     svcs.Configure<R365ConfigurationModel>(config.GetSection("appsettings"));
                     svcs.AddSingleton<IR365ConfigurationClient, AppSettingsR365ConfigurationClient>();
                 });

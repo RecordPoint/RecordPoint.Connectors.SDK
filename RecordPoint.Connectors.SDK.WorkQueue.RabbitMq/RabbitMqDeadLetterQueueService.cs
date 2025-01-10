@@ -1,17 +1,12 @@
-﻿using Newtonsoft.Json;
-using RecordPoint.Connectors.SDK.ContentManager;
-using RecordPoint.Connectors.SDK.Extensions;
-using RecordPoint.Connectors.SDK.Work.Models;
-using RecordPoint.Connectors.SDK.Work;
-using RecordPoint.Connectors.SDK.WorkQueue.RabbitMq;
+﻿using System.Text;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Data.Common;
-using System.Text;
-using RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Extensions;
-using System.Reflection;
+using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Providers;
+using RecordPoint.Connectors.SDK.Work;
+using RecordPoint.Connectors.SDK.Work.Models;
 
-namespace RecordPoint.Connectors.SDK.WorkQueue.Services
+namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 {
     /// <summary>
     /// Deadletter queue service class
@@ -27,8 +22,9 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="serviceBusClientFactory"></param>
+        /// <param name="rabbitMqClientFactory"></param>
         /// <param name="managedWorkStatusManager"></param>
+        /// <param name="dateTimeProvider"></param>
         public RabbitMqDeadLetterQueueService(IRabbitMqClientFactory rabbitMqClientFactory,
             IManagedWorkStatusManager managedWorkStatusManager,
             IDateTimeProvider dateTimeProvider)
@@ -46,10 +42,11 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
         public async Task<List<DeadLetterModel>> GetAllMessagesAsync(string queueName)
         {
             var deadLetterList = new List<DeadLetterModel>();
+            var dlqName = GetDlqName(queueName);
             using var channel = _rabbitMqConnection.CreateModel();
             do
             {
-                var message = channel.BasicGet(queueName, false);
+                var message = channel.BasicGet(dlqName, false);
                 if (message != null)
                 {
                     deadLetterList.Add(message.ToDeadLetterModel());
@@ -72,11 +69,12 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
         /// <returns></returns>
         public async Task<DeadLetterModel> GetMessageAsync(string queueName, long sequenceNumber)
         {
-            var deadLetterModel = new DeadLetterModel();
+            var dlQueueName = GetDlqName(queueName);
+            DeadLetterModel deadLetterModel;
             using var channel = _rabbitMqConnection.CreateModel();
             do
             {
-                var message = channel.BasicGet(queueName, false);
+                var message = channel.BasicGet(dlQueueName, false);
                 if (message != null && message.DeliveryTag == Convert.ToUInt64(sequenceNumber))
                 {
                     deadLetterModel = message.ToDeadLetterModel();
@@ -101,51 +99,49 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
 
             var receivedMessages = new List<BasicGetResult>();
             var messageBatch = channel.CreateBasicPublishBatch();
-            var dlQueueName = queueName + "-DL";
+            var dlQueueName = GetDlqName(queueName);
             do
             {
                 var message = channel.BasicGet(dlQueueName, false);
-                if (message != null && sequenceNumbers.Any(s => Convert.ToUInt64(s) == message.DeliveryTag))
+                if (message != null && Array.Exists(sequenceNumbers, s => Convert.ToUInt64(s) == message.DeliveryTag))
                 {
                     receivedMessages.Add(message);
+                    continue;
                 }
-                else
-                {
-                    break;
-                }
+
+                break;
             }
             while (true);
 
-            foreach (var receivedMessage in receivedMessages)
+            foreach (var messageBody in receivedMessages.Select(m => m.Body))
             {
-                var serilizeMessage = Encoding.UTF8.GetString(receivedMessage.Body.ToArray());
+                var serializedMessage = Encoding.UTF8.GetString(messageBody.ToArray());
 
-                var workRequest = JsonConvert.DeserializeObject<WorkRequest>(serilizeMessage);
+                var workRequest = JsonConvert.DeserializeObject<WorkRequest>(serializedMessage);
+                if (workRequest == null) continue;
 
-                if (workRequest != null)
+                //We want to reset the fault count back to 0 
+                workRequest.FaultedCount = 0;
+                var workStatus = ManagedWorkStatusModel.Deserialize(workRequest.Body);
+
+                if (workStatus?.WorkType is ContentManagerOperation.WORK_TYPE or ContentRegistrationOperation.WORK_TYPE or ContentSynchronisationOperation.WORK_TYPE or ChannelDiscoveryOperation.WORK_TYPE)
                 {
-                    //We want to reset the fault count back to 0 
-                    workRequest.FaultedCount = 0;
-                    var workStatus = ManagedWorkStatusModel.Deserialize(workRequest.Body);
-
-                    if (workStatus?.WorkType is ContentManagerOperation.WORK_TYPE or ContentRegistrationOperation.WORK_TYPE or ContentSynchronisationOperation.WORK_TYPE or ChannelDiscoveryOperation.WORK_TYPE)
-                    {
-                        await _managedWorkStatusManager.SetWorkRunningAsync(workStatus.Id, CancellationToken.None);
-                    }
-                   
-                    IBasicProperties props = channel.CreateBasicProperties();
-
-                    if (workRequest.WaitTill.HasValue)
-                    {
-                        var delayMilliSeconds = workRequest.WaitTill.Value.Subtract(_dateTimeProvider.UtcNow).TotalMilliseconds;
-                        props.Headers = new Dictionary<string, object>
-                        {
-                            { ExchangeDelayHeader, delayMilliSeconds }
-                        };
-                    }
-
-                    messageBatch.Add(ExchangeName, dlQueueName, false, props, receivedMessage.Body);
+                    await _managedWorkStatusManager.SetWorkRunningAsync(workStatus.Id, CancellationToken.None);
                 }
+
+                IBasicProperties props = channel.CreateBasicProperties();
+                props.Persistent = true;
+
+                if (workRequest.WaitTill.HasValue)
+                {
+                    var delayMilliSeconds = workRequest.WaitTill.Value.Subtract(_dateTimeProvider.UtcNow).TotalMilliseconds;
+                    props.Headers = new Dictionary<string, object>
+                    {
+                        { ExchangeDelayHeader, delayMilliSeconds }
+                    };
+                }
+
+                messageBatch.Add(ExchangeName, dlQueueName, false, props, messageBody);
             }
 
             messageBatch.Publish();
@@ -158,17 +154,18 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
         }
 
         /// <summary>
-        /// Delete the message from the deadletter queue
+        /// Delete a specific message from the dead-letter queue
         /// </summary>
         /// <param name="queueName"></param>
         /// <param name="sequenceNumber"></param>
         /// <returns></returns>
         public async Task DeleteMessageAsync(string queueName, long sequenceNumber)
         {
+            var dlqName = GetDlqName(queueName);
             using var channel = _rabbitMqConnection.CreateModel();
             do
             {
-                var message = channel.BasicGet(queueName, false);
+                var message = channel.BasicGet(dlqName, false);
                 if (message != null && message.DeliveryTag == Convert.ToUInt64(sequenceNumber))
                 {
                     channel.BasicAck(message.DeliveryTag, false);
@@ -180,13 +177,18 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
             await Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Delete all messages from the dead-letter queue.
+        /// </summary>
+        /// <param name="queueName"></param>
         public async Task DeleteAllMessagesAsync(string queueName)
         {
+            var dlqName = GetDlqName(queueName);
             using var channel = _rabbitMqConnection.CreateModel();
 
             do
             {
-                var message = channel.BasicGet(queueName, false);
+                var message = channel.BasicGet(dlqName, false);
                 if (message != null)
                 {
                     channel.BasicAck(message.DeliveryTag, false);
@@ -199,6 +201,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.Services
             while (true);
 
             await Task.CompletedTask;
+        }
+
+        private static string GetDlqName(string queueName)
+        {
+            // Allow users to use the base queue name
+            // (for consistency with the Service Bus implementation)
+            return queueName.EndsWith(QueueNameHelper.DeadLetterSuffix) 
+                ? queueName 
+                : $"{queueName}-{QueueNameHelper.DeadLetterSuffix}";
         }
     }
 }

@@ -30,7 +30,11 @@
         /// </summary>
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(ChannelModel? other)
         {
             if (other == null)
@@ -42,6 +46,11 @@
                 && MetaData == other.MetaData;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -53,6 +62,10 @@
                 return Equals(other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;

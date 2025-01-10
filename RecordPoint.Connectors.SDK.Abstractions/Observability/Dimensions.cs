@@ -1,15 +1,20 @@
-﻿using System.Runtime.Serialization;
-
-namespace RecordPoint.Connectors.SDK.Observability
+﻿namespace RecordPoint.Connectors.SDK.Observability
 {
-    [Serializable]
+    /// <summary>
+    /// The dimensions.
+    /// </summary>
     public class Dimensions : Dictionary<string, string?>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Dimensions"/> class.
+        /// </summary>
         public Dimensions() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Dimensions"/> class.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
         public Dimensions(IEnumerable<KeyValuePair<string, string?>> collection) : base(collection) { }
-
-        protected Dimensions(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         /// Convert dimensions to log scope state suitable for being passed to a logging BeingScope

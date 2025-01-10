@@ -13,7 +13,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="connectorConfiguration">The onnector configuration</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Result of the discovery operation</returns>
-        Task<ContentResult> BeginAsync(ConnectorConfigModel ConnectorConfiguration, CancellationToken cancellationToken);
+        Task<ContentResult> BeginAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken);
 
         /// <summary>
         /// Continue a content report generation
@@ -22,6 +22,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="cursor">Scan cursor provided by the prior sync operation</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Result of the discovery operation</returns>
-        Task<ContentResult> ContinueAsync(ConnectorConfigModel ConnectorConfiguration, string cursor, CancellationToken cancellationToken);
+        Task<ContentResult> ContinueAsync(ConnectorConfigModel connectorConfiguration, string cursor, CancellationToken cancellationToken);
     }
 }

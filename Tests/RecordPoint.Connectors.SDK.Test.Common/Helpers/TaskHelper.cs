@@ -88,7 +88,7 @@ namespace RecordPoint.Connectors.SDK.Test.Helpers
             if (t.IsCompleted)
             {
                 await t.ConfigureAwait(false);
-                Assert.False(true, "Task has completed unexpectedly without an exception.");
+                Assert.Fail("Task has completed unexpectedly without an exception.");
             }
         }
     }

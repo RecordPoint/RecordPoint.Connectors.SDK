@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Hosting;
-using RecordPoint.Connectors.SDK.Test.Mock.Context;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Observability.Null;
+using RecordPoint.Connectors.SDK.Test.Mock.Context;
 using RecordPoint.Connectors.SDK.Time;
+using RecordPoint.Connectors.SDK.Toggles.Null;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using RecordPoint.Connectors.SDK.Toggles.Null;
-using Microsoft.Extensions.Configuration;
 
 namespace RecordPoint.Connectors.SDK.Test
 {
@@ -32,7 +32,7 @@ namespace RecordPoint.Connectors.SDK.Test
 
         #region Temp Data Directory
 
-        private string _tempDataDirectory;
+        private string? _tempDataDirectory;
 
         protected void CreateTempDataDirectory()
         {
@@ -49,7 +49,7 @@ namespace RecordPoint.Connectors.SDK.Test
             }
         }
 
-        protected string GetTempDataDirectory()
+        protected string? GetTempDataDirectory()
         {
             return _tempDataDirectory;
         }
@@ -92,7 +92,7 @@ namespace RecordPoint.Connectors.SDK.Test
         /// Set the SUT Running
         /// </summary>
         /// <returns>Task</returns>
-        public virtual Task StartSUTAsync(IConfiguration configuration = null)
+        public virtual Task StartSUTAsync(IConfiguration? configuration = null)
         {
             Configure();
             CreateTempDataDirectory();
@@ -112,15 +112,18 @@ namespace RecordPoint.Connectors.SDK.Test
         /// <returns>Task</returns>
         public async virtual Task StopSUTAsync()
         {
-            await Host.StopAsync(CancellationToken.None);
+            if (Host != null)
+            {
+                await Host.StopAsync(CancellationToken.None);
+            }
             DeleteTempDataDirectory();
         }
 
         // Accessors
 
-        public IHost Host { get; set; }
+        public IHost? Host { get; set; }
 
-        public IServiceProvider Services => Host.Services;
+        public IServiceProvider? Services => Host?.Services;
 
         #endregion
 

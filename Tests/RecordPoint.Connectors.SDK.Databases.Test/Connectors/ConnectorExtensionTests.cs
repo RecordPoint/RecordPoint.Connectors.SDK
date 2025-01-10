@@ -1,14 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Client.Models;
-using System.Text.Json;
-using Xunit;
-using System.Threading.Tasks;
-using System.Threading;
+using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Test;
 using RecordPoint.Connectors.SDK.Test.Mock.Databases;
-using System;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
 {

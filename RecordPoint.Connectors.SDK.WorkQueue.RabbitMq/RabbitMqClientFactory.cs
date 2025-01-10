@@ -11,13 +11,11 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
     {
         private readonly IConfiguration _configuration;
         private readonly IOptions<RabbitMqOptions> _rabbitMqOptions;
-        private IConnection _rabbitMqConnection;
+        private IConnection? _rabbitMqConnection = null;
 
         /// <summary>
         /// Constructor for the Factory
         /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="rabbitMqOptions"></param>
         public RabbitMqClientFactory(
             IConfiguration configuration,
             IOptions<RabbitMqOptions> rabbitMqOptions)
@@ -31,7 +29,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// </summary>
         /// <returns></returns>
         public IConnection CreateRabbitMqConnection()
-        {           
+        {
             if (_rabbitMqConnection != null && _rabbitMqConnection.IsOpen)
             {
                 return _rabbitMqConnection;

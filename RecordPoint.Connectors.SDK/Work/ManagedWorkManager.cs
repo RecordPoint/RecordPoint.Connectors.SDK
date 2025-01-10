@@ -15,6 +15,11 @@ namespace RecordPoint.Connectors.SDK.Work
 
         private const string RETRY_COMPLETE_MSG = "Work operation is being retried";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="managedWorkStatusManager"></param>
+        /// <param name="workQueueClient"></param>
         public ManagedWorkManager(
             IManagedWorkStatusManager managedWorkStatusManager,
             IWorkQueueClient workQueueClient)
@@ -229,10 +234,11 @@ namespace RecordPoint.Connectors.SDK.Work
             return WorkResult.Failed(reason);
         }
 
+        /// <summary>
         /// Set that the Work has had a possibly transient fault
         /// </summary>
         /// <param name="reason">Reason why</param>
-        /// <param name="ct">Cancellation token</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <param name="faultedCount">faulted count</param>
         /// <returns>Outcome to pass onto the work queue</returns>
         public async Task<WorkResult> FaultyAsync(string reason, CancellationToken cancellationToken, int? faultedCount = 0)
@@ -246,7 +252,7 @@ namespace RecordPoint.Connectors.SDK.Work
                     faulted++;
 
                     //Exponential Back off now 0:30s , 2:50, 7:48, 16:00, 27:57, 44:05 with the 2.5 exponent with the retry delay of 30 seconds
-                    var delay = WorkStatus.ExponentialRetryDelay 
+                    var delay = WorkStatus.ExponentialRetryDelay
                         ? Math.Min(Math.Pow(faulted, 2.5) * WorkStatus.RetryDelay, WorkStatus.MaxRetryDelay)
                         : WorkStatus.RetryDelay;
                     return await RetryAsync(DateTimeOffset.UtcNow.AddSeconds(delay), cancellationToken, faulted).ConfigureAwait(false);

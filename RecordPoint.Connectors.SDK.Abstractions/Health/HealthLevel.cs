@@ -10,8 +10,17 @@
     /// </remarks>
     public enum HealthLevel
     {
-        Normal = 0,  // Normal operation
-        Warning = 1,  // Warning of possible health issues
-        Failure = 2  // Connector is not operating correctly
+        /// <summary>
+        /// Normal operation
+        /// </summary>
+        Normal = 0,
+        /// <summary>
+        /// Warning of possible health issues
+        /// </summary>
+        Warning = 1,
+        /// <summary>
+        /// Connector is not operating correctly
+        /// </summary>
+        Failure = 2
     }
 }

@@ -10,11 +10,19 @@ namespace RecordPoint.Connectors.SDK.Work
     /// </summary>
     public class DatabaseManagedWorkStatusManager : IManagedWorkStatusManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string WORK_STATUS_ID_DIMENSION = "WorkStatusId";
 
         private readonly IConnectorDatabaseClient _databaseClient;
         private readonly IScopeManager _scopeManager;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseClient"></param>
+        /// <param name="scopeManager"></param>
         public DatabaseManagedWorkStatusManager(
             IConnectorDatabaseClient databaseClient,
             IScopeManager scopeManager)

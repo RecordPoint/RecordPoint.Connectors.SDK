@@ -6,6 +6,9 @@
     /// </summary>
     public class HealthCheckOptions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SECTION_NAME = "HealthCheck";
 
         /// <summary>
@@ -13,7 +16,7 @@
         /// 
         /// Defaults to 10 minutes.
         /// </summary>
-        public int HealthCheckFrequencySeconds { get; set; } = 600;
+        public int HealthCheckFrequencySeconds { get; set; } = 30;
 
         /// <summary>
         /// Number of seconds to delay for the first health check to let the
@@ -21,7 +24,7 @@
         /// 
         /// Defaults to 1 minute.
         /// </summary>
-        public int HealthCheckStartDelaySeconds { get; set; } = 60;
+        public int HealthCheckStartDelaySeconds { get; set; } = 10;
 
         /// <summary>
         /// Number of Gb which is minimum requires for disk space

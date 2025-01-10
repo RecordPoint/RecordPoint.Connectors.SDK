@@ -1,6 +1,6 @@
 ﻿using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Client.Test.Filters;
 using RecordPoint.Connectors.SDK.Filters;
-using RecordPoint.Connectors.SDK.SubmitPipeline;
 
 namespace RecordPoint.Connectors.SDK.Test.Filters
 {
@@ -22,13 +22,14 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
             nameof(Double)
         };
 
-        protected static SubmitContext GetSubmitContext(FiltersModel filters = null)
+        protected static TestSubmitContext GetSubmitContext(FiltersModel filters = null, string name = null)
         {
-            var output = new SubmitContext()
+            var output = new TestSubmitContext()
             {
-                CoreMetaData = new List<SubmissionMetaDataModel>(),
-                SourceMetaData = new List<SubmissionMetaDataModel>(),
-                Filters = filters
+                CoreMetaData = [],
+                SourceMetaData = [],
+                Filters = filters,
+                Name = name
             };
 
             foreach (var dataType in FieldTypes)

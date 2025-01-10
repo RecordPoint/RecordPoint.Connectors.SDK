@@ -16,21 +16,55 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Worker responsible for submitting records to Records 365.
+    /// The submit audit event operation.
     /// </summary>
     public class SubmitAuditEventOperation : QueueableWorkBase<AuditEvent>
     {
+        /// <summary>
+        /// WORK TYPE.
+        /// </summary>
         public const string WORK_TYPE = "Audit Event Submission";
 
+        /// <summary>
+        /// The CONTENT LABEL.
+        /// </summary>
         public const string CONTENT_LABEL = "Audit Event";
 
+        /// <summary>
+        /// The DEFAULT DEFERRAL SECONDS.
+        /// </summary>
         public const int DEFAULT_DEFERRAL_SECONDS = 10;
 
+        /// <summary>
+        /// The content manager action provider.
+        /// </summary>
         private readonly IContentManagerActionProvider _contentManagerActionProvider;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
+        /// <summary>
+        /// The r365 client.
+        /// </summary>
         private readonly IR365Client _r365Client;
+        /// <summary>
+        /// Work queue client.
+        /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubmitAuditEventOperation"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
+        /// <param name="r365Client">The r365 client.</param>
+        /// <param name="connectorManager">The connector manager.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="workQueueClient">The work queue client.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         public SubmitAuditEventOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -50,16 +84,35 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _connectorManager = connectorManager;
         }
 
+        /// <summary>
+        /// Gets the service name.
+        /// </summary>
         public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WORK_TYPE;
 
+        /// <summary>
+        /// Gets the audit event.
+        /// </summary>
         public AuditEvent AuditEvent => Parameter;
 
+        /// <summary>
+        /// Gets the connector config id.
+        /// </summary>
         public string ConnectorConfigId => WorkRequest.ConnectorConfigId;
 
+        /// <summary>
+        /// The connector configuration.
+        /// </summary>
         private ConnectorConfigModel _connectorConfiguration;
 
+        /// <summary>
+        /// Get custom key dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomKeyDimensions()
         {
             var dimensions = new Dimensions
@@ -70,6 +123,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return dimensions;
         }
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             _connectorConfiguration = await _connectorManager.GetConnectorAsync(ConnectorConfigId, cancellationToken);
@@ -138,11 +196,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }
         }
 
+        /// <summary>
+        /// Submits and return a task of type submitresult asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<SubmitResult>]]></returns>
         private Task<SubmitResult> SubmitAsync(CancellationToken cancellationToken)
         {
             return _r365Client.SubmitAuditEvent(_connectorConfiguration, Parameter, cancellationToken);
         }
 
+        /// <summary>
+        /// Get feature status.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<ConnectorFeatureStatus>]]></returns>
         private Task<ConnectorFeatureStatus> GetFeatureStatus(CancellationToken cancellationToken)
         {
             return _connectorManager.GetSubmissionStatusAsync(ConnectorConfigId, cancellationToken);

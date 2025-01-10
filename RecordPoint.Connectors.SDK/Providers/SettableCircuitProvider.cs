@@ -8,6 +8,9 @@ namespace RecordPoint.Connectors.SDK.Providers
     /// </summary>
     public class SettableCircuitProvider : ISettableCircuitProvider
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IDateTimeProvider DateTimeProvider { get; set; }
         private DateTimeOffset? _disabledUntil = null;
         private object _disabledUntilLock = new object();

@@ -12,7 +12,7 @@ namespace RecordPoint.Connectors.SDK.Client
     {
         private const string AuthEndpointPrefix = "https://login.microsoftonline.com/";
 
-        private IConfidentialClientApplication clientApp;
+        private readonly IConfidentialClientApplication _clientApp;
 
         /// <summary>
         /// Creates and initilizes a ConfidentialClientApplication
@@ -26,7 +26,7 @@ namespace RecordPoint.Connectors.SDK.Client
 
 
             // sign in & get an authentication token...
-            clientApp = ConfidentialClientApplicationBuilder.Create(settings.ClientId)
+            _clientApp = ConfidentialClientApplicationBuilder.Create(settings.ClientId)
                     .WithClientSecret(SecureStringToString(settings.ClientSecret))
                     .WithCacheOptions(CacheOptions.EnableSharedCacheOptions)
                     .Build();
@@ -39,14 +39,14 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <returns></returns>
         public async Task<AuthenticationResult> AcquireTokenAsync(AuthenticationHelperSettings settings)
         {
-            if (clientApp == null)
+            if (_clientApp == null)
             {
                 throw new InvalidOperationException("Client Application has not been initialized");
             }
             var authority = GetAuthority(settings);
 
             var scopes = new[] { settings.AuthenticationResource + "/.default" };
-            var aadAuthenticationResult = await clientApp.AcquireTokenForClient(scopes).WithAuthority(authority).ExecuteAsync().ConfigureAwait(false);
+            var aadAuthenticationResult = await _clientApp.AcquireTokenForClient(scopes).WithTenantIdFromAuthority(authority).ExecuteAsync().ConfigureAwait(false);
 
             return new AuthenticationResult
             {
@@ -70,10 +70,10 @@ namespace RecordPoint.Connectors.SDK.Client
             }
         }
 
-        private static string GetAuthority(AuthenticationHelperSettings settings)
+        private static Uri GetAuthority(AuthenticationHelperSettings settings)
         {
             ValidationHelper.ArgumentNotNullOrWhiteSpace(settings.TenantDomainName, nameof(settings.TenantDomainName));
-            return AuthEndpointPrefix + settings.TenantDomainName;
+            return new Uri(AuthEndpointPrefix + settings.TenantDomainName);
         }
     }
 }

@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
+using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
 using Xunit;
-using RecordPoint.Connectors.SDK.Providers;
 
 namespace RecordPoint.Connectors.SDK.Test.Work
 {
@@ -29,10 +29,10 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
             public NullQueueWorkItem(
                 IServiceProvider serviceProvider,
-                ISystemContext systemContext, 
-                IScopeManager scopeManager, 
-                ILogger logger, 
-                ITelemetryTracker telemetryTracker, 
+                ISystemContext systemContext,
+                IScopeManager scopeManager,
+                ILogger logger,
+                ITelemetryTracker telemetryTracker,
                 IDateTimeProvider dateTimeProvider)
                 : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
             { }
@@ -170,5 +170,29 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             }
         }
 
+        [Fact]
+        public async Task WorkItem_DisposeSuccess()
+        {
+            try
+            {
+                await StartSutAsync();
+                var workType = nameof(NullQueueWorkItem);
+                var workRequest = CreateTestWorkRequest(workType);
+                var dateTimeProvider = Services.GetRequiredService<IDateTimeProvider>();
+                var startTime = dateTimeProvider.UtcNow;
+
+                NullQueueWorkItem workItem;
+
+                using (workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>())) {
+                    Assert.False(workItem.HasDisposed);
+                }
+
+                Assert.Throws<ObjectDisposedException>(() => workItem.HasDisposed);
+            }
+            finally
+            {
+                await StopSUTAsync();
+            }
+        }
     }
 }

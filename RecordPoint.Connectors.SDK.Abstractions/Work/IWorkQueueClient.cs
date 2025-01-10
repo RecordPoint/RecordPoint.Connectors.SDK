@@ -8,7 +8,7 @@
         /// <summary>
         /// Submit work
         /// </summary>
-        /// <param name="request">Work request to submit</param>
+        /// <param name="workRequest">Work request to submit</param>
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Task</returns>
         Task SubmitWorkAsync(WorkRequest workRequest, CancellationToken cancellationToken);

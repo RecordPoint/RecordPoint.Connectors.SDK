@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Connectors;
-using RecordPoint.Connectors.SDK.Status;
-using Xunit;
-using RecordPoint.Connectors.SDK.Test.Mock.Databases;
 using RecordPoint.Connectors.SDK.Databases;
+using RecordPoint.Connectors.SDK.Status;
+using RecordPoint.Connectors.SDK.Test.Mock.Databases;
+using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.Status
 {
@@ -14,7 +14,7 @@ namespace RecordPoint.Connectors.SDK.Test.Status
     /// </summary>
     public class StatusManagerSUT : CommonSutBase
     {
-        protected override IHostBuilder CreateSutBuilder() 
+        protected override IHostBuilder CreateSutBuilder()
             => base
                 .CreateSutBuilder()
                 .UseStatusManager()
@@ -46,10 +46,10 @@ namespace RecordPoint.Connectors.SDK.Test.Status
         {
             await StartSutAsync();
             var statusManager = Services.GetRequiredService<IStatusManager>();
-            var statusModel = statusManager.GetStatusModelAsync(CancellationToken.None);
+            var statusModel = await statusManager.GetStatusModelAsync(CancellationToken.None);
 
             // statusModel should not be null even if no config available
-            Assert.NotNull(statusModel.Result);
+            Assert.NotNull(statusModel);
         }
 
         [Fact]

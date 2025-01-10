@@ -12,7 +12,7 @@ namespace RecordPoint.Connectors.SDK.Test.Common.Mock.Caching.Semaphore
         public string Key { get; set; } = string.Empty;
         public int ExecutionCount { get; set; } = 0;
 
-        public Task<string> ExecuteAsync(ConnectorConfigModel connectorConfigModel, string workType, CancellationToken cancellationToken)
+        public Task<string> ExecuteAsync(ConnectorConfigModel connectorConfigModel, string workType, object? context, CancellationToken cancellationToken)
         {
             ExecutionCount++;
 

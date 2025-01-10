@@ -1,9 +1,4 @@
-﻿using RecordPoint.Connectors.SDK.Client;
-using RecordPoint.Connectors.SDK.Helpers;
-using System.Security;
-using Xunit;
-
-namespace RecordPoint.Connectors.SDK.Test.Helpers
+﻿namespace RecordPoint.Connectors.SDK.Test.Helpers
 {
     public class HttpRequestHelperTest
     {

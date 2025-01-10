@@ -6,9 +6,10 @@ using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using System;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace RecordPoint.Connectors.SDK.Work
 {
@@ -18,7 +19,6 @@ namespace RecordPoint.Connectors.SDK.Work
     public abstract class QueueableWorkBase<TParameter> : WorkBase<TParameter>, IQueueableWork
     {
         #region Dependencies
-
         /// <summary>
         /// Public constructor. Used to inject dependencies
         /// </summary>
@@ -42,7 +42,13 @@ namespace RecordPoint.Connectors.SDK.Work
         /// </summary>
         protected ISystemContext SystemContext { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly IServiceProvider _serviceProvider;
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly ISemaphoreLockManager _semaphoreLockManager;
         #endregion
 
@@ -97,18 +103,21 @@ namespace RecordPoint.Connectors.SDK.Work
             return RunAsync(parameter, cancellationToken);
         }
 
+        #nullable enable
         /// <summary>
         /// Checks to see if a semphore lock has been applied and defers execution until the lock expires
         /// </summary>
         /// <param name="connectorConfigModel"></param>
+        /// <param name="context">Context for lock keys when external apis have different restrictions, ie: by channel</param>
         /// <param name="cancellationToken"></param>
         /// <returns>True if a lock has been applied</returns>
-        protected async Task<bool> CheckSemaphoreLockAsync(ConnectorConfigModel connectorConfigModel, CancellationToken cancellationToken)
+        /// enable
+        protected async Task<bool> CheckSemaphoreLockAsync(ConnectorConfigModel connectorConfigModel, object? context, CancellationToken cancellationToken)
         {
             if (_semaphoreLockManager != null)
             {
                 _semaphoreLockManager.ConnectorConfiguration = connectorConfigModel;
-                var semaphoreLockExpiry = await _semaphoreLockManager.GetSemaphoreAsync(WorkType, cancellationToken);
+                var semaphoreLockExpiry = await _semaphoreLockManager.GetSemaphoreAsync(WorkType, context, cancellationToken);
                 if (semaphoreLockExpiry.HasValue)
                 {
                     //Semaphore lock is active so backoff until the semaphore lock expires
@@ -118,6 +127,8 @@ namespace RecordPoint.Connectors.SDK.Work
             }
             return false;
         }
+        #nullable disable
+
         #endregion
 
         #region Result
@@ -181,16 +192,18 @@ namespace RecordPoint.Connectors.SDK.Work
             WaitTill = waitTill;
         }
 
+        #nullable enable
         /// <summary>
         /// Defers the work and applies a semaphore lock
         /// </summary>
         /// <param name="connectorConfigModel"></param>
+        /// <param name="context">Context for lock keys when external apis have different restrictions, ie: by channel</param>
         /// <param name="semaphoreLockType"></param>
         /// <param name="nextDelay"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="RequiredValueNullException"></exception>
-        protected async Task HandleBackOffResultAsync(ConnectorConfigModel connectorConfigModel, SemaphoreLockType? semaphoreLockType, int? nextDelay, CancellationToken cancellationToken)
+        protected async Task HandleBackOffResultAsync(ConnectorConfigModel connectorConfigModel, object? context, SemaphoreLockType? semaphoreLockType, int? nextDelay, CancellationToken cancellationToken)
         {
             if (!semaphoreLockType.HasValue)
                 throw new RequiredValueNullException(nameof(semaphoreLockType));
@@ -202,15 +215,20 @@ namespace RecordPoint.Connectors.SDK.Work
                 throw new RequiredValueNullException(nameof(_semaphoreLockManager));
 
             _semaphoreLockManager.ConnectorConfiguration = connectorConfigModel;
-            await _semaphoreLockManager.SetSemaphoreAsync(semaphoreLockType.Value, WorkType, nextDelay.Value, cancellationToken);
+            await _semaphoreLockManager.SetSemaphoreAsync(semaphoreLockType.Value, WorkType, context, nextDelay.Value, cancellationToken);
 
             var delay = DateTimeOffset.Now.AddSeconds(nextDelay.Value);
             Deferred("Semaphore Lock enabled, deferring Channel Discovery.", delay);
         }
+        #nullable disable
+
         #endregion
 
         #region Observability
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override Dimensions GetCoreKeyDimensions()
         {
             var dimensions = base.GetCoreKeyDimensions();
@@ -233,7 +251,44 @@ namespace RecordPoint.Connectors.SDK.Work
             dimensions[StandardMeasures.OUTCOME_SECONDS] = ResultDuration.TotalSeconds;
             return dimensions;
         }
+        #endregion
 
+        #region Disposable
+        private bool _hasDisposed = false;
+
+        /// <summary>
+        /// Public access to check if the object has been disposed
+        /// </summary>
+        public bool HasDisposed
+        {
+            get
+            {
+                if (!_hasDisposed) return _hasDisposed;
+                throw new ObjectDisposedException(WorkType);
+            }
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        protected virtual void InnerDispose()
+        {
+            // free unmanaged resources (unmanaged objects) and override finalizer
+            // set large fields to null
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            if (!_hasDisposed)
+            {
+                InnerDispose();
+                _hasDisposed = true;
+            }
+            GC.SuppressFinalize(this);
+        }
         #endregion
     }
 }

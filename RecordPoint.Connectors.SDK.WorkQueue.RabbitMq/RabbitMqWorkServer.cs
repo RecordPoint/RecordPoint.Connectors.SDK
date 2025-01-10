@@ -12,36 +12,100 @@ using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Toggles;
 using RecordPoint.Connectors.SDK.Work;
-using System.Diagnostics;
-using System.Reflection;
 using System.Text;
-using YamlDotNet.Core.Tokens;
 
 namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 {
+    /// <summary>
+    /// The rabbit mq work server.
+    /// </summary>
     public class RabbitMqWorkServer : BackgroundService
     {
+        /// <summary>
+        /// The exchange name.
+        /// </summary>
         private const string ExchangeName = "publish-consumer-exchange";
+        /// <summary>
+        /// The exchange type.
+        /// </summary>
         private const string ExchangeType = "x-delayed-message";
+        /// <summary>
+        /// The deadletter exchange.
+        /// </summary>
         private const string DeadletterExchange = "dead-letter-exchange";
+        /// <summary>
+        /// The deadletter exchange type.
+        /// </summary>
         private const string DeadletterExchangeType = "x-dead-letter-exchange";
 
+        /// <summary>
+        /// The service provider.
+        /// </summary>
         private readonly IServiceProvider _serviceProvider;
+        /// <summary>
+        /// The system context.
+        /// </summary>
         private readonly ISystemContext _systemContext;
+        /// <summary>
+        /// Work manager.
+        /// </summary>
         private readonly IQueueableWorkManager _workManager;
+        /// <summary>
+        /// The rabbit mq options.
+        /// </summary>
         private readonly IOptions<RabbitMqOptions> _rabbitMqOptions;
+        /// <summary>
+        /// The scope manager.
+        /// </summary>
         private readonly IScopeManager _scopeManager;
+        /// <summary>
+        /// The logger.
+        /// </summary>
         private readonly ILogger<RabbitMqWorkServer> _logger;
+        /// <summary>
+        /// The date time provider.
+        /// </summary>
         private readonly IDateTimeProvider _dateTimeProvider;
+        /// <summary>
+        /// The toggle provider.
+        /// </summary>
         private readonly IToggleProvider _toggleProvider;
 
 
+        /// <summary>
+        /// The rabbit mq connection.
+        /// </summary>
         private readonly IConnection _rabbitMqConnection;
+        /// <summary>
+        /// The rabbit mq processors.
+        /// </summary>
         private readonly Dictionary<string, RabbitMqProcessModel> _rabbitMqProcessors = new();
+        /// <summary>
+        /// Work queue client.
+        /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
+        /// <summary>
+        /// The service id.
+        /// </summary>
         private readonly string _serviceId;
+        /// <summary>
+        /// Processing token.
+        /// </summary>
         private readonly CancellationTokenSource _processingToken = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RabbitMqWorkServer"/> class.
+        /// </summary>
+        /// <param name="workQueueClient">The work queue client.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="workManager">The work manager.</param>
+        /// <param name="rabbitMqClientFactory">The rabbit mq client factory.</param>
+        /// <param name="rabbitMqOptions">The rabbit mq options.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
+        /// <param name="toggleProvider">The toggle provider.</param>
         public RabbitMqWorkServer(
             IWorkQueueClient workQueueClient,
             IServiceProvider serviceProvider,
@@ -68,12 +132,17 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             _workQueueClient = workQueueClient;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            foreach (var processor in _rabbitMqProcessors.Values)
+            foreach (var model in _rabbitMqProcessors.Values.Select(processor => processor.RabbitMqModel))
             {
-                processor.RabbitMqModel.Close();
-                processor.RabbitMqModel.Dispose();
+                model.Close();
+                model.Dispose();
             }
 
             _rabbitMqConnection.Close();
@@ -81,6 +150,11 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             await base.StopAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
@@ -99,10 +173,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                     _logger.LogEvent("RabbitMqSettings not found");
                     return;
                 }
-                else
-                {
-                    _logger.LogEvent("RabbitMqSettings found");
-                }
+
+                _logger.LogEvent("RabbitMqSettings found");
 
                 CreateProcessors();
 
@@ -129,6 +201,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                     }
                     catch (OperationCanceledException)
                     {
+                        // Do nothing, should result in exiting the loop
                     }
                 }
 
@@ -156,6 +229,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             _logger.LogEvent("Consumer stopped", shutdownDimensions);
         }
 
+        /// <summary>
+        /// Basic IDisposable implementation.
+        /// </summary>
+        public override void Dispose()
+        {
+            _processingToken.Dispose();
+            base.Dispose();
+        }
+
         private async void HandleIncomingMessagesAsync(object? sender, BasicDeliverEventArgs args)
         {
             var json = Encoding.Default.GetString(args.Body.Span);
@@ -171,23 +253,20 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
                 switch (result.ResultType)
                 {
-                    case WorkResultType.Complete:
-                        eventingBasicConsumer!.Model.BasicAck(args.DeliveryTag, false);
-                        break;
-
+                    //When we abandon work, we need to complete the message on queue so it is removed from the queue
                     case WorkResultType.Abandoned:
-                        //When we abandon work, we need to complete the message on queue so it is removed from the queue
-                        eventingBasicConsumer!.Model.BasicAck(args.DeliveryTag, false);
-                        throw new WorkResultException(result.Reason);
+                    case WorkResultType.Complete:
+                        eventingBasicConsumer.Model.BasicAck(args.DeliveryTag, false);
+                        break;
 
                     case WorkResultType.DeadLetter:
                     case WorkResultType.Failed:
                         //Move the message to the Dead Letter Queue
-                        eventingBasicConsumer!.Model.BasicNack(args.DeliveryTag, false, false);
+                        eventingBasicConsumer.Model.BasicNack(args.DeliveryTag, false, false);
                         throw new WorkResultException(result.Reason);
 
                     case WorkResultType.Deferred:
-                        eventingBasicConsumer!.Model.BasicAck(args.DeliveryTag, false);
+                        eventingBasicConsumer.Model.BasicAck(args.DeliveryTag, false);
                         await DeferMessageAsync(workRequest, CancellationToken.None);
                         break;
                 }
@@ -244,19 +323,28 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
         private void CloseModels()
         {
-            foreach (var queueProcessor in _rabbitMqProcessors.Where(a => !a.Value.RabbitMqModel.IsClosed))
+            foreach (var processModel in _rabbitMqProcessors.Select(a => a.Value)
+                .Where(a => !a.RabbitMqModel.IsClosed))
             {
-                queueProcessor.Value.RabbitMqModel.Close();
+                processModel.RabbitMqModel.Close();
             }
         }
 
         private void TryCreateRabbitMqConsumer<TQueueableWork>()
-            where TQueueableWork : IQueueableWork
+            where TQueueableWork : class, IQueueableWork
         {
             var service = _serviceProvider.GetService<TQueueableWork>();
             if (service == null) return;
 
             var model = _rabbitMqConnection.CreateModel();
+
+            // Set prefetch count if required
+            var dop = _rabbitMqOptions.Value.MaxDegreeOfParallelism;
+            if (dop != null)
+            {
+                model.BasicQos(0, dop.Value, false);
+            }
+
             var processor = new RabbitMqProcessModel
             {
                 RabbitMqModel = model,
@@ -278,7 +366,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                 { DeadletterExchangeType, DeadletterExchange}
             };
 
-            var exchangeArgumets = new Dictionary<string, object>
+            var exchangeArguments = new Dictionary<string, object>
             {
                 { "x-delayed-type", "direct" }
             };
@@ -286,7 +374,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             var queueName = QueueNameHelper.GetQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
             var dlQueueName = QueueNameHelper.GetDLQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
 
-            model.ExchangeDeclare(ExchangeName, ExchangeType, durable: true, arguments: exchangeArgumets);
+            model.ExchangeDeclare(ExchangeName, ExchangeType, durable: true, arguments: exchangeArguments);
             model.QueueDeclare(queueName, true, false, false, dlExchangeArguments);
             model.QueueBind(queueName, ExchangeName, dlQueueName);
             var consumer = new EventingBasicConsumer(model);

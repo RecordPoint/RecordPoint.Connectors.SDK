@@ -11,6 +11,12 @@
         public string ConnectorApiUrl { get; set; } = string.Empty;
 
         /// <summary>
+        /// Set to false to skip validation of the server SSL certificate at the
+        /// Records365 vNext Connector API endpoint, true otherwise.
+        /// </summary>
+        public bool ServerCertificateValidation { get; set; } = true;
+
+        /// <summary>
         /// Client Id
         /// </summary>
         public string ClientId { get; set; } = string.Empty;

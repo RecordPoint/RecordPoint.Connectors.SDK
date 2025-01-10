@@ -3,7 +3,7 @@
 Aggregation Submission is one of a few responsibilities that are simple to implement as there is no associated action.
 The operation is entirely managed by the SDK so only requires dependency injection configuration to setup the operation.
 
-The Aggregation Submission Operation is invoked by the SDK when Aggregations have been identified for submission.
+The Aggregation Submission Operation is invoked by the SDK when Aggregations have been identified for submission (by the Content Registration or Content Synchronisation operations).
 
 ### Dependency Injection
 

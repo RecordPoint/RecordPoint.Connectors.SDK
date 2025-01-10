@@ -21,7 +21,7 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             hostBuilder.ConfigureServices((hostContext, services) =>
             {
                 var appInsightsOptions = hostContext.Configuration.GetSection(ApplicationInsightOptions.OPTION_NAME);
-                
+
                 services
                     .Configure<ApplicationInsightOptions>(appInsightsOptions)
                     .AddSingleton<IScopeManager, ScopeManager>()

@@ -3,6 +3,9 @@ using RecordPoint.Connectors.SDK.Client.Models;
 
 namespace RecordPoint.Connectors.SDK.Notifications
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface INotificationPullManager
     {
         /// <summary>

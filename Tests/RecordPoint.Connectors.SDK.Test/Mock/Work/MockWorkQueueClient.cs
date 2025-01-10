@@ -60,7 +60,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
         /// </summary>
         public IEnumerable<WorkRequest> SubmittedRequests => SubmittedRequestStates.Select(ws => ws.WorkRequest);
 
-       /// <summary>
+        /// <summary>
         /// Complete requests
         /// </summary>
         public BlockingCollection<WorkRequestState> CompleteRequestStates { get; private set; }
@@ -110,7 +110,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
         {
             // We can't execute yet so just add to back of the queue
             var currentTime = _dateTimeProvider.UtcNow;
-            if (input.EarliestTime  > currentTime)
+            if (input.EarliestTime > currentTime)
             {
                 _queuedRequests.Add(input);
                 return;

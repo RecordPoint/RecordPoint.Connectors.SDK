@@ -3,7 +3,7 @@
 Record Submission is one of a few responsibilities that are simple to implement as there is no associated action.
 The operation is entirely managed by the SDK so only requires dependency injection configuration to setup the operation.
 
-The Record Submission Operation is invoked by the SDK when Records have been identified for submission.
+The Record Submission Operation is invoked by the SDK when Records have been identified for submission (by the Content Registration or Content Synchronisation operations).
 
 ### Dependency Injection
 

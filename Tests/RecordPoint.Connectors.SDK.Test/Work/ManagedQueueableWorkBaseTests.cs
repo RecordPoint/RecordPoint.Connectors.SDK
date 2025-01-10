@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Context;
-using RecordPoint.Connectors.SDK.Work;
 using RecordPoint.Connectors.SDK.Observability;
-using RecordPoint.Connectors.SDK.Test.Mock.Work;
-using Xunit;
 using RecordPoint.Connectors.SDK.Providers;
+using RecordPoint.Connectors.SDK.Test.Mock.Work;
+using RecordPoint.Connectors.SDK.Work;
+using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.Work
 {
@@ -18,7 +18,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             return base.CreateSutBuilder()
                 .UseWorkManager()
                 .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
-                .ConfigureServices(svcs => 
+                .ConfigureServices(svcs =>
                     svcs.AddMockWorkQueue()
                         .AddAddQueueableWorkOperation<NullManagedQueueableWork>(nameof(NullManagedQueueableWork))
                 );
@@ -33,11 +33,11 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
         public NullManagedQueueableWork(
             IServiceProvider serviceProvider,
-            IManagedWorkFactory workFactory, 
-            ISystemContext systemContext, 
-            IScopeManager scopeManager, 
-            ILogger<NullManagedQueueableWork> logger, 
-            ITelemetryTracker telemetryTracker, 
+            IManagedWorkFactory workFactory,
+            ISystemContext systemContext,
+            IScopeManager scopeManager,
+            ILogger<NullManagedQueueableWork> logger,
+            ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
             : base(serviceProvider, workFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
         { }

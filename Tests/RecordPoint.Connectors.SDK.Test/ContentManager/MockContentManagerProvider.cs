@@ -5,9 +5,10 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
     public class MockContentManagerProvider : IContentManagerActionProvider
     {
         public MockContentManagerProvider(
+            Func<IContentManagerCallbackAction> contentManagerCallbackActionFactory,
             Func<IChannelDiscoveryAction> channelDiscoveryFactory,
-            Func<IContentSynchronisationAction> contentSynchronisationFactory, 
-            Func<IContentRegistrationAction> contentRegistrationFactory,  
+            Func<IContentSynchronisationAction> contentSynchronisationFactory,
+            Func<IContentRegistrationAction> contentRegistrationFactory,
             Func<IBinaryRetrievalAction> binaryRetrievalFactory,
             Func<IAggregationSubmissionCallbackAction> aggregationSubmissionCallbackFactory,
             Func<IAuditEventSubmissionCallbackAction> auditEventSubmissionCallbackFactory,
@@ -16,6 +17,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             Func<IRecordDisposalAction> recordDisposalFactory
             )
         {
+            ContentManagerCallbackActionFactory = contentManagerCallbackActionFactory;
             ContentSynchronisationActionFactory = contentSynchronisationFactory;
             ContentRegistrationActionFactory = contentRegistrationFactory;
             BinaryRetrievalActionFactory = binaryRetrievalFactory;
@@ -26,6 +28,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             ChannelDiscoveryActionFactory = channelDiscoveryFactory;
             RecordDisposalActionFactory = recordDisposalFactory;
         }
+
+        public Func<IContentManagerCallbackAction> ContentManagerCallbackActionFactory { get; set; }
 
         public Func<IContentSynchronisationAction> ContentSynchronisationActionFactory { get; set; }
 
@@ -46,6 +50,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         public Func<IRecordDisposalAction> RecordDisposalActionFactory { get; set; }
 
 
+        public IContentManagerCallbackAction CreateContentManagerCallbackAction() => ContentManagerCallbackActionFactory();
 
         public IChannelDiscoveryAction CreateChannelDiscoveryAction() => ChannelDiscoveryActionFactory();
 
@@ -66,6 +71,15 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         public IRecordDisposalAction CreateRecordDisposalAction() => RecordDisposalActionFactory();
 
         public IGenerateReportAction CreateGenerationReportAction()
+        {
+            throw new NotImplementedException();
+        }
+        public IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>() where TOutput : ActionResultBase
+        {
+            throw new NotImplementedException();
+        }
+
+        public IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>() where TOutput : ActionResultBase
         {
             throw new NotImplementedException();
         }

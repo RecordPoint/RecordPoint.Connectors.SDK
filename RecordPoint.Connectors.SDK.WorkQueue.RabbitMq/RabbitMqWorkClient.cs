@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RecordPoint.Connectors.SDK.Providers;
@@ -21,6 +22,12 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly object _rabbitMqClientLock = new();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rabbitMqClientFactory"></param>
+        /// <param name="rabbitMqOptions"></param>
+        /// <param name="dateTimeProvider"></param>
         public RabbitMqWorkClient(
             IRabbitMqClientFactory rabbitMqClientFactory,
             IOptions<RabbitMqOptions> rabbitMqOptions,
@@ -45,10 +52,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             var sender = GetRabbitMqSender(workRequest.WorkType);
 
             IBasicProperties props = sender.CreateBasicProperties();
+            props.Persistent = true;
 
             if (workRequest.WaitTill.HasValue)
             {
                 var delayMilliSeconds = workRequest.WaitTill.Value.Subtract(_dateTimeProvider.UtcNow).TotalMilliseconds;
+                if (props.Headers == null || props.Headers.Count == 0)
+                {
+                    props.Headers = new Dictionary<string, object>();
+                }
                 props.Headers.Add(ExchangeDelayHeader, delayMilliSeconds);
             }
 
@@ -68,6 +80,10 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             return _rabbitMqSenders[queueName];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ValueTask DisposeAsync()
         {
             foreach (var sender in _rabbitMqSenders.Values)

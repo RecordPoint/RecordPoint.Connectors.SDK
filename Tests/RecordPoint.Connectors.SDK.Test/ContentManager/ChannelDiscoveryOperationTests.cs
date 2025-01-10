@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Caching.Semaphore;
+using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.ContentManager;
-using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Test.Common;
 using RecordPoint.Connectors.SDK.Work;
 using Xunit;
-using RecordPoint.Connectors.SDK.Caching.Semaphore;
-using RecordPoint.Connectors.SDK.Test.Common;
-using Microsoft.Extensions.Configuration;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
 {

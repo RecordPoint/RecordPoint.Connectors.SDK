@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Databases.LocalDb
 {
+    /// <summary>
+    /// The local db connector database options.
+    /// </summary>
     public class LocalDbConnectorDatabaseOptions
     {
 

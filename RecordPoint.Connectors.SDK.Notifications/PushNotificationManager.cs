@@ -9,6 +9,13 @@ namespace RecordPoint.Connectors.SDK.Notifications
     /// </summary>
     public class PushNotificationManager : NotificationManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="notificationStrategies"></param>
+        /// <param name="scopeManager"></param>
+        /// <param name="telemetryTracker"></param>
         public PushNotificationManager(
             ILogger<PullNotificationManager> logger,
             IEnumerable<INotificationStrategy> notificationStrategies,
@@ -18,6 +25,12 @@ namespace RecordPoint.Connectors.SDK.Notifications
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="notification"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override async Task HandleNotificationAsync(ConnectorNotificationModel notification, CancellationToken cancellationToken)
         {
             var notificationType = notification.NotificationType;

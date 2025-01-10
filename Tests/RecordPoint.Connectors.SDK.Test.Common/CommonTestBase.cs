@@ -26,20 +26,24 @@ namespace RecordPoint.Connectors.SDK.Test
         /// <summary>
         /// System under test
         /// </summary>
-        protected TSut SUT { get; private set; }
+        protected TSut? SUT { get; private set; }
 
         /// <summary>
         /// SUT Services available to use in tests
         /// </summary>
-        protected IServiceProvider Services => SUT.Services;
+        protected IServiceProvider? Services => SUT?.Services;
 
         /// <summary>
         /// Start the SUT for this test
         /// </summary>
         /// <returns>Task</returns>
-        protected Task StartSutAsync(IConfiguration configuration = null)
+        protected async Task StartSutAsync(IConfiguration? configuration = null)
         {
-            return SUT.StartSUTAsync(configuration);
+            if (SUT == null)
+            {
+                throw new InvalidOperationException("Cannot start a null SUT");
+            }
+            await SUT.StartSUTAsync(configuration);
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace RecordPoint.Connectors.SDK.Test
         protected async Task StopSUTAsync()
         {
             if (SUT == null)
-                return ;
+                return;
             await SUT.StopSUTAsync();
             SUT = null;
         }
@@ -68,6 +72,10 @@ namespace RecordPoint.Connectors.SDK.Test
         {
             var assembly = assemblyType.Assembly;
             using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                throw new InvalidOperationException($"Could not find resource {resourceName}");
+            }
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
         }

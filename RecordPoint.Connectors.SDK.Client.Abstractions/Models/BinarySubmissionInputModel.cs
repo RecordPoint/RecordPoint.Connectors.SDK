@@ -39,7 +39,7 @@
         /// Gets or sets the ID of the connector submitting the binary
         /// </summary>
         [JsonProperty(PropertyName = "connectorId")]
-        public string ConnectorId { get; set; } 
+        public string ConnectorId { get; set; }
 
         /// <summary>
         /// Gets or sets the ExternalID of the item that the binary belongs to
@@ -57,14 +57,14 @@
         /// Gets or sets an optional file name to associate with the binary
         /// </summary>
         [JsonProperty(PropertyName = "fileName")]
-        public string FileName { get; set; } 
+        public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets an optional ID used to track the binary version as it
         /// moves through the pipeline
         /// </summary>
         [JsonProperty(PropertyName = "correlationId")]
-        public string CorrelationId { get; set; } 
+        public string CorrelationId { get; set; }
 
         /// <summary>
         /// Validate the object.

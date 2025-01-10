@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyInjection;
 using RecordPoint.Connectors.SDK.Test.Work;
 
 namespace RecordPoint.Connectors.SDK.Test.Mock.Work

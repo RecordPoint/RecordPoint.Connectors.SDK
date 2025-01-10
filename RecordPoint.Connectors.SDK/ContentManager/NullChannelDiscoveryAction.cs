@@ -7,17 +7,30 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Implementation of a Channel Discovery Action used when a content source doesn't support Channels
+    /// The null channel discovery action.
     /// </summary>
     public class NullChannelDiscoveryAction : IChannelDiscoveryAction
     {
+        /// <summary>
+        /// The channel manager.
+        /// </summary>
         private readonly IChannelManager _channelManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NullChannelDiscoveryAction"/> class.
+        /// </summary>
+        /// <param name="channelManager">The channel manager.</param>
         public NullChannelDiscoveryAction(IChannelManager channelManager)
         {
             _channelManager = channelManager;
         }
 
+        /// <summary>
+        /// Execute and return a task of type channeldiscoveryresult asynchronously.
+        /// </summary>
+        /// <param name="connectorConfiguration">The connector configuration.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<ChannelDiscoveryResult>]]></returns>
         public async Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken)
         {
             var result = new ChannelDiscoveryResult()

@@ -4,8 +4,15 @@
 
 namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
 {
+    /// <summary>
+    /// The initial create.
+    /// </summary>
     public partial class InitialCreate : Migration
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -36,7 +43,7 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Aggregations", x => new { x.ConnectorId, x.ExternalId });
-               });
+                });
 
             migrationBuilder.CreateTable(
                 name: "Connectors",
@@ -76,6 +83,10 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

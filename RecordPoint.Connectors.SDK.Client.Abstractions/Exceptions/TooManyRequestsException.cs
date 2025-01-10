@@ -8,6 +8,9 @@ namespace RecordPoint.Connectors.SDK.Exceptions
     [Serializable]
     public class TooManyRequestsException : Exception
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTime WaitUntilTime { get; set; }
 
         /// <summary>
@@ -30,6 +33,11 @@ namespace RecordPoint.Connectors.SDK.Exceptions
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

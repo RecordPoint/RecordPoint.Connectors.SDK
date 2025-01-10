@@ -32,7 +32,7 @@ namespace RecordPoint.Connectors.SDK.Notifications.Test
         {
             _mockNotificationManager = new Mock<INotificationManager>();
             _mockR365Client = new Mock<IR365NotificationClient>();
-            _options = Options.Create(new NotificationsPollerOptions(){ PollIntervalSeconds = 1 });
+            _options = Options.Create(new NotificationsPollerOptions() { PollIntervalSeconds = 1 });
 
             var builder = base.CreateSutBuilder();
             builder.ConfigureServices(svcs => svcs
@@ -46,7 +46,7 @@ namespace RecordPoint.Connectors.SDK.Notifications.Test
 
     }
 
-    public class PollNotificationWorkItemTest: CommonTestBase<NotificationPollServiceSut>
+    public class PollNotificationWorkItemTest : CommonTestBase<NotificationPollServiceSut>
     {
 
         [Fact]
@@ -91,11 +91,11 @@ namespace RecordPoint.Connectors.SDK.Notifications.Test
                 });
 
             SUT.R365Client?.Setup(x => x.IsConfigured()).Returns(true);
-            SUT.R365Client?.Setup(x=> x.GetAllPendingNotifications(It.IsAny<CancellationToken>())).ReturnsAsync(listOfNotifications);
+            SUT.R365Client?.Setup(x => x.GetAllPendingNotifications( It.IsAny<CancellationToken>())).ReturnsAsync(listOfNotifications);
 
             _ = pollService.StartAsync(CancellationToken.None);
 
-            await Task.Delay(SUT.GetPollInternal()).ConfigureAwait(false);
+            await Task.Delay(SUT.GetPollInternal());
             await pollService.StopAsync(CancellationToken.None);
 
             notificationManager?.Verify(x => x.HandleNotificationAsync(It.IsAny<ConnectorNotificationModel>(), It.IsAny<CancellationToken>()), Times.Exactly(3));

@@ -6,7 +6,7 @@
     public class ApiClientFactorySettings
     {
         /// <summary>
-        /// The base URL of the Records36 vNext Connector API to call.
+        /// The base URL of the Records365 vNext Connector API to call.
         /// </summary>
         public string ConnectorApiUrl { get; set; } = string.Empty;
 

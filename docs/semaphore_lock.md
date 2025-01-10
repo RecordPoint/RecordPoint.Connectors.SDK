@@ -26,7 +26,7 @@ The scope is a unique key that is set by the locking process and is able to be r
 
 To use Scoped Semaphore Locks, the `ISemaphoreLockScopedKeyAction` needs to be implemented and registered via Dependency Injection.
 
-The action receives the Connector Configuration and the running operations "Work Type" as context that can be used to establish the locking key.
+The action receives the Connector Configuration, the running operations "Work Type" and a nullable "context" (ie: ChannelExternalId) as context that can be used to establish the locking key.
 
 ---
 
@@ -78,9 +78,10 @@ public interface ISemaphoreLockScopedKeyAction
     /// </summary>
     /// <param name="connectorConfigModel"></param>
     /// <param name="workType"></param>
+    /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<string> ExecuteAsync(ConnectorConfigModel connectorConfigModel, string workType, CancellationToken cancellationToken);
+    Task<string> ExecuteAsync(ConnectorConfigModel connectorConfigModel, string workType, object? context, CancellationToken cancellationToken);
 }
 ```
 
@@ -89,7 +90,8 @@ public interface ISemaphoreLockScopedKeyAction
 ### Action Execution
 The Semaphore Lock Scoped Key Action contains an `ExecuteAsync(...)` method as the invocation point for the action.
 
-The implementation should utilise data within the provided Connector Configuration and optionally the "Work Type" to produce a locking key.
+The implementation should utilise data within the provided Connector Configuration and optionally the "Work Type" and "Context" to produce a locking key.
+Context can be used to pass additional information such as channel, binary or record, for a more complete picture.
 
 The logic should be simple and not call external resources in order to reduce the cost & latency of producing a locking key.
 

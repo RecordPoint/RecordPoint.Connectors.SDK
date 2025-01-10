@@ -48,6 +48,10 @@ namespace RecordPoint.Connectors.SDK.Filters
                     {
                         return !IsStartsWith(model, filter.FieldValue);
                     }
+                case FilterConstants.StringFieldOperators.EqualsToAnyOf:
+                    {
+                        return IsEqualsToAnyOf(model, filter.FieldValue);
+                    }
                 default:
                     {
                         throw new NotImplementedException($"Filter for FieldName [{filter.FieldName}] has invalid OperatorProperty [{filter.OperatorProperty}]");
@@ -95,6 +99,18 @@ namespace RecordPoint.Connectors.SDK.Filters
             {
                 return model.Value.StartsWith(expectedValue, StringComparison.InvariantCultureIgnoreCase);
             }
+            return false;
+        }
+
+        private static bool IsEqualsToAnyOf(SubmissionMetaDataModel model, string expectedValue)
+        {
+            if (!string.IsNullOrEmpty(model?.Value))
+            {
+                return expectedValue.Split(',')
+                    .Select(s => s.Trim().ToLower())
+                    .Contains(model.Value.ToLower());
+            }
+
             return false;
         }
     }

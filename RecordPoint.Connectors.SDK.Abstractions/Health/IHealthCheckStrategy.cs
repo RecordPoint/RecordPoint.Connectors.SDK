@@ -14,7 +14,6 @@
         /// Perform a health check
         /// </summary>
         /// <returns>Health check</returns>
-        /// </remarks>
-        Task<List<HealthCheckItem>> HealthCheckAsync(CancellationToken stoppingToken);
+        Task<HealthCheckResult> HealthCheckAsync(CancellationToken stoppingToken);
     }
 }

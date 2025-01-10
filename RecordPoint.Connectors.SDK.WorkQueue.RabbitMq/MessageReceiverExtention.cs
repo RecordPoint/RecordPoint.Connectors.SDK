@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RecordPoint.Connectors.SDK.Work;
 using RecordPoint.Connectors.SDK.Work.Models;
-using System.Text;
 
-namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Extensions
+namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 {
     /// <summary>
-    /// ServiceBus Received Message Extentions
+    /// ServiceBus Received Message Extensions
     /// </summary>
-    public static class RabbitMqReceivedMessageExtentions
+    public static class RabbitMqReceivedMessageExtensions
     {
         /// <summary>
         /// DeadLetterReasonKey key used for deadletter reason
@@ -17,17 +17,16 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Extensions
         public const string DeadLetterReasonKey = "x-first-death-reason";
 
         /// <summary>
-        /// Deadletter Extentions Model 
+        /// Deadletter extensions model
         /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
         public static DeadLetterModel ToDeadLetterModel(this BasicGetResult source)
         {
             var messageBody = Encoding.UTF8.GetString(source.Body.ToArray());
             var workRequest = JsonConvert.DeserializeObject<WorkRequest>(messageBody);
 
             string deadLetterReason = string.Empty;
-            if (source.BasicProperties.Headers.ContainsKey(DeadLetterReasonKey))
+            if (source.BasicProperties.Headers != null &&
+                source.BasicProperties.Headers.ContainsKey(DeadLetterReasonKey))
             {
                 deadLetterReason = Encoding.UTF8.GetString((byte[])source.BasicProperties.Headers[DeadLetterReasonKey]);
             }

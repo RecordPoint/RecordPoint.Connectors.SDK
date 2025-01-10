@@ -927,7 +927,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// 'validation', 'partialSuccess'</param>
         /// <param name="severity">Possible values include: 'critical',
         /// 'error', 'warning', 'informational'</param>
-        public ErrorModel(string type = default(string), string message = default(string), string messageCode = default(string), string severity = default(string), System.DateTime? dateTime = default(System.DateTime?), string target = default(string), IList<ErrorModel> innerError = default(IList<ErrorModel>))
+        /// <param name="aggregateErrors">This property contains the indexed
+        /// errors for bulk operations.
+        /// The list of ErrorModel correspond to the list of input values
+        /// and the index refers to the index in that input list.</param>
+        public ErrorModel(string type = default(string), string message = default(string), string messageCode = default(string), string severity = default(string), System.DateTime? dateTime = default(System.DateTime?), string target = default(string), IList<ErrorModel> innerError = default(IList<ErrorModel>), IDictionary<string, IList<ErrorModel>> aggregateErrors = default(IDictionary<string, IList<ErrorModel>>))
         {
             Type = type;
             Message = message;
@@ -936,6 +940,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             DateTime = dateTime;
             Target = target;
             InnerError = innerError;
+            AggregateErrors = aggregateErrors;
             CustomInit();
         }
 
@@ -982,6 +987,15 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "innerError")]
         public IList<ErrorModel> InnerError { get; set; }
+
+        /// <summary>
+        /// Gets or sets this property contains the indexed errors for bulk
+        /// operations.
+        /// The list of ErrorModel correspond to the list of input values
+        /// and the index refers to the index in that input list.
+        /// </summary>
+        [JsonProperty(PropertyName = "aggregateErrors")]
+        public IDictionary<string, IList<ErrorModel>> AggregateErrors { get; set; }
 
     }
 }
@@ -1268,11 +1282,16 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// ISO-8601 Round-trip format</param>
         /// <param name="fileName">An optional file name to associate with the
         /// binary</param>
+        /// <param name="location">An optional pointer to a binaries location.
+        /// Examples: an operating system path and filename, the location cited
+        /// within a file plan, or the location of a magnetic tape rack</param>
         /// <param name="correlationId">An optional ID used to track the binary
         /// version as it moves through the pipeline</param>
         /// <param name="isOldVersion">(Optional) Indicates whether the binary
         /// is the latest or an older version</param>
-        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?))
+        /// <param name="skipEnrichment">(Optional) Indicates whether the
+        /// binary will skip the enrichment pipeline</param>
+        public DirectBinarySubmissionInputModel(string connectorId, string itemExternalId, string binaryExternalId, string mimeType = default(string), long? fileSize = default(long?), string fileHash = default(string), System.DateTime? sourceLastModifiedDate = default(System.DateTime?), string fileName = default(string), string location = default(string), string correlationId = default(string), bool? isOldVersion = default(bool?), bool? skipEnrichment = default(bool?))
         {
             MimeType = mimeType;
             FileSize = fileSize;
@@ -1282,8 +1301,10 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             ItemExternalId = itemExternalId;
             BinaryExternalId = binaryExternalId;
             FileName = fileName;
+            Location = location;
             CorrelationId = correlationId;
             IsOldVersion = isOldVersion;
+            SkipEnrichment = skipEnrichment;
             CustomInit();
         }
 
@@ -1342,6 +1363,14 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public string FileName { get; set; }
 
         /// <summary>
+        /// Gets or sets an optional pointer to a binaries location.
+        /// Examples: an operating system path and filename, the location cited
+        /// within a file plan, or the location of a magnetic tape rack
+        /// </summary>
+        [JsonProperty(PropertyName = "location")]
+        public string Location { get; set; }
+
+        /// <summary>
         /// Gets or sets an optional ID used to track the binary version as it
         /// moves through the pipeline
         /// </summary>
@@ -1354,6 +1383,13 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "isOldVersion")]
         public bool? IsOldVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets (Optional) Indicates whether the binary will skip the
+        /// enrichment pipeline
+        /// </summary>
+        [JsonProperty(PropertyName = "skipEnrichment")]
+        public bool? SkipEnrichment { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -1819,6 +1855,8 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// object</param>
         /// <param name="connectorTypeId">ID of the ConnectorType for this
         /// instance</param>
+        /// <param name="connectorTypeConfigurationId">ID of the
+        /// ConnectorTypeConfiguration for this instance</param>
         /// <param name="statusCode">String containing general reason for last
         /// connector error state</param>
         /// <param name="createdDate">Date and time that this connector
@@ -1850,11 +1888,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// enabled for this connector</param>
         /// <param name="filters">Filters records based on Excluded and
         /// Included properties</param>
-        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?), FiltersModel filters = default(FiltersModel))
+        public ConnectorConfigModel(string status, string displayName, bool hasSubmittedData, string id = default(string), string transactionId = default(string), string connectorTypeId = default(string), string connectorTypeConfigurationId = default(string), string statusCode = default(string), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string tenantId = default(string), string tenantDomainName = default(string), string originatingOrganization = default(string), string enabledHistory = default(string), IList<MetaDataModel> properties = default(IList<MetaDataModel>), string clientId = default(string), bool? protectionEnabled = default(bool?), FiltersModel filters = default(FiltersModel))
         {
             Id = id;
             TransactionId = transactionId;
             ConnectorTypeId = connectorTypeId;
+            ConnectorTypeConfigurationId = connectorTypeConfigurationId;
             Status = status;
             StatusCode = statusCode;
             CreatedDate = createdDate;
@@ -1896,6 +1935,12 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "connectorTypeId")]
         public string ConnectorTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets ID of the ConnectorTypeConfiguration for this instance
+        /// </summary>
+        [JsonProperty(PropertyName = "connectorTypeConfigurationId")]
+        public string ConnectorTypeConfigurationId { get; set; }
 
         /// <summary>
         /// Gets or sets "Enabled" if the connector is enabled, "Disabled" if
@@ -2982,9 +3027,11 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         /// relates to. Null if
         /// the notification relates to a connector</param>
         /// <param name="connectorConfig">Gets or sets the connector
-        /// configuraiton which this notification
+        /// configuration which this notification
         /// relates to. Null if the notification relates to an item</param>
-        public ConnectorNotificationModel(string id = default(string), string notificationType = default(string), System.DateTime? timestamp = default(System.DateTime?), string tenantId = default(string), string connectorId = default(string), ItemSubmissionOutputModel item = default(ItemSubmissionOutputModel), ConnectorConfigModel connectorConfig = default(ConnectorConfigModel))
+        /// <param name="context">An object that can hold contextual data for
+        /// any notification type</param>
+        public ConnectorNotificationModel(string id = default(string), string notificationType = default(string), System.DateTime? timestamp = default(System.DateTime?), string tenantId = default(string), string connectorId = default(string), ItemSubmissionOutputModel item = default(ItemSubmissionOutputModel), ConnectorConfigModel connectorConfig = default(ConnectorConfigModel), object context = default(object))
         {
             Id = id;
             NotificationType = notificationType;
@@ -2993,6 +3040,7 @@ namespace RecordPoint.Connectors.SDK.Client.Models
             ConnectorId = connectorId;
             Item = item;
             ConnectorConfig = connectorConfig;
+            Context = context;
             CustomInit();
         }
 
@@ -3046,11 +3094,18 @@ namespace RecordPoint.Connectors.SDK.Client.Models
         public ItemSubmissionOutputModel Item { get; set; }
 
         /// <summary>
-        /// Gets or sets the connector configuraiton which this notification
+        /// Gets or sets the connector configuration which this notification
         /// relates to. Null if the notification relates to an item
         /// </summary>
         [JsonProperty(PropertyName = "connectorConfig")]
         public ConnectorConfigModel ConnectorConfig { get; set; }
+
+        /// <summary>
+        /// Gets or sets an object that can hold contextual data for any
+        /// notification type
+        /// </summary>
+        [JsonProperty(PropertyName = "context")]
+        public object Context { get; set; }
 
         /// <summary>
         /// Validate the object.

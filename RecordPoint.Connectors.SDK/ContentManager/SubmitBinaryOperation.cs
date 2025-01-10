@@ -16,19 +16,53 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Binary submission Operation
+    /// The submit binary operation.
     /// </summary>
     public class SubmitBinaryOperation : QueueableWorkBase<BinaryMetaInfo>
     {
+        /// <summary>
+        /// WORK TYPE.
+        /// </summary>
         public const string WORK_TYPE = "Binary Submission";
+        /// <summary>
+        /// The DEFAULT DEFERRAL SECONDS.
+        /// </summary>
         public const int DEFAULT_DEFERRAL_SECONDS = 10;
+        /// <summary>
+        /// The BINARY SUBMISSION DELAY SECONDS.
+        /// </summary>
         public const int BINARY_SUBMISSION_DELAY_SECONDS = 10;
 
+        /// <summary>
+        /// The content manager action provider.
+        /// </summary>
         private readonly IContentManagerActionProvider _contentManagerActionProvider;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
+        /// <summary>
+        /// The r365 client.
+        /// </summary>
         private readonly IR365Client _r365Client;
+        /// <summary>
+        /// Work queue client.
+        /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubmitBinaryOperation"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
+        /// <param name="r365Client">The r365 client.</param>
+        /// <param name="connectorManager">The connector manager.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="workQueueClient">The work queue client.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         public SubmitBinaryOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -48,17 +82,47 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _connectorManager = connectorManager;
         }
 
+        /// <summary>
+        /// Gets the service name.
+        /// </summary>
         public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WORK_TYPE;
 
+        /// <summary>
+        /// Gets the binary meta info.
+        /// </summary>
         public BinaryMetaInfo BinaryMetaInfo => Parameter;
 
+        /// <summary>
+        /// Gets the connector config id.
+        /// </summary>
         public string ConnectorConfigId => WorkRequest.ConnectorConfigId;
 
+        /// <summary>
+        /// The connector configuration.
+        /// </summary>
         private ConnectorConfigModel _connectorConfiguration;
+        /// <summary>
+        /// The binary retrieval result.
+        /// </summary>
         private BinaryRetrievalResult _binaryRetrievalResult;
+        /// <summary>
+        /// How long it took to for the operation to execute
+        /// </summary>
+        private TimeSpan? _actionExecutionTimespan;
+        /// <summary>
+        /// How long it took to submit the work to the queue
+        /// </summary>
+        private TimeSpan? _submitTimespan;
 
+        /// <summary>
+        /// Get custom key dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomKeyDimensions()
         {
             var dimensions = new Dimensions
@@ -74,9 +138,45 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             {
                 dimensions.Add(StandardDimensions.EXCEPTION, _binaryRetrievalResult.Exception.ToString());
             }
+            if (_binaryRetrievalResult?.Dimensions != null)
+            {
+                foreach (var dimension in _binaryRetrievalResult.Dimensions)
+                {
+                    dimensions[dimension.Key] = dimension.Value;
+                }
+            }
             return dimensions;
         }
 
+        /// <summary>
+        /// Get custom result measures.
+        /// </summary>
+        /// <returns>A Measures</returns>
+        protected override Measures GetCustomResultMeasures()
+        {
+            var measures = base.GetCustomResultMeasures();
+            if (_actionExecutionTimespan.HasValue)
+                measures[StandardMeasures.ACTION_EXECUTION_SECONDS] = _actionExecutionTimespan.Value.Milliseconds / 1000D;
+            if (_submitTimespan.HasValue)
+                measures[StandardMeasures.SUBMIT_SECONDS] = _submitTimespan.Value.Milliseconds / 1000D;
+
+            if (_binaryRetrievalResult?.Measures != null)
+            {
+                foreach (var measure in _binaryRetrievalResult.Measures)
+                {
+                    measures[measure.Key] = measure.Value;
+                }
+            }
+
+            return measures;
+        }
+
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             _connectorConfiguration = await _connectorManager.GetConnectorAsync(ConnectorConfigId, cancellationToken);
@@ -94,17 +194,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 return;
             }
 
-            if (await CheckSemaphoreLockAsync(_connectorConfiguration, cancellationToken))
+            if (await CheckSemaphoreLockAsync(_connectorConfiguration, BinaryMetaInfo, cancellationToken))
             {
                 return;
             }
+
+            //Invoke retrieval action to obtain binary stream
+            var startTime = DateTimeProvider.UtcNow;
 
             var binaryRetrievalAction = CreateBinaryRetrievalAction();
             _binaryRetrievalResult = await binaryRetrievalAction
                 .ExecuteAsync(_connectorConfiguration, BinaryMetaInfo, cancellationToken)
                 .ConfigureAwait(false);
 
-            using var binaryStream = _binaryRetrievalResult.Stream;
+            _actionExecutionTimespan = DateTimeProvider.UtcNow - startTime;
+
 
             SubmitResult submitResult = null;
 
@@ -114,9 +218,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     await InvokeSubmissionCallbackAsync(SubmissionActionType.PreSubmit, cancellationToken)
                         .ConfigureAwait(false);
 
+                    var submissionStartTime = DateTimeProvider.UtcNow;
                     submitResult = await _r365Client
-                        .SubmitBinary(_connectorConfiguration, BinaryMetaInfo, binaryStream, cancellationToken)
+                        .SubmitBinary(_connectorConfiguration, BinaryMetaInfo, _binaryRetrievalResult.Stream, cancellationToken)
                         .ConfigureAwait(false);
+                    _submitTimespan = DateTimeProvider.UtcNow - submissionStartTime;
                     break;
 
                 case BinaryRetrievalResultType.ZeroBinary:
@@ -137,7 +243,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     throw new InvalidOperationException(_binaryRetrievalResult.Reason, _binaryRetrievalResult.Exception);
 
                 case BinaryRetrievalResultType.BackOff:
-                    await HandleBackOffResultAsync(_connectorConfiguration, _binaryRetrievalResult.SemaphoreLockType, _binaryRetrievalResult.NextDelay, cancellationToken);
+                    await HandleBackOffResultAsync(_connectorConfiguration, BinaryMetaInfo, _binaryRetrievalResult.SemaphoreLockType, _binaryRetrievalResult.NextDelay, cancellationToken);
                     break;
 
                 default:
@@ -172,13 +278,30 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             await RecordOutcomeAsync(submitResult, cancellationToken);
         }
 
+        /// <summary>
+        /// Dispose binary stream
+        /// </summary>
+        protected override void InnerDispose()
+        {
+            _binaryRetrievalResult?.Stream?.Dispose();
+        }
+
+        /// <summary>
+        /// Creates binary retrieval action.
+        /// </summary>
+        /// <returns>An IBinaryRetrievalAction</returns>
         private IBinaryRetrievalAction CreateBinaryRetrievalAction() => _contentManagerActionProvider.CreateBinaryRetrievalAction();
+        /// <summary>
+        /// Creates binary submission callback action.
+        /// </summary>
+        /// <returns>An IBinarySubmissionCallbackAction</returns>
         private IBinarySubmissionCallbackAction CreateBinarySubmissionCallbackAction() => _contentManagerActionProvider.CreateBinarySubmissionCallbackAction();
 
         /// <summary>
         /// Record the work outcome
         /// </summary>
         /// <param name="submitResult">Submission result</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         private Task RecordOutcomeAsync(SubmitResult submitResult, CancellationToken cancellationToken)
         {
             switch (submitResult.SubmitStatus)
@@ -210,6 +333,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return Task.Delay(0, cancellationToken);
         }
 
+        /// <summary>
+        /// Invokes submission callback asynchronously.
+        /// </summary>
+        /// <param name="submissionActionType">The submission action type.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         private async Task InvokeSubmissionCallbackAsync(SubmissionActionType submissionActionType, CancellationToken cancellationToken)
         {
             var binarySubmissionCallbackAction = CreateBinarySubmissionCallbackAction();

@@ -1,19 +1,19 @@
-﻿using Microsoft.Rest;
+﻿using Azure;
+using Azure.Storage;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.Rest;
 using Moq;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Diagnostics;
+using RecordPoint.Connectors.SDK.Exceptions;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System.Net;
 using System.Text;
 using Xunit;
 using static RecordPoint.Connectors.SDK.Fields;
-using RecordPoint.Connectors.SDK.Exceptions;
-using Azure.Storage.Blobs;
-using Azure;
-using Azure.Storage.Blobs.Models;
-using Azure.Storage;
 
 namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 {

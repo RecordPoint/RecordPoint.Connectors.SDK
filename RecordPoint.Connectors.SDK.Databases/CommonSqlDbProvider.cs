@@ -4,15 +4,31 @@ using RecordPoint.Connectors.SDK.Context;
 
 namespace RecordPoint.Connectors.SDK.Databases
 {
-
-
+    /// <summary>
+    /// The common sql db provider.
+    /// </summary>
+    /// <typeparam name="TDbContext"/>
     public abstract class CommonSqlDbProvider<TDbContext>
         where TDbContext : DbContext
     {
+        /// <summary>
+        /// The system context.
+        /// </summary>
         protected readonly ISystemContext _systemContext;
+        /// <summary>
+        /// The logger.
+        /// </summary>
         protected readonly ILogger _logger;
+        /// <summary>
+        /// The ready source.
+        /// </summary>
         protected readonly TaskCompletionSource<Exception> _readySource = new();
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="logger">The logger.</param>
         protected CommonSqlDbProvider(
             ISystemContext systemContext,
             ILogger logger)
@@ -57,6 +73,10 @@ namespace RecordPoint.Connectors.SDK.Databases
             await dbContext.Database.MigrateAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Check database exists.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
         protected abstract void CheckDatabaseExists(CancellationToken cancellationToken);
 
         /// <summary>
@@ -69,13 +89,26 @@ namespace RecordPoint.Connectors.SDK.Databases
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task RemoveAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected abstract DbContextOptionsBuilder<TDbContext> GetAdminContextOptionsBuilder();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected abstract DbContextOptionsBuilder<TDbContext> GetContextOptionsBuilder();
 
         /// <summary>
@@ -118,13 +151,27 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// <returns>Connector db context</returns>
         protected abstract TDbContext CreateDbAdminContext();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptName"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         protected abstract string GetSqlDatabaseScript(string scriptName, Dictionary<string, string> parameters);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetExternalSystemName()
         {
             return _systemContext.GetConnectorName();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool Exists()
         {
             return CreateDbAdminContext().Database.CanConnect();

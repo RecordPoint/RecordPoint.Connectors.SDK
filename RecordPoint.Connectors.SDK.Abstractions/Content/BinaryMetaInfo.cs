@@ -42,6 +42,16 @@
         /// </summary>
         public long? FileSize { get; set; }
 
+        /// <summary>
+        /// Flag to skip the enrichment pipeline
+        /// </summary>
+        public bool? SkipEnrichment { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(BinaryMetaInfo? other)
         {
             if (other == null) return false;
@@ -56,6 +66,11 @@
                 && FileSize == other.FileSize;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -67,6 +82,10 @@
                 return Equals(other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;

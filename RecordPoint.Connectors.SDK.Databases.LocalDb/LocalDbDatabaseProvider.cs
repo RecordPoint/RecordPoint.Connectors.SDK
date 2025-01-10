@@ -5,24 +5,56 @@ using RecordPoint.Connectors.SDK.Context;
 namespace RecordPoint.Connectors.SDK.Databases.LocalDb
 {
 
+    /// <summary>
+    /// The local db database provider.
+    /// </summary>
+    /// <typeparam name="TDbContext"/>
     public abstract class LocalDbDatabaseProvider<TDbContext> : ILocalDbDatabaseProvider<TDbContext>
         where TDbContext : DbContext
     {
 
+        /// <summary>
+        /// The LOCALDB SYSTEM NAME.
+        /// </summary>
         public const string LOCALDB_SYSTEM_NAME = "LocalDB";
 
+        /// <summary>
+        /// The DEFAULT DATABASE NAME.
+        /// </summary>
         public const string DEFAULT_DATABASE_NAME = "Connector";
+        /// <summary>
+        /// The DEFAULT LOCALDB NAME.
+        /// </summary>
         public const string DEFAULT_LOCALDB_NAME = "(localdb)\\MSSQLLocalDB";
 
+        /// <summary>
+        /// The SQL ATTACH SCRIPT.
+        /// </summary>
         private const string SQL_ATTACH_SCRIPT = "LocalDb_DbAttach.sql";
+        /// <summary>
+        /// The SQL DETACH SCRIPT.
+        /// </summary>
         private const string SQL_DETACH_SCRIPT = "LocalDb_DbDetach.sql";
+        /// <summary>
+        /// The SQL CREATE SCRIPT.
+        /// </summary>
         private const string SQL_CREATE_SCRIPT = "LocalDb_DbCreate.sql";
 
 
+        /// <summary>
+        /// The system context.
+        /// </summary>
         private readonly ISystemContext _systemContext;
 
+        /// <summary>
+        /// The ready source.
+        /// </summary>
         private readonly TaskCompletionSource<Exception> _readySource = new();
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="systemContext">The system context.</param>
         protected LocalDbDatabaseProvider(ISystemContext systemContext)
         {
             _systemContext = systemContext;
@@ -95,6 +127,11 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         /// <returns>Connection string for the database</returns>
         public virtual string GetConnectionString() => $"Server = {GetSqlServer()};Integrated Security=true; AttachDBFilename = {GetDatabasePath()}";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task PrepareAsync(CancellationToken cancellationToken)
         {
             // Make sure the data directory exists
@@ -125,12 +162,21 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
             return filePath.Exists;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task RemoveAsync(CancellationToken cancellationToken)
         {
             File.Delete(GetDatabasePath());
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual DbContextOptionsBuilder<TDbContext> GetContextOptionsBuilder()
         {
             var builder = new DbContextOptionsBuilder<TDbContext>()
@@ -225,6 +271,13 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
             File.WriteAllLines(GetDatabaseStatusFilePath(), new string[] { $"Database: {GetDatabaseName()} detached" });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptName"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        /// <exception cref="RequiredValueNullException"></exception>
         public string GetSqlDatabaseScript(string scriptName, Dictionary<string, string> parameters)
         {
             var scriptAssembly = typeof(LocalDbDatabaseProvider<TDbContext>).Assembly;

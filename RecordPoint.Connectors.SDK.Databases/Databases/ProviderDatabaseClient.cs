@@ -11,6 +11,10 @@ namespace RecordPoint.Connectors.SDK.Databases
         where TDbProvider : IDatabaseProvider<TDbContext>
 
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseProvider"></param>
         public ProviderDatabaseClient(TDbProvider databaseProvider)
         {
             Provider = databaseProvider;
@@ -21,17 +25,29 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// </summary>
         public TDbProvider Provider { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public TDbContext CreateDbContext()
         {
             return Provider.CreateDbContext();
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetExternalSystemName()
         {
             return Provider.GetExternalSystemName();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task ReadyAsync(CancellationToken cancellationToken)
         {
             return Provider.ReadyAsync(cancellationToken);

@@ -3,48 +3,61 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Work;
 using System.Reflection;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace RecordPoint.Connectors.SDK.WebHost
 {
     /// <summary>
     /// Web server startup
     /// </summary>
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        private readonly IConfiguration _configuration = configuration;
 
-        private readonly IConfiguration _configuration;
-
+        /// <summary>
+        /// Register services into the IServiceCollection.
+        /// </summary>
+        /// <param name="services">The service collection to register the services</param>
         public void ConfigureServices(IServiceCollection services)
         {
             var corsOrigins = _configuration.GetSection("CorsOrigins").Get<string[]>();
-            services.AddCors(options =>
+            if (corsOrigins != null)
             {
-                options.AddPolicy("AllowAll",
-                    configurePolicy =>
-                    {
-                        configurePolicy
-                            .WithOrigins(corsOrigins)
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
-            });
+                services.AddCors(options =>
+                {
+                    options.AddPolicy("AllowAll",
+                        configurePolicy =>
+                        {
+                            configurePolicy
+                                .WithOrigins(corsOrigins)
+                                .AllowAnyMethod()
+                                .AllowAnyHeader();
+                        });
+                });
+            }
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            //Setup Authentication
+            //Setup Multi Authentication
+            var multiAuthenticationConfigurations = _configuration.GetSection(WebHostAuthenticationOptions.MULTI_CONFIG_SECTION_NAME)
+                .GetChildren().ToList();
+            foreach (var section in multiAuthenticationConfigurations)
+            {
+                services.AddAuthentication()
+                    .AddMicrosoftIdentityWebApp(section, section.Key, null);
+            }
+
+            //Setup Singular Authentication
             var authenticationConfiguration = _configuration.GetSection(WebHostAuthenticationOptions.SECTION_NAME)
                 .Get<WebHostAuthenticationOptions>();
-            if (authenticationConfiguration != null)
+            if (multiAuthenticationConfigurations.Count == 0 && authenticationConfiguration != null)
             {
                 services.AddMicrosoftIdentityWebApiAuthentication(_configuration, WebHostAuthenticationOptions.SECTION_NAME);
             }
@@ -53,7 +66,7 @@ namespace RecordPoint.Connectors.SDK.WebHost
             services
                 .AddControllers(o =>
                 {
-                    if (authenticationConfiguration != null)
+                    if (multiAuthenticationConfigurations.Count != 0 || authenticationConfiguration != null)
                     {
                         var policy = new AuthorizationPolicyBuilder()
                             .RequireAuthenticatedUser()
@@ -61,25 +74,33 @@ namespace RecordPoint.Connectors.SDK.WebHost
                         o.Filters.Add(new AuthorizeFilter(policy));
                     }
                 })
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                })
                 .PartManager
                 .ApplicationParts
                 .Add(new AssemblyPart(typeof(Startup).Assembly));
-            
+
             // Add Swagger
-            services.AddSwaggerGen(config=>
-            {                
+            services.AddSwaggerGen(config =>
+            {
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 if (File.Exists(xmlPath))
                 {
                     config.IncludeXmlComments(xmlPath);
                 }
-                
-            });            
-            
+
+            });
+
             services.AddWorkStateManagement<DatabaseManagedWorkStatusManager>();
         }
 
+        /// <summary>
+        /// Configures the application.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISystemContext systemContext)
         {
             if (env.IsDevelopment())
@@ -87,21 +108,42 @@ namespace RecordPoint.Connectors.SDK.WebHost
                 app.UseDeveloperExceptionPage();
             }
 
+            var webHostOptions = _configuration.GetSection(WebHostOptions.SECTION_NAME)
+                .Get<WebHostOptions>();
+            webHostOptions ??= new WebHostOptions();
+
             app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
 
-            var pathBase = $"/{systemContext.GetShortName()}";
-            app.UsePathBase(pathBase);
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((swaggerDoc, request) =>
+                {
+                    const string prefixHeader = "X-Forwarded-Prefix";
+                    if (!request.Headers.TryGetValue(prefixHeader, out var prefix))
+                    {
+                        return;
+                    }
+
+                    swaggerDoc.Servers = new List<OpenApiServer>()
+                    {
+                        new() { Url = prefix }
+                    };
+                });
+            });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RecordPoint Connectors SDK WebHost API");
+                c.SwaggerEndpoint(webHostOptions.SwaggerEndpointUrl, webHostOptions.SwaggerEndpointName);
             });
             app.UseEndpoints(endpoints =>
             {

@@ -9,9 +9,18 @@ namespace RecordPoint.Connectors.SDK.ContentManager
     public interface IContentRegistrationAction
     {
         /// <summary>
+        /// Key for the StartDate of a Content Registration context
+        /// </summary>
+        public const string StartDate = "StartDate";
+        /// <summary>
+        /// Key for the EndDate of a Content Registration context
+        /// </summary>
+        public const string EndDate = "EndDate";
+
+        /// <summary>
         /// Begin a new content registration operation
         /// </summary>
-        /// <param name="connectorConfiguration">The onnector configuration</param>
+        /// <param name="connectorConfiguration">The connector configuration</param>
         /// <param name="channel">The channel to perform content registration on</param>
         /// <param name="context">Custom Context for the Registration action</param>
         /// <param name="cancellationToken">Cancellation token</param>
@@ -21,7 +30,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Continue a content registration
         /// </summary>
-        /// <param name="connectorConfiguration">The onnector configuration</param>
+        /// <param name="connectorConfiguration">The connector configuration</param>
         /// <param name="channel">The channel to perform content registration on</param>
         /// <param name="cursor">Scan cursor provided by the prior sync operation</param>
         /// <param name="context">Custom Context for the Registration action</param>
@@ -29,11 +38,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns>Result of the registration operation</returns>
         Task<ContentResult> ContinueAsync(ConnectorConfigModel connectorConfiguration, Channel channel, string cursor, IDictionary<string, string> context, CancellationToken cancellationToken);
 
-        /// summary>
+        /// <summary>
         /// Stops the content synchronisation operation
         /// </summary>
-        /// <param name="connectorConfiguration">The onnector configuration</param>
+        /// <param name="connectorConfiguration">The connector configuration</param>
         /// <param name="channel">The channel to perform content registration on</param>
+        /// <param name="cursor">Scan cursor provided by the prior sync operation</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <remarks>
         /// Stops a current content synchronisation operation. Typically because a connector has been disabled, kill switch has been hit etc.

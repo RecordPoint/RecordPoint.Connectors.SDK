@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.Providers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ISdkAzureBlobCircuitProvider : ICircuitProvider, ICircuitEventHandler
     {
     }

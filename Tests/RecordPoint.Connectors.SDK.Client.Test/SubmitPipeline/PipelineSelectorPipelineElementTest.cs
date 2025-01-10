@@ -48,7 +48,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline.Test
         }
 
         [Fact]
-        public async void PipelineSelectorPipelineElementTest_Record_Submits()
+        public async Task PipelineSelectorPipelineElementTest_Record_Submits()
         {
             var coreMetadata = new List<SubmissionMetaDataModel>()
                 {
@@ -75,7 +75,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline.Test
         }
 
         [Fact]
-        public async void PipelineSelectorPipelineElementTest_Folder_Submits()
+        public async Task PipelineSelectorPipelineElementTest_Folder_Submits()
         {
             var coreMetadata = new List<SubmissionMetaDataModel>()
                 {
@@ -102,7 +102,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline.Test
         }
 
         [Fact]
-        public async void PipelineSelectorPipelineElementTest_NotRecord_Submits()
+        public async Task PipelineSelectorPipelineElementTest_NotRecord_Submits()
         {
             var coreMetadata = new List<SubmissionMetaDataModel>()
                 {
@@ -129,7 +129,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline.Test
         }
 
         [Fact]
-        public async void PipelineSelectorPipelineElementTest_Nothing_Submits()
+        public async Task PipelineSelectorPipelineElementTest_Nothing_Submits()
         {
             var coreMetadata = new List<SubmissionMetaDataModel>();
             var sourceMetadata = new List<SubmissionMetaDataModel>();

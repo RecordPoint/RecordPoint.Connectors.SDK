@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RecordPoint.Connectors.SDK.Health;
 
 namespace RecordPoint.Connectors.SDK.Status
 {
+    /// <summary>
+    /// The status builder extensions.
+    /// </summary>
     public static class StatusBuilderExtensions
     {
         /// <summary>
@@ -15,7 +17,6 @@ namespace RecordPoint.Connectors.SDK.Status
         {
             return hostBuilder.ConfigureServices(svcs => svcs
                 .AddSingleton<IStatusManager, StatusManager>()
-                .AddSingleton<IHealthCheckStrategy, StatusHealthChecker>()
                 .AddSingleton<IStatusStrategy, ConnectorStatusStrategy>()
             );
         }

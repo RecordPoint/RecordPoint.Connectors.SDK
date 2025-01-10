@@ -5,11 +5,25 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Status
 {
+    /// <summary>
+    /// The status manager.
+    /// </summary>
     public class StatusManager : IStatusManager
     {
+        /// <summary>
+        /// The strategies.
+        /// </summary>
         private readonly IEnumerable<IStatusStrategy> _strategies;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly Connectors.IConnectorConfigurationManager _connectorManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatusManager"/> class.
+        /// </summary>
+        /// <param name="strategies">The strategies.</param>
+        /// <param name="connectorManager">The connector manager.</param>
         public StatusManager(IEnumerable<IStatusStrategy> strategies,
             Connectors.IConnectorConfigurationManager connectorManager)
         {
@@ -18,6 +32,11 @@ namespace RecordPoint.Connectors.SDK.Status
 
         }
 
+        /// <summary>
+        /// Get status model asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<List<StatusModel>>]]></returns>
         public async Task<List<StatusModel>> GetStatusModelAsync(CancellationToken cancellationToken)
         {
             var model = new List<StatusModel>();

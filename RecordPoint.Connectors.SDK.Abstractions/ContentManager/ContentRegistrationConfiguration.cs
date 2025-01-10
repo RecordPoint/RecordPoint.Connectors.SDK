@@ -22,13 +22,27 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// </summary>
         public IDictionary<string, string> Context { get; set; } = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Gets the configuration type.
+        /// </summary>
         public static string ConfigurationType => nameof(ContentRegistrationConfiguration);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string Serialize()
         {
             return JsonSerializer.Serialize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configurationType"></param>
+        /// <param name="configurationText"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static ContentRegistrationConfiguration? Deserialize(string configurationType, string configurationText)
         {
             if (configurationType != nameof(ContentRegistrationConfiguration))

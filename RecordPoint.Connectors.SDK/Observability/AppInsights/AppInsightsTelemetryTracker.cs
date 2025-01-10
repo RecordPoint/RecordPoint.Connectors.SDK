@@ -10,21 +10,48 @@ using System.Linq;
 
 namespace RecordPoint.Connectors.SDK.Observability.AppInsights
 {
-
     /// <summary>
-    /// Telemetry tracker that just records all events in application insights
+    /// The app insights telemetry tracker.
     /// </summary>
     public class AppInsightsTelemetryTracker : ITelemetryTracker, IDisposable
     {
+        /// <summary>
+        /// The scope manager.
+        /// </summary>
         private readonly IScopeManager _scopeManager;
+        /// <summary>
+        /// The feature toggle provider.
+        /// </summary>
         private readonly IToggleProvider _featureToggleProvider;
+        /// <summary>
+        /// The application insight options.
+        /// </summary>
         private readonly IOptions<ApplicationInsightOptions> _applicationInsightOptions;
+        /// <summary>
+        /// The system context.
+        /// </summary>
         private readonly ISystemContext _systemContext;
+        /// <summary>
+        /// The telemetry client.
+        /// </summary>
         private readonly Lazy<TelemetryClient> _telemetryClient;
+        /// <summary>
+        /// The disposed value.
+        /// </summary>
         private bool disposedValue;
 
+        /// <summary>
+        /// Gets the telemetry submission.
+        /// </summary>
         private string TelemetrySubmission => $"{_systemContext.GetConnectorName()}-TelemetrySubmission";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppInsightsTelemetryTracker"/> class.
+        /// </summary>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="featureToggleProvider">The feature toggle provider.</param>
+        /// <param name="applicationInsightOptions">The application insight options.</param>
+        /// <param name="systemContext">The system context.</param>
         public AppInsightsTelemetryTracker(IScopeManager scopeManager,
                 IToggleProvider featureToggleProvider, IOptions<ApplicationInsightOptions> applicationInsightOptions,
                 ISystemContext systemContext)
@@ -36,9 +63,17 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             _systemContext = systemContext;
         }
 
+        /// <summary>
+        /// Gets the instrumentation key.
+        /// </summary>
         public string InstrumentationKey => _applicationInsightOptions.Value?.InstrumentationKey;
 
 
+        /// <summary>
+        /// Creates telemetry client.
+        /// </summary>
+        /// <exception cref="RequiredValueNullException"></exception>
+        /// <returns>A TelemetryClient</returns>
         private TelemetryClient CreateTelemetryClient()
         {
             if (string.IsNullOrWhiteSpace(InstrumentationKey))
@@ -48,11 +83,19 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             return telemetryClient;
         }
 
+        /// <summary>
+        /// Checks if is configured.
+        /// </summary>
+        /// <returns>A bool</returns>
         public bool IsConfigured()
         {
             return !string.IsNullOrWhiteSpace(InstrumentationKey);
         }
 
+        /// <summary>
+        /// Checks if is enabled.
+        /// </summary>
+        /// <returns>A bool</returns>
         public bool IsEnabled()
         {
             if (!IsConfigured())
@@ -65,6 +108,12 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             return toggleProviderTelemetryToggleOptions && telemetryClient.IsEnabled();
         }
 
+        /// <summary>
+        /// Tracks the event.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="dimensions">The dimensions.</param>
+        /// <param name="measures">The measures.</param>
         public void TrackEvent(string name, Dimensions dimensions = null, Measures measures = null)
         {
             if (!IsEnabled())
@@ -73,6 +122,13 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             _telemetryClient.Value.TrackEvent(name, GatherDimensions(dimensions, null), measures);
         }
 
+        /// <summary>
+        /// Tracks the exception.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="exception">The exception.</param>
+        /// <param name="dimensions">The dimensions.</param>
+        /// <param name="measures">The measures.</param>
         public void TrackException(string name, Exception exception, Dimensions dimensions = null, Measures measures = null)
         {
             if (!IsEnabled())
@@ -81,6 +137,12 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             _telemetryClient.Value.TrackException(exception, GatherDimensions(dimensions, exception), measures);
         }
 
+        /// <summary>
+        /// Gather the dimensions.
+        /// </summary>
+        /// <param name="dimensions">The dimensions.</param>
+        /// <param name="exception">The exception.</param>
+        /// <returns>A Dimensions</returns>
         private Dimensions GatherDimensions(Dimensions dimensions, Exception exception)
         {
             var dimensionPairs = (dimensions ?? new Dimensions()).Select(kp => new KeyValuePair<string, object>(kp.Key, kp.Value));
@@ -96,6 +158,9 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             return new Dimensions(pairs);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Flush()
         {
             if (!IsEnabled())
@@ -106,6 +171,10 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -118,6 +187,9 @@ namespace RecordPoint.Connectors.SDK.Observability.AppInsights
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             Dispose(disposing: true);

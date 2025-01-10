@@ -37,10 +37,10 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Context
             return TEST_SHORT_NAME;
         }
 
-        public string GetSystemName()
+        public string? GetSystemName()
         {
             return _systemOptions.Value.SUTName;
-       }
+        }
 
     }
 }

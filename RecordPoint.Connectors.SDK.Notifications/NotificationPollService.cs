@@ -23,6 +23,14 @@ namespace RecordPoint.Connectors.SDK.Notifications
 
         private const string SERVICE_TYPE = "Notifications Poller";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="systemContext"></param>
+        /// <param name="options"></param>
+        /// <param name="logger"></param>
+        /// <param name="scopeManager"></param>
+        /// <param name="serviceProvider"></param>
         public NotificationPollService(
             ISystemContext systemContext,
             IOptions<NotificationsPollerOptions> options,
@@ -43,6 +51,11 @@ namespace RecordPoint.Connectors.SDK.Notifications
 
         private TimeSpan GetPollInternal() => TimeSpan.FromSeconds(_options.Value.PollIntervalSeconds);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var systemScope = _scopeManager.BeginSystemScope(_systemContext);

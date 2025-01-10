@@ -10,6 +10,12 @@ namespace RecordPoint.Connectors.SDK.Work
     {
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workType"></param>
+        /// <param name="implementationType"></param>
+        /// <param name="serviceProvider"></param>
         public QueueableWorkFactory(string workType, Type implementationType, IServiceProvider serviceProvider)
         {
             WorkType = workType;

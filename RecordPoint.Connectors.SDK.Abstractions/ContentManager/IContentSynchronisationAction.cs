@@ -28,11 +28,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns>Result of the content synchronisation</returns>
         Task<ContentResult> ContinueAsync(ConnectorConfigModel connectorConfiguration, Channel channel, string cursor, CancellationToken cancellationToken);
 
-        /// summary>
+        /// <summary>
         /// Stops the content synchronisation operation
         /// </summary>
         /// <param name="connectorConfiguration">The onnector configuration</param>
         /// <param name="channel">The channel to perform content registration on</param>
+        /// <param name="cursor">Scan cursor provided by the prior sync operation</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <remarks>
         /// Stops a current content synchronisation operation. Typically because a connector has been disabled, kill switch has been hit etc.

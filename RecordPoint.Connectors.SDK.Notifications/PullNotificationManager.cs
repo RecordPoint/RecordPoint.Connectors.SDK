@@ -9,8 +9,19 @@ namespace RecordPoint.Connectors.SDK.Notifications
     /// </summary>
     public class PullNotificationManager : NotificationManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly IR365NotificationClient _r365NotificationClient;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r365NotificationClient"></param>
+        /// <param name="logger"></param>
+        /// <param name="notificationStrategies"></param>
+        /// <param name="scopeManager"></param>
+        /// <param name="telemetryTracker"></param>
         public PullNotificationManager(
             IR365NotificationClient r365NotificationClient,
             ILogger<PullNotificationManager> logger,
@@ -22,6 +33,12 @@ namespace RecordPoint.Connectors.SDK.Notifications
             _r365NotificationClient = r365NotificationClient;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="notification"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override async Task HandleNotificationAsync(ConnectorNotificationModel notification, CancellationToken cancellationToken)
         {
             var notificationType = notification.NotificationType;

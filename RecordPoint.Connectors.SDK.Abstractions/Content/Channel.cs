@@ -47,16 +47,26 @@
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Channel? other)
         {
             if (other == null)
                 return false;
 
-            return Title == other.Title 
+            return Title == other.Title
                 && ExternalId == other.ExternalId
                 && MetaDataItems.IsEqual(other.MetaDataItems);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -68,6 +78,10 @@
                 return Equals(other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;

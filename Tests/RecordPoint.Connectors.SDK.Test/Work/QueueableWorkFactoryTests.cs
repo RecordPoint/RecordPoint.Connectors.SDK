@@ -3,10 +3,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
-using RecordPoint.Connectors.SDK.Work;
-using Xunit;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Test.Mock.Work;
+using RecordPoint.Connectors.SDK.Work;
+using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.Work
 {
@@ -22,7 +22,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             return base.CreateSutBuilder()
                 .UseWorkManager()
                 .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
-                .ConfigureServices(svcs => 
+                .ConfigureServices(svcs =>
                     svcs.AddMockWorkQueue()
                         .AddAddQueueableWorkOperation<NotImplementedWorkItem>(nameof(NotImplementedWorkItem))
                         .AddAddQueueableWorkOperation<CompletesWorkItem>(nameof(CompletesWorkItem))
@@ -59,6 +59,32 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         public Task RunAsync(WorkRequest workRequest, CancellationToken cancellationToken) => throw new NotImplementedException();
 
         public Task RunWorkRequestAsync(WorkRequest workRequest, CancellationToken cancellationToken) => throw new NotImplementedException();
+
+        #region Disposable
+        private bool hasDisposed = false;
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        protected virtual void InnerDispose()
+        {
+            // free unmanaged resources (unmanaged objects) and override finalizer
+            // set large fields to null
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            if (!hasDisposed)
+            {
+                InnerDispose();
+                hasDisposed = true;
+            }
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 
     public class CompletesWorkItem : QueueableWorkBase<object>
@@ -66,10 +92,10 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
         public CompletesWorkItem(
             IServiceProvider serviceProvider,
-            ISystemContext systemContext, 
-            IScopeManager scopeManager, 
-            ILogger<CompletesWorkItem> logger, 
-            ITelemetryTracker telemetryTracker, 
+            ISystemContext systemContext,
+            IScopeManager scopeManager,
+            ILogger<CompletesWorkItem> logger,
+            ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
             : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
         {

@@ -1,15 +1,15 @@
-﻿using RecordPoint.Connectors.SDK.Content;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Caching.Semaphore;
+using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Configuration;
+using RecordPoint.Connectors.SDK.Connectors;
+using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.ContentManager;
+using RecordPoint.Connectors.SDK.Test.Common;
 using RecordPoint.Connectors.SDK.Work;
 using Xunit;
-using RecordPoint.Connectors.SDK.Connectors;
-using RecordPoint.Connectors.SDK.Client.Models;
-using Microsoft.Extensions.DependencyInjection;
-using RecordPoint.Connectors.SDK.Configuration;
-using RecordPoint.Connectors.SDK.Caching.Semaphore;
-using RecordPoint.Connectors.SDK.Test.Common;
 using Record = RecordPoint.Connectors.SDK.Content.Record;
-using Microsoft.Extensions.Configuration;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
 {
@@ -186,7 +186,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await StartSutAsync();
 
             var connector = ContentManagerSutBase.CreateConnector1();
-            connector.Status = "Disabled";
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now);
             var channel = ContentManagerSutBase.CreateChannel1();
 
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
@@ -203,10 +203,61 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, workItem.ResultType);
-            Assert.Equal("Connector is not enabled", workItem.ResultReason);
+            Assert.Equal("Connector disabled", workItem.ResultReason);
             Assert.Equal(0, scanner.BeginCalledCount);
             Assert.Equal(0, scanner.ContinueCalledCount);
             Assert.True(workStatuses.All(a => a.Status == ManagedWorkStatuses.Running));
+        }
+
+        [Fact]
+        public async Task OnFirstSyncWithConnectorDisabled_ExceedsDisabledThreshold_AbandonsWork()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var testCursor1 = "TestCursor1";
+            var scanner = new ContentSynchronisationAction
+            {
+                ResultType = ContentResultType.Complete,
+                Cursor = testCursor1
+            };
+            SUT.SelectContentSynchronisationAction(scanner);
+
+            var myConfig = new Dictionary<string, string>
+            {
+                { "ContentManager:MaxDisabledConnectorAge", "1209600" },
+            };
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfig)
+                .Build();
+
+            await StartSutAsync(config);
+
+
+            var configuration = SUT.Services.GetService<IConfiguration>();
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now.AddDays(-30));
+            var channel = ContentManagerSutBase.CreateChannel1();
+
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+            await SUT.GetChannelManager().UpsertChannelAsync(channel, cancellationToken);
+
+            var workMessage = SUT.CreateContentSynchronisationManagedWorkStatusModel(connector, channel);
+            await SUT.SetWorkRunning(workMessage);
+
+            var workItem = Services.GetRequiredService<ContentSynchronisationOperation>();
+
+            await workItem.RunWorkRequestAsync(SUT.CreateContentSynchronisationRequest(workMessage), cancellationToken);
+
+            var workStatuses = await SUT.GetWorkStatusManager()
+                .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
+
+            Assert.Equal(WorkResultType.Abandoned, workItem.ResultType);
+            Assert.Equal("Connector disabled", workItem.ResultReason);
+            Assert.Equal(0, scanner.BeginCalledCount);
+            Assert.Equal(0, scanner.ContinueCalledCount);
+            Assert.True(workStatuses.All(a => a.Status == ManagedWorkStatuses.Abandoned));
         }
 
         [Fact]
@@ -383,7 +434,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, continueWorkItem.ResultType);
-            Assert.Equal("Connector is not enabled", continueWorkItem.ResultReason);
+            Assert.Equal("Connector disabled", continueWorkItem.ResultReason);
             Assert.Equal(0, scanner.ContinueCalledCount);
             Assert.True(workStatuses.All(a => a.Status == ManagedWorkStatuses.Running));
         }

@@ -27,11 +27,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// </summary>
         public static string LatestStateType => nameof(ContentManagerState);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string Serialize()
         {
             return JsonSerializer.Serialize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stateType"></param>
+        /// <param name="stateText"></param>
+        /// <returns></returns>
         public static ContentManagerState? Deserialize(string stateType, string stateText)
         {
             if (string.IsNullOrEmpty(stateType))

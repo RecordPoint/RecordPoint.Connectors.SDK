@@ -36,6 +36,9 @@ A Record is a set of meta-data that is retrieved from the Content Source, includ
 #### Binaries
 A Binary is the logical data that makes up the Record. e.g. a file on a storage disk. *Note: A Record could include multiple binaries.*
 
+#### Audit Events
+An Audit Event is a log in the security history of a Record or Aggregation, in the Content Source or Records 365 - e.g. "Modified", "Deleted", "Viewed in R365". 
+
 ---
 
 ### Dependency Injection

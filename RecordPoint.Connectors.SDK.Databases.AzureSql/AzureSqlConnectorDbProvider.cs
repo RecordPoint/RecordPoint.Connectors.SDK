@@ -6,13 +6,32 @@ using RecordPoint.Connectors.SDK.Context;
 namespace RecordPoint.Connectors.SDK.Databases.AzureSql
 {
 
+    /// <summary>
+    /// The azure sql connector db provider.
+    /// </summary>
     public class AzureSqlConnectorDbProvider : AzureSqlDbProvider<ConnectorDbContext>, IConnectorDatabaseProvider
     {
+        /// <summary>
+        /// The database options.
+        /// </summary>
         private readonly IOptions<AzureSqlConnectorDbOptions> _databaseOptions;
 
+        /// <summary>
+        /// The database name.
+        /// </summary>
         private readonly Lazy<string> _databaseName;
+        /// <summary>
+        /// The admin connection string.
+        /// </summary>
         private readonly Lazy<string> _adminConnectionString;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AzureSqlConnectorDbProvider"/> class.
+        /// </summary>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="databaseOptions">The database options.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="connectionFactory">The connection factory.</param>
         public AzureSqlConnectorDbProvider(
             ISystemContext systemContext,
             IOptions<AzureSqlConnectorDbOptions> databaseOptions,
@@ -51,23 +70,43 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql
             });
         }
 
+        /// <summary>
+        /// Get database name.
+        /// </summary>
+        /// <returns>A string</returns>
         protected override string GetDatabaseName() => _databaseName.Value;
 
+        /// <summary>
+        /// Get admin connection string.
+        /// </summary>
+        /// <returns>A string</returns>
         protected override string GetAdminConnectionString()
         {
             return _adminConnectionString.Value;
         }
 
+        /// <summary>
+        /// Get connection string.
+        /// </summary>
+        /// <returns>A string</returns>
         public override string GetConnectionString()
         {
             return _databaseOptions.Value.ConnectionString;
         }
 
+        /// <summary>
+        /// Creates db admin context.
+        /// </summary>
+        /// <returns>A ConnectorDbContext</returns>
         protected override ConnectorDbContext CreateDbAdminContext()
         {
             return new AzureSqlConnectorDbContext(GetAdminContextOptionsBuilder().Options, AzureSqlConnectorDbContext.DEFAULT_DB_SCHEMA_NAME);
         }
 
+        /// <summary>
+        /// Creates db context.
+        /// </summary>
+        /// <returns>A ConnectorDbContext</returns>
         public override ConnectorDbContext CreateDbContext()
         {
             return new AzureSqlConnectorDbContext(GetContextOptionsBuilder().Options, AzureSqlConnectorDbContext.DEFAULT_DB_SCHEMA_NAME);

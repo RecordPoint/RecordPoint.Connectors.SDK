@@ -1,7 +1,16 @@
 ﻿namespace RecordPoint.Connectors.SDK.ContentManager
 {
+    /// <summary>
+    /// Contract for a Content Manager Action Provider
+    /// </summary>
     public interface IContentManagerActionProvider
     {
+        /// <summary>
+        /// Create a new content manager callback action
+        /// </summary>
+        /// <returns>Content Manager Callback Action</returns>
+        IContentManagerCallbackAction CreateContentManagerCallbackAction();
+
         /// <summary>
         /// Create a new Channel discovery action
         /// </summary>
@@ -61,5 +70,17 @@
         /// </summary>
         /// <returns>Generate Report Action</returns>
         IGenerateReportAction CreateGenerationReportAction();
+
+        /// <summary>
+        /// Create a new generic action with the provided templated input and output classes
+        /// </summary>
+        /// <returns>Generic Action</returns>
+        IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>() where TOutput : ActionResultBase;
+
+        /// <summary>
+        /// Create a new generic action with the provided templated input and output classes
+        /// </summary>
+        /// <returns>Generic Action</returns>
+        IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>() where TOutput : ActionResultBase;
     }
 }

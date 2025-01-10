@@ -38,7 +38,7 @@
         /// in code
         /// </summary>
         /// <param name="ex"></param>
-        /// <param name="type"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
         public static bool IsAssignableFrom<T>(this Exception ex, Func<T, bool> code)
             where T : Exception

@@ -29,7 +29,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test.Mock
             _connectionFactoryMock = new Mock<IConnectionFactory>();
             _rabbitMqConnectionMock = new Mock<IConnection>();
             _rabbitMqModelMock = new Mock<IModel>();
-            _rabbitMqBasicPropertiesMock = new Mock<IBasicProperties>();    
+            _rabbitMqBasicPropertiesMock = new Mock<IBasicProperties>();
             _connectionFactoryMock.Setup(m => m.CreateConnection()).Returns(_rabbitMqConnectionMock.Object);
             _rabbitMqConnectionMock.Setup(a => a.CreateModel()).Returns(_rabbitMqModelMock.Object);
             _rabbitMqModelMock.Setup(a => a.CreateBasicProperties()).Returns(_rabbitMqBasicPropertiesMock.Object);

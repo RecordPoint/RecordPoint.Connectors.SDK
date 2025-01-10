@@ -16,17 +16,42 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Worker responsible for submitting records to Records 365.
+    /// The submit record operation.
     /// </summary>
     public class SubmitRecordOperation : SubmitOperationBase<Record>
     {
+        /// <summary>
+        /// WORK TYPE.
+        /// </summary>
         public const string WORK_TYPE = "Record Submission";
 
+        /// <summary>
+        /// The CONTENT LABEL.
+        /// </summary>
         public const string CONTENT_LABEL = "Record";
 
+        /// <summary>
+        /// The content manager action provider.
+        /// </summary>
         private readonly IContentManagerActionProvider _contentManagerActionProvider;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubmitRecordOperation"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
+        /// <param name="r365Client">The r365 client.</param>
+        /// <param name="workQueueClient">The work queue client.</param>
+        /// <param name="connectorManager">The connector manager.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         public SubmitRecordOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -44,30 +69,63 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _connectorManager = connectorManager;
         }
 
+        /// <summary>
+        /// Gets the service name.
+        /// </summary>
         public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WORK_TYPE;
 
+        /// <summary>
+        /// Gets the content label.
+        /// </summary>
         public override string ContentLabel => CONTENT_LABEL;
 
+        /// <summary>
+        /// Gets the connector config.
+        /// </summary>
         public ConnectorConfigModel ConnectorConfig { get; private set; }
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             ConnectorConfig = await _connectorManager.GetConnectorAsync(ConnectorConfigId, cancellationToken);
             await base.InnerRunAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Submits and return a task of type submitresult asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<SubmitResult>]]></returns>
         protected override Task<SubmitResult> SubmitAsync(CancellationToken cancellationToken)
         {
             return R365Client.SubmitRecord(ConnectorConfig, Parameter, cancellationToken);
         }
 
+        /// <summary>
+        /// Get feature status.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<ConnectorFeatureStatus>]]></returns>
         protected override Task<ConnectorFeatureStatus> GetFeatureStatus(CancellationToken cancellationToken)
         {
             return _connectorManager.GetSubmissionStatusAsync(ConnectorConfigId, cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="waitTill"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         protected override Task RequeueAsync(DateTimeOffset waitTill, CancellationToken cancellationToken)
         {
             return WorkQueueClient.SubmitRecordAsync(new ContentSynchronisationConfiguration()
@@ -80,13 +138,22 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
         private IRecordSubmissionCallbackAction CreateRecordSubmissionCallbackAction() => _contentManagerActionProvider.CreateRecordSubmissionCallbackAction();
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         protected override async Task PreSubmitAsync(CancellationToken cancellationToken)
         {
             await InvokeSubmissionCallbackAsync(SubmissionActionType.PreSubmit, cancellationToken)
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         protected override async Task SubmitSuccessfulAsync(CancellationToken cancellationToken)
         {
             await InvokeSubmissionCallbackAsync(SubmissionActionType.PostSubmit, cancellationToken)

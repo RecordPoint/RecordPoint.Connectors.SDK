@@ -15,6 +15,10 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
     [Migration("20220214231215_InitialCreate")]
     partial class InitialCreate
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

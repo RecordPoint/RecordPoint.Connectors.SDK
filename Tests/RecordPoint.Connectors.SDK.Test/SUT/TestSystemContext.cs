@@ -5,7 +5,7 @@ namespace RecordPoint.Connectors.SDK.Test.SUT
     /// <summary>
     /// Context that extends the standard context with additional features for on premise connectors
     /// </summary>
-    public class TestSystemContext :  ISystemContext
+    public class TestSystemContext : ISystemContext
     {
         public const string RECORDPOINT_COMPANY_NAME = "RecordPoint";
         public const string CONNECTOR_NAME = "Test Connector";

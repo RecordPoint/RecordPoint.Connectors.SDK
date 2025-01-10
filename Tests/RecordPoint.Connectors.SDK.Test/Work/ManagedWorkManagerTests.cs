@@ -32,7 +32,7 @@ public class ManagedWorkManagerTests : CommonTestBase<ManagedWorkManagerSut>
         var workManager = Services.GetRequiredService<IManagedWorkManager>();
 
         var work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 5);
-        Assert.Equal(WorkResultType.DeadLetter,work.ResultType);
+        Assert.Equal(WorkResultType.DeadLetter, work.ResultType);
 
         work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 2);
         Assert.Equal(WorkResultType.Complete, work.ResultType);

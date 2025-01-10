@@ -77,7 +77,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// Removes the specified Aggregations from Storage
         /// </summary>
         /// <param name="connectorId">The Connector for which the Aggregation belongs</param>
-        /// <param name="externalId">The Ids of the Aggregations</param>
+        /// <param name="externalIds">The Ids of the Aggregations</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Task</returns>
         Task RemoveAggregationsAsync(string connectorId, string[] externalIds, CancellationToken cancellationToken);

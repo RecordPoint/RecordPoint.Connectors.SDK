@@ -54,10 +54,6 @@ namespace RecordPoint.Connectors.SDK.Client
                 {
                     if (_apiClient == null) // this condition required for being thread-safe
                     {
-                        if (settings.ServerCertificateValidation == false)
-                        {
-                            ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-                        }
                         // Support both the root site and /connector in the configuration
                         var connectorApiUrl = new Uri(settings.ConnectorApiUrl);
                         if (!settings.ConnectorApiUrl.Contains(ConnectorApiPrefix))
@@ -65,23 +61,23 @@ namespace RecordPoint.Connectors.SDK.Client
                             connectorApiUrl = new Uri(connectorApiUrl, ConnectorApiPrefix);
                         }
 
-#if NETSTANDARD2_0
                         if (settings.ServerCertificateValidation == false)
                         {
                             var certHandler = new HttpClientHandler
                             {
+#if NETSTANDARD2_0
                                 ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
+#else
+                                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+#endif
                             };
 
                             _apiClient = new ApiClient(connectorApiUrl, new NotSpecifiedCredentials(), certHandler);
                         }
                         else
                         {
-#endif
-                        _apiClient = new ApiClient(connectorApiUrl, new NotSpecifiedCredentials());
-#if NETSTANDARD2_0
+                            _apiClient = new ApiClient(connectorApiUrl, new NotSpecifiedCredentials());
                         }
-#endif
                     }
                 }
             }

@@ -85,7 +85,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await StartSutAsync();
 
             var connector = ContentManagerSutBase.CreateConnector1();
-            connector.Status = "Disabled";
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now);
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
@@ -224,7 +224,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = connector;
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, 10, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, null, 10, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
@@ -259,7 +259,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = connector;
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, 10, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, null, 10, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
@@ -289,7 +289,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = connector;
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, 10, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, null, 10, cancellationToken);
 
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
