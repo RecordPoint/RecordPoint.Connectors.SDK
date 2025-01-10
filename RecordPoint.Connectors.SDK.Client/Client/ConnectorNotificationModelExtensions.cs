@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.Client
 {
+    /// <summary>
+    /// The connector notification model extensions.
+    /// </summary>
     public static class ConnectorNotificationModelExtensions
     {
         /// <summary>

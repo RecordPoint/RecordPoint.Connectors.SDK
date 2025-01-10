@@ -6,7 +6,13 @@
     /// </summary>
     public enum DependancyType
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Database,
+        /// <summary>
+        /// 
+        /// </summary>
         Records365
     }
 }

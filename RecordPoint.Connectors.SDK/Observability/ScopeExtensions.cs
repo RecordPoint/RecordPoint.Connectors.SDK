@@ -75,8 +75,8 @@ namespace RecordPoint.Connectors.SDK.Observability
         /// Invoke a function so that key properties are attached to log messages and any
         /// exceptions raised during execution
         /// </summary>
-        /// <param name="logger">Logger</param>
-        /// <param name="keyProperties">Key properties to attach to all log message</param>
+        /// <param name="scopeManager">Scope manager</param>
+        /// <param name="dimensions">Logger</param>
         /// <param name="func">Action to invoke</param>
         /// <typeparam name="T">Return type</typeparam>
         public async static Task<T> InvokeAsync<T>(this IScopeManager scopeManager, Dimensions dimensions, Func<Task<T>> func)

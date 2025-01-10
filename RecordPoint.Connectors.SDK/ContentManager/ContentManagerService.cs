@@ -18,6 +18,13 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         private readonly IManagedWorkFactory _managedWorkFactory;
         private readonly IManagedWorkStatusManager _managedWorkStatusManager;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="logger"></param>
+        /// <param name="managedWorkFactory"></param>
+        /// <param name="managedWorkStatusManager"></param>
         public ContentManagerService(
             IOptions<ContentManagerOptions> options,
             ILogger<ContentManagerService> logger,
@@ -30,6 +37,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _managedWorkStatusManager = managedWorkStatusManager;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

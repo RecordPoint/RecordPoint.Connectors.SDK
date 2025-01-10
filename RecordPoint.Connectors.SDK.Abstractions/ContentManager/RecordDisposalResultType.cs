@@ -6,9 +6,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
     /// </summary>
     public enum RecordDisposalResultType
     {
-        Complete,   // We successfully disposed of the record
-        Failed,     // We failed to dispose of the record
-        Deleted,    // The record cannot be disposed because it has already been deleted
-        BackOff     // Content Source has throttled requests
+        /// <summary>
+        /// We successfully disposed of the record
+        /// </summary>
+        Complete,
+        /// <summary>
+        /// We failed to dispose of the record
+        /// </summary>
+        Failed,
+        /// <summary>
+        /// The record cannot be disposed because it has already been deleted
+        /// </summary>
+        Deleted,
+        /// <summary>
+        /// Content Source has throttled requests
+        /// </summary>
+        BackOff
     }
 }

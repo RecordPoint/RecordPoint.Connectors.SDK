@@ -1,6 +1,5 @@
 ﻿using RecordPoint.Connectors.SDK.Client.Models;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <summary>
         /// Convert a connector config model into a connector data model suitable for the database
         /// </summary>
-        /// <param name="notificationModel">Notification model containing a connector notification</param>
+        /// <param name="connectorConfig">Notification model containing a connector notification</param>
         /// <returns></returns>
         private static ConnectorConfigurationModel ConvertToConnectorData(ConnectorConfigModel connectorConfig)
         {
@@ -46,21 +45,41 @@ namespace RecordPoint.Connectors.SDK.Connectors
         }
 
 
+        /// <summary>
+        /// Set the connector asynchronously.
+        /// </summary>
+        /// <param name="connectorClient">The connector client.</param>
+        /// <param name="connectorConfig">The connector config.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         public static Task SetConnectorAsync(this IConnectorConfigurationManager connectorClient, ConnectorConfigModel connectorConfig, CancellationToken cancellationToken)
         {
             return connectorClient.SetConnectorConfigurationAsync(ConvertToConnectorData(connectorConfig), cancellationToken);
         }
 
+        /// <summary>
+        /// Get the connector asynchronously.
+        /// </summary>
+        /// <param name="connectorClient">The connector client.</param>
+        /// <param name="connectorId">The connector id.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<ConnectorConfigModel>]]></returns>
         public static async Task<ConnectorConfigModel> GetConnectorAsync(this IConnectorConfigurationManager connectorClient, string connectorId, CancellationToken cancellationToken)
         {
             var connectorData = await connectorClient.GetConnectorConfigurationAsync(connectorId, cancellationToken);
             return connectorData != null ? ConvertToConnectorConfig(connectorData) : null;
         }
 
+        /// <summary>
+        /// List the connectors asynchronously.
+        /// </summary>
+        /// <param name="connectorClient">The connector client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<List<ConnectorConfigModel>>]]></returns>
         public static async Task<List<ConnectorConfigModel>> ListConnectorsAsync(this IConnectorConfigurationManager connectorClient, CancellationToken cancellationToken)
         {
-            var connectorConfiurations = await connectorClient.GetAllConnectorConfigurationsAsync(cancellationToken);
-            return connectorConfiurations.Select(a => ConvertToConnectorConfig(a)).ToList();
+            var connectorConfigurations = await connectorClient.GetAllConnectorConfigurationsAsync(cancellationToken);
+            return connectorConfigurations.Select(a => ConvertToConnectorConfig(a)).ToList();
         }
     }
 }

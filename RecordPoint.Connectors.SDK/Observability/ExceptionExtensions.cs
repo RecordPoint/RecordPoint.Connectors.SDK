@@ -17,7 +17,13 @@ namespace RecordPoint.Connectors.SDK.Observability
         /// </summary>
         /// 
         public const string HAS_SCOPE_PROPERTY = "HasScope";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DIMENSIONS_PROPERTY = "Dimensions";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string LOG_MESSAGE_PROPERTY = "LogMessage";
 
         /// <summary>
@@ -48,7 +54,7 @@ namespace RecordPoint.Connectors.SDK.Observability
         /// Scope this exception to a given scope tracker
         /// </summary>
         /// <param name="ex">Exception to update</param>
-        /// <param name="keyProperties">Key properties to set</param>
+        /// <param name="scopeManager">Key properties to set</param>
         /// <remarks>
         /// This method is used to attach information about the observability scope to the exception. This must be called within that
         /// observability scope if the exception is not tracked within that observability scope.

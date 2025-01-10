@@ -3,8 +3,14 @@ using System.Net;
 
 namespace RecordPoint.Connectors.SDK.Helpers
 {
+    /// <summary>
+    /// The HTTP request helper.
+    /// </summary>
     public static class HTTPRequestHelper
     {
+        /// <summary>
+        /// The known retriable web exception statuses.
+        /// </summary>
         private static readonly WebExceptionStatus[] _knownRetriableWebExceptionStatuses = new[]
         {
             WebExceptionStatus.ConnectFailure,
@@ -20,6 +26,11 @@ namespace RecordPoint.Connectors.SDK.Helpers
             WebExceptionStatus.UnknownError
         };
 
+        /// <summary>
+        /// Checks if is retriable web request exception.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        /// <returns>A bool</returns>
         public static bool IsRetriableWebRequestException(this Exception ex)
         {
             if (ex is WebException wex)
@@ -39,6 +50,11 @@ namespace RecordPoint.Connectors.SDK.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Checks if is web exception status retriable.
+        /// </summary>
+        /// <param name="wex">The wex.</param>
+        /// <returns>A bool</returns>
         private static bool IsWebExceptionStatusRetriable(WebException wex)
         {
             if (wex?.Status != null)
@@ -52,7 +68,7 @@ namespace RecordPoint.Connectors.SDK.Helpers
         /// <summary>
         /// Get Headers with Bearer Token
         /// </summary>
-        /// <param name="authenticationHelper"></param>
+        /// <param name="authProvider"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
         public static async Task<Dictionary<string, List<string>>> GetHttpRequestHeaders(this IAuthenticationProvider authProvider, AuthenticationHelperSettings settings)

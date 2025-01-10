@@ -21,6 +21,10 @@
             Fields.SourceCreatedBy
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerable<string> GetRequiredStringFields()
         {
             return _requiredFields;

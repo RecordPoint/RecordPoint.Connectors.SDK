@@ -18,6 +18,12 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly object _serviceBusSendersLock = new();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceBusClientFactory"></param>
+        /// <param name="serviceBusOptions"></param>
+        /// <param name="dateTimeProvider"></param>
         public AzureServiceBusWorkClient(
             IServiceBusClientFactory serviceBusClientFactory,
             IOptions<AzureServiceBusOptions> serviceBusOptions,
@@ -53,7 +59,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             {
                 if (!_serviceBusSenders.ContainsKey(queueName)) _serviceBusSenders.Add(queueName, _serviceBusClient.CreateSender(queueName));
             }
-            
+
             return _serviceBusSenders[queueName];
         }
 
@@ -61,6 +67,10 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             ? $"{workType.Replace(" ", "-").ToLower()}"
             : $"{_serviceBusOptions.Value.QueuePrefix}-{workType.Replace(" ", "-").ToLower()}";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async ValueTask DisposeAsync()
         {
             foreach (var sender in _serviceBusSenders.Values)

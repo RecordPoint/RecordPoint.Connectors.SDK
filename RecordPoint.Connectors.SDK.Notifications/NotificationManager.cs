@@ -10,11 +10,30 @@ namespace RecordPoint.Connectors.SDK.Notifications
     /// </summary>
     public abstract class NotificationManager : INotificationManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly ILogger<PullNotificationManager> _logger;
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly Dictionary<string, INotificationStrategy> _notificationStrategies;
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly IScopeManager _scopeManager;
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly ITelemetryTracker _telemetryTracker;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="notificationStrategies"></param>
+        /// <param name="scopeManager"></param>
+        /// <param name="telemetryTracker"></param>
         protected NotificationManager(
             ILogger<PullNotificationManager> logger,
             IEnumerable<INotificationStrategy> notificationStrategies,
@@ -27,6 +46,12 @@ namespace RecordPoint.Connectors.SDK.Notifications
             _telemetryTracker = telemetryTracker;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="notification"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public abstract Task HandleNotificationAsync(ConnectorNotificationModel notification, CancellationToken cancellationToken);
 
 
@@ -50,7 +75,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <summary>
         /// Get observability outcome dimensions
         /// </summary>
-        /// <param name="notification">Notification to get key properties for</param>
+        /// <param name="outcome">Notification to get key properties for</param>
         /// <returns>Key properties</returns>
         protected virtual Dimensions GetOutcomeDimensions(NotificationOutcome outcome)
         {

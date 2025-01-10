@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using RecordPoint.Connectors.SDK.ContentManager;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Connectors;
-using RecordPoint.Connectors.SDK.Test.Mock.Databases;
 using RecordPoint.Connectors.SDK.Content;
+using RecordPoint.Connectors.SDK.ContentManager;
+using RecordPoint.Connectors.SDK.Test.Mock.Databases;
 using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
@@ -18,7 +18,13 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .UseDatabaseConnectorConfigurationManager()
                 .UseMockConnectorDatabase()
                 .UseDatabaseChannelManager()
-                .ConfigureServices(svcs => svcs.AddTransient<ContentManagerOperation>());
+                .UseDatabaseAggregationManager()
+                .ConfigureServices((context, svcs) => {
+                     var contentManagerConfiguration = context.Configuration.GetSection("ContentManager");
+                     svcs
+                         .Configure<ContentManagerOptions>(contentManagerConfiguration)
+                         .AddTransient<ContentManagerOperation>();
+                 });
         }
 
         #region Content Manager Work Request

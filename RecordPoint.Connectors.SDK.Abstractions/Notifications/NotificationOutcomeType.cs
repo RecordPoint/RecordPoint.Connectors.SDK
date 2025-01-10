@@ -6,7 +6,13 @@
     /// </summary>
     public enum NotificationOutcomeType
     {
-        Ok,    // Notification was successfully processed
-        Failed  // Notification has failed.
+        /// <summary>
+        /// Notification was successfully processed
+        /// </summary>
+        Ok,
+        /// <summary>
+        /// Notification has failed.
+        /// </summary>
+        Failed
     }
 }

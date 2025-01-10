@@ -24,7 +24,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task<IList<ConnectorNotificationModel>> GetAllPendingNotifications(CancellationToken cancellationToken);
+        public Task<List<ConnectorNotificationModel>> GetAllPendingNotifications( CancellationToken cancellationToken);
 
         /// <summary>
         /// Acknowledges a Notification from R365

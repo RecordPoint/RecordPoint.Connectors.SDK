@@ -26,6 +26,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
         [InlineData("abc", "ABCEFGH", FilterConstants.StringFieldOperators.StartsWith)]
         [InlineData("abc", "zxyerf", FilterConstants.StringFieldOperators.NotStartsWith)]
         [InlineData("abc", "ZXYERF", FilterConstants.StringFieldOperators.NotStartsWith)]
+        [InlineData("abc,def,ghi", "abc", FilterConstants.StringFieldOperators.EqualsToAnyOf)]
         public void MatchesFilters_StringType_DifferentOperators_ResultShouldBe_True(string filterValue, string modelValue, string operatorType)
         {
             Assert.True(MatchesFilterTest(filterValue, modelValue, operatorType));
@@ -51,6 +52,7 @@ namespace RecordPoint.Connectors.SDK.Test.Filters
         [InlineData("abc", "EFGHIJ", FilterConstants.StringFieldOperators.StartsWith)]
         [InlineData("abc", "abcerf", FilterConstants.StringFieldOperators.NotStartsWith)]
         [InlineData("abc", "ABCerf", FilterConstants.StringFieldOperators.NotStartsWith)]
+        [InlineData("ab,def,ghi", "abc", FilterConstants.StringFieldOperators.EqualsToAnyOf)]
         public void MatchesFilters_StringType_DifferentOperators_ResultShouldBe_False(string filterValue, string modelValue, string operatorType)
         {
             Assert.False(MatchesFilterTest(filterValue, modelValue, operatorType));

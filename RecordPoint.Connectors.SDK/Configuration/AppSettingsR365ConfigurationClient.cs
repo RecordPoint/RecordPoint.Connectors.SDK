@@ -10,6 +10,10 @@ namespace RecordPoint.Connectors.SDK.Configuration
 
         private readonly R365ConfigurationModel _r365ConfigurationModel;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r365ConfigurationModel"></param>
         public AppSettingsR365ConfigurationClient(IOptions<R365ConfigurationModel> r365ConfigurationModel)
         {
             _r365ConfigurationModel = r365ConfigurationModel.Value;

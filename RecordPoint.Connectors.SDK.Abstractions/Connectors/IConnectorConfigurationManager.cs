@@ -24,7 +24,7 @@
         /// <summary>
         /// Set connector configuration
         /// </summary>
-        /// <param name="connector">Connector data</param>
+        /// <param name="connectorData">Connector data</param>
         /// <param name="cancellationToken">Cancellation token</param>
         Task SetConnectorConfigurationAsync(ConnectorConfigurationModel connectorData, CancellationToken cancellationToken);
 

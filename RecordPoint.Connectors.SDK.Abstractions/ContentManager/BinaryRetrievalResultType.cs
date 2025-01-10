@@ -5,11 +5,26 @@
     /// </summary>
     public enum BinaryRetrievalResultType
     {
-        Complete,   // We successfully got the content item requested
-        Failed,     // We failed to get the content item due to an error
-        Deleted,    // The content cannot be obtained because it has neen deleted
-        ZeroBinary, // The BinaryStream has a length of zero and can't be written to blob
-        BackOff     // Content Source has throttled requests
+        /// <summary>
+        /// We successfully got the content item requested
+        /// </summary>
+        Complete,
+        /// <summary>
+        /// We failed to get the content item due to an error
+        /// </summary>
+        Failed,
+        /// <summary>
+        /// The content cannot be obtained because it has neen deleted
+        /// </summary>
+        Deleted,
+        /// <summary>
+        /// The BinaryStream has a length of zero and can't be written to blob
+        /// </summary>
+        ZeroBinary,
+        /// <summary>
+        /// Content Source has throttled requests
+        /// </summary>
+        BackOff
     }
 
 }

@@ -67,6 +67,7 @@
         /// <summary>
         /// Track an exception
         /// </summary>
+        /// <param name="name">Name of the exception</param>
         /// <param name="exception">Exception to track</param>
         /// <param name="dimensions">Dimensions associated with the event</param>
         /// <param name="measures">Measures associated with the event</param>

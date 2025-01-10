@@ -53,11 +53,21 @@ namespace RecordPoint.Connectors.SDK.Content
         /// </summary>
         public List<MetaDataItem> MetaDataItems { get; set; } = new List<MetaDataItem>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(ContentItem? other)
         {
             return Equals(this, other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -69,6 +79,12 @@ namespace RecordPoint.Connectors.SDK.Content
                 return Equals(other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public bool Equals(ContentItem? x, ContentItem? y)
         {
             if (x == null && y == null) return true;
@@ -84,12 +100,21 @@ namespace RecordPoint.Connectors.SDK.Content
                 && x.MetaDataItems.IsEqual(y.MetaDataItems);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;
             return ExternalId.GetHashCode();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int GetHashCode([DisallowNull] ContentItem obj)
         {
             if (obj.ExternalId == null) return 0;

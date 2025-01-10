@@ -19,10 +19,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
 
             builder.ConfigureServices((hostContext, services) =>
                 services
-                .Configure<RabbitMqOptions>(providers => new RabbitMqOptions
-                {
-                    QueuePrefix = "test"
-                })
+                .Configure<RabbitMqOptions>(options => options.QueuePrefix = "test")
                 .AddSingleton<IRabbitMqClientFactory>(provider => MockRabbitMqClientFactory)
                 .AddSingleton<IWorkQueueClient, RabbitMqWorkClient>()
                 );
@@ -44,7 +41,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
 
             var workRequest = new WorkRequest { SubmitDateTime = DateTime.UtcNow, WorkType = QueueName };
 
-            SUT.MockRabbitMqClientFactory.RabbitMqModelMock.Setup(a => a.BasicPublish(It.IsAny<string>(),
+            SUT?.MockRabbitMqClientFactory.RabbitMqModelMock.Setup(a => a.BasicPublish(It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<bool>(),
                 It.IsAny<IBasicProperties>(),
@@ -54,7 +51,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
                     basicPublishCalled++;
                 });
 
-            var workQueueClient = Services.GetRequiredService<IWorkQueueClient>();
+            var workQueueClient = Services?.GetRequiredService<IWorkQueueClient>();
             Assert.NotNull(workQueueClient);
 
             await workQueueClient.SubmitWorkAsync(workRequest, CancellationToken.None);
@@ -75,10 +72,10 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
 
             var workRequest = new WorkRequest { WaitTill = waitTill, WorkType = QueueName };
 
-            SUT.MockRabbitMqClientFactory.RabbitMqBasicPropertiesMock.Setup(o => o.Headers)
-                                                                     .Returns(new Dictionary<string, object>{});
+            SUT?.MockRabbitMqClientFactory.RabbitMqBasicPropertiesMock.Setup(o => o.Headers)
+                                                                     .Returns(new Dictionary<string, object> { });
 
-            SUT.MockRabbitMqClientFactory.RabbitMqModelMock.Setup(a => a.BasicPublish(It.IsAny<string>(),
+            SUT?.MockRabbitMqClientFactory.RabbitMqModelMock.Setup(a => a.BasicPublish(It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<bool>(),
                 It.IsAny<IBasicProperties>(),
@@ -88,7 +85,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
                     actualMilliseconds = Convert.ToDouble(props.Headers[ExchangeDelayHeader]);
                 });
 
-            var workQueueClient = Services.GetRequiredService<IWorkQueueClient>();
+            var workQueueClient = Services?.GetRequiredService<IWorkQueueClient>();
             Assert.NotNull(workQueueClient);
             await workQueueClient.SubmitWorkAsync(workRequest, CancellationToken.None);
 

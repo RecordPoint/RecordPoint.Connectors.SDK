@@ -16,20 +16,65 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Implementation of a managed work item that performs a Channel Discovery Operation
+    /// The channel discovery operation.
     /// </summary>
     public class ChannelDiscoveryOperation : ManagedQueueableWorkBase<ChannelDiscoveryConfiguration, ChannelDiscoveryState>
     {
+        /// <summary>
+        /// WORK TYPE.
+        /// </summary>
         public const string WORK_TYPE = "Channel Discovery";
 
+        /// <summary>
+        /// The content manager action provider.
+        /// </summary>
         private readonly IContentManagerActionProvider _contentManagerActionProvider;
+        /// <summary>
+        /// Work queue client.
+        /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
+        /// <summary>
+        /// The managed work factory.
+        /// </summary>
         private readonly IManagedWorkFactory _managedWorkFactory;
+        /// <summary>
+        /// The managed work status manager.
+        /// </summary>
         private readonly IManagedWorkStatusManager _managedWorkStatusManager;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
+        /// <summary>
+        /// The channel manager.
+        /// </summary>
         private readonly IChannelManager _channelManager;
+        /// <summary>
+        /// The options.
+        /// </summary>
         private readonly IOptions<ChannelDiscoveryOperationOptions> _options;
+        /// <summary>
+        /// Content Manager Options
+        /// </summary>
+        private readonly IOptions<ContentManagerOptions> _contentManagerOptions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChannelDiscoveryOperation"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
+        /// <param name="connectorManager">The connector manager.</param>
+        /// <param name="channelManager">The channel manager.</param>
+        /// <param name="workQueueClient">The work queue client.</param>
+        /// <param name="managedWorkFactory">The managed work factory.</param>
+        /// <param name="managedWorkStatusManager">The managed work status manager.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="contentManagerOptions">The content manager options.</param>
         public ChannelDiscoveryOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -43,7 +88,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             ILogger<ChannelDiscoveryOperation> logger,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
-            IOptions<ChannelDiscoveryOperationOptions> options)
+            IOptions<ChannelDiscoveryOperationOptions> options,
+            IOptions<ContentManagerOptions> contentManagerOptions)
             : base(serviceProvider, managedWorkFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
@@ -53,43 +99,39 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _channelManager = channelManager;
             _managedWorkStatusManager = managedWorkStatusManager;
             _options = options;
+            _contentManagerOptions = contentManagerOptions;
         }
 
+        /// <summary>
+        /// Gets the service name.
+        /// </summary>
         public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WORK_TYPE;
 
+        /// <summary>
+        /// The connector configuration.
+        /// </summary>
         private ConnectorConfigModel _connectorConfiguration;
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <exception cref="RequiredValueOutOfRangeException"></exception>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             _connectorConfiguration = await _connectorManager.GetConnectorAsync(Configuration.ConnectorConfigurationId, cancellationToken);
-            if (_connectorConfiguration == null)
-            {
-                // If connector not found assume its been deleted
-                await AbandonedAsync("Connector not found", cancellationToken);
+
+            if (!(await CheckConnectorEnabledStatusAsync(_connectorConfiguration, _options.Value, State, _contentManagerOptions.Value.MaxDisabledConnectorAge, cancellationToken)))
                 return;
-            }
 
-            var connectorStatus = await _connectorManager.GetConnectorStatusAsync(Configuration.ConnectorConfigurationId, cancellationToken);
-            if (!connectorStatus.Enabled)
-            {
-                //Connector Configuration is disabled, so backoff until it is re-enabled
-                var backOffSeconds = CalculateBackOffSeconds(
-                    _options.Value,
-                    false,
-                    State.LastBackOffDelaySeconds);
-
-                State.LastBackOffDelaySeconds = backOffSeconds;
-
-                await ContinueAsync(connectorStatus.EnabledReason, State, DateTimeProvider.UtcNow.AddSeconds(backOffSeconds), cancellationToken);
+            if (await CheckSemaphoreLockAsync(_connectorConfiguration, null, cancellationToken))
                 return;
-            }
-
-            if (await CheckSemaphoreLockAsync(_connectorConfiguration, cancellationToken))
-            {
-                return;
-            }
 
             var startTime = DateTimeProvider.UtcNow;
 
@@ -107,7 +149,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     break;
 
                 case ChannelDiscoveryResultType.BackOff:
-                    await HandleBackOffResultAsync(_connectorConfiguration, _channelDiscoveryResult.SemaphoreLockType, _channelDiscoveryResult.NextDelay, cancellationToken);
+                    await HandleBackOffResultAsync(_connectorConfiguration, null, _channelDiscoveryResult.SemaphoreLockType, _channelDiscoveryResult.NextDelay, cancellationToken);
                     break;
 
                 default:
@@ -164,10 +206,18 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         #endregion
 
         #region Handle Result
+        /// <summary>
+        /// Handle complete result asynchronously.
+        /// </summary>
+        /// <param name="channelResult">The channel result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected async Task HandleCompleteResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
         {
             //Add the new Channels to Storage
-            var channelModels = channelResult.Channels.ToChannelModelList();
+            var channelModels = channelResult.Channels.ToChannelModelList()
+                .UnionBy(channelResult.NewChannelRegistrations.ToChannelModelList(), a => a.ExternalId)
+                .ToList();
             channelModels.ForEach(channelModel => channelModel.ConnectorId = _connectorConfiguration.Id);
             await _channelManager.UpsertChannelsAsync(channelModels, cancellationToken);
 
@@ -185,9 +235,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             //Create new Content Synchronisation Operations for Channels that don't currently have Work assigned
             //The running Channel Discovery Operation should handle when Channels are removed
             var newContentSynchronisationChannels = await GetMissingChannelsForWorkTypeAsync(
-                channelResult.Channels, 
-                ContentSynchronisationOperation.WORK_TYPE, 
-                a => a.DeserialiseContentSynchronisationConfiguration().ChannelExternalId, 
+                channelResult.Channels,
+                ContentSynchronisationOperation.WORK_TYPE,
+                a => a.DeserialiseContentSynchronisationConfiguration().ChannelExternalId,
                 cancellationToken);
 
             foreach (var channel in newContentSynchronisationChannels)
@@ -199,9 +249,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
             //Create new Content Registration Operations for Channels that don't currently have Work assigned
             var newContentRegistrationChannels = await GetMissingChannelsForWorkTypeAsync(
-                channelResult.NewChannelRegistrations, 
-                ContentRegistrationOperation.WORK_TYPE, 
-                a => a.DeserialiseContentRegistrationConfiguration().ChannelExternalId, 
+                channelResult.NewChannelRegistrations,
+                ContentRegistrationOperation.WORK_TYPE,
+                a => a.DeserialiseContentRegistrationConfiguration().ChannelExternalId,
                 cancellationToken);
 
             foreach (var channel in newContentRegistrationChannels)
@@ -235,6 +285,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             await ContinueAsync("Channel Discovery completed normally", finalState, nextRunTime, cancellationToken);
         }
 
+        /// <summary>
+        /// Handle failed result asynchronously.
+        /// </summary>
+        /// <param name="channelResult">The channel result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected Task HandleFailedResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
         {
             // Should continue the failed Channel work in the next runs
@@ -263,10 +319,27 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         #endregion
 
         #region State Serialization
+        /// <summary>
+        /// Deserialize the configuration.
+        /// </summary>
+        /// <param name="configurationType">The configuration type.</param>
+        /// <param name="configurationText">The configuration text.</param>
+        /// <returns>A ChannelDiscoveryConfiguration</returns>
         protected override ChannelDiscoveryConfiguration DeserializeConfiguration(string configurationType, string configurationText) => ChannelDiscoveryConfiguration.Deserialize(configurationType, configurationText);
 
+        /// <summary>
+        /// Deserialize the state.
+        /// </summary>
+        /// <param name="stateType">The state type.</param>
+        /// <param name="stateText">The state text.</param>
+        /// <returns>A ChannelDiscoveryState</returns>
         protected override ChannelDiscoveryState DeserializeState(string stateType, string stateText) => ChannelDiscoveryState.Deserialize(stateType, stateText);
 
+        /// <summary>
+        /// Serialize the state.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <returns>A (string, string)</returns>
         protected override (string, string) SerializeState(ChannelDiscoveryState state) => (ChannelDiscoveryState.LatestStateType, state.Serialize());
         #endregion
 
@@ -317,9 +390,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 dimensions[StandardDimensions.EXCEPTION] = _channelDiscoveryResult.Exception.ToString();
             }
 
+            if (_channelDiscoveryResult?.Dimensions != null)
+            {
+                foreach (var dimension in _channelDiscoveryResult.Dimensions)
+                {
+                    dimensions[dimension.Key] = dimension.Value;
+                }
+            }
+
             return dimensions;
         }
 
+        /// <summary>
+        /// Get custom result dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomResultDimensions()
         {
             var dimensions = base.GetCustomResultDimensions();
@@ -327,6 +412,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return dimensions;
         }
 
+        /// <summary>
+        /// Get custom result measures.
+        /// </summary>
+        /// <returns>A Measures</returns>
         protected override Measures GetCustomResultMeasures()
         {
             var measures = base.GetCustomResultMeasures();
@@ -338,6 +427,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 measures[StandardMeasures.ACTION_EXECUTION_SECONDS] = _actionExecutionTimespan.Value.Milliseconds / 1000D;
             if (_submitTimespan.HasValue)
                 measures[StandardMeasures.SUBMIT_SECONDS] = _submitTimespan.Value.Milliseconds / 1000D;
+
+            if (_channelDiscoveryResult?.Measures != null)
+            {
+                foreach (var measure in _channelDiscoveryResult.Measures)
+                {
+                    measures[measure.Key] = measure.Value;
+                }
+            }
 
             return measures;
         }

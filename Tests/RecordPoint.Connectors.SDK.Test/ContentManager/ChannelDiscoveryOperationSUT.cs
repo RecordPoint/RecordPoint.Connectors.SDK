@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
-using RecordPoint.Connectors.SDK.Work;
-using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Connectors;
+using RecordPoint.Connectors.SDK.Content;
+using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Test.Mock.Databases;
+using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
 {

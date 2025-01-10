@@ -16,6 +16,9 @@ namespace RecordPoint.Connectors.SDK.Logging.Serilog
     /// </summary>
     public static class SerilogLogBuilderExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string LOG_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}]: {Message:lj}{NewLine}{Properties}{NewLine}{Exception}";
 
         /// <summary>

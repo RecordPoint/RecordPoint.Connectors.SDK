@@ -6,6 +6,11 @@
     public sealed class Aggregation : ContentItem, IEquatable<Aggregation>
     {
         /// <summary>
+        /// Parent External Id of the Aggregation
+        /// </summary>
+        public string? ParentExternalId { get; set; }
+
+        /// <summary>
         /// Aggregation item type
         /// </summary>
         public const int ItemTypeId = 1;
@@ -15,6 +20,11 @@
         /// </summary>
         public string Location { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Aggregation? other)
         {
             if (other == null) return false;
@@ -28,9 +38,15 @@
                 && SourceLastModifiedBy == other.SourceLastModifiedBy
                 && SourceLastModifiedDate == other.SourceLastModifiedDate
                 && Title == other.Title
-                && Location == other.Location;
+                && Location == other.Location
+                && ParentExternalId == other.ParentExternalId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -42,6 +58,10 @@
                 return Equals(other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;

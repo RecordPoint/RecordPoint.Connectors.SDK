@@ -1,20 +1,34 @@
 ﻿namespace RecordPoint.Connectors.SDK.ContentManager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ContentManagerOptions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SECTION_NAME = "ContentManager";
 
         /// <summary>
         /// Number of seconds to delay betwwen Content Manager Operation executions
         /// </summary>
         /// <remarks>
-        /// The Content Manager Operation ensures Channel Discovery & Content Synchronisation is being performed for all Connector Configurations and discovered Channels.
+        /// The Content Manager Operation ensures Channel Discovery and Content Synchronisation is being performed for all Connector Configurations and discovered Channels.
         /// Defaults to 300 seconds (5 minutes)
         /// </remarks>
         public int DelaySeconds { get; set; } = 300;
 
         /// <summary>
-        /// Automatically remove Channels that belong to Connectors Configurations that have been removed
+        /// Automatically remove Aggregations that belong to Connectors Configurations that have been removed or have been disabled beyond the configured threshold
+        /// </summary>
+        /// <remarks>
+        /// Defaults to true
+        /// </remarks>
+        public bool CleanUpAggregations { get; set; } = true;
+
+        /// <summary>
+        /// Automatically remove Channels that belong to Connectors Configurations that have been removed or have been disabled beyond the configured threshold
         /// </summary>
         /// <remarks>
         /// Defaults to true
@@ -57,6 +71,14 @@
         /// The maximum age for Channel Synchronisation Work that has been abandoned due to the Channel no longer existing
         /// </summary>
         public int MaxAbandonedChannelSynchronisationAge { get; set; } = 300;
+
+        /// <summary>
+        /// The max age for a disabled connector configuration before all work is abandoned
+        /// </summary>
+        /// <remarks>
+        /// Defaults to -1 which means disabled connectors will not have their work abandoned
+        /// </remarks>
+        public int MaxDisabledConnectorAge { get; set; } = -1;
     }
 
 
@@ -111,6 +133,9 @@
     /// </summary>
     public class ChannelDiscoveryOperationOptions : ContentManagerOperationOptionsBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SECTION_NAME = "ContentManager:ChannelDiscovery";
     }
 
@@ -119,6 +144,9 @@
     /// </summary>
     public class ContentRegistrationOperationOptions : ContentManagerOperationOptionsBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SECTION_NAME = "ContentManager:ContentRegistration";
 
         /// <summary>
@@ -132,6 +160,9 @@
     /// </summary>
     public class ContentSynchronisationOperationOptions : ContentManagerOperationOptionsBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SECTION_NAME = "ContentManager:ContentSynchronisation";
 
         /// <summary>

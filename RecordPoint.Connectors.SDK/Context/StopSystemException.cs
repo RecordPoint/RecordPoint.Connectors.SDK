@@ -1,29 +1,33 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace RecordPoint.Connectors.SDK.Context
 {
     /// <summary>
-    /// Exception that indicates that the system was requested to stop
+    /// The stop system exception.
     /// </summary>
-    [Serializable]
     public class StopSystemException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopSystemException"/> class.
+        /// </summary>
         public StopSystemException()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopSystemException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public StopSystemException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopSystemException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="inner">The inner.</param>
         public StopSystemException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected StopSystemException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }

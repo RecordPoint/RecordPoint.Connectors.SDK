@@ -13,16 +13,42 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Binary submission work item
+    /// The record disposal operation.
     /// </summary>
     public class RecordDisposalOperation : QueueableWorkBase<Record>
     {
+        /// <summary>
+        /// WORK TYPE.
+        /// </summary>
         public const string WORK_TYPE = "Record Disposal";
+        /// <summary>
+        /// The DEFAULT DEFERRAL SECONDS.
+        /// </summary>
         public const int DEFAULT_DEFERRAL_SECONDS = 10;
+        /// <summary>
+        /// The BINARY SUBMISSION DELAY SECONDS.
+        /// </summary>
         public const int BINARY_SUBMISSION_DELAY_SECONDS = 10;
 
+        /// <summary>
+        /// The content manager action provider.
+        /// </summary>
         private readonly IContentManagerActionProvider _contentManagerActionProvider;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordDisposalOperation"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
+        /// <param name="connectorManager">The connector manager.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         public RecordDisposalOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -38,17 +64,41 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _connectorManager = connectorManager;
         }
 
+        /// <summary>
+        /// Gets the service name.
+        /// </summary>
         public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WORK_TYPE;
 
+        /// <summary>
+        /// Gets the record.
+        /// </summary>
         public Record Record => Parameter;
 
+        /// <summary>
+        /// Gets the connector config id.
+        /// </summary>
         public string ConnectorConfigId => WorkRequest.ConnectorConfigId;
 
+        /// <summary>
+        /// The connector configuration.
+        /// </summary>
         private ConnectorConfigModel _connectorConfiguration;
+        /// <summary>
+        /// The record disposal result.
+        /// </summary>
         private RecordDisposalResult _recordDisposalResult;
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             _connectorConfiguration = await _connectorManager.GetConnectorAsync(ConnectorConfigId, cancellationToken);
@@ -66,7 +116,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 return;
             }
 
-            if (await CheckSemaphoreLockAsync(_connectorConfiguration, cancellationToken))
+            if (await CheckSemaphoreLockAsync(_connectorConfiguration, Record, cancellationToken))
             {
                 return;
             }
@@ -90,7 +140,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     throw new InvalidOperationException(_recordDisposalResult.Reason, _recordDisposalResult.Exception);
 
                 case RecordDisposalResultType.BackOff:
-                    await HandleBackOffResultAsync(_connectorConfiguration, _recordDisposalResult.SemaphoreLockType, _recordDisposalResult.NextDelay, cancellationToken);
+                    await HandleBackOffResultAsync(_connectorConfiguration, Record, _recordDisposalResult.SemaphoreLockType, _recordDisposalResult.NextDelay, cancellationToken);
                     break;
 
                 default:
@@ -105,6 +155,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         protected IRecordDisposalAction CreateRecordDisposalAction() => _contentManagerActionProvider.CreateRecordDisposalAction();
 
         #region Observability
+        /// <summary>
+        /// Get custom key dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomKeyDimensions()
         {
             var dimensions = new Dimensions
@@ -114,6 +168,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return dimensions;
         }
 
+        /// <summary>
+        /// Get custom result dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomResultDimensions()
         {
             var dimensions = base.GetCustomResultDimensions();
@@ -126,7 +184,36 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             {
                 dimensions[StandardDimensions.EXCEPTION] = _recordDisposalResult.Exception.ToString();
             }
+
+            if (_recordDisposalResult?.Dimensions != null)
+            {
+                foreach (var dimension in _recordDisposalResult.Dimensions)
+                {
+                    dimensions[dimension.Key] = dimension.Value;
+                }
+            }
+
             return dimensions;
+        }
+
+
+        /// <summary>
+        /// Get custom result measures.
+        /// </summary>
+        /// <returns>A Measures</returns>
+        protected override Measures GetCustomResultMeasures()
+        {
+            var measures = base.GetCustomResultMeasures();
+
+            if (_recordDisposalResult?.Measures != null)
+            {
+                foreach (var measure in _recordDisposalResult.Measures)
+                {
+                    measures[measure.Key] = measure.Value;
+                }
+            }
+
+            return measures;
         }
         #endregion
     }

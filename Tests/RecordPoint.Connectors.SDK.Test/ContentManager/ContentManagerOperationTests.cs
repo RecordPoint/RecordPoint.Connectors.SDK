@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Work;
@@ -101,7 +102,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             Assert.Equal(ContentManagerConfiguration.ConfigurationType, afterWork.ConfigurationType);
         }
 
-
         [Fact]
         public async Task ChannelRemovedIfConnectorDoesNotExist()
         {
@@ -127,5 +127,181 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             Assert.Empty(channels);
         }
 
+        [Fact]
+        public async Task ChannelRemovedIfConnectorDisabledPassedThreshold()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var myConfig = new Dictionary<string, string>
+            {
+                { "ContentManager:MaxDisabledConnectorAge", "1209600" },
+            };
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfig)
+                .Build();
+
+            await StartSutAsync(config);
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now.AddDays(-30));
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+
+            var channel = ContentManagerSutBase.CreateChannel1();
+            await SUT.GetChannelManager().UpsertChannelAsync(channel, cancellationToken);
+
+            var channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
+
+            Assert.NotEmpty(channels);
+
+            var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
+            await SUT.SetWorkRunning(workMessage);
+
+            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+
+            channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
+
+            Assert.Empty(channels);
+        }
+
+        [Fact]
+        public async Task ChannelNotRemovedIfConnectorDisabledNotPassedThreshold()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var myConfig = new Dictionary<string, string>
+            {
+                { "ContentManager:MaxDisabledConnectorAge", "1209600" },
+            };
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfig)
+                .Build();
+
+            await StartSutAsync(config);
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now);
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+
+            var channel = ContentManagerSutBase.CreateChannel1();
+            await SUT.GetChannelManager().UpsertChannelAsync(channel, cancellationToken);
+
+            var channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
+
+            Assert.NotEmpty(channels);
+
+            var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
+            await SUT.SetWorkRunning(workMessage);
+
+            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+
+            channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
+
+            Assert.NotEmpty(channels);
+        }
+
+        [Fact]
+        public async Task AggregationRemovedIfConnectorDoesNotExist()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            await StartSutAsync();
+
+            var aggregation = ContentManagerSutBase.CreateAggregation1();
+            await SUT.GetAggregationManager().UpsertAggregationAsync(aggregation, cancellationToken);
+
+            var aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
+
+            Assert.NotEmpty(aggregations);
+
+            var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
+            await SUT.SetWorkRunning(workMessage);
+
+            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+
+            aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
+
+            Assert.Empty(aggregations);
+        }
+
+        [Fact]
+        public async Task AggregationRemovedIfConnectorDisabledPassedThreshold()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var myConfig = new Dictionary<string, string>
+            {
+                { "ContentManager:MaxDisabledConnectorAge", "1209600" },
+            };
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfig)
+                .Build();
+
+            await StartSutAsync(config);
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now.AddDays(-30));
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+
+            var aggregation = ContentManagerSutBase.CreateAggregation1();
+            await SUT.GetAggregationManager().UpsertAggregationAsync(aggregation, cancellationToken);
+
+            var aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
+
+            Assert.NotEmpty(aggregations);
+
+            var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
+            await SUT.SetWorkRunning(workMessage);
+
+            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+
+            aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
+
+            Assert.Empty(aggregations);
+        }
+
+        [Fact]
+        public async Task AggregationNotRemovedIfConnectorDisabledNotPassedThreshold()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var myConfig = new Dictionary<string, string>
+            {
+                { "ContentManager:MaxDisabledConnectorAge", "1209600" },
+            };
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfig)
+                .Build();
+
+            await StartSutAsync(config);
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now);
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+
+            var aggregation = ContentManagerSutBase.CreateAggregation1();
+            await SUT.GetAggregationManager().UpsertAggregationAsync(aggregation, cancellationToken);
+
+            var aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
+
+            Assert.NotEmpty(aggregations);
+
+            var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
+            await SUT.SetWorkRunning(workMessage);
+
+            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+
+            aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
+
+            Assert.NotEmpty(aggregations);
+        }
     }
 }

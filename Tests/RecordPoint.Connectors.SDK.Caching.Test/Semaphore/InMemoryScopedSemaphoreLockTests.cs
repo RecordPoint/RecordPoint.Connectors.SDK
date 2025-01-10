@@ -58,7 +58,7 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = new();
 
-            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, CancellationToken.None);
+            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, CancellationToken.None);
             Assert.Null(result);
         }
 
@@ -74,7 +74,7 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
 
             try
             {
-                await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, lockDuration, cancellationToken);
+                await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, lockDuration, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
 
             try
             {
-                var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, cancellationToken);
+                var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -113,9 +113,9 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = new();
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, lockDuration, cancellationToken);
 
-            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             var semaporeDuration = result.Value - DateTimeOffset.Now;
 
             Assert.NotNull(result);
@@ -133,11 +133,11 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = new();
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, lockDuration, cancellationToken);
 
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
-            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
 
             Assert.Null(result);
         }
@@ -153,11 +153,11 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = new();
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, lockDuration, cancellationToken);
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             stopWatch.Stop();
 
             Assert.True(stopWatch.Elapsed.Seconds > 3);
@@ -174,13 +174,13 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = new();
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, lockDuration, cancellationToken);
 
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             stopWatch.Stop();
 
             Assert.True(stopWatch.Elapsed.Seconds < 2);
@@ -198,17 +198,17 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
             semaphoreLockManager.ConnectorConfiguration = new();
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, lockDuration, cancellationToken);
             Assert.Equal(1, SUT.SemaphoreLockScopedKeyAction.ExecutionCount);
 
-            await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             Assert.Equal(2, SUT.SemaphoreLockScopedKeyAction.ExecutionCount);
 
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             stopWatch.Stop();
 
             Assert.Equal(3, SUT.SemaphoreLockScopedKeyAction.ExecutionCount);

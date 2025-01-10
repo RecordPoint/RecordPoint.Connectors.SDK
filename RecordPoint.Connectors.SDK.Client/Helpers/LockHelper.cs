@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Helpers
 {
+    /// <summary>
+    /// The lock helper.
+    /// </summary>
     public static class LockHelper
     {
         /// <summary>
@@ -54,6 +57,13 @@
             );
         }
 
+        /// <summary>
+        /// Locked the read.
+        /// </summary>
+        /// <typeparam name="T"/>
+        /// <param name="lockingObject">The locking object.</param>
+        /// <param name="lockedObject">The locked object.</param>
+        /// <returns>A <typeparamref name="T"/></returns>
         public static T LockedRead<T>(ref object lockingObject, ref T lockedObject)
         {
             lock (lockingObject)

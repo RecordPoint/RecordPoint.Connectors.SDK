@@ -1,5 +1,6 @@
 ﻿using Moq;
 using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Client.Test.Filters;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Filters;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
@@ -211,24 +212,19 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             await AssertFiltered(submitContext, !expectFilter);
         }
 
-        public static IEnumerable<object[]> CanMatchExcludedOnAndTestData()
+        public static TheoryData<TestSubmitContext, bool> CanMatchExcludedOnAndTestData()
         {
-            // Fields not present - Expect item to not be filtered
-            yield return new object[] { GetSubmitContext(3, 0, FilterConstants.FilterBooleanOperators.And), false };
-            // One of the three Fields present - Expect item to not be filtered
-            yield return new object[] { GetSubmitContext(3, 1, FilterConstants.FilterBooleanOperators.And), false };
-            // Only two of three Fields present - Expect item to not be filtered
-            yield return new object[] { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.And), false };
-            // All three Fields present - Expect item to be filtered
-            yield return new object[] { GetSubmitContext(3, 3, FilterConstants.FilterBooleanOperators.And), true };
-            // All three Fields present, but one field has a value which does not match - Expect item to not be filtered
-            var submitContext = GetSubmitContext(3, 3, FilterConstants.FilterBooleanOperators.And);
-            yield return new object[] { AddOrUpdateCoreMetadata(submitContext, submitContext.CoreMetaData.Last().Name, "Test"), false };
-
-            // Fields not present - Capitalized casing - Expect item to not be filtered
-            yield return new object[] { GetSubmitContext(3, 0, "And"), false };
-            // All three Fields present - Capitalized casing - Expect item to be filtered
-            yield return new object[] { GetSubmitContext(3, 3, "And"), true };
+            var threeFieldSubmitContext = GetSubmitContext(3, 3, FilterConstants.FilterBooleanOperators.And, "All three Fields present, but one field has a value which does not match");
+            return new TheoryData<TestSubmitContext, bool>
+            {
+                { GetSubmitContext(3, 0, FilterConstants.FilterBooleanOperators.And, "Fields not present"), false },
+                { GetSubmitContext(3, 1, FilterConstants.FilterBooleanOperators.And, " One of the three Fields present"), false },
+                { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.And, "Only two of three Fields present"), false },
+                { GetSubmitContext(3, 3, FilterConstants.FilterBooleanOperators.And, "All three Fields present"), true },
+                { AddOrUpdateCoreMetadata(threeFieldSubmitContext, threeFieldSubmitContext.CoreMetaData.Last().Name, "Test"), false },
+                { GetSubmitContext(3, 0, "And", "Fields not present - Capitalized casing"), false },
+                { GetSubmitContext(3, 3, "And", "All three Fields present - Capitalized casing"), true }
+            };
         }
 
         [Theory]
@@ -250,29 +246,21 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             await AssertFiltered(submitContext, !expectFilter);
         }
 
-        public static IEnumerable<object[]> CanMatchExcludedOnOrTestData()
+        public static TheoryData<TestSubmitContext, bool> CanMatchExcludedOnOrTestData()
         {
-            // Fields not present - Expect item to not be filtered
-            yield return new object[] { GetSubmitContext(3, 0, FilterConstants.FilterBooleanOperators.Or), false };
-            // One of the fields present, but does not match - Expect item to not be filtered 
-            var onePresentDoesNotMatch = GetSubmitContext(3, 1, FilterConstants.FilterBooleanOperators.Or);
-            yield return new object[] { AddOrUpdateCoreMetadata(onePresentDoesNotMatch, onePresentDoesNotMatch.CoreMetaData.Last().Name, "Test"), false };
-            // One of the three Fields present - Expect item to be filtered
-            yield return new object[] { GetSubmitContext(3, 1, FilterConstants.FilterBooleanOperators.Or), true };
-            // Two of the fields present, but one does not match - Expect item to be filtered 
-            var twoPresentDoesNotMatch = GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or);
-            yield return new object[] { AddOrUpdateCoreMetadata(twoPresentDoesNotMatch, twoPresentDoesNotMatch.CoreMetaData.Last().Name, "Test"), true };
-            // Two of the three Fields present - Expect item to be filtered 
-            yield return new object[] { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or), true };
-            // All of the three Fields present - Expect item to be filtered 
-            yield return new object[] { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or), true };
-
-
-            // Fields not present - Capitalized casing - Expect item to not be filtered
-            yield return new object[] { GetSubmitContext(3, 0, "Or"), false };
-            // One of the three Fields present - Capitalized casing - Expect item to be filtered
-            yield return new object[] { GetSubmitContext(3, 1, "Or"), true };
-
+            var onePresentDoesNotMatch = GetSubmitContext(3, 1, FilterConstants.FilterBooleanOperators.Or, "One of the fields present, but does not match");
+            var twoPresentDoesNotMatch = GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or, "Two of the fields present, but one does not match");
+            return new TheoryData<TestSubmitContext, bool>
+            {
+                { GetSubmitContext(3, 0, FilterConstants.FilterBooleanOperators.Or, "Fields not present"), false },
+                { AddOrUpdateCoreMetadata(onePresentDoesNotMatch, onePresentDoesNotMatch.CoreMetaData.Last().Name, "Test"), false },
+                { GetSubmitContext(3, 1, FilterConstants.FilterBooleanOperators.Or, "One of the three Fields present"), true },
+                { AddOrUpdateCoreMetadata(twoPresentDoesNotMatch, twoPresentDoesNotMatch.CoreMetaData.Last().Name, "Test"), true },
+                { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or, "Two of the three Fields present"), true },
+                { GetSubmitContext(3, 2, FilterConstants.FilterBooleanOperators.Or, "All of the three Fields present"), true },
+                { GetSubmitContext(3, 0, "Or", "Fields not present - Capitalized casing"), false },
+                { GetSubmitContext(3, 1, "Or", "One of the three Fields present - Capitalized casing"), true }
+            };
         }
 
         [Fact]
@@ -427,7 +415,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             await AssertFiltered(submitContext, expectFilter);
         }
 
-        public static IEnumerable<object[]> ExcludedFilterAndIncludedFilter_WorkTogetherTestData()
+        public static TheoryData<TestSubmitContext, bool> ExcludedFilterAndIncludedFilter_WorkTogetherTestData()
         {
             var connectorTypeId = Guid.NewGuid();
             var excludeFieldName = "folderPath";
@@ -442,11 +430,11 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 {
                     BoolOperator = FilterConstants.FilterBooleanOperators.Or,
                     SearchTerm = null,
-                    Children = new List<SearchTreeNodeModel>()
-                    {
+                    Children =
+                    [
                         GetSearchTreeNodeModel(excludeSourceFieldName, "inbox", FilterConstants.StringFieldOperators.Contains),
                         GetSearchTreeNodeModel(excludeSourceFieldName, "sent", FilterConstants.StringFieldOperators.Contains)
-,                   }
+,                   ]
                 },
                 Included = new SearchTreeNodeModel()
                 {
@@ -456,33 +444,36 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 }
             };
 
-            // Item in one of the excluded folders and does not match include - Expect item to be filtered
-            var test1 = GetSubmitContext(filter);
+            var test1 = GetSubmitContext(filter, "Item in one of the excluded folders and does not match include");
             AddOrUpdateSourceMetadata(test1, excludeFieldName, "inbox");
             AddOrUpdateSourceMetadata(test1, includeFieldName, Guid.NewGuid().ToString());
-            yield return new object[] { test1, true };
-            // Item in one of the excluded folders and matches include - Expect item to be filtered
-            var test2 = GetSubmitContext(filter);
+
+            var test2 = GetSubmitContext(filter, "Item in one of the excluded folders and matches include");
             AddOrUpdateSourceMetadata(test2, excludeFieldName, "sent");
             AddOrUpdateSourceMetadata(test2, includeFieldName, "meeting");
-            yield return new object[] { test2, true };
-            // Item not in one of the excluded folders and does not match include - Expect item to be filtered
-            var test3 = GetSubmitContext(filter);
+
+            var test3 = GetSubmitContext(filter, "Item not in one of the excluded folders and does not match include");
             AddOrUpdateSourceMetadata(test3, excludeFieldName, "Sandstorm");
             AddOrUpdateSourceMetadata(test3, includeFieldName, "PROJECT ON HOLD");
-            yield return new object[] { test3, true };
-            // Item not in one of the excluded folders and does match include - Expect item to not be filtered
-            var test4 = GetSubmitContext(filter);
+
+            var test4 = GetSubmitContext(filter, "Item not in one of the excluded folders and does match include");
             AddOrUpdateSourceMetadata(test4, excludeFieldName, "Sandstorm");
             AddOrUpdateSourceMetadata(test4, includeFieldName, "Project Sandstorm - Crisis Management Meeting");
-            yield return new object[] { test4, false };
+
+            return new TheoryData<TestSubmitContext, bool>
+            {
+                { test1, true },
+                { test2, true },
+                { test3, true },
+                { test4, false }
+            };
         }
 
         private async Task AssertFiltered(SubmitContext submitContext, bool expectFiltered)
         {
             // We might reuse the same submit context id in the same run - Let's just reset
             // the invocations before we do a verify
-            _mockNext.ResetCalls();
+            _mockNext.Invocations.Clear();
 
             if (expectFiltered)
             {
@@ -534,7 +525,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             };
         }
 
-        private static SubmitContext GetSubmitContext(int numberOfFields, int numberOfMatchingFields, string boolOperator)
+        private static TestSubmitContext GetSubmitContext(int numberOfFields, int numberOfMatchingFields, string boolOperator, string name = null)
         {
             var fieldNamesAndValues = new Dictionary<string, string>();
             for (int i = 0; i < numberOfFields; i++)
@@ -548,10 +539,11 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             };
 
             var submitContext = GetSubmitContext(filter);
+            submitContext.Name = name;
             return AddOrUpdateCoreMetadata(submitContext, fieldNamesAndValues.Take(numberOfMatchingFields));
         }
 
-        private static SubmitContext AddOrUpdateCoreMetadata(SubmitContext submitContext, string fieldName, string fieldValue, string fieldType = nameof(String))
+        private static TestSubmitContext AddOrUpdateCoreMetadata(TestSubmitContext submitContext, string fieldName, string fieldValue, string fieldType = nameof(String))
         {
             submitContext.CoreMetaData.AddOrUpdate(new SubmissionMetaDataModel()
             {
@@ -575,7 +567,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
             return submitContext;
         }
 
-        private static SubmitContext AddOrUpdateCoreMetadata(SubmitContext submitContext, IEnumerable<KeyValuePair<string, string>> fieldKeysAndValues, string fieldType = nameof(String))
+        private static TestSubmitContext AddOrUpdateCoreMetadata(TestSubmitContext submitContext, IEnumerable<KeyValuePair<string, string>> fieldKeysAndValues, string fieldType = nameof(String))
         {
             foreach (var kvp in fieldKeysAndValues)
             {

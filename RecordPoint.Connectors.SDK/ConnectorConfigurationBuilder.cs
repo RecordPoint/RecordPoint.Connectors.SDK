@@ -49,6 +49,7 @@ namespace RecordPoint.Connectors.SDK
         /// Creates a Connector configuration builder.
         /// </summary>
         /// <param name="args">Application args</param>
+        /// <param name="connectorAssembly">Assembly of the application being configured</param>
         /// <returns>Configuration builder</returns>
         /// <remarks>
         /// Create a configuration that loads settings from the following sources:

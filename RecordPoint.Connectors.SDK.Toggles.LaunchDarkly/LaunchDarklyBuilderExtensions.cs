@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RecordPoint.Common.FeatureToggles.LaunchDarkly;
 
 namespace RecordPoint.Connectors.SDK.Toggles.LaunchDarkly
 {
@@ -8,7 +9,6 @@ namespace RecordPoint.Connectors.SDK.Toggles.LaunchDarkly
     /// </summary>
     public static class LaunchDarklyBuilderExtensions
     {
-
         /// <summary>
         /// Configure the host to use the launch darkly toggle provider
         /// </summary>
@@ -16,16 +16,12 @@ namespace RecordPoint.Connectors.SDK.Toggles.LaunchDarkly
         /// <returns>Updated host builder</returns>
         public static IHostBuilder UseLaunchDarklyToggles(this IHostBuilder hostBuilder)
         {
-            hostBuilder.ConfigureServices((hostContext, serviceCollection) =>
-            {
-                var configurationLDarklySection = hostContext.Configuration.GetSection(LaunchDarklyOptions.SECTION_NAME);
-                serviceCollection.Configure<LaunchDarklyOptions>(configurationLDarklySection);
-
-                serviceCollection.AddSingleton<IToggleProvider, LaunchDarklyToggleProvider>();
-            });
-
-            return hostBuilder;
+            return hostBuilder
+                .RegisterLaunchDarklyFeatureToggleProvider(string.Empty)
+                .ConfigureServices((hostContext, serviceCollection) =>
+                {
+                    serviceCollection.AddSingleton<IToggleProvider, LaunchDarklyToggleProvider>();
+                });
         }
-
     }
 }

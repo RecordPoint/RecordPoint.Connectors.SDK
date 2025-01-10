@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 {
+    /// <summary>
+    /// The azure service bus dimensions.
+    /// </summary>
     public static class AzureServiceBusDimensions
     {
 

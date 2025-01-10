@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RecordPoint.Connectors.SDK.Caching.Semaphore;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Work;
@@ -37,7 +36,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await StartSutAsync();
 
             var connector = ContentManagerSutBase.CreateConnector1();
-            connector.Status = "Disabled";
+            ContentManagerSutBase.DisableConnector(connector, DateTimeOffset.Now);
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitAuditEventManagedWorkStatusModel(connector);

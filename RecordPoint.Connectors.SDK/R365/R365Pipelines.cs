@@ -2,9 +2,19 @@
 
 namespace RecordPoint.Connectors.SDK.R365
 {
+    /// <summary>
+    /// The r365 pipelines.
+    /// </summary>
     public class R365Pipelines : IR365Pipelines
     {
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="R365Pipelines"/> class.
+        /// </summary>
+        /// <param name="recordPipeline">The record pipeline.</param>
+        /// <param name="binaryPipeline">The binary pipeline.</param>
+        /// <param name="aggregationPipeline">The aggregation pipeline.</param>
+        /// <param name="auditEventPipeline">The audit event pipeline.</param>
         public R365Pipelines(ISubmission recordPipeline, ISubmission binaryPipeline, ISubmission aggregationPipeline, ISubmission auditEventPipeline)
         {
             RecordPipeline = recordPipeline;

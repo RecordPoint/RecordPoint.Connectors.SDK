@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.Caching.Semaphore
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ISemaphoreLockManager
     {
         /// <summary>
@@ -13,26 +16,29 @@ namespace RecordPoint.Connectors.SDK.Caching.Semaphore
         /// Checks if a valid semaphore lock is active and delays execution until the lock expires
         /// </summary>
         /// <param name="workType"></param>
+        /// <param name="context"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task CheckWaitSemaphoreAsync(string workType, CancellationToken cancellationToken);
+        Task CheckWaitSemaphoreAsync(string workType, object? context, CancellationToken cancellationToken);
 
         /// <summary>
         /// Checks if a sempahore lock is active and returns the Date/Time when the lock expires
         /// </summary>
         /// <param name="workType"></param>
+        /// <param name="context"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<DateTimeOffset?> GetSemaphoreAsync(string workType, CancellationToken cancellationToken);
+        Task<DateTimeOffset?> GetSemaphoreAsync(string workType, object? context, CancellationToken cancellationToken);
 
         /// <summary>
         /// Sets a semaphore lock with the provided context for the specified duration
         /// </summary>
         /// <param name="semaphoreLockType"></param>
         /// <param name="workType"></param>
+        /// <param name="context"></param>
         /// <param name="duration"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task SetSemaphoreAsync(SemaphoreLockType semaphoreLockType, string workType, int duration, CancellationToken cancellationToken);
+        Task SetSemaphoreAsync(SemaphoreLockType semaphoreLockType, string workType, object? context, int duration, CancellationToken cancellationToken);
     }
 }

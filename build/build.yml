@@ -13,24 +13,25 @@ stages:
   displayName: 'Build NuGet Package'
   jobs:
   - job: CI_Build
-    displayName: 'NuGet - Build, Pack and Test'    
+    displayName: 'NuGet - Build, Pack and Test'
     steps:
 
-    - task: DotNetCoreInstaller@1
-      displayName: Install DotNetCore 3.1.x
+    - task: UseDotNet@2
+      displayName: 'Use .NET 8.0 SDK'
       inputs:
-        packageType: runtime
-        version: 3.1.x
+        packageType: sdk
+        version: 8.0.x
+        installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: gitversion/setup@0
       displayName: Install GitVersion
       inputs:
-        versionSpec: '5.5.0'
-        
+        versionSpec: '5.10.1'
+
     - task: gitversion/execute@0
       displayName: Determine Version
 
-    - task: SonarCloudPrepare@1
+    - task: SonarCloudPrepare@2
       displayName: 'Prepare analysis on SonarCloud'
       inputs:
         SonarCloud: SonarCloud
@@ -60,7 +61,7 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: Run tests
       inputs:
-        command: 'test'        
+        command: 'test'
         arguments: '/p:CollectCoverage=true --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover'
         projects: 'Tests/**/*.Test.csproj'
 
@@ -70,17 +71,17 @@ stages:
         reports: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
         targetdir: 'Coverage'
 
-    - task: PublishCodeCoverageResults@1
+    - task: PublishCodeCoverageResults@2
       displayName: 'Publish code coverage'
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: 'Coverage/Cobertura.xml'
         reportDirectory: 'Coverage'
 
-    - task: SonarCloudAnalyze@1
+    - task: SonarCloudAnalyze@2
       displayName: 'Run Code Analysis'
-    
-    - task: SonarCloudPublish@1
+
+    - task: SonarCloudPublish@2
       displayName: 'Publish Quality Gate Result'
 
     - task: DotNetCoreCLI@2
@@ -121,3 +122,8 @@ stages:
               packagesToPush: '$(Agent.BuildDirectory)/$(ArtifactNugetName)/*.nupkg'
               nuGetFeedType: 'internal'
               publishVstsFeed: '607bbd8a-5bd5-4ec1-8180-3593f0ff5a1f'
+
+          - task: PublishSymbols@2
+            displayName: 'Publish symbols'
+            inputs:
+              SymbolServerType: TeamServices

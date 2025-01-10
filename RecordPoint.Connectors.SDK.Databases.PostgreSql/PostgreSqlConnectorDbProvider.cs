@@ -6,13 +6,32 @@ using System.Data.SqlClient;
 namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
 {
 
+    /// <summary>
+    /// The postgre sql connector db provider.
+    /// </summary>
     public class PostgreSqlConnectorDbProvider : PostgreSqlDbProvider<ConnectorDbContext>, IConnectorDatabaseProvider
     {
+        /// <summary>
+        /// The database options.
+        /// </summary>
         private readonly IOptions<PostgreSqlConnectorDbOptions> _databaseOptions;
 
+        /// <summary>
+        /// The database name.
+        /// </summary>
         private readonly Lazy<string> _databaseName;
+        /// <summary>
+        /// The admin connection string.
+        /// </summary>
         private readonly Lazy<string> _adminConnectionString;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PostgreSqlConnectorDbProvider"/> class.
+        /// </summary>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="databaseOptions">The database options.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="connectionFactory">The connection factory.</param>
         public PostgreSqlConnectorDbProvider(
             ISystemContext systemContext,
             IOptions<PostgreSqlConnectorDbOptions> databaseOptions,
@@ -51,26 +70,46 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
             });
         }
 
+        /// <summary>
+        /// Get database name.
+        /// </summary>
+        /// <returns>A string</returns>
         protected override string GetDatabaseName()
         {
             return _databaseName.Value;
         }
 
+        /// <summary>
+        /// Get admin connection string.
+        /// </summary>
+        /// <returns>A string</returns>
         protected override string GetAdminConnectionString()
         {
             return _adminConnectionString.Value;
         }
 
+        /// <summary>
+        /// Get connection string.
+        /// </summary>
+        /// <returns>A string</returns>
         public override string GetConnectionString()
         {
             return _databaseOptions.Value.ConnectionString;
         }
 
+        /// <summary>
+        /// Creates db admin context.
+        /// </summary>
+        /// <returns>A ConnectorDbContext</returns>
         protected override ConnectorDbContext CreateDbAdminContext()
         {
             return new PostgreSqlConnectorDbContext(GetAdminContextOptionsBuilder().Options, PostgreSqlConnectorDbContext.DEFAULT_DB_SCHEMA_NAME);
         }
 
+        /// <summary>
+        /// Creates db context.
+        /// </summary>
+        /// <returns>A ConnectorDbContext</returns>
         public override ConnectorDbContext CreateDbContext()
         {
             return new PostgreSqlConnectorDbContext(GetContextOptionsBuilder().Options, PostgreSqlConnectorDbContext.DEFAULT_DB_SCHEMA_NAME);

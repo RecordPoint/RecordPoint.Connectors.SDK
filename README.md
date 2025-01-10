@@ -1,11 +1,11 @@
 # Records365 Connectors SDK 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=alert_status&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=alert_status&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
 
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=security_rating&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=sqale_rating&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=reliability_rating&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=security_rating&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=sqale_rating&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=reliability_rating&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
  
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=vulnerabilities&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=bugs&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=code_smells&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=vulnerabilities&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=bugs&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=code_smells&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
 
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=coverage&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=duplicated_lines_density&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=ncloc&token=a2d542d03c6517bc0c547c3bde36e7c80cb1824d)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=coverage&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=duplicated_lines_density&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RecordPoint_RecordPoint.Connectors.SDK&metric=ncloc&token=993f86b463ce7a6e86c6e745f2e3531f554ca9ab)](https://sonarcloud.io/summary/new_code?id=RecordPoint_RecordPoint.Connectors.SDK)
 
 Get started quickly with writing new connectors for Records365 using this .NET library.
 
@@ -29,7 +29,7 @@ This project uses [semantic versioning](https://semver.org/) which is automated 
 
 Semantic Versioning: [MAJOR].[MINOR].[PATCH]
 
-To increment various version segments, include "+semver: xxxx" in your commit message:
+To increment various version segments, include "+semver: xxxx" in your PR description:
 * MAJOR: use "+semver: major" or "+semver: breaking"
 * MINOR: use "+semver: minor" or "+semver: feature"
 * PATCH: use "+semver: patch" or "+semver: fix"
@@ -63,15 +63,17 @@ To explicitly set a version, tag the commit with the desired semantic version.
 Records 365 is a Data Intelligent platform that analyses content from external content sources and produces various meta data about the 
 content that can then be used within an organisation for classification.
 
-A Connector is a set of services that integrate the content source to Records 365.  These services a broken up in to functional domains
+A Connector is a set of services that integrate the content source to Records 365. These services are broken up into functional domains
 that implement a given responsibility covering various aspects such as content discovery and submission.
 
 ![Connector Architecture](./docs/connector_architecture.png)
 
+See the [operations documentation](./docs/operations/) for detailed information on services.
+
 ## How the Connectors SDK Works
 
 ### Background Services
-The Connectors SDK consists of various [BackgroundService](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.backgroundservice?view=dotnet-plat-ext-6.0) implementations that provide the main execution layer for the connector features.
+The Connectors SDK consists of various [BackgroundService](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.backgroundservice) implementations that provide the main execution layer for the connector features.
 These services can be included in your connector via dependency injction extentions available within the relevant SDK packages.
 
 Each connector service typically implements logic that executes "Work Operations".
@@ -99,7 +101,7 @@ Each different type of work has its own queue on the underlying queueing resourc
 
 The Work Queue is implemented via the `RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus` package and uses Azure Service Bus as the underlying queueing resource.
 
-A future package should be developed to provide RabbitMq as an underlying queueing resource for On-Premise connector deployments.
+The Work Queue is also implemented via the RecordPoint.Connectors.SDK.WorkQueue.RabbitMq and uses RabbitMq as an underlying queueing resource for On-Premise connector deployments.
 
 ##### Managed Queueable Work
 See [Managed Work Queue](./docs/managedworkqueue.md)
@@ -146,7 +148,7 @@ The SDK includes several different database providers allowing flexibility when 
 ### Integration with Records365
 See [Record.Connectors.SDK.Notifications](./docs/packages/recordpoint_connectors_sdk_notifications.md)
 
-Records365 generates notifications for connectors that can require the connector to perform some spcified logic.
+Records365 generates notifications for connectors that can require the connector to perform some specified logic.
 For example, connector configuration chnages (add,edit,delete) are received via notifications from Records365, and instruct the connector to apply the configuration change.
 
 There are two ways to receive notifications from Records365.
@@ -158,4 +160,4 @@ Records365 will push notificatons directly to the Connector as they are generate
 
 ##### Poll Notifications
 Poll based notifications are implemented via a service that periodically calls the Records365 Connector Api.
-The current implementation of poll based notifications is functionaly limited in comparison to push notifications and should not be used until the Records365 functionality is improved.
+The current implementation of poll based notifications is functionally limited in comparison to push notifications but can be used for development purposes.

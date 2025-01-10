@@ -5,8 +5,17 @@
     /// </summary>
     public enum ChannelDiscoveryResultType
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Complete,
+        /// <summary>
+        /// 
+        /// </summary>
         Failed,
+        /// <summary>
+        /// 
+        /// </summary>
         BackOff
     }
 }

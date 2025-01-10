@@ -42,7 +42,7 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
             await StartSutAsync();
             var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
 
-            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, CancellationToken.None);
+            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, CancellationToken.None);
             Assert.Null(result);
         }
 
@@ -56,9 +56,9 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
 
             const int lockDuration = 60;
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, WorkTypeContext1, null, lockDuration, cancellationToken);
 
-            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            var result = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             var semaporeDuration = result.Value - DateTimeOffset.Now;
 
             Assert.NotNull(result);
@@ -75,7 +75,7 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             stopWatch.Stop();
 
             Assert.True(stopWatch.Elapsed.Seconds < 1);
@@ -91,11 +91,11 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
 
             const int lockDuration = 5;
 
-            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, WorkTypeContext1, lockDuration, cancellationToken);
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, WorkTypeContext1, null, lockDuration, cancellationToken);
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, cancellationToken);
+            await semaphoreLockManager.CheckWaitSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
             stopWatch.Stop();
 
             Assert.True(stopWatch.Elapsed.Seconds > 3);

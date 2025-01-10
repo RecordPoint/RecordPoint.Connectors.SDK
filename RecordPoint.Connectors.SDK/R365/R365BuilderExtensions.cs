@@ -139,6 +139,11 @@ namespace RecordPoint.Connectors.SDK.R365
             return element;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
         public static ISubmission CreateAuditEventPipeline(this IServiceProvider provider)
         {
             var element = new HttpSubmitAuditEventPipelineElement(null)

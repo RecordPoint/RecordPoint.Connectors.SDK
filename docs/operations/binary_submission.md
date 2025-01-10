@@ -6,6 +6,8 @@ The operation requires the `IBinaryRetrievalAction` action interface to be imple
 This action requires a return value that includes a stream to the binary on the Content Source.
 The SDK itself handles the submission to Records 365.
 
+(`IBinarySubmissionCallbackAction` may also be implemented. This is only needed if `IBinaryRetrievalAction` creates resources that must be cleaned up post-submission.)
+
 The Binary Submission Operation is invoked by the SDK when Binaries have been identified for submission.
 
 ### Dependency Injection

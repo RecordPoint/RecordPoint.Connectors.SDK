@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
@@ -9,14 +11,38 @@ using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Work
 {
+    /// <summary>
+    /// The managed queueable work base.
+    /// </summary>
+    /// <typeparam name="TConfiguration"/>
+    /// <typeparam name="TState"/>
     public abstract class ManagedQueueableWorkBase<TConfiguration, TState> : QueueableWorkBase<TState>
     {
+        /// <summary>
+        /// The SEMAPHORE GLOBAL.
+        /// </summary>
         protected const string SEMAPHORE_GLOBAL = "SEMAPHORE_GLOBAL";
+        /// <summary>
+        /// The SEMAPHORE CONNECTOR CONFIGURATION.
+        /// </summary>
         protected const string SEMAPHORE_CONNECTOR_CONFIGURATION = "SEMAPHORE_CONNECTOR_CONFIGURATION_";
 
         #region Dependencies
+        /// <summary>
+        /// The managed work factory.
+        /// </summary>
         private readonly IManagedWorkFactory _managedWorkFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="managedWorkFactory">The managed work factory.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         protected ManagedQueueableWorkBase(
             IServiceProvider serviceProvider,
             IManagedWorkFactory managedWorkFactory,
@@ -128,6 +154,51 @@ namespace RecordPoint.Connectors.SDK.Work
                 TrackFinish();
             }
         }
+
+        /// <summary>
+        /// Determines if a connector is enabled and if not, back off until it is re-enabled or exceeds the threshold
+        /// </summary>
+        /// <param name="connectorConfiguration">The Connector Configuration</param>
+        /// <param name="options">Configured options for the work operation</param>
+        /// <param name="maxDisabledConnectorAge">The maximum time in seconds a Connector can be disabled before being abandoned</param>
+        /// <param name="state">The state object of the work operation</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns></returns>
+        protected async Task<bool> CheckConnectorEnabledStatusAsync(ConnectorConfigModel connectorConfiguration, ContentManagerOperationOptionsBase options, IContentDiscoveryState state, int maxDisabledConnectorAge, CancellationToken cancellationToken)
+        {
+            if (connectorConfiguration == null)
+            {
+                // If connector not found assume its been deleted
+                await AbandonedAsync("Connector not found", cancellationToken);
+                return false;
+            }
+
+            if (connectorConfiguration.IsEnabled())
+                return true;
+
+            //Check the time the connector was disabled. If the time exceeds the configured threshold, we should abandon the work.
+            //We may not have a disabled date in which case, we should just abandon the work immediately.
+            //If the Max Disabled Connector Age is less than zero, we will retry indefinitely until the connector is re-enabled.
+            if (connectorConfiguration.IsDisabledConnectorExpired(maxDisabledConnectorAge))
+            {
+                //Connector has been disabled for too long, abandon the work
+                await AbandonedAsync("Connector disabled", cancellationToken);
+            }
+            else
+            {
+                //The Connector Configuration is disabled and is within the configured threshold, so backoff until it is re-enabled or exceeds the threshold
+                var backOffSeconds = CalculateBackOffSeconds(
+                    options,
+                    false,
+                    state.LastBackOffDelaySeconds);
+
+                state.LastBackOffDelaySeconds = backOffSeconds;
+
+                await ContinueAsync("Connector disabled", State, DateTimeProvider.UtcNow.AddSeconds(backOffSeconds), cancellationToken);
+            }
+
+            return false;
+        }
         #endregion
 
         #region Run Result
@@ -136,6 +207,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// to run it
         /// </summary>
         /// <remarks>Reason why the work item is complete</remarks>
+        /// <param name="reason">Reason why the work item is complete</param>
         /// <param name="cancellationToken">Cancellation token</param>
         protected new async virtual Task CompleteAsync(string reason, CancellationToken cancellationToken)
         {
@@ -146,6 +218,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Record that the long-running job should continue working
         /// </summary>
+        /// <param name="reason">Reason why the job is continuing</param>
         /// <param name="state">State to use for the next run</param>
         /// <param name="waitTill">Time to wait for the next run</param>
         /// <param name="cancellationToken">Cancellation token</param>
@@ -162,6 +235,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// Set that the job has permanently failed
         /// </summary>
         /// <param name="reason">Reason why the job has failed</param>
+        /// <param name="exception">Optional cause of the failure</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Outcome to pass onto the work queue</returns>
         public async Task FailAsync(string reason, Exception exception, CancellationToken cancellationToken)
@@ -193,6 +267,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// to run it
         /// </summary>
         /// <remarks>Reason why the work item is complete</remarks>
+        /// <param name="reason">Reason why the work item is complete</param>
         /// <param name="cancellationToken">Cancellation token</param>
         protected async virtual Task AbandonedAsync(string reason, CancellationToken cancellationToken)
         {
@@ -213,6 +288,13 @@ namespace RecordPoint.Connectors.SDK.Work
             HasResult = true;
         }
 
+        /// <summary>
+        /// Calculate back off seconds.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <param name="hasResult">If true, has result.</param>
+        /// <param name="lastDelaySeconds">The last delay seconds.</param>
+        /// <returns>An int</returns>
         protected int CalculateBackOffSeconds(ContentManagerOperationOptionsBase settings, bool hasResult, int lastDelaySeconds)
         {
             if (settings.ImmediateReExecution && hasResult) return 0;
@@ -222,7 +304,7 @@ namespace RecordPoint.Connectors.SDK.Work
             {
                 delay += Random.Shared.Next(settings.DelaySeconds);
             }
-            
+
             if (!settings.ExponentialBackOff) return delay;
 
             var newDelay = lastDelaySeconds == 0 ? delay : lastDelaySeconds * 2;

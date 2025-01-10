@@ -3,8 +3,19 @@ using RecordPoint.Connectors.SDK.Helpers;
 
 namespace RecordPoint.Connectors.SDK.Client
 {
+    /// <summary>
+    /// The meta data model list extensions.
+    /// </summary>
     public static class MetaDataModelListExtensions
     {
+        /// <summary>
+        /// Add or update.
+        /// </summary>
+        /// <param name="metaDataList">The meta data list.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="value">The value.</param>
+        /// <returns><![CDATA[IList<MetaDataModel>]]></returns>
         public static IList<MetaDataModel> AddOrUpdate(this IList<MetaDataModel> metaDataList, string name, string type, string value)
         {
             ValidationHelper.ArgumentNotNull(metaDataList, nameof(metaDataList));
@@ -29,11 +40,24 @@ namespace RecordPoint.Connectors.SDK.Client
             return metaDataList;
         }
 
+        /// <summary>
+        /// Add or update.
+        /// </summary>
+        /// <param name="metaDataList">The meta data list.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns><![CDATA[IList<MetaDataModel>]]></returns>
         public static IList<MetaDataModel> AddOrUpdate(this IList<MetaDataModel> metaDataList, string name, string value)
         {
             return metaDataList.AddOrUpdate(name, nameof(String), value);
         }
 
+        /// <summary>
+        /// Get value or default.
+        /// </summary>
+        /// <param name="metaDataList">The meta data list.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>A string</returns>
         public static string GetValueOrDefault(this IList<MetaDataModel> metaDataList, string name)
         {
             ValidationHelper.ArgumentNotNull(metaDataList, nameof(metaDataList));

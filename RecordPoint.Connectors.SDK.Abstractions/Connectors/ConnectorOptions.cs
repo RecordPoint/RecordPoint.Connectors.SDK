@@ -5,6 +5,9 @@
     /// </summary>
     public class ConnectorOptions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string SECTION_NAME = "Connector";
 
         private const double DEFAULT_BINARY_SKIP_THRESHOLD = 500;

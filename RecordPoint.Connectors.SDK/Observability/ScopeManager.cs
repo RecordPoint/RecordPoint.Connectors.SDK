@@ -52,6 +52,10 @@ namespace RecordPoint.Connectors.SDK.Observability
         private readonly ILogger _logger;
         private readonly AsyncLocal<ImmutableDictionary<string, string>> _dimensions = new AsyncLocal<ImmutableDictionary<string, string>>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
         public ScopeManager(ILogger<object> logger)
         {
             _logger = logger;
@@ -65,8 +69,16 @@ namespace RecordPoint.Connectors.SDK.Observability
             get { return _dimensions.Value ?? ImmutableDictionary<string, string>.Empty; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ILogger Logger => _logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <returns></returns>
         public IDisposable BeginScope(Dimensions dimensions)
         {
             var loggerScope = _logger.BeginScope(dimensions.ToLogState());

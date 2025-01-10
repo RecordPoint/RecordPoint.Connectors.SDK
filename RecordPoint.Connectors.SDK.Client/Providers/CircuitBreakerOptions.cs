@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Providers
 {
+    /// <summary>
+    /// The circuit breaker options.
+    /// </summary>
     public class CircuitBreakerOptions
     {
         /// <summary>

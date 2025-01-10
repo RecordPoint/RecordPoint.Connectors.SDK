@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.Notifications
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface INotificationManager
     {
 

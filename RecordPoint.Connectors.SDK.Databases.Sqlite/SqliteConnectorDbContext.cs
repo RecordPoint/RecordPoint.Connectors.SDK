@@ -8,6 +8,10 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite
     public class SqliteConnectorDbContext : ConnectorDbContext
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         public SqliteConnectorDbContext(DbContextOptions<ConnectorDbContext> options)
             : base(options)
         {

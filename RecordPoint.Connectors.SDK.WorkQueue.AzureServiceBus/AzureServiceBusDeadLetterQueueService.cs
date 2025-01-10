@@ -2,9 +2,8 @@
 using Azure.Messaging.ServiceBus.Administration;
 using Newtonsoft.Json;
 using RecordPoint.Connectors.SDK.ContentManager;
-using RecordPoint.Connectors.SDK.Extensions;
-using RecordPoint.Connectors.SDK.Work.Models;
 using RecordPoint.Connectors.SDK.Work;
+using RecordPoint.Connectors.SDK.Work.Models;
 using RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus;
 using RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.Extensions;
 

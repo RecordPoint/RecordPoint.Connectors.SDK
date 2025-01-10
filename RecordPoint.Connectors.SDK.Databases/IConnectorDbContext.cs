@@ -5,6 +5,9 @@ using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Databases
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IConnectorDbContext
     {
         /// <summary>

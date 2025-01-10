@@ -5,6 +5,10 @@
     /// </summary>
     public interface IPerformanceEvent : IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ex"></param>
         void Exception(Exception ex);
     }
 }

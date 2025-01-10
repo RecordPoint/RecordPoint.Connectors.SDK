@@ -5,7 +5,7 @@ You must have access to a Records365 tenant before you begin.
 
 If you want a more detailed explanation of the Connectors SDK, start [here](../README.md).
 
-The Reference Connector within this repo can be used as a guide for developing a connector.
+The Reference Connector Project ([DevOps Link](https://dev.azure.com/recordpoint/Connectors/_git/RecordPoint.Connectors.Reference)) ([github link](https://github.com/RecordPoint/RecordPoint.Connectors.Reference)) can be used as a guide for developing a connector.
 
 
 ### Authentication 
@@ -37,7 +37,7 @@ The responsibilities contained within our simple connector:
 
 
 ## Create your Connector
-Create a new dotnet 6 Console Application.
+Create a new dotnet 8 Console Application.
 Add the following packages to the project:
 * RecordPoint.Connectors.SDK
 * RecordPoint.Connectors.SDK.Databases.LocalDb

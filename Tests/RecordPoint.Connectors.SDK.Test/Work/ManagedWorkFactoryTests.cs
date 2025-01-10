@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RecordPoint.Connectors.SDK.Databases;
+using RecordPoint.Connectors.SDK.Test.Mock.Databases;
+using RecordPoint.Connectors.SDK.Test.Mock.Work;
 using RecordPoint.Connectors.SDK.Work;
 using Xunit;
-using RecordPoint.Connectors.SDK.Test.Mock.Work;
-using RecordPoint.Connectors.SDK.Test.Mock.Databases;
-using RecordPoint.Connectors.SDK.Databases;
 
 namespace RecordPoint.Connectors.SDK.Test.Work
 {
@@ -19,7 +19,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 .UseWorkManager()
                 .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
                 .UseMockConnectorDatabase()
-                .ConfigureServices(svcs => 
+                .ConfigureServices(svcs =>
                     svcs
                         .AddMockWorkQueue()
                 );

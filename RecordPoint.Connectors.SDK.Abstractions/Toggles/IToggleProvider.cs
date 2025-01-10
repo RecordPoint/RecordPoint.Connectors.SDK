@@ -1,6 +1,5 @@
 ﻿namespace RecordPoint.Connectors.SDK.Toggles
 {
-
     /// <summary>
     /// Defines a feature toggle provider
     /// </summary>
@@ -28,22 +27,5 @@
         /// <param name="default">Default value</param>
         /// <returns>Toggle value</returns>
         bool GetToggleBool(string toggle, string userKey, bool @default);
-
-        /// <summary>
-        /// Get an Int toggle value
-        /// </summary>
-        /// <param name="toggle">toggle to get</param>
-        /// <param name="default">Default value</param>
-        /// <returns>Toggle value</returns>
-        int GetToggleInt(string toggle, int @default);
-
-        /// <summary>
-        /// Get an Int toggle value
-        /// </summary>
-        /// <param name="toggle">toggle to get</param>
-        /// <param name="userKey">Targeted user key</param>
-        /// <param name="default">Default value</param>
-        /// <returns>Toggle value</returns>
-        int GetToggleInt(string toggle, string userKey, int @default);
     }
 }

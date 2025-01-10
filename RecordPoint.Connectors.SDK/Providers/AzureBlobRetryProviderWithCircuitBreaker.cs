@@ -1,9 +1,10 @@
 ﻿using Azure;
 using Polly;
 using Polly.CircuitBreaker;
+using Polly.Fallback;
 using RecordPoint.Connectors.SDK.Exceptions;
-using RecordPoint.Connectors.SDK.Extensions;
 using System;
+using System.Threading.Tasks;
 
 namespace RecordPoint.Connectors.SDK.Providers
 {
@@ -16,8 +17,8 @@ namespace RecordPoint.Connectors.SDK.Providers
         // singleton. Static would be good for ensuring the policy is a singleton even if we mess up our IoC, but this would:
         // - Prevent RetryProviderWithCircuitBreaker being abstracted into a base class for multiple resources, as they would all share the same underlying circuit
         // - Complicates testing of the policy, as it does not reset in between calls (Can get around this by nulling it with reflection if required)
-        private readonly CircuitBreakerPolicy _circuitBreaker;
-        private readonly Policy _fallback;
+        private readonly AsyncCircuitBreakerPolicy _circuitBreaker;
+        private readonly AsyncFallbackPolicy _fallback;
         private readonly object _waitUntilLock = new object();
         private DateTimeOffset _waitUntil = DateTimeOffset.MinValue;
         private readonly CircuitBreakerOptions _options;
@@ -69,7 +70,7 @@ namespace RecordPoint.Connectors.SDK.Providers
             return false;
         }
 
-        private void ThrowTooManyRequests()
+        private Task ThrowTooManyRequests()
         {
             var waitUntil = DateTimeOffset.UtcNow.AddSeconds(_options.DurationOfBreakS);
 
@@ -82,12 +83,12 @@ namespace RecordPoint.Connectors.SDK.Providers
             throw new TooManyRequestsException(nameof(AzureBlobRetryProviderWithCircuitBreaker), _waitUntil.DateTime);
         }
 
-        private Policy GetFallbackPolicy()
+        private AsyncFallbackPolicy GetFallbackPolicy()
         {
-            return CustomFallbackPolicy.CustomFallbackAsync<BrokenCircuitException>((ct) => ThrowTooManyRequests());
+            return Policy.Handle<BrokenCircuitException>().FallbackAsync((cancellationToken) => ThrowTooManyRequests());
         }
 
-        private CircuitBreakerPolicy GetCircuitBreakerPolicy()
+        private AsyncCircuitBreakerPolicy GetCircuitBreakerPolicy()
         {
             return Policy.Handle<RequestFailedException>(ex => IsCircuitBreakerAzureBlobException(ex))
                     .AdvancedCircuitBreakerAsync(
@@ -122,12 +123,14 @@ namespace RecordPoint.Connectors.SDK.Providers
         /// </summary>
         /// <param name="type"></param>
         /// <param name="methodName"></param>
-        protected override Policy GetRetryPolicy(Type type, string methodName)
+        protected override IAsyncPolicy GetRetryPolicy(Type type, string methodName)
         {
             // Wrap the retry policy with a fallback if using the circuit breaker
             if (_useCircuit)
             {
-                return Policy.WrapAsync(_fallback, base.GetRetryPolicy(type, methodName), _circuitBreaker);
+                return base.GetRetryPolicy(type, methodName)
+                    .WrapAsync(_fallback)
+                    .WrapAsync(_circuitBreaker);
             }
 
             return base.GetRetryPolicy(type, methodName);

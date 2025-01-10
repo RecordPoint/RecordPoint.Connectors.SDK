@@ -5,6 +5,9 @@
     /// </summary>
     public interface IDateTimeProvider
     {
+        /// <summary>
+        /// 
+        /// </summary>
         DateTime UtcNow { get; }
     }
 }

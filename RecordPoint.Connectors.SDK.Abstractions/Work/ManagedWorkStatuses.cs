@@ -5,9 +5,21 @@
     /// </summary>
     public enum ManagedWorkStatuses
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Running,
+        /// <summary>
+        /// 
+        /// </summary>
         Complete,
+        /// <summary>
+        /// 
+        /// </summary>
         Failed,
+        /// <summary>
+        /// 
+        /// </summary>
         Abandoned
     }
 }

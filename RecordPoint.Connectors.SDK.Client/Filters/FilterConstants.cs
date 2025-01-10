@@ -35,6 +35,7 @@ namespace RecordPoint.Connectors.SDK.Filters
             public const string NotEndsWith = nameof(NotEndsWith);
             public const string StartsWith = nameof(StartsWith);
             public const string NotStartsWith = nameof(NotStartsWith);
+            public const string EqualsToAnyOf = nameof(EqualsToAnyOf);
         }
 
         public static class DateFieldOperators

@@ -7,16 +7,20 @@ namespace RecordPoint.Connectors.SDK.Test
     public class TestLogger<T> : ILogger<T>, IDisposable
     {
 
-        public List<string> Output = new();
+        public List<string> Output = [];
         private bool disposedValue;
 
         public TestLogger()
         {
         }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
-            Output.Add(state.ToString());
+            var item = state?.ToString();
+            if (!string.IsNullOrEmpty(item))
+            {
+                Output.Add(item);
+            }
         }
 
         public bool IsEnabled(LogLevel logLevel)
@@ -24,7 +28,7 @@ namespace RecordPoint.Connectors.SDK.Test
             return true;
         }
 
-        public IDisposable BeginScope<TState>(TState state)
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull
         {
             return this;
         }

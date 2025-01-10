@@ -55,7 +55,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
 
 
         [Fact]
-        public void Dimensions_AreAsyncLocal()
+        public async Task Dimensions_AreAsyncLocal()
         {
             var dimensions1 = new Dimensions()
             {
@@ -82,7 +82,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
             var tracker = new ScopeManager(CreateTestLogger());
             var task1 = CheckScopeProperties1(tracker);
             var task2 = CheckScopeProperties2(tracker);
-            Task.WaitAll(task1, task2);
+            await Task.WhenAll(task1, task2);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
             ScopeManager scopeTracker;
             async Task<ScopeManager> CreateTracker()
             {
-                await Task.Delay(1).ConfigureAwait(false) ; // Make sure we are in a differnet s
+                await Task.Delay(1).ConfigureAwait(false); // Make sure we are in a differnet s
                 return new ScopeManager(CreateTestLogger());
             }
             async Task CheckDimensions()
@@ -119,8 +119,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
 
             using var scope1 = tracker.BeginScope(dimensions1);
             using var scope2 = tracker.BeginScope(dimensions2);
-            Assert.Equal(new string[] { "Test1", "Test2" }, tracker.Dimensions.Keys.OrderBy(k => k).ToArray());
-
+            Assert.Equal(["Test1", "Test2"], [.. tracker.Dimensions.Keys.OrderBy(k => k)]);
         }
 
         [Fact]

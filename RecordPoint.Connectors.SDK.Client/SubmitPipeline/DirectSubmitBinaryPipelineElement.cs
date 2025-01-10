@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs.Specialized;
 using Microsoft.Rest;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
@@ -71,7 +70,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 fileHash: binarySubmitContext.FileHash,
                 mimeType: binarySubmitContext.MimeType ?? binarySubmitContext.SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.MimeType)?.Value,
                 correlationId: binarySubmitContext.CorrelationId.ToString(),
-                isOldVersion: binarySubmitContext.IsOldVersion ?? default(bool)
+                isOldVersion: binarySubmitContext.IsOldVersion ?? default,
+                skipEnrichment: binarySubmitContext.SkipEnrichment ?? default
             );
 
             // Get token and URL via Autorest-generated API call
@@ -124,7 +124,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <param name="retryPolicy"></param>
         /// <returns></returns>
         /// <exception cref="HttpOperationException"></exception>
-        private async Task<bool> InnerHandleSuccessfulSubmissionAsync(SubmitContext submitContext, HttpOperationResponse<object> result, DirectBinarySubmissionInputModel binarySubmissionInputModel, IApiClient apiClient, Polly.Policy retryPolicy)
+        private async Task<bool> InnerHandleSuccessfulSubmissionAsync(SubmitContext submitContext, HttpOperationResponse<object> result, DirectBinarySubmissionInputModel binarySubmissionInputModel, IApiClient apiClient, Polly.Retry.AsyncRetryPolicy retryPolicy)
         {
             var binarySubmitContext = submitContext as BinarySubmitContext;
             var response = result.Body as DirectBinarySubmissionResponseModel;

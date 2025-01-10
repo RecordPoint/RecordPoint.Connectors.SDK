@@ -1,5 +1,5 @@
 ﻿using Microsoft.Rest;
-using Polly;
+using Polly.Retry;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using static RecordPoint.Connectors.SDK.Fields;
@@ -196,7 +196,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// Gets a retry policy which can be used for communicating with Records365
         /// </summary>
         /// <returns></returns>
-        protected Policy GetRetryPolicy(SubmitContext submitContext, string methodName = nameof(Submit))
+        protected AsyncRetryPolicy GetRetryPolicy(SubmitContext submitContext, string methodName = nameof(Submit))
         {
             return ApiClientRetryPolicy.GetPolicy(Log, GetType(), methodName, MaxRetryAttempts, submitContext.LogPrefix(), submitContext.CancellationToken);
         }

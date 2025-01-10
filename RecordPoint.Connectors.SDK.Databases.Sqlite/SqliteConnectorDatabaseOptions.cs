@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Databases.Sqlite
 {
+    /// <summary>
+    /// The sqlite connector database options.
+    /// </summary>
     public class SqliteConnectorDatabaseOptions
     {
 

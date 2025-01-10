@@ -14,6 +14,10 @@ namespace RecordPoint.Connectors.SDK.Databases
     /// </remarks>
     public abstract class ConnectorDbContext : DbContext, IConnectorDbContext
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         protected ConnectorDbContext(DbContextOptions<ConnectorDbContext> options)
             : base(options)
         {
@@ -31,6 +35,10 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// <inheritdoc/>
         public DbSet<ManagedWorkStatusModel> ManagedWorkStatuses { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -39,19 +47,36 @@ namespace RecordPoint.Connectors.SDK.Databases
             MapAggregations(modelBuilder);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected virtual string GetSchema() => null;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected virtual void MapChannels(ModelBuilder modelBuilder)
         {
             var entityBuilder = modelBuilder.Entity<ChannelModel>();
             entityBuilder.HasKey(a => new { a.ConnectorId, a.ExternalId });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected virtual void MapAggregations(ModelBuilder modelBuilder)
         {
             var entityBuilder = modelBuilder.Entity<AggregationModel>();
             entityBuilder.HasKey(a => new { a.ConnectorId, a.ExternalId });
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected virtual void MapManagedWorkStatuses(ModelBuilder modelBuilder)
         {
             var entityBuilder = modelBuilder.Entity<ManagedWorkStatusModel>();

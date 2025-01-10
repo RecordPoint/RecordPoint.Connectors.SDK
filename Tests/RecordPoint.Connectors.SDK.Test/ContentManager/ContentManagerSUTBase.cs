@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Moq;
-using RecordPoint.Connectors.SDK.Connectors;
-using RecordPoint.Connectors.SDK.Work;
-using RecordPoint.Connectors.SDK.Client.Models;
-using RecordPoint.Connectors.SDK.Test.Mock.Work;
-using RecordPoint.Connectors.SDK.ContentManager;
-using RecordPoint.Connectors.SDK.Test.Mock.Databases;
-using RecordPoint.Connectors.SDK.Databases;
-using RecordPoint.Connectors.SDK.Content;
-using RecordPoint.Connectors.SDK.Test.Common.Mock.Caching.Semaphore;
-using RecordPoint.Connectors.SDK.Caching.Semaphore;
 using RecordPoint.Connectors.SDK.Caching;
+using RecordPoint.Connectors.SDK.Caching.Semaphore;
+using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Connectors;
+using RecordPoint.Connectors.SDK.Content;
+using RecordPoint.Connectors.SDK.ContentManager;
+using RecordPoint.Connectors.SDK.Databases;
+using RecordPoint.Connectors.SDK.Test.Common.Mock.Caching.Semaphore;
+using RecordPoint.Connectors.SDK.Test.Mock.Databases;
+using RecordPoint.Connectors.SDK.Test.Mock.Work;
+using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
 {
@@ -32,10 +32,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .ConfigureServices(svcs =>
                 {
                     var mockContentManagerProvider = new MockContentManagerProvider(
-                        ChannelDiscoveryActionFactory, 
-                        ContentSynchronisationActionFactory, 
-                        ContentRegistrationActionFactory, 
-                        BinaryRetrievalActionFactory, 
+                        ContentManagerCallbackActionFactory,
+                        ChannelDiscoveryActionFactory,
+                        ContentSynchronisationActionFactory,
+                        ContentRegistrationActionFactory,
+                        BinaryRetrievalActionFactory,
                         AggregationSubmissionCallbackActionFactory,
                         AuditEventSubmissionCallbackActionFactory,
                         RecordSubmissionCallbackActionFactory,
@@ -77,6 +78,27 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public IConnectorConfigurationManager GetConnectorManager() => Services.GetRequiredService<IConnectorConfigurationManager>();
 
+        public static void DisableConnector(ConnectorConfigModel connectorConfig, DateTimeOffset disabledTime)
+        {
+            connectorConfig.Status = "Disabled";
+            connectorConfig.SetProperty("DisabledTime", disabledTime.ToString("O"));
+        }
+        #endregion
+
+        #region Aggregations
+
+        public const string AGGREGATION_EXTERNAL_ID_1 = "Aggregation_1";
+        public const string AGGREGATION_TITLE_1 = "Aggregation 1";
+
+        public static AggregationModel CreateAggregation1() => new()
+        {
+            ExternalId = AGGREGATION_EXTERNAL_ID_1,
+            Title = AGGREGATION_TITLE_1,
+            ConnectorId = CONNECTOR_CONFIGURATION_ID_1
+        };
+
+        public IAggregationManager GetAggregationManager() => Services.GetRequiredService<IAggregationManager>();
+
         #endregion
 
         #region Channels
@@ -98,6 +120,22 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         #region Work
 
         public IManagedWorkStatusManager GetWorkStatusManager() => Services.GetRequiredService<IManagedWorkStatusManager>();
+
+        #endregion
+
+        #region Content Manager Callback Action
+
+        public Func<IContentManagerCallbackAction> ContentManagerCallbackActionFactory { get; set; }
+
+        public void SelectContentManagerCallbackActionMock(IMock<IContentManagerCallbackAction> contentManagerCallbackAction)
+        {
+            ContentManagerCallbackActionFactory = () => contentManagerCallbackAction.Object;
+        }
+
+        public void SelectContentManagerCallbackAction(IContentManagerCallbackAction contentManagerCallbackAction)
+        {
+            ContentManagerCallbackActionFactory = () => contentManagerCallbackAction;
+        }
 
         #endregion
 

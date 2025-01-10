@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using RecordPoint.Connectors.SDK.Connectors;
-using Xunit;
-using RecordPoint.Connectors.SDK.Client.Models;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using RecordPoint.Connectors.SDK.Context;
-using RecordPoint.Connectors.SDK.Toggles;
 using Moq;
+using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Connectors;
+using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Test;
 using RecordPoint.Connectors.SDK.Test.Mock.Databases;
+using RecordPoint.Connectors.SDK.Toggles;
+using System;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
 {
@@ -137,7 +138,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
 
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
             var connectorId = Guid.Empty.ToString();
-            var connectorConfigModel = new ConnectorConfigModel("", "", false, connectorId, "", "", "", DateTime.UtcNow.AddDays(-2), DateTime.UtcNow.AddDays(-1), "", "", "");
+            var connectorConfigModel = new ConnectorConfigModel("", "", false, connectorId, "", "", "", "", DateTime.UtcNow.AddDays(-2), DateTime.UtcNow.AddDays(-1), "", "", "");
             var connectorNotificationModel = new ConnectorNotificationModel("", "", DateTime.UtcNow, "", connectorId, null, connectorConfigModel);
 
             var cancellationToken = CancellationToken.None;
@@ -177,6 +178,14 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             var connectorDisplayName = $"{connectorId} Name";
             var connectorTypeId = $"{connectorId}_Type";
             var tenantId = $"{connectorId}_Tenant";
+
+            var connectorConfigModel = new ConnectorConfigModel
+            {
+                Id = connectorId,
+                ConnectorTypeId = connectorTypeId,
+                TenantId = tenantId
+            };
+
             var connectorDataModel = new ConnectorConfigurationModel
             {
                 ConnectorId = connectorId,
@@ -184,7 +193,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
                 TenantId = tenantId,
                 DisplayName = connectorDisplayName,
                 Status = status,
-                Data = "ABC"
+                Data = JsonSerializer.Serialize(connectorConfigModel)
             };
             return connectorDataModel;
         }
@@ -207,6 +216,79 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             Assert.Equal(connectorId, connectorStatus.ConnectorId);
             Assert.False(connectorStatus.Enabled);
             Assert.Equal(DatabaseConnectorConfigurationManager.CONNECTOR_DISABLED_REASON, connectorStatus.EnabledReason);
+        }
+
+        [Fact]
+        public async Task IfConnectorDisabled_DisabledTime_Property_IsPopulated()
+        {
+            await StartSutAsync();
+
+            var cancellationToken = CancellationToken.None;
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+
+            var connectorId = nameof(IfConnectorDisabled_ConnectorStatusIsDisabled);
+            var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
+            await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
+
+            var persistedConnector = await connectorManager.GetConnectorAsync(connectorId, cancellationToken);
+            var disabledTime = persistedConnector.GetPropertyOrDefault("DisabledTime");
+
+            Assert.NotNull(persistedConnector);
+            Assert.Equal(connectorId, persistedConnector.Id);
+            Assert.False(string.IsNullOrEmpty(disabledTime));
+        }
+
+        [Fact]
+        public async Task IfDisabledConnector_IsUpdated_DisabledTime_Property_IsUnchanged()
+        {
+            await StartSutAsync();
+
+            var cancellationToken = CancellationToken.None;
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+
+            var connectorId = nameof(IfConnectorDisabled_ConnectorStatusIsDisabled);
+            var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
+            await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
+            
+            var persistedConnector1 = await connectorManager.GetConnectorAsync(connectorId, cancellationToken);
+            var disabledTime1 = persistedConnector1.GetPropertyOrDefault("DisabledTime");
+
+            connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
+            await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
+
+            var persistedConnector2 = await connectorManager.GetConnectorAsync(connectorId, cancellationToken);
+            var disabledTime2 = persistedConnector2.GetPropertyOrDefault("DisabledTime");
+
+            Assert.NotNull(persistedConnector1);
+            Assert.NotNull(persistedConnector2);
+            Assert.Equal(connectorId, persistedConnector1.Id);
+            Assert.Equal(connectorId, persistedConnector2.Id);
+            Assert.False(string.IsNullOrEmpty(disabledTime1));
+            Assert.False(string.IsNullOrEmpty(disabledTime2));
+            Assert.Equal(disabledTime1, disabledTime2);
+        }
+
+        [Fact]
+        public async Task IfDisabledConnector_IsReenabled_DisabledTime_Property_IsRemoved()
+        {
+            await StartSutAsync();
+
+            var cancellationToken = CancellationToken.None;
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+
+            var connectorId = nameof(IfConnectorDisabled_ConnectorStatusIsDisabled);
+            var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
+            await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
+
+            connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Enabled");
+            await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
+
+            var persistedConnector = await connectorManager.GetConnectorAsync(connectorId, cancellationToken);
+            var disabledTime = persistedConnector.GetPropertyOrDefault("DisabledTime");
+
+            Assert.NotNull(persistedConnector);
+            Assert.Equal(connectorId, persistedConnector.Id);
+            Assert.True(string.IsNullOrEmpty(disabledTime));
         }
 
         [Fact]

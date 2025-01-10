@@ -15,14 +15,31 @@ namespace RecordPoint.Connectors.SDK.Work
         private readonly ILogger _logger;
         private readonly ImmutableDictionary<string, IQueueableWorkFactory> _queueableWorkFactories;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="queueableWorkFactories"></param>
         public QueueableWorkManager(ILogger<QueueableWorkManager> logger, IEnumerable<IQueueableWorkFactory> queueableWorkFactories)
         {
             _logger = logger;
             _queueableWorkFactories = queueableWorkFactories.ToImmutableDictionary(a => a.WorkType);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workType"></param>
+        /// <param name="queueableWorkFactory"></param>
+        /// <returns></returns>
         public bool TryGetQueueableWorkFactory(string workType, out IQueueableWorkFactory queueableWorkFactory) => _queueableWorkFactories.TryGetValue(workType, out queueableWorkFactory);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workRequest"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<WorkResult> HandleWorkRequestAsync(WorkRequest workRequest, CancellationToken cancellationToken)
         {
             var workType = workRequest.WorkType;
@@ -30,7 +47,7 @@ namespace RecordPoint.Connectors.SDK.Work
             {
                 if (TryGetQueueableWorkFactory(workType, out var queueableWorkFactory))
                 {
-                    var queueableWorkOperation = queueableWorkFactory.CreateWorkOperation();
+                    using var queueableWorkOperation = queueableWorkFactory.CreateWorkOperation();
                     await queueableWorkOperation.RunWorkRequestAsync(workRequest, cancellationToken);
                     return queueableWorkOperation.WorkResult;
                 }

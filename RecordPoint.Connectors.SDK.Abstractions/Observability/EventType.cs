@@ -5,11 +5,26 @@
     /// </summary>
     public enum EventType
     {
-        Startup, // Service startup
-        Shutdown, // Service shutdown
-        Start, // Unit of work started
-        Finish, // Unit of work finished
-        Decision, // Major decision completed
+        /// <summary>
+        /// Service startup
+        /// </summary>
+        Startup,
+        /// <summary>
+        /// Service shutdown
+        /// </summary>
+        Shutdown,
+        /// <summary>
+        /// Unit of work started
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Unit of work finished
+        /// </summary>
+        Finish,
+        /// <summary>
+        /// Major decision completed
+        /// </summary>
+        Decision
     }
 
 }

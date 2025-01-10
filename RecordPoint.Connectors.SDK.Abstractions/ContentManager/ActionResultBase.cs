@@ -1,7 +1,11 @@
 ﻿using RecordPoint.Connectors.SDK.Caching.Semaphore;
+using RecordPoint.Connectors.SDK.Observability;
 
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActionResultBase
     {
         /// <summary>
@@ -16,5 +20,15 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// </summary>
         /// <remarks>When null, the operation will use the default delay configuration</remarks>
         public int? NextDelay { get; set; } = null;
+
+        /// <summary>
+        /// Observability Dimensions
+        /// </summary>
+        public Dimensions Dimensions { get; set; } = [];
+
+        /// <summary>
+        /// Observability Measures
+        /// </summary>
+        public Measures Measures { get; set; } = [];
     }
 }

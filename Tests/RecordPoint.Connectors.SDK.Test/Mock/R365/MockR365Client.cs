@@ -1,10 +1,10 @@
-﻿using RecordPoint.Connectors.SDK.Content;
-using RecordPoint.Connectors.SDK.R365;
-using RecordPoint.Connectors.SDK.Client;
+﻿using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Content;
+using RecordPoint.Connectors.SDK.Providers;
+using RecordPoint.Connectors.SDK.R365;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System.Collections.Concurrent;
-using RecordPoint.Connectors.SDK.Providers;
 
 namespace RecordPoint.Connectors.SDK.Test.Mock.R365
 {

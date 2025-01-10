@@ -50,11 +50,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// </summary>
         protected SubmitOperationBase(
             IServiceProvider serviceProvider,
-            IR365Client r365Client, 
-            IWorkQueueClient workQueueClient, 
+            IR365Client r365Client,
+            IWorkQueueClient workQueueClient,
             ISystemContext systemContext,
-            IScopeManager scopeManager, 
-            ILogger logger, 
+            IScopeManager scopeManager,
+            ILogger logger,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
             : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
@@ -96,6 +96,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         #endregion
 
         #region Run
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             var featureStatus = await GetFeatureStatus(cancellationToken);
@@ -173,6 +178,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Required override that requeues the request if needed
         /// </summary>
+        /// <param name="waitTill">Time to wait until</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Submit result</returns>
         protected abstract Task RequeueAsync(DateTimeOffset waitTill, CancellationToken cancellationToken);

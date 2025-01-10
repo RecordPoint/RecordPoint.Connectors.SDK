@@ -1,5 +1,4 @@
 ﻿using Azure;
-using Azure.Storage.Blobs;
 using Polly;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Helpers;
@@ -45,7 +44,7 @@ namespace RecordPoint.Connectors.SDK.Providers
         /// </summary>
         /// <param name="type"></param>
         /// <param name="methodName"></param>
-        protected virtual Policy GetRetryPolicy(Type type, string methodName)
+        protected virtual IAsyncPolicy GetRetryPolicy(Type type, string methodName)
         {
             return Policy.Handle<Exception>(ex => IsTransientAzureBlobException(ex)).WaitAndRetryAsync(
                 MaxAttempts,

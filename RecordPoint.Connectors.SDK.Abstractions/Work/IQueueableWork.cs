@@ -3,7 +3,7 @@
     /// <summary>
     /// Definition of work that is submitted to a queue for execution.
     /// </summary>
-    public interface IQueueableWork : IWork
+    public interface IQueueableWork : IWork, IDisposable
     {
         /// <summary>
         /// Original work request

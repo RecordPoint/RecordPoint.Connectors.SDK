@@ -6,13 +6,34 @@ using RecordPoint.Connectors.SDK.Work;
 namespace RecordPoint.Connectors.SDK.Notifications
 {
 
+    /// <summary>
+    /// The poll notifications operation.
+    /// </summary>
     public class PollNotificationsOperation : WorkBase<object>
     {
+        /// <summary>
+        /// The notification manager.
+        /// </summary>
         private readonly INotificationManager _notificationManager;
+        /// <summary>
+        /// The r365 notification client.
+        /// </summary>
         private readonly IR365NotificationClient _r365NotificationClient;
 
+        /// <summary>
+        /// The POLL WORK TYPE.
+        /// </summary>
         private const string POLL_WORK_TYPE = "Poll Notifications";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PollNotificationsOperation"/> class.
+        /// </summary>
+        /// <param name="notificationManager">The notification manager.</param>
+        /// <param name="r365NotificationClient">The r365 notification client.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         public PollNotificationsOperation(
             INotificationManager notificationManager,
             IR365NotificationClient r365NotificationClient,
@@ -26,8 +47,16 @@ namespace RecordPoint.Connectors.SDK.Notifications
             _r365NotificationClient = r365NotificationClient;
         }
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => POLL_WORK_TYPE;
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             // If Records 365 is not configured silently do nothing
@@ -36,10 +65,10 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 await CompleteAsync("Connector is not ready for operation", cancellationToken);
                 return;
             }
-
-            // Get notifications
-            var notificationValues = await _r365NotificationClient.GetAllPendingNotifications(cancellationToken).ConfigureAwait(false);
-            if (notificationValues == null)
+            
+            var notificationValues = await _r365NotificationClient.GetAllPendingNotifications( cancellationToken).ConfigureAwait(false);
+            
+            if (notificationValues.Count == 0)
             {
                 await CompleteAsync("No work to do", cancellationToken);
                 return;
@@ -63,8 +92,15 @@ namespace RecordPoint.Connectors.SDK.Notifications
             await CompleteAsync("All processing complete", cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the notification count.
+        /// </summary>
         public int NotificationCount { get; private set; }
 
+        /// <summary>
+        /// Get custom result measures.
+        /// </summary>
+        /// <returns>A Measures</returns>
         protected override Measures GetCustomResultMeasures()
         {
             return new Measures()

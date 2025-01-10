@@ -1,15 +1,33 @@
 ﻿namespace RecordPoint.Connectors.SDK.Content
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class Record : ContentItem, IEquatable<Record>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string? ParentExternalId { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string? Location { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string? MimeType { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string? MediaType { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public long? FileSize { get; set; }
 
         /// <summary>
@@ -17,6 +35,11 @@
         /// </summary>
         public List<BinaryMetaInfo> Binaries { get; set; } = new List<BinaryMetaInfo>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Record? other)
         {
             if (other == null) return false;
@@ -30,6 +53,9 @@
                 && Binaries.IsEqual(other.Binaries);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -41,6 +67,9 @@
                 return Equals(other);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;

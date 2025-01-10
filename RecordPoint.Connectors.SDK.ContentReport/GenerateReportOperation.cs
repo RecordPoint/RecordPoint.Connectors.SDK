@@ -75,8 +75,8 @@ namespace RecordPoint.Connectors.SDK.ContentReport
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var scanTask = scanOutcome == null 
-                        ? contentDiscoveryAction.BeginAsync(notification.ConnectorConfig, cancellationToken) 
+                    var scanTask = scanOutcome == null
+                        ? contentDiscoveryAction.BeginAsync(notification.ConnectorConfig, cancellationToken)
                         : contentDiscoveryAction.ContinueAsync(notification.ConnectorConfig, scanOutcome.Cursor, cancellationToken);
 
                     scanOutcome = await scanTask.ConfigureAwait(false);

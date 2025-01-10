@@ -3,14 +3,27 @@ using System;
 
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
+    /// <summary>
+    /// The content manager action provider.
+    /// </summary>
     public class ContentManagerActionProvider : IContentManagerActionProvider
     {
+        /// <summary>
+        /// The service provider.
+        /// </summary>
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentManagerActionProvider"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
         public ContentManagerActionProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
+
+        /// <inheritdoc/>
+        public IContentManagerCallbackAction CreateContentManagerCallbackAction() => _serviceProvider.GetService<IContentManagerCallbackAction>();
 
         /// <inheritdoc/>
         public IChannelDiscoveryAction CreateChannelDiscoveryAction() => _serviceProvider.GetRequiredService<IChannelDiscoveryAction>();
@@ -41,5 +54,13 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
         /// <inheritdoc/>
         public IGenerateReportAction CreateGenerationReportAction() => _serviceProvider.GetRequiredService<IGenerateReportAction>();
+
+        /// <inheritdoc/>
+        public IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>() where TOutput : ActionResultBase =>
+            _serviceProvider.GetRequiredService<IGenericAction<TInput, TOutput>>();
+
+        /// <inheritdoc/>
+        public IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>() where TOutput : ActionResultBase =>
+            _serviceProvider.GetRequiredService<IGenericManagedAction<TInput, TOutput>>();
     }
 }

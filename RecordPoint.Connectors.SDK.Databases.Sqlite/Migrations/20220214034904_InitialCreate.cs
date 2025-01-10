@@ -4,8 +4,15 @@
 
 namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
 {
+    /// <summary>
+    /// The initial create.
+    /// </summary>
     public partial class InitialCreate : Migration
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -76,6 +83,10 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

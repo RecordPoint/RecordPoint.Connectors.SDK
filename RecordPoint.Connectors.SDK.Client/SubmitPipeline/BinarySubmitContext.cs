@@ -47,6 +47,11 @@
         public bool? IsOldVersion { get; set; }
 
         /// <summary>
+        /// (Optional) Indicates whether the binary will skip the enrichment pipeline
+        /// </summary>
+        public bool? SkipEnrichment { get; set; }
+
+        /// <summary>
         /// Retrieve the title from the strongly typed FileName field instead of the Core Metadata for binaries
         /// </summary>
         /// <returns></returns>

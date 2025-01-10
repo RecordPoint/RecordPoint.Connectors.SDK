@@ -1,15 +1,32 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
 {
+    /// <summary>
+    /// The cosmos db manager.
+    /// </summary>
+    /// <typeparam name="T"/>
     public class CosmosDbManager<T> : ICosmosDbManager<T> where T : BaseCosmosDbItem
     {
+        /// <summary>
+        /// The logger.
+        /// </summary>
         private readonly ILogger<CosmosDbManager<T>> _logger;
+        /// <summary>
+        /// The container.
+        /// </summary>
         private readonly Container? _container;
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="cosmosClient">The cosmos client.</param>
+        /// <param name="databaseId">The database id.</param>
+        /// <param name="containerId">The container id.</param>
+        /// <param name="logger">The logger.</param>
         public CosmosDbManager(CosmosClient cosmosClient, string databaseId, string containerId, ILogger<CosmosDbManager<T>> logger)
         {
             _container = cosmosClient.GetContainer(databaseId, containerId);

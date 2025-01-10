@@ -15,7 +15,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite
         /// <returns>Updated host builder</returns>
         public static IHostBuilder UseSqliteConnectorDatabase(this IHostBuilder hostBuilder)
         {
-            return hostBuilder.ConfigureServices(services => 
+            return hostBuilder.ConfigureServices(services =>
             {
                 services
                     .AddSingleton<IConnectorDatabaseProvider, SqliteConnectorDatabaseProvider>()

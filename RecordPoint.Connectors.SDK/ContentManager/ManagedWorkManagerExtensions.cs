@@ -14,7 +14,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Create a new Content Manager Operation
         /// </summary>
-        /// <param name="connectorConfigModel">Connector configuration</param>
+        /// <param name="managedWorkFactory"></param>
         /// <returns>Newly created Content Manager Operation</returns>
         public static IManagedWorkManager CreateContentManagerOperation(this IManagedWorkFactory managedWorkFactory)
         {
@@ -28,6 +28,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Create a new Channel Discovery Operation
         /// </summary>
+        /// <param name="managedWorkFactory"></param>
         /// <param name="connectorConfigModel">Connector configuration</param>
         /// <returns>Newly created Channel Discovery Operation</returns>
         public static IManagedWorkManager CreateChannelDiscoveryOperation(this IManagedWorkFactory managedWorkFactory, ConnectorConfigModel connectorConfigModel)
@@ -47,6 +48,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Create a new Content Registration Operation
         /// </summary>
+        /// <param name="managedWorkFactory"></param>
         /// <param name="connectorConfigModel">Connector configuration</param>
         /// <param name="channel">Channel on which to perform the content synchronisation</param>
         /// <param name="context">Custom Context for the Content Registration</param>
@@ -71,6 +73,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Create a new Content Synchronisation Operation
         /// </summary>
+        /// <param name="managedWorkFactory"></param>
         /// <param name="connectorConfigModel">Connector configuration</param>
         /// <param name="channel">Channel on which to perform the content synchronisation</param>
         /// <returns>Newly created Content Synchronisation Operation</returns>

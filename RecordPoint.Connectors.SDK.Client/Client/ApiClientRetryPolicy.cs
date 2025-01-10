@@ -1,5 +1,6 @@
 ﻿using Microsoft.Rest;
 using Polly;
+using Polly.Retry;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Helpers;
 using System.Net;
@@ -29,7 +30,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name="maxTryCount"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Policy GetPolicy(int maxTryCount, CancellationToken cancellationToken)
+        public static AsyncRetryPolicy GetPolicy(int maxTryCount, CancellationToken cancellationToken)
         {
             return Policy.Handle<Exception>(ex => ex.IsRecords365ApiRetriableException(cancellationToken))
                 .WaitAndRetryAsync(maxTryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(RetryPolicyBaseSeconds, retryAttempt)),
@@ -48,7 +49,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <param name="logPrefix"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Policy GetPolicy(ILog log, Type callerType, string methodName, int maxTryCount, string logPrefix, CancellationToken cancellationToken)
+        public static AsyncRetryPolicy GetPolicy(ILog log, Type callerType, string methodName, int maxTryCount, string logPrefix, CancellationToken cancellationToken)
         {
             return Policy
                 .Handle<Exception>(ex => ex.IsRecords365ApiRetriableException(cancellationToken))

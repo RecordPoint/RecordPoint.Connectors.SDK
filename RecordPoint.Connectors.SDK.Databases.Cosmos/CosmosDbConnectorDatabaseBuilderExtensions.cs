@@ -2,8 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RecordPoint.Connectors.SDK.Configuration;
+using RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Manager;
 using RecordPoint.Connectors.SDK.Observability;
+using RecordPoint.Connectors.SDK.Toggles;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos
 {
@@ -42,19 +45,68 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="serviceProvider"></param>
-        /// <param name="cosmosClient"></param>
+        /// <param name="cosmosDbConnectorDatabaseOptions"></param>
+        /// <param name="cosmosAzureAuthenticationOptions"></param>
         /// <param name="databaseName"></param>
         /// <param name="containerName"></param>
         /// <returns></returns>
         public static CosmosDbManager<T> InitialiseCosmosStorage<T>(
             this IServiceProvider serviceProvider,
-            CosmosClient cosmosClient, 
-            string databaseName, 
-            string containerName) 
+            CosmosDbConnectorDatabaseOptions cosmosDbConnectorDatabaseOptions,
+            AzureAuthenticationOptions cosmosAzureAuthenticationOptions,
+            string databaseName,
+            string containerName)
             where T : BaseCosmosDbItem
         {
+            var featureToggleProvider = serviceProvider.GetRequiredService<IToggleProvider>();
+            var cosmosClient = GetCosmosClient(featureToggleProvider, cosmosDbConnectorDatabaseOptions, cosmosAzureAuthenticationOptions);
             var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbManager<T>>>();
             return new CosmosDbManager<T>(cosmosClient, databaseName, containerName, logger);
+        }
+
+        /// <summary>
+        /// Returns a cosmos client for building cosmos db manager
+        /// </summary>
+        /// <param name="featureToggleProvider"></param>
+        /// <param name="options"></param>
+        /// <param name="cosmosAzureAuthenticationOptions"></param>
+        /// <returns></returns>
+        private static CosmosClient GetCosmosClient(IToggleProvider featureToggleProvider, CosmosDbConnectorDatabaseOptions options, AzureAuthenticationOptions cosmosAzureAuthenticationOptions)
+        {
+            CosmosClient cosmosClient;
+
+            var cosmosSerializationOptions = new CosmosClientOptions
+            {
+                SerializerOptions = new CosmosSerializationOptions
+                {
+                    PropertyNamingPolicy = options.UseCamelCaseNamingPolicy
+                        ? CosmosPropertyNamingPolicy.CamelCase
+                        : CosmosPropertyNamingPolicy.Default
+                }
+            };
+
+            if (!string.IsNullOrEmpty(options.ConnectionString))
+            {
+                SetConnectionMode(cosmosSerializationOptions, options.ConnectionString, options.UseGateWayConnectionMode);
+                cosmosClient = new CosmosClient(options.ConnectionString, cosmosSerializationOptions);
+            }
+            else
+            {
+                var credential = cosmosAzureAuthenticationOptions.GetTokenCredential();
+                var accountEndpoint = CosmosEndpointHelper.BuildCosmosAccountEndpoint(featureToggleProvider, options.CosmosDbAccountName);
+                SetConnectionMode(cosmosSerializationOptions, accountEndpoint, options.UseGateWayConnectionMode);
+                cosmosClient = new CosmosClient(accountEndpoint, credential, cosmosSerializationOptions);
+            }
+            return cosmosClient;
+        }
+
+        private static void SetConnectionMode(CosmosClientOptions cosmosSerializationOptions, string cosmosConnectionStringOrEndpoint, bool useGateway)
+        {
+            const string cosmosDedicatedGatewaySignifier = "sqlx.cosmos.azure.com";
+            cosmosSerializationOptions.ConnectionMode =
+                cosmosConnectionStringOrEndpoint.Contains(cosmosDedicatedGatewaySignifier) || useGateway
+                    ? ConnectionMode.Gateway
+                    : ConnectionMode.Direct;
         }
 
     }

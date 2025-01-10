@@ -1,15 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RecordPoint.Connectors.SDK.Test.SUT;
 using RecordPoint.Connectors.SDK.Context;
-using RecordPoint.Connectors.SDK.Interfaces;
-using RecordPoint.Connectors.SDK.Providers;
-using RecordPoint.Connectors.SDK.Toggles.Null;
-using RecordPoint.Connectors.SDK.Work;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RecordPoint.Connectors.SDK.Test.SUT;
 using RecordPoint.Connectors.SDK.Time;
+using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Tests.SUT
 {

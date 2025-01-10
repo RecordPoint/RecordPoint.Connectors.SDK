@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.Caching
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ISemaphoreLockScopedKeyAction
     {
         /// <summary>
@@ -9,8 +12,9 @@ namespace RecordPoint.Connectors.SDK.Caching
         /// </summary>
         /// <param name="connectorConfigModel"></param>
         /// <param name="workType"></param>
+        /// <param name="context"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<string> ExecuteAsync(ConnectorConfigModel connectorConfigModel, string workType, CancellationToken cancellationToken);
+        Task<string> ExecuteAsync(ConnectorConfigModel connectorConfigModel, string workType, object? context, CancellationToken cancellationToken);
     }
 }

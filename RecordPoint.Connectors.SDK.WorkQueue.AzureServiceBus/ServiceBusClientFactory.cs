@@ -43,11 +43,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
             var fullyQualifiedNamespace = $"{_serviceBusOptions.Value.ServiceBusName}.servicebus.windows.net";
 
-            
+
             return new ServiceBusClient(fullyQualifiedNamespace, credential);
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ServiceBusAdministrationClient CreateServiceBusAdministrationClient()
         {
             if (!string.IsNullOrEmpty(_serviceBusOptions.Value.ServiceBusConnectionString))

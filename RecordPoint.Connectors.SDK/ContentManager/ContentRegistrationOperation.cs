@@ -6,6 +6,7 @@ using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
+using RecordPoint.Connectors.SDK.Toggles;
 using RecordPoint.Connectors.SDK.Work;
 using System;
 using System.Collections.Generic;
@@ -16,18 +17,61 @@ using System.Threading.Tasks;
 namespace RecordPoint.Connectors.SDK.ContentManager
 {
     /// <summary>
-    /// Implementation of a managed work item that performs a Content Registration Operation
+    /// The content registration operation.
     /// </summary>
     public class ContentRegistrationOperation : ManagedQueueableWorkBase<ContentRegistrationConfiguration, ContentRegistrationState>
     {
+        /// <summary>
+        /// WORK TYPE.
+        /// </summary>
         public const string WORK_TYPE = "Content Registration";
 
+        /// <summary>
+        /// The content manager action provider.
+        /// </summary>
         private readonly IContentManagerActionProvider _contentManagerActionProvider;
+        /// <summary>
+        /// The connector manager.
+        /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
+        /// <summary>
+        /// The channel manager.
+        /// </summary>
         private readonly IChannelManager _channelManager;
+        /// <summary>
+        /// Work queue client.
+        /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
+        /// <summary>
+        /// Feature Toggle Provider.
+        /// </summary>
+        private readonly IToggleProvider _toggleProvider;
+        /// <summary>
+        /// The options.
+        /// </summary>
         private readonly IOptions<ContentRegistrationOperationOptions> _options;
+        /// <summary>
+        /// The content manager options.
+        /// </summary>
+        private readonly IOptions<ContentManagerOptions> _contentManagerOptions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentRegistrationOperation"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
+        /// <param name="connectorManager">The connector manager.</param>
+        /// <param name="channelManager">The channel manager.</param>
+        /// <param name="workQueueClient">The work queue client.</param>
+        /// <param name="managedWorkFactory">The managed work factory.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="toggleProvider">The toggle provider.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="contentManagerOptions">The content manager options.</param>
         public ContentRegistrationOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -37,34 +81,49 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IManagedWorkFactory managedWorkFactory,
             ISystemContext systemContext,
             IScopeManager scopeManager,
+            IToggleProvider toggleProvider,
             ILogger<ContentRegistrationOperation> logger,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
-            IOptions<ContentRegistrationOperationOptions> options)
+            IOptions<ContentRegistrationOperationOptions> options,
+            IOptions<ContentManagerOptions> contentManagerOptions)
             : base(serviceProvider, managedWorkFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _connectorManager = connectorManager;
             _channelManager = channelManager;
             _workQueueClient = workQueueClient;
+            _toggleProvider = toggleProvider;
             _options = options;
+            _contentManagerOptions = contentManagerOptions;
         }
 
+        /// <summary>
+        /// Gets the service name.
+        /// </summary>
         public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WORK_TYPE;
 
+        /// <summary>
+        /// The connector configuration.
+        /// </summary>
         private ConnectorConfigModel _connectorConfiguration;
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <exception cref="RequiredValueOutOfRangeException"></exception>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             _connectorConfiguration = await _connectorManager.GetConnectorAsync(Configuration.ConnectorConfigurationId, cancellationToken);
-            if (_connectorConfiguration == null)
-            {
-                // If connector not found assume its been deleted
-                await AbandonedAsync("Connector not found", cancellationToken);
+            if (!(await CheckConnectorEnabledStatusAsync(_connectorConfiguration, _options.Value, State, _contentManagerOptions.Value.MaxDisabledConnectorAge, cancellationToken)))
                 return;
-            }
 
             var channelExists = await _channelManager.ChannelExistsAsync(Configuration.ConnectorConfigurationId, Configuration.ChannelExternalId, cancellationToken);
             if (!channelExists)
@@ -74,26 +133,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 return;
             }
 
-            var connectorStatus = await _connectorManager.GetConnectorStatusAsync(Configuration.ConnectorConfigurationId, cancellationToken);
-            if (!connectorStatus.Enabled)
-            {
-                //Connector Configuration is disabled, so backoff until it is re-enabled
-                var backOffSeconds = CalculateBackOffSeconds(
-                    _options.Value,
-                    false,
-                    State.LastBackOffDelaySeconds);
-
-                State.LastBackOffDelaySeconds = backOffSeconds;
-
-                await ContinueAsync(connectorStatus.EnabledReason, State, DateTimeProvider.UtcNow.AddSeconds(backOffSeconds), cancellationToken);
-                return;
-            }
-
-            if (await CheckSemaphoreLockAsync(_connectorConfiguration, cancellationToken))
+            if (await CheckSemaphoreLockAsync(_connectorConfiguration, Configuration!.ChannelExternalId, cancellationToken))
             {
                 return;
             }
-
 
             var startTime = DateTimeProvider.UtcNow;
 
@@ -119,7 +162,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     break;
 
                 case ContentResultType.BackOff:
-                    await HandleBackOffResultAsync(_connectorConfiguration, result.SemaphoreLockType, result.NextDelay, cancellationToken);
+                    await HandleBackOffResultAsync(_connectorConfiguration, Configuration!.ChannelExternalId, result.SemaphoreLockType, result.NextDelay, cancellationToken);
                     break;
 
                 default:
@@ -172,12 +215,25 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return result;
         }
 
+        /// <summary>
+        /// Begins and return a task of type contentresult asynchronously.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<ContentResult>]]></returns>
         protected async Task<ContentResult> BeginAsync(Channel channel, CancellationToken cancellationToken)
         {
             var action = CreateContentRegistrationAction();
             return await action.BeginAsync(_connectorConfiguration, channel, Configuration.Context, cancellationToken);
         }
 
+        /// <summary>
+        /// Continue the sync.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <param name="cursor">The cursor.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><![CDATA[Task<ContentResult>]]></returns>
         protected async Task<ContentResult> ContinueSync(Channel channel, string cursor, CancellationToken cancellationToken)
         {
             var action = CreateContentRegistrationAction();
@@ -187,33 +243,53 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
         #region Handle Content
 
+        /// <summary>
+        /// Handle complete content asynchronously.
+        /// </summary>
+        /// <param name="contentResult">The content result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected async Task HandleCompleteContentAsync(ContentResult contentResult, CancellationToken cancellationToken)
         {
             // We've registered all available content so the operation can completed
             await SubmitContentAsync(contentResult, cancellationToken).ConfigureAwait(false);
+
             await CompleteAsync(contentResult.Reason, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handle incomplete content asynchronously.
+        /// </summary>
+        /// <param name="contentResult">The content result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected async Task HandleIncompleteContentAsync(ContentResult contentResult, CancellationToken cancellationToken)
         {
             // If we haven't gotten everything available go again straight away.
             await SubmitContentAsync(contentResult, cancellationToken).ConfigureAwait(false);
 
-            var backOffSeconds = _options.Value.ExponentialBackOff ? _options.Value.DelaySeconds : 0;
-            var startTime = DateTimeProvider.UtcNow;
+            var backOffSeconds = contentResult.NextDelay ?? CalculateBackOffSeconds(
+                _options.Value,
+                contentResult.Records.Any() || contentResult.Aggregations.Any(),
+                State.LastBackOffDelaySeconds);
+
             var nextRunTime = DateTimeProvider.UtcNow.AddSeconds(backOffSeconds);
 
-            var finalState = new ContentRegistrationState
+            var state = new ContentRegistrationState
             {
                 LastBackOffDelaySeconds = backOffSeconds,
                 Cursor = contentResult.Cursor
             };
-            _contentResult = contentResult;
-            _submitTimespan = DateTimeProvider.UtcNow - startTime;
 
-            await ContinueAsync("Registration complete normally", finalState, nextRunTime, cancellationToken);
+            await ContinueAsync("Registration complete normally", state, nextRunTime, cancellationToken);
         }
 
+        /// <summary>
+        /// Handle failed content asynchronously.
+        /// </summary>
+        /// <param name="contentResult">The content result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected Task HandleFailedContentAsync(ContentResult contentResult, CancellationToken cancellationToken)
         {
             // Should continue the failed content operation in the next runs
@@ -221,6 +297,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return FaultedAsync(contentResult.Reason, contentResult.Exception, cancellationToken);
         }
 
+        /// <summary>
+        /// Handle abandonded content asynchronously.
+        /// </summary>
+        /// <param name="contentResult">The content result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected Task HandleAbandondedContentAsync(ContentResult contentResult, CancellationToken cancellationToken)
         {
             // Should complete the abandonded content operation as this is typically due to the Channel no longer being available
@@ -228,13 +310,27 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return AbandonedAsync(contentResult.Reason, cancellationToken);
         }
 
+        /// <summary>
+        /// Submits the content asynchronously.
+        /// </summary>
+        /// <param name="contentResult">The content result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected async Task SubmitContentAsync(ContentResult contentResult, CancellationToken cancellationToken)
         {
+            var startTime = DateTimeProvider.UtcNow;
             var tasks = new List<Task>();
+            var contentProtectionEnabled = _toggleProvider.GetConnectorContentProtection(SystemContext, _connectorConfiguration.TenantId);
 
             var records = contentResult.Records;
             foreach (var record in records)
             {
+                if (!contentProtectionEnabled)
+                {
+                    //If content protection is disabled, remove all binaries from the record 
+                    record.Binaries = new List<BinaryMetaInfo>();
+                }
+
                 cancellationToken.ThrowIfCancellationRequested();
                 tasks.Add(_workQueueClient.SubmitRecordAsync(new ContentSubmissionConfiguration
                 {
@@ -281,15 +377,35 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
+
+            _contentResult = contentResult;
+            _submitTimespan = DateTimeProvider.UtcNow - startTime;
         }
 
         #endregion
 
         #region State Serialization
+        /// <summary>
+        /// Deserialize the configuration.
+        /// </summary>
+        /// <param name="configurationType">The configuration type.</param>
+        /// <param name="configurationText">The configuration text.</param>
+        /// <returns>A ContentRegistrationConfiguration</returns>
         protected override ContentRegistrationConfiguration DeserializeConfiguration(string configurationType, string configurationText) => ContentRegistrationConfiguration.Deserialize(configurationType, configurationText);
 
+        /// <summary>
+        /// Deserialize the state.
+        /// </summary>
+        /// <param name="stateType">The state type.</param>
+        /// <param name="stateText">The state text.</param>
+        /// <returns>A ContentRegistrationState</returns>
         protected override ContentRegistrationState DeserializeState(string stateType, string stateText) => ContentRegistrationState.Deserialize(stateType, stateText);
 
+        /// <summary>
+        /// Serialize the state.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <returns>A (string, string)</returns>
         protected override (string, string) SerializeState(ContentRegistrationState state) => (ContentRegistrationState.LatestStateType, state.Serialize());
         #endregion
 
@@ -320,10 +436,16 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             dimensions[StandardDimensions.CONNECTOR_ID] = Configuration.ConnectorConfigurationId;
             dimensions[StandardDimensions.TENANT_ID] = Configuration.TenantId;
             dimensions[StandardDimensions.TENANT_DOMAIN_NAME] = Configuration.TenantDomainName;
+            dimensions[StandardDimensions.CHANNEL_EXTERNAL_ID] = Configuration.ChannelExternalId;
+            dimensions[StandardDimensions.CHANNEL_TITLE] = Configuration.ChannelTitle;
 
             return dimensions;
         }
 
+        /// <summary>
+        /// Get custom result dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomResultDimensions()
         {
             var dimensions = base.GetCustomResultDimensions();
@@ -336,9 +458,22 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             {
                 dimensions[StandardDimensions.EXCEPTION] = _contentResult.Exception.ToString();
             }
+
+            if (_contentResult?.Dimensions != null)
+            {
+                foreach (var dimension in _contentResult.Dimensions)
+                {
+                    dimensions[dimension.Key] = dimension.Value;
+                }
+            }
+
             return dimensions;
         }
 
+        /// <summary>
+        /// Get custom result measures.
+        /// </summary>
+        /// <returns>A Measures</returns>
         protected override Measures GetCustomResultMeasures()
         {
             var measures = base.GetCustomResultMeasures();
@@ -350,6 +485,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 measures[StandardMeasures.ACTION_EXECUTION_SECONDS] = _actionExecutionTimespan.Value.Milliseconds / 1000D;
             if (_submitTimespan.HasValue)
                 measures[StandardMeasures.SUBMIT_SECONDS] = _submitTimespan.Value.Milliseconds / 1000D;
+
+            if (_contentResult?.Measures != null)
+            {
+                foreach (var measure in _contentResult.Measures)
+                {
+                    measures[measure.Key] = measure.Value;
+                }
+            }
 
             return measures;
         }

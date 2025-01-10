@@ -75,7 +75,6 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Lists the status of managed work that matches the given predicate
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -84,7 +83,6 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Determines if there is managed work that matches the given predicate
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>

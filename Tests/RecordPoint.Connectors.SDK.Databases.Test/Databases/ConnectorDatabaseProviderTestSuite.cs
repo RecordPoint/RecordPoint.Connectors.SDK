@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
-using Xunit;
-using System.IO;
-using System.Linq;
-using System.Threading;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Databases;
 using RecordPoint.Connectors.SDK.Observability.Null;
 using RecordPoint.Connectors.SDK.Time;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.ConnectorDatabase
 {
@@ -229,7 +229,7 @@ namespace RecordPoint.Connectors.SDK.Test.ConnectorDatabase
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
-        } 
+        }
         #endregion
     }
 }

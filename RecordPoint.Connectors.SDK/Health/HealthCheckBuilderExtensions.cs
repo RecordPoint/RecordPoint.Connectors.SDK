@@ -9,10 +9,21 @@ namespace RecordPoint.Connectors.SDK.Health
     public static class HealthCheckBuilderExtensions
     {
         /// <summary>
-        /// Use the health checker
+        /// Use the health checker with default health check actions.
         /// </summary>
         /// <param name="hostBuilder">Host builder to target</param>
         public static IHostBuilder UseHealthChecker(this IHostBuilder hostBuilder)
+        {
+            return hostBuilder.UseHealthChecker<DefaultHealthCheckLiveAction, DefaultHealthCheckReadyAction>();
+        }
+
+        /// <summary>
+        /// Use the health checker with provided health check actions.
+        /// </summary>
+        /// <param name="hostBuilder">Host builder to target</param>
+        public static IHostBuilder UseHealthChecker<THealthCheckLiveAction, THealthCheckReadyAction>(this IHostBuilder hostBuilder)
+            where THealthCheckLiveAction : class, IHealthCheckLiveAction
+            where THealthCheckReadyAction : class, IHealthCheckReadyAction
         {
             return hostBuilder.ConfigureServices((hostContext, services) =>
             {
@@ -21,8 +32,9 @@ namespace RecordPoint.Connectors.SDK.Health
                     .AddHostedService<HealthCheckService>()
                     .Configure<HealthCheckOptions>(configuration.GetSection(HealthCheckOptions.SECTION_NAME))
                     .AddSingleton<IHealthCheckManager, HealthCheckManager>()
-                    .AddTransient<HealthCheckOperation>()
-                    .AddSingleton<IHealthCheckStrategy, RunHealthChecker>();
+                    .AddSingleton<IHealthCheckStrategy, UptimeStrategy>()
+                    .AddSingleton<IHealthCheckLiveAction, THealthCheckLiveAction>()
+                    .AddSingleton<IHealthCheckReadyAction, THealthCheckReadyAction>();
             });
         }
     }

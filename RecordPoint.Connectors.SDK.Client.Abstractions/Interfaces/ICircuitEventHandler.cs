@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.Interfaces
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ICircuitEventHandler
     {
         /// <summary>

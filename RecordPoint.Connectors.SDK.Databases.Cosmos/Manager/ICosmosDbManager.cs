@@ -2,6 +2,10 @@
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface ICosmosDbManager<T> where T : BaseCosmosDbItem
     {
         /// <summary>
@@ -11,7 +15,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         /// <param name="item"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task UpsertAsync(string partitionKey, T item,  CancellationToken cancellationToken);
+        Task UpsertAsync(string partitionKey, T item, CancellationToken cancellationToken);
 
         /// <summary>
         /// Get Item Async from cosmos
@@ -29,7 +33,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task DeleteAsync(string partitionKey, string id,  CancellationToken cancellationToken = default);
+        Task DeleteAsync(string partitionKey, string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Passing an SQL query to this will execute it and will yield return it

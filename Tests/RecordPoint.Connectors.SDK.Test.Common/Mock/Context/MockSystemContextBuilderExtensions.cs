@@ -16,7 +16,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Context
         {
             var systemOptions = new MockSystemOptions()
             {
-                SUTName =  sutName
+                SUTName = sutName
             };
             hostBuilder.ConfigureServices(svcs => svcs
                 .AddSingleton(Options.Create(systemOptions))

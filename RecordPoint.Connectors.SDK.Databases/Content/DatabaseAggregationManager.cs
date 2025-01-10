@@ -10,11 +10,19 @@ namespace RecordPoint.Connectors.SDK.Content
     /// </summary>
     public class DatabaseAggregationManager : IAggregationManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string CONNECTOR_ID_DIMENSION = "ConnectorId";
 
         private readonly IConnectorDatabaseClient _databaseClient;
         private readonly IScopeManager _scopeManager;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseClient"></param>
+        /// <param name="scopeManager"></param>
         public DatabaseAggregationManager(IConnectorDatabaseClient databaseClient, IScopeManager scopeManager)
         {
             _databaseClient = databaseClient;
@@ -113,7 +121,7 @@ namespace RecordPoint.Connectors.SDK.Content
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
-                var connectorIdGroups = aggregations.GroupBy(a => a.ConnectorId, a => a );
+                var connectorIdGroups = aggregations.GroupBy(a => a.ConnectorId, a => a);
                 foreach (var aggregationsGroupedByConnectorId in connectorIdGroups)
                 {
                     var externalIds = aggregationsGroupedByConnectorId.Select(a => a.ExternalId);

@@ -14,6 +14,10 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
     [Migration("20220214034904_InitialCreate")]
     partial class InitialCreate
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

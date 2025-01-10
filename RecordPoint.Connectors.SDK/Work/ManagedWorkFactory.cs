@@ -12,6 +12,10 @@ namespace RecordPoint.Connectors.SDK.Work
     {
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceProvider"></param>
         public ManagedWorkFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;

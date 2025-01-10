@@ -6,12 +6,29 @@ using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Notifications.Webhook
 {
+    /// <summary>
+    /// The webhook operation.
+    /// </summary>
     public class WebhookOperation : WorkBase<object>
     {
+        /// <summary>
+        /// The WEBHOOK WORK TYPE.
+        /// </summary>
         private const string WEBHOOK_WORK_TYPE = "Webhook Notifications";
 
+        /// <summary>
+        /// The notification manager.
+        /// </summary>
         private readonly INotificationManager _notificationManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebhookOperation"/> class.
+        /// </summary>
+        /// <param name="notificationManager">The notification manager.</param>
+        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="dateTimeProvider">The date time provider.</param>
         public WebhookOperation(
             INotificationManager notificationManager,
             IScopeManager scopeManager,
@@ -23,10 +40,21 @@ namespace RecordPoint.Connectors.SDK.Notifications.Webhook
             _notificationManager = notificationManager;
         }
 
+        /// <summary>
+        /// Gets the work type.
+        /// </summary>
         public override string WorkType => WEBHOOK_WORK_TYPE;
 
+        /// <summary>
+        /// Gets the connector notification.
+        /// </summary>
         public ConnectorNotificationModel ConnectorNotification => (ConnectorNotificationModel)Parameter;
 
+        /// <summary>
+        /// Inner the run asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
         {
             await _notificationManager.HandleNotificationAsync(ConnectorNotification, cancellationToken);
@@ -34,6 +62,10 @@ namespace RecordPoint.Connectors.SDK.Notifications.Webhook
             await CompleteAsync("Processing complete", cancellationToken);
         }
 
+        /// <summary>
+        /// Get custom key dimensions.
+        /// </summary>
+        /// <returns>A Dimensions</returns>
         protected override Dimensions GetCustomKeyDimensions()
         {
             var dimensions = base.GetCustomKeyDimensions();

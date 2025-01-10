@@ -16,11 +16,19 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         private const string WORK_STATUS_CONTAINER_NAME = "managedworkstatuses";
         private const string AGGREGATION_CONTAINER_NAME = "aggregations";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         public CosmosDbConnectorDbContext(DbContextOptions<ConnectorDbContext> options)
             : base(options)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ChannelModel>()
@@ -40,7 +48,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
                 .ToContainer(CONNECTOR_CONTAINER_NAME)
                 .HasPartitionKey(a => a.ConnectorId)
                 .HasKey(nameof(ConnectorConfigurationModel.ConnectorId));
-            
+
             modelBuilder.Entity<ManagedWorkStatusModel>()
                 .HasNoDiscriminator()
                 .ToContainer(WORK_STATUS_CONTAINER_NAME)

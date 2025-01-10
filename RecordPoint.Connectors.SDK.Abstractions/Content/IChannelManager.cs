@@ -77,7 +77,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// Removes the specified Channels from Storage
         /// </summary>
         /// <param name="connectorId">The Connector for which the Channel belongs</param>
-        /// <param name="externalId">The Ids of the Channels</param>
+        /// <param name="externalIds">The Ids of the Channels</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Task</returns>
         Task RemoveChannelsAsync(string connectorId, string[] externalIds, CancellationToken cancellationToken);

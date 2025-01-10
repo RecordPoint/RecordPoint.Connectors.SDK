@@ -10,7 +10,7 @@
         /// <summary>
         /// Name of the SUT this test is running in
         /// </summary>
-        public string SUTName { get; set; }
+        public string? SUTName { get; set; }
 
     }
 }

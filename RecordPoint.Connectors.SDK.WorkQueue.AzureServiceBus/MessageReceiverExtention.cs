@@ -15,10 +15,10 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.Extensions
         /// <returns></returns>
         public static DeadLetterModel ToDeadLetterModel(this ServiceBusReceivedMessage source) => new()
         {
-             MessageId = source.MessageId,
-             DeadLetterReason = source.DeadLetterReason,
-             EnqueuedTime=  source.EnqueuedTime,
-             SequenceNumber = source.SequenceNumber.ToString(),
+            MessageId = source.MessageId,
+            DeadLetterReason = source.DeadLetterReason,
+            EnqueuedTime = source.EnqueuedTime,
+            SequenceNumber = source.SequenceNumber.ToString(),
         };
     }
 }
