@@ -5,7 +5,7 @@ You must have access to a Records365 tenant before you begin.
 
 If you want a more detailed explanation of the Connectors SDK, start [here](../README.md).
 
-The Reference Connector Project ([DevOps Link](https://dev.azure.com/recordpoint/Connectors/_git/RecordPoint.Connectors.Reference)) ([github link](https://github.com/RecordPoint/RecordPoint.Connectors.Reference)) can be used as a guide for developing a connector.
+The Reference Connector Project ([link](https://github.com/RecordPoint/RecordPoint.Connectors.Reference)) can be used as a guide for developing a connector.
 
 
 ### Authentication 
