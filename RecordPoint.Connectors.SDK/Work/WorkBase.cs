@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Observability;
+﻿using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using System;
 using System.Linq;
@@ -19,11 +18,10 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Public constructor. Used to inject dependencies
         /// </summary>
-        protected WorkBase(IScopeManager scopeManager, ILogger logger, ITelemetryTracker telemetryTracker, IDateTimeProvider dateTimeProvider)
+        protected WorkBase(IObservabilityScope observabilityScope, ITelemetryTracker telemetryTracker, IDateTimeProvider dateTimeProvider)
         {
-            ScopeManager = scopeManager;
+            ScopeManager = observabilityScope;
             TelemetryTracker = telemetryTracker;
-            Logger = logger;
             DateTimeProvider = dateTimeProvider;
 
             Id = Guid.NewGuid().ToString();
@@ -32,12 +30,8 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Observability scope manager
         /// </summary>
-        protected IScopeManager ScopeManager { get; private set; }
+        protected IObservabilityScope ScopeManager { get; private set; }
 
-        /// <summary>
-        /// Logger
-        /// </summary>
-        protected ILogger Logger { get; private set; }
 
         /// <summary>
         /// Telemetry tracker
@@ -134,11 +128,11 @@ namespace RecordPoint.Connectors.SDK.Work
             HasResult = true;
             ResultReason = reason;
             ResultType = WorkResultType.Complete;
-            return Task.Delay(0, cancellationToken);
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Record that this work item has critically failed and should not be reattempted
+        /// Record that this work item has failed and should be reattempted
         /// </summary>
         /// <param name="reason">Reason why the work item has failed</param>
         /// <param name="cancellationToken"></param>
@@ -149,11 +143,12 @@ namespace RecordPoint.Connectors.SDK.Work
             ResultReason = reason;
             ResultType = WorkResultType.Failed;
             Exception = new InvalidOperationException(reason);
-            return Task.Delay(0, cancellationToken);
+            TelemetryTracker.TrackException(Exception);
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Record that this work item has critically failed due to an exception and should not be reattempted
+        /// Record that this work item has failed due to an exception and should be reattempted
         /// </summary>
         /// <param name="exception">Exception that is cause of the failure</param>
         /// <param name="cancellationToken"></param>
@@ -164,7 +159,20 @@ namespace RecordPoint.Connectors.SDK.Work
             ResultReason = exception.Message;
             ResultType = WorkResultType.Failed;
             Exception = exception;
-            return Task.Delay(0, cancellationToken);
+            TelemetryTracker.TrackException(exception);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Record that this work item should be abandoned
+        /// </summary>
+        protected virtual Task HandleAbandonedResultAsync(string reason, CancellationToken cancellationToken)
+        {
+            EnsureIncomplete();
+            HasResult = true;
+            ResultReason = reason;
+            ResultType = WorkResultType.Abandoned;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -198,7 +206,6 @@ namespace RecordPoint.Connectors.SDK.Work
             var measures = new Measures(GetCoreStartMeasures().Concat(GetCustomStartMeasures()));
 
             TelemetryTracker.TrackEvent(eventName, dimensions, measures);
-            Logger.LogEvent(eventName, dimensions, measures);
         }
 
         /// <summary>
@@ -212,16 +219,7 @@ namespace RecordPoint.Connectors.SDK.Work
 
             var dimensions = new Dimensions(GetCoreResultDimensions().Concat(GetCustomResultDimensions()));
             var measures = new Measures(GetCoreResultMeasures().Concat(GetCustomResultMeasures()));
-            if (Exception == null)
-            {
-                TelemetryTracker.TrackEvent(eventName, dimensions, measures);
-                Logger.LogEvent(eventName, dimensions, measures);
-            }
-            else
-            {
-                TelemetryTracker.TrackException(eventName, Exception, dimensions, measures);
-                Logger.LogEventException(eventName, Exception, dimensions, measures);
-            }
+            TelemetryTracker.TrackEvent(eventName, dimensions, measures);
         }
 
         /// <summary>

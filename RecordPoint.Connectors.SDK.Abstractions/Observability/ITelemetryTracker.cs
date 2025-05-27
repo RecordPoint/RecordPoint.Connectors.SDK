@@ -20,7 +20,7 @@
         /// <param name="name">
         /// The event name uniquely identifies the type of event to track, not the specific instance of the event.
         /// 
-        /// Provide in the form of "<system>.<component>.<action>" or "<system>.<component>.<action>.<subaction>" to make it standardised and user-readable.
+        /// Provide in the form of "[system].[component].[action]" or "[system].[component].[action].[subaction]" to make it standardised and user-readable.
         /// Use PascalCase for each identifier and limit to no more than 3 words. Keep it short but still understandable without context.
         /// e.g. "Eiger.AzureSearch.Sync", "Eiger.Item.Dispose", or "MachineLearning.Model.Train" or "Eiger.AzureSearch.Sync.Batch"
         /// </param>
@@ -65,13 +65,24 @@
         void TrackEvent(string name, Dimensions? dimensions = null, Measures? measures = null);
 
         /// <summary>
+        /// Logs a Trace message with optional dimensions.
+        /// </summary>
+        /// <param name="message">The trace message to log</param>
+        /// <param name="severityLevel">The severity level of the trace message</param>
+        /// <param name="dimensions">Optional dimensions to include in the trace message</param>
+        void TrackTrace(string message, SeverityLevel severityLevel, Dimensions? dimensions = null);
+
+        /// <summary>
         /// Track an exception
         /// </summary>
-        /// <param name="name">Name of the exception</param>
         /// <param name="exception">Exception to track</param>
         /// <param name="dimensions">Dimensions associated with the event</param>
         /// <param name="measures">Measures associated with the event</param>
-        void TrackException(string name, Exception exception, Dimensions? dimensions = null, Measures? measures = null);
+        void TrackException(Exception? exception, Dimensions? dimensions = null, Measures? measures = null);
 
+        /// <summary>
+        /// Begins a new Observability scope
+        /// </summary>
+        IDisposable BeginScope(Dimensions? dimensions = null, Measures? measures = null);
     }
 }

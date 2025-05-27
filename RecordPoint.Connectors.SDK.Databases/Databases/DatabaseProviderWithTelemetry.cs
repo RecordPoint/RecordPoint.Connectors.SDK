@@ -94,7 +94,7 @@ namespace RecordPoint.Connectors.SDK.Databases
             }
             catch (Exception ex)
             {
-                _telemetryTracker?.TrackException("Exception Thrown in CreateDbContext", ex);
+                _telemetryTracker?.TrackException(ex);
                 throw;
             }
 

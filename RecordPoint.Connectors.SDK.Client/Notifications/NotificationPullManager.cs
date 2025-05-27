@@ -46,7 +46,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 async (ct) =>
                 {
                     var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
-                    var response = await client.ApiNotificationsGetWithHttpMessagesAsync(
+                    var response = await client.GET.ApiNotificationsWithHttpMessagesAsync(
                         connectorConfigId,
                         customHeaders: headers,
                         cancellationToken: ct
@@ -84,7 +84,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 async () =>
                 {
                     var headers = await authHelper.GetHttpRequestHeaders(authenticationSettings).ConfigureAwait(false);
-                    var response = await client.ApiNotificationsPostWithHttpMessagesAsync(acknowledgement, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    var response = await client.POST.ApiNotificationsWithHttpMessagesAsync(body: acknowledgement, customHeaders: headers, cancellationToken: cancellationToken).ConfigureAwait(false);
                     return response;
                 }
             ).ConfigureAwait(false);

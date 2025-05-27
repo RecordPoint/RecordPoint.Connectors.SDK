@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
@@ -81,8 +80,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="managedWorkFactory">The managed work factory.</param>
         /// <param name="systemContext">The system context.</param>
         /// <param name="options">The options.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         public ContentManagerOperation(
@@ -94,11 +92,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IManagedWorkFactory managedWorkFactory,
             ISystemContext systemContext,
             IOptions<ContentManagerOptions> options,
-            IScopeManager scopeManager,
-            ILogger<ContentManagerOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, managedWorkFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, managedWorkFactory, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _connectorConfigurationManager = connectorConfigManager;
@@ -159,7 +156,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             var newConnectorConfigurations = await GetNewEnabledConnectorConfigurationsAsync(cancellationToken);
             foreach (var connectorConfiguration in newConnectorConfigurations)
             {
-                var channelDiscoveryOperation = _managedWorkFactory.CreateChannelDiscoveryOperation(connectorConfiguration);
+                using var channelDiscoveryOperation = _managedWorkFactory.CreateChannelDiscoveryOperation(connectorConfiguration);
                 await channelDiscoveryOperation.StartAsync(cancellationToken);
                 State.ChannelDiscoveryOperationsStarted++;
             }

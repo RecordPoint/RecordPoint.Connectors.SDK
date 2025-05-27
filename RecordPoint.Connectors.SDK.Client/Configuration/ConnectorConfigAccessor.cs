@@ -40,7 +40,7 @@ namespace RecordPoint.Connectors.SDK.Configuration
                 async (ct) =>
                 {
                     var headers = await authprovider.GetHttpRequestHeaders(AuthenticationHelperSettings).ConfigureAwait(false);
-                    var response = await client.ApiConnectorConfigurationsGetMultiTenantedGetWithHttpMessagesAsync(
+                    var response = await client.GET.ApiConnectorConfigurationsGetMultiTenantedWithHttpMessagesAsync(
                         connectorConfigId,
                         customHeaders: headers,
                         cancellationToken: ct

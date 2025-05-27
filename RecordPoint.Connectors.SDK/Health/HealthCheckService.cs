@@ -21,7 +21,7 @@ namespace RecordPoint.Connectors.SDK.Health
         /// <summary>
         /// The scope manager.
         /// </summary>
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         /// <summary>
         /// The health check manager.
         /// </summary>
@@ -30,16 +30,6 @@ namespace RecordPoint.Connectors.SDK.Health
         /// The health check options.
         /// </summary>
         private readonly IOptions<HealthCheckOptions> _healthCheckOptions;
-
-        /// <summary>
-        /// The service ID.
-        /// </summary>
-        private readonly string _serviceID;
-
-        /// <summary>
-        /// The SERVICE TYPE.
-        /// </summary>
-        private const string SERVICE_TYPE = "Health Checker";
 
         /// <summary>
         /// Gets the start delay.
@@ -56,20 +46,18 @@ namespace RecordPoint.Connectors.SDK.Health
         /// </summary>
         /// <param name="healthCheckManager">The health check manager.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="healthCheckOptions">The health check options.</param>
         public HealthCheckService(
             IHealthCheckManager healthCheckManager,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             IOptions<HealthCheckOptions> healthCheckOptions)
         {
             _systemContext = systemContext;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _healthCheckManager = healthCheckManager;
             _healthCheckOptions = healthCheckOptions;
-
-            _serviceID = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -82,8 +70,7 @@ namespace RecordPoint.Connectors.SDK.Health
             await Task.Delay(StartDelay, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
-                using var serviceScope = _scopeManager.BeginServiceScope(SERVICE_TYPE, _serviceID);
+                using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
                 await _healthCheckManager.RunHealthCheckAsync(stoppingToken);
                 await Task.Delay(CheckDelay, stoppingToken);
             }

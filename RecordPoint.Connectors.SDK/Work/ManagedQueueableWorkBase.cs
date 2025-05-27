@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Context;
@@ -17,6 +16,8 @@ namespace RecordPoint.Connectors.SDK.Work
     /// <typeparam name="TConfiguration"/>
     /// <typeparam name="TState"/>
     public abstract class ManagedQueueableWorkBase<TConfiguration, TState> : QueueableWorkBase<TState>
+        where TConfiguration : class
+        where TState : class
     {
         /// <summary>
         /// The SEMAPHORE GLOBAL.
@@ -39,19 +40,17 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="managedWorkFactory">The managed work factory.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         protected ManagedQueueableWorkBase(
             IServiceProvider serviceProvider,
             IManagedWorkFactory managedWorkFactory,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _managedWorkFactory = managedWorkFactory;
 
@@ -145,8 +144,8 @@ namespace RecordPoint.Connectors.SDK.Work
             }
             catch (Exception ex)
             {
+                TelemetryTracker.TrackException(ex);
                 await FaultedAsync(ex.Message, ex, cancellationToken);
-                Logger?.LogError(ex, nameof(IQueueableWork));
             }
             finally
             {
@@ -244,6 +243,7 @@ namespace RecordPoint.Connectors.SDK.Work
             EnsureIncomplete();
             SetOutcome(await WorkManager.FailedAsync(reason, cancellationToken));
             Exception = exception;
+            TelemetryTracker.TrackException(exception);
         }
 
         /// <summary>
@@ -258,8 +258,9 @@ namespace RecordPoint.Connectors.SDK.Work
         {
             reason ??= exception?.Message ?? throw new ArgumentNullException(nameof(reason));
             EnsureIncomplete();
-            SetOutcome(await WorkManager.FaultyAsync(reason, cancellationToken, WorkRequest?.FaultedCount ?? 0));
+            SetOutcome(await WorkManager.FaultyAsync(reason, exception, cancellationToken, WorkRequest?.FaultedCount ?? 0));
             Exception = exception;
+            TelemetryTracker.TrackException(exception);
         }
 
         /// <summary>
@@ -325,6 +326,19 @@ namespace RecordPoint.Connectors.SDK.Work
             [StandardDimensions.WORK] = WorkType,
             [StandardDimensions.WORK_ID] = Id
         };
+        #endregion
+
+        #region Disposal
+        /// <summary>
+        /// Dispose of resources
+        /// </summary>
+        protected override void InnerDispose()
+        {
+            Configuration = null;
+            State = null;
+            WorkManager?.Dispose();
+            WorkManager = null;
+        }
         #endregion
     }
 }

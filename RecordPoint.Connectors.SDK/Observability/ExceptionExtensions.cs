@@ -11,7 +11,6 @@ namespace RecordPoint.Connectors.SDK.Observability
     /// </remarks>
     public static class ExceptionExtensions
     {
-
         /// <summary>
         /// Data properties
         /// </summary>
@@ -21,6 +20,10 @@ namespace RecordPoint.Connectors.SDK.Observability
         /// 
         /// </summary>
         public const string DIMENSIONS_PROPERTY = "Dimensions";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string MEASURES_PROPERTY = "Measures";
         /// <summary>
         /// 
         /// </summary>
@@ -35,7 +38,21 @@ namespace RecordPoint.Connectors.SDK.Observability
         {
             if (!ex.Data.Contains(DIMENSIONS_PROPERTY))
                 ex.Data[DIMENSIONS_PROPERTY] = ImmutableDictionary<string, string>.Empty;
-            return (ImmutableDictionary<string, string>)ex.Data[DIMENSIONS_PROPERTY];
+
+            return (ImmutableDictionary<string, string>)ex.Data[DIMENSIONS_PROPERTY]!;
+        }
+
+        /// <summary>
+        /// Get observability measures for an exception
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns>Key properties, empty by default</returns>
+        public static ImmutableDictionary<string, double> GetMeasures(this Exception ex)
+        {
+            if (!ex.Data.Contains(MEASURES_PROPERTY))
+                ex.Data[MEASURES_PROPERTY] = ImmutableDictionary<string, double>.Empty;
+
+            return (ImmutableDictionary<string, double>)ex.Data[MEASURES_PROPERTY]!;
         }
 
         /// <summary>
@@ -47,25 +64,26 @@ namespace RecordPoint.Connectors.SDK.Observability
         {
             if (!ex.Data.Contains(HAS_SCOPE_PROPERTY))
                 return false;
-            return (bool)ex.Data[HAS_SCOPE_PROPERTY];
+            return (bool)ex.Data[HAS_SCOPE_PROPERTY]!;
         }
 
         /// <summary>
         /// Scope this exception to a given scope tracker
         /// </summary>
         /// <param name="ex">Exception to update</param>
-        /// <param name="scopeManager">Key properties to set</param>
+        /// <param name="observabilityScope">Key properties to set</param>
         /// <remarks>
         /// This method is used to attach information about the observability scope to the exception. This must be called within that
         /// observability scope if the exception is not tracked within that observability scope.
         /// 
         /// The standard observability patterns ensure that this is done.
         /// </remarks>
-        public static void ScopeTo(this Exception ex, IScopeManager scopeManager)
+        public static void ScopeTo(this Exception ex, IObservabilityScope observabilityScope)
         {
             if (HasScope(ex))
                 return;
-            ex.Data[DIMENSIONS_PROPERTY] = scopeManager.Dimensions;
+            ex.Data[DIMENSIONS_PROPERTY] = observabilityScope.Dimensions;
+            ex.Data[MEASURES_PROPERTY] = observabilityScope.Measures;
             ex.Data[HAS_SCOPE_PROPERTY] = true;
         }
 
@@ -78,7 +96,7 @@ namespace RecordPoint.Connectors.SDK.Observability
         {
             if (!ex.Data.Contains(LOG_MESSAGE_PROPERTY))
                 return null;
-            return (string)ex.Data[LOG_MESSAGE_PROPERTY];
+            return (string)ex.Data[LOG_MESSAGE_PROPERTY]!;
         }
 
         /// <summary>
@@ -103,5 +121,4 @@ namespace RecordPoint.Connectors.SDK.Observability
         }
 
     }
-
 }

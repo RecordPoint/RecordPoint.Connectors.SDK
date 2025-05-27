@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -60,8 +59,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="r365Client">The r365 client.</param>
         /// <param name="connectorManager">The connector manager.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="workQueueClient">The work queue client.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
@@ -71,12 +69,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IR365Client r365Client,
             IConnectorConfigurationManager connectorManager,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<SubmitBinaryOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IWorkQueueClient workQueueClient,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _r365Client = r365Client;
@@ -261,6 +258,13 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             await auditEventSubmissionCallbackAction
                 .ExecuteAsync(connectorConfiguration, Parameter, submissionActionType, cancellationToken)
                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        protected override void InnerDispose()
+        {
         }
     }
 }

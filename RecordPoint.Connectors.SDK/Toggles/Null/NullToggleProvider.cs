@@ -26,5 +26,29 @@
         {
             return @default;
         }
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, string userKey, int @default)
+        {
+            return @default;
+        }
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, int @default)
+        {
+            return @default;
+        }
+
+        /// <inheritdoc/>
+        public string GetToggleString(string toggle, string userKey, string @default = null)
+        {
+            return @default;
+        }
+
+        /// <inheritdoc/>
+        public string GetToggleString(string toggle, string @default = null)
+        {
+            return @default;
+        }
     }
 }

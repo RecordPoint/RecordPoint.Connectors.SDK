@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Client.Models;
+﻿using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Observability;
 
 namespace RecordPoint.Connectors.SDK.Notifications
@@ -18,17 +17,15 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// 
         /// </summary>
         /// <param name="r365NotificationClient"></param>
-        /// <param name="logger"></param>
         /// <param name="notificationStrategies"></param>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         /// <param name="telemetryTracker"></param>
         public PullNotificationManager(
             IR365NotificationClient r365NotificationClient,
-            ILogger<PullNotificationManager> logger,
             IEnumerable<INotificationStrategy> notificationStrategies,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker)
-            : base(logger, notificationStrategies, scopeManager, telemetryTracker)
+            : base(notificationStrategies, observabilityScope, telemetryTracker)
         {
             _r365NotificationClient = r365NotificationClient;
         }
@@ -41,17 +38,18 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <returns></returns>
         public override async Task HandleNotificationAsync(ConnectorNotificationModel notification, CancellationToken cancellationToken)
         {
+            using var notificationScope = _observabilityScope.BeginScope(GetDimensions(notification));
+
             var notificationType = notification.NotificationType;
             if (!_notificationStrategies.ContainsKey(notificationType))
             {
                 var errorReason = $"Received unknown notification type {notificationType}";
-                _logger.LogWarning(errorReason);
+                _telemetryTracker.TrackTrace(errorReason, SeverityLevel.Warning);
                 await _r365NotificationClient.AcknowledgeNotificationAsync(notification, SDK.Client.ProcessingResult.NotificationError, errorReason, cancellationToken);
                 return;
             }
 
             var strategy = _notificationStrategies[notificationType];
-            using var notificationScope = _scopeManager.BeginScope(GetDimensions(notification));
             try
             {
                 var outcome = await strategy.HandleNotificationAsync(notification, cancellationToken);
@@ -59,12 +57,12 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 {
                     case NotificationOutcomeType.Ok:
                         await _r365NotificationClient.AcknowledgeNotificationAsync(notification, SDK.Client.ProcessingResult.OK, outcome.Reason, cancellationToken);
-                        _logger.LogEvent(notificationType, GetOutcomeDimensions(outcome));
+                        _telemetryTracker.TrackTrace("Notification Processed OK", SeverityLevel.Information, GetOutcomeDimensions(outcome));
                         break;
 
                     case NotificationOutcomeType.Failed:
                         await _r365NotificationClient.AcknowledgeNotificationAsync(notification, SDK.Client.ProcessingResult.NotificationError, outcome.Reason, cancellationToken);
-                        _logger.LogEvent(notificationType, GetOutcomeDimensions(outcome));
+                        _telemetryTracker.TrackTrace("Notification Processing Failed", SeverityLevel.Error, GetOutcomeDimensions(outcome));
                         break;
                 }
             }
@@ -72,8 +70,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
             {
                 var message = ex.Message;
                 await _r365NotificationClient.AcknowledgeNotificationAsync(notification, SDK.Client.ProcessingResult.NotificationError, message, cancellationToken);
-                _telemetryTracker.TrackException(notificationType, ex);
-                _logger.LogEventException(notificationType, ex);
+                _telemetryTracker.TrackException(ex);
             }
         }
     }

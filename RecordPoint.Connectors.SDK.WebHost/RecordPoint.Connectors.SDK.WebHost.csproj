@@ -1,35 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <OutputType>Library</OutputType>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
-    <IsPackable>true</IsPackable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_webhost_doc.md</DocumentationMarkdown>
-    <PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
-    <PackageTags>RecordPoint</PackageTags>
-    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Description>Web Hosting extensions for the Connectors SDK.</Description>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.2" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="3.4.0" />
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="RecordPoint.Code.Documentation" Version="1.0.208304">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RecordPoint.Connectors.SDK.Notifications\RecordPoint.Connectors.SDK.Notifications.csproj" />
-    <ProjectReference Include="..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>Library</OutputType>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+		<IsPackable>true</IsPackable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_webhost_doc.md</DocumentationMarkdown>
+		<PackageIcon>Rex.png</PackageIcon>
+		<PackageTags>RecordPoint</PackageTags>
+		<PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+		<PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<Description>Web Hosting extensions for the Connectors SDK.</Description>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.2" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="3.4.0" />
+		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="RecordPoint.Code.Documentation" Version="1.0.208304">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RecordPoint.Connectors.SDK.Notifications\RecordPoint.Connectors.SDK.Notifications.csproj" />
+		<ProjectReference Include="..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
+	</ItemGroup>
 </Project>

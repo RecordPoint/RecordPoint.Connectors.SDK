@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RecordPoint.Connectors.SDK.Connectors;
@@ -12,7 +11,6 @@ using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Toggles;
 using RecordPoint.Connectors.SDK.Work;
-using System.Reflection;
 
 namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 {
@@ -40,11 +38,11 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// <summary>
         /// The scope manager.
         /// </summary>
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         /// <summary>
-        /// The logger.
+        /// The telemetry tracker.
         /// </summary>
-        private readonly ILogger<AzureServiceBusWorkServer> _logger;
+        private readonly ITelemetryTracker _telemetryTracker;
         /// <summary>
         /// The date time provider.
         /// </summary>
@@ -70,10 +68,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// Work queue client.
         /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
-        /// <summary>
-        /// The service id.
-        /// </summary>
-        private readonly string _serviceId;
 
         /// <summary>
         /// Processing token.
@@ -110,8 +104,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// <param name="workManager">The work manager.</param>
         /// <param name="serviceBusClientFactory">The service bus client factory.</param>
         /// <param name="serviceBusOptions">The service bus options.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
         /// <param name="operationTypes">An optional list of operation types to create service bus processors for</param>
@@ -123,8 +117,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             IQueueableWorkManager workManager,
             IServiceBusClientFactory serviceBusClientFactory,
             IOptions<AzureServiceBusOptions> serviceBusOptions,
-            IScopeManager scopeManager,
-            ILogger<AzureServiceBusWorkServer> logger,
+            IObservabilityScope observabilityScope,
+            ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
             IToggleProvider toggleProvider,
             IList<Type> operationTypes,
@@ -134,13 +128,12 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             _systemContext = systemContext;
             _workManager = workManager;
             _serviceBusOptions = serviceBusOptions;
-            _logger = logger;
+            _telemetryTracker = telemetryTracker;
             _dateTimeProvider = dateTimeProvider;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _toggleProvider = toggleProvider;
             _configuration = configuration;
 
-            _serviceId = Guid.NewGuid().ToString();
             _serviceBusClient = serviceBusClientFactory.CreateServiceBusClient();
             _workQueueClient = workQueueClient;
             _operationTypes = ValidateOperationTypes(operationTypes);
@@ -171,25 +164,24 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
-            using var serviceScope = _scopeManager.BeginServiceScope(AzureServiceBusDimensions.SERVICE_NAME, _serviceId);
+            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
 
             var startupDimensions = new Dimensions()
             {
                 [StandardDimensions.EVENT_TYPE] = EventType.Startup.ToString()
             };
-            _logger.LogEvent("Connecting to ASB", startupDimensions);
+            _telemetryTracker.TrackTrace("Connecting to ASB", SeverityLevel.Information, startupDimensions);
 
             try
             {
                 if (_serviceBusOptions == null)
                 {
-                    _logger.LogEvent("AzureServiceBusSettings not found");
+                    _telemetryTracker.TrackTrace("AzureServiceBusSettings not found", SeverityLevel.Critical, startupDimensions);
                     return;
                 }
                 else
                 {
-                    _logger.LogEvent("AzureServiceBusSettings found");
+                    _telemetryTracker.TrackTrace("AzureServiceBusSettings found", SeverityLevel.Information, startupDimensions);
                 }
 
                 CreateProcessors();
@@ -232,21 +224,21 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
                 await CloseProcessorsAsync(CancellationToken.None);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError(e, "Exception thrown");
+                _telemetryTracker.TrackException(ex);
             }
 
             var shutdownDimensions = new Dimensions()
             {
                 [StandardDimensions.EVENT_TYPE] = EventType.Shutdown.ToString()
             };
-            _logger.LogEvent("ASB stopped", shutdownDimensions);
+            _telemetryTracker.TrackTrace("ASB stopped", SeverityLevel.Information, shutdownDimensions);
         }
 
         private Task HandleErrors(ProcessErrorEventArgs args)
         {
-            _logger.LogError(args.Exception, "Exception thrown from HandleErrorsAsync");
+            _telemetryTracker.TrackException(args.Exception);
             return Task.CompletedTask;
         }
 
@@ -258,7 +250,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
             try
             {
-                var result = await _workManager.HandleWorkRequestAsync(workRequest, _processingToken.Token).ConfigureAwait(false);
+                var result = await _workManager.HandleWorkRequestAsync(workRequest, _processingToken.Token);
 
                 workRequest.MustFinishDateTime = _dateTimeProvider.UtcNow + TimeSpan.FromMinutes(1);
 
@@ -272,8 +264,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
                     case WorkResultType.DeadLetter:
                         //Move the message to the Dead Letter Queue
-                        await args.DeadLetterMessageAsync(args.Message);
-                        throw new WorkResultException(result.Reason);
+                        await args.DeadLetterMessageAsync(args.Message, deadLetterReason: result.Reason, deadLetterErrorDescription: result.Exception?.StackTrace);
+                        break;
 
                     case WorkResultType.Deferred:
                         await args.CompleteMessageAsync(args.Message);
@@ -283,12 +275,13 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
                     case WorkResultType.Failed:
                         //Allow Service Bus to handle retries based on the Maximum Delivery Count setting on the Queue
                         await args.AbandonMessageAsync(args.Message);
-                        throw new WorkResultException(result.Reason);
+                        break;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError(e, "Exception thrown when trying to handle incoming message");
+                var workRequestException = new UnknownWorkRequestException(ex);
+                _telemetryTracker.TrackException(workRequestException);
             }
         }
 
@@ -305,11 +298,14 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
         private void CreateProcessors()
         {
+            var queueableWorkOperations = _serviceProvider.GetServices<IQueueableWork>();
             foreach (var type in _operationTypes)
             {
-                var method = typeof(AzureServiceBusWorkServer).GetMethod(nameof(TryCreateServiceBusProcessor), BindingFlags.Instance | BindingFlags.NonPublic);
-                var genericMethod = method?.MakeGenericMethod(type);
-                genericMethod?.Invoke(this, null);
+                var queueableWorkOperation = queueableWorkOperations.FirstOrDefault(queueableWorkOperation => queueableWorkOperation.GetType() == type);
+                if (queueableWorkOperation == null)
+                    continue;
+
+                TryCreateServiceBusProcessor(queueableWorkOperation.WorkType);
             }
         }
 
@@ -343,18 +339,14 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             await Task.WhenAll(tasks);
         }
 
-        private void TryCreateServiceBusProcessor<TQueueableWork>()
-            where TQueueableWork : class, IQueueableWork
+        private void TryCreateServiceBusProcessor(string workType)
         {
-            var service = _serviceProvider.GetService<TQueueableWork>();
-            if (service == null) return;
-
-            var queueName = GetQueueName(service.WorkType);
+            var queueName = GetQueueName(workType);
             var processor = _serviceBusClient.CreateProcessor(queueName, new ServiceBusProcessorOptions
             {
                 AutoCompleteMessages = false,
-                MaxAutoLockRenewalDuration = GetMaxAutoLockRenewalDuration(service.WorkType),
-                MaxConcurrentCalls = GetMaxDegreeOfParallelism(service.WorkType)
+                MaxAutoLockRenewalDuration = GetMaxAutoLockRenewalDuration(workType),
+                MaxConcurrentCalls = GetMaxDegreeOfParallelism(workType)
             });
             _serviceBusProcessors.Add(queueName, processor);
 

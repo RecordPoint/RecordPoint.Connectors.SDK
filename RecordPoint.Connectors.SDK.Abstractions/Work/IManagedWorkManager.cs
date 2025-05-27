@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public interface IManagedWorkManager
+    public interface IManagedWorkManager : IDisposable
     {
         /// <summary>
         /// 
@@ -45,14 +45,16 @@
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<WorkResult> FailedAsync(string reason, CancellationToken cancellationToken);
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reason"></param>
+        /// <param name="exception"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="faultedCount"></param>
         /// <returns></returns>
-        Task<WorkResult> FaultyAsync(string reason, CancellationToken cancellationToken, int? faultedCount = 0);
+        Task<WorkResult> FaultyAsync(string reason, Exception exception, CancellationToken cancellationToken, int? faultedCount = 0);
         /// <summary>
         /// 
         /// </summary>

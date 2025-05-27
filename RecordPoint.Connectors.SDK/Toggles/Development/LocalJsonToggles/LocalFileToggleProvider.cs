@@ -13,6 +13,7 @@ namespace RecordPoint.Connectors.SDK.Toggles.Development.LocalJsonToggles
         private readonly IOptions<LocalFeatureToggleOptions> _options;
         private readonly IFileReader _fileReader;
         private readonly object _lock = new();
+
         /// <summary>
         ///Initialises the LocalFileToggleProvider, reads the json file and stores the values in a dictionary.
         /// </summary>
@@ -58,6 +59,30 @@ namespace RecordPoint.Connectors.SDK.Toggles.Development.LocalJsonToggles
             }
 
             return featureToggleModel.Value;
+        }
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, string userKey, int @default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, int @default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string GetToggleString(string toggle, string userKey, string @default = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string GetToggleString(string toggle, string @default = null)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

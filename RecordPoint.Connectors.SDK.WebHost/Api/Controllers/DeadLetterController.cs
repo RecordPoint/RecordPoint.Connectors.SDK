@@ -89,6 +89,43 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
         }
 
         /// <summary>
+        /// Requeue all the dead letter messages for a given queue name and batch size
+        /// </summary>
+        /// <param name="queueName"></param>
+        /// <param name="batchSize"></param>
+        /// <returns></returns>
+        [HttpPost("PostAllMessages")]
+        public async Task<IActionResult> Post([BindRequired] string queueName, [BindRequired] int batchSize = 1000)
+        {
+            if (string.IsNullOrEmpty(queueName))
+            {
+                return BadRequest("Queue Name is required");
+            }
+
+            if (batchSize > 1000)
+            {
+                return BadRequest("Batch size is too big");
+            }
+
+            var deadLetterList = await _deadLetterQueueService.GetAllMessagesAsync(queueName);
+
+            if (!deadLetterList.Any())
+            {
+                return Ok("No dead letters found");
+            }
+
+            var sequenceNumbers = deadLetterList.Select(dlm => long.Parse(dlm.SequenceNumber)).ToArray();
+
+            // limit size of batch
+            batchSize = batchSize > 0 ? batchSize : 1000;
+            var count = sequenceNumbers.Length <= batchSize ? sequenceNumbers.Length : batchSize;
+            var cappedSequenceNumbers = sequenceNumbers.Take(count).ToArray();
+
+            await _deadLetterQueueService.ResubmitMessagesAsync(queueName, cappedSequenceNumbers);
+            return Ok();
+        }
+
+        /// <summary>
         /// Delete the message from the queue based on the sequence number
         /// </summary>
         /// <param name="queueName"></param>

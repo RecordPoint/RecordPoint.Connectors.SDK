@@ -5,13 +5,16 @@
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_notifications_doc.md</DocumentationMarkdown>
-		<PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+		<PackageIcon>Rex.png</PackageIcon>
 		<PackageTags>RecordPoint</PackageTags>
 		<PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
 		<PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<Description>Records365 Notifications extensions for the Connectors SDK.</Description>
 	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>

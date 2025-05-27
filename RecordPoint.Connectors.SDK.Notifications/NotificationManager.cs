@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Client.Models;
+﻿using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Observability;
 
 namespace RecordPoint.Connectors.SDK.Notifications
@@ -10,18 +9,14 @@ namespace RecordPoint.Connectors.SDK.Notifications
     /// </summary>
     public abstract class NotificationManager : INotificationManager
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        protected readonly ILogger<PullNotificationManager> _logger;
-        /// <summary>
+      /// <summary>
         /// 
         /// </summary>
         protected readonly Dictionary<string, INotificationStrategy> _notificationStrategies;
         /// <summary>
         /// 
         /// </summary>
-        protected readonly IScopeManager _scopeManager;
+        protected readonly IObservabilityScope _observabilityScope;
         /// <summary>
         /// 
         /// </summary>
@@ -30,19 +25,16 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="notificationStrategies"></param>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         /// <param name="telemetryTracker"></param>
         protected NotificationManager(
-            ILogger<PullNotificationManager> logger,
             IEnumerable<INotificationStrategy> notificationStrategies,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker)
         {
-            _logger = logger;
             _notificationStrategies = notificationStrategies.ToDictionary(s => s.NotificationType);
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _telemetryTracker = telemetryTracker;
         }
 

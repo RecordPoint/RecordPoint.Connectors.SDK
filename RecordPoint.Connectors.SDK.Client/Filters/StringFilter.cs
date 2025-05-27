@@ -52,6 +52,10 @@ namespace RecordPoint.Connectors.SDK.Filters
                     {
                         return IsEqualsToAnyOf(model, filter.FieldValue);
                     }
+                case FilterConstants.StringFieldOperators.ContainsAnyOf:
+                    {
+                        return IsContainsAnyOf(model, filter.FieldValue);
+                    }
                 default:
                     {
                         throw new NotImplementedException($"Filter for FieldName [{filter.FieldName}] has invalid OperatorProperty [{filter.OperatorProperty}]");
@@ -111,6 +115,16 @@ namespace RecordPoint.Connectors.SDK.Filters
                     .Contains(model.Value.ToLower());
             }
 
+            return false;
+        }
+
+        private static bool IsContainsAnyOf(SubmissionMetaDataModel model, string expectedValue)
+        {
+            if (!string.IsNullOrEmpty(model?.Value))
+            {
+                var filterList = expectedValue.Split(',').Select(s => s.Trim().ToLower()).ToList();
+                return filterList.Any(x => model.Value.ToLower().Contains(x));
+            }
             return false;
         }
     }

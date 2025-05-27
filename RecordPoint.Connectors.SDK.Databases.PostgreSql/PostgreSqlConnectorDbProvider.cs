@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Observability;
 using System.Data.SqlClient;
 
 namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
@@ -30,14 +30,14 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
         /// </summary>
         /// <param name="systemContext">The system context.</param>
         /// <param name="databaseOptions">The database options.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="connectionFactory">The connection factory.</param>
         public PostgreSqlConnectorDbProvider(
             ISystemContext systemContext,
             IOptions<PostgreSqlConnectorDbOptions> databaseOptions,
-            ILogger<PostgreSqlDbProvider<ConnectorDbContext>> logger,
+            ITelemetryTracker telemetryTracker,
             IPostgreSqlConnectionFactory connectionFactory)
-            : base(systemContext, logger, connectionFactory, databaseOptions)
+            : base(systemContext, telemetryTracker, connectionFactory, databaseOptions)
         {
             _databaseOptions = databaseOptions;
             _databaseName = new Lazy<string>(() =>

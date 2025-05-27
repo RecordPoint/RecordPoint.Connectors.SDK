@@ -1,7 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Manager;
@@ -60,8 +59,8 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         {
             var featureToggleProvider = serviceProvider.GetRequiredService<IToggleProvider>();
             var cosmosClient = GetCosmosClient(featureToggleProvider, cosmosDbConnectorDatabaseOptions, cosmosAzureAuthenticationOptions);
-            var logger = serviceProvider.GetRequiredService<ILogger<CosmosDbManager<T>>>();
-            return new CosmosDbManager<T>(cosmosClient, databaseName, containerName, logger);
+            var telemetryTracker = serviceProvider.GetRequiredService<ITelemetryTracker>();
+            return new CosmosDbManager<T>(cosmosClient, databaseName, containerName, telemetryTracker);
         }
 
         /// <summary>

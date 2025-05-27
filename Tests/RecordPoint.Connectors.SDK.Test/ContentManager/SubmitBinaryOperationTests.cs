@@ -180,7 +180,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
 
-            var workResult = submitBinaryItem.WorkResult;
+            var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
             Assert.Equal(WorkResultType.Complete, workResult.ResultType);
@@ -214,7 +214,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
 
-            var workResult = submitBinaryItem.WorkResult;
+            var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
             Assert.Equal(WorkResultType.Complete, workResult.ResultType);
@@ -249,7 +249,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
 
-            var workResult = submitBinaryItem.WorkResult;
+            var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
             Assert.Equal(WorkResultType.Complete, workResult.ResultType);

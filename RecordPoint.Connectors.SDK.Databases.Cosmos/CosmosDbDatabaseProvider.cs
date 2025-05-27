@@ -1,11 +1,11 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers;
+using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Toggles;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos
@@ -35,15 +35,15 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         /// </summary>
         /// <param name="systemContext">The system context.</param>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
         /// <param name="options">The options.</param>
         protected CosmosDbDatabaseProvider(
             ISystemContext systemContext,
             IConfiguration configuration,
-            ILogger<CosmosDbDatabaseProvider<TDbContext>> logger,
+            ITelemetryTracker telemetryTracker,
             IToggleProvider toggleProvider,
-            IOptions<CosmosDbConnectorDatabaseOptions> options) : base(systemContext, logger)
+            IOptions<CosmosDbConnectorDatabaseOptions> options) : base(systemContext, telemetryTracker)
         {
             _configuration = configuration;
             _options = options;
@@ -61,11 +61,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
 
             if (Exists())
             {
-                _logger.LogInformation("Database '{databaseName}' connection successful.", databaseName);
+                _telemetryTracker.TrackTrace(string.Format("Database '{0}' connection successful.", databaseName), SeverityLevel.Information);
             }
             else
             {
-                _logger.LogCritical("Database '{databaseName}' cannot be connected with or does not exist.", databaseName);
+                _telemetryTracker.TrackTrace(string.Format("Database '{0}' cannot be connected with or does not exist.", databaseName), SeverityLevel.Error);
                 throw new ConnectorDatabaseException($"Database '{databaseName}' cannot be connected with or does not exist.");
             }
         }

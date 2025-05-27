@@ -20,6 +20,7 @@ namespace RecordPoint.Connectors.SDK.Configuration
             {
                 services
                     .Configure<R365ConfigurationModel>(hostContext.Configuration.GetSection("Configuration"))
+                    .Configure<R365MultiConfigurationModel>(hostContext.Configuration.GetSection("MultiConfiguration"))
                     .AddSingleton<IR365ConfigurationClient, AppSettingsR365ConfigurationClient>();
             });
             return hostBuilder;

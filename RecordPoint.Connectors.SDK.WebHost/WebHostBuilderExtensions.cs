@@ -1,5 +1,8 @@
 ﻿namespace RecordPoint.Connectors.SDK.WebHost
 {
+    /// <summary>
+    /// The web host builder extensions.
+    /// </summary>
     public static class WebHostBuilderExtensions
     {
         /// <summary>

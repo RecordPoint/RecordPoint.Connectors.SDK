@@ -306,9 +306,9 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         private void SetupDefaultNotifyBinariesForClient()
         {
-            _mockClient.Setup(x => x.ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(
-                It.IsAny<DirectBinarySubmissionInputModel>(),
+            _mockClient.Setup(x => x.POST.ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(
                 It.IsAny<string>(),
+                It.IsAny<DirectBinarySubmissionInputModel>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(new HttpOperationResponse<ErrorResponseModel>()
@@ -320,9 +320,9 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         private void SetupNotifyBinariesForClient(HttpStatusCode statusCode, string messageCode)
         {
-            _mockClient.Setup(x => x.ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(
-                It.IsAny<DirectBinarySubmissionInputModel>(),
+            _mockClient.Setup(x => x.POST.ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(
                 It.IsAny<string>(),
+                It.IsAny<DirectBinarySubmissionInputModel>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(new HttpOperationResponse<ErrorResponseModel>()
@@ -340,9 +340,9 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         private void SetupDefaultGetSASTokenResponse()
         {
-            _mockClient.Setup(x => x.ApiBinariesGetSASTokenPostWithHttpMessagesAsync(
-                It.IsAny<DirectBinarySubmissionInputModel>(),
+            _mockClient.Setup(x => x.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
                 It.IsAny<string>(),
+                It.IsAny<DirectBinarySubmissionInputModel>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(new HttpOperationResponse<object>()
@@ -358,9 +358,9 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
         private void SetupGetSASTokenResponseWithError(HttpStatusCode statusCode, string messageCode)
         {
-            _mockClient.Setup(x => x.ApiBinariesGetSASTokenPostWithHttpMessagesAsync(
-                It.IsAny<DirectBinarySubmissionInputModel>(),
+            _mockClient.Setup(x => x.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
                 It.IsAny<string>(),
+                It.IsAny<DirectBinarySubmissionInputModel>(),
                 It.IsAny<Dictionary<string, List<string>>>(),
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(new HttpOperationResponse<object>()

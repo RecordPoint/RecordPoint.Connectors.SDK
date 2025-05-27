@@ -27,7 +27,7 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <summary>
         /// The scope manager.
         /// </summary>
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         /// <summary>
         /// The r365 pipelines.
         /// </summary>
@@ -37,15 +37,15 @@ namespace RecordPoint.Connectors.SDK.R365
         /// Initializes a new instance of the <see cref="R365Client"/> class.
         /// </summary>
         /// <param name="r365ConfigurationClient">The r365 configuration client.</param>
-        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="r365Pipelines">The r365 pipelines.</param>
         public R365Client(
             IR365ConfigurationClient r365ConfigurationClient,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             IR365Pipelines r365Pipelines)
         {
             _r365ConfigurationClient = r365ConfigurationClient;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _r365Pipelines = r365Pipelines;
         }
 
@@ -63,11 +63,11 @@ namespace RecordPoint.Connectors.SDK.R365
         }
 
         /// <summary>
-        /// Ensure configuration is loaded
+        /// Load configuration with optional key (For multi configuration use)
         /// </summary>
-        private R365ConfigurationModel LoadConfiguration()
+        private R365ConfigurationModel LoadConfiguration(string key = "")
         {
-            return _r365ConfigurationClient.GetR365Configuration();
+            return _r365ConfigurationClient.GetR365Configuration(key);
         }
 
         /// <summary>
@@ -76,8 +76,7 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <returns>A bool</returns>
         public bool IsConfigured()
         {
-            var r365Configuration = LoadConfiguration();
-            return r365Configuration != null;
+            return _r365ConfigurationClient.R365ConfigurationExists();
         }
 
         /// <summary>
@@ -123,10 +122,10 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <returns>Submit result</returns>
         public async Task<SubmitResult> SubmitAuditEvent(ConnectorConfigModel connectorConfig, AuditEvent auditEvent, CancellationToken cancellationToken)
         {
-            return await _scopeManager.InvokeAsync(
+            return await _observabilityScope.InvokeAsync(
                 GetDimensions(), async () =>
                 {
-                    var r365Configuration = LoadConfiguration();
+                    var r365Configuration = LoadConfiguration(connectorConfig.ConnectorTypeConfigurationId);
                     var submitContext = CreateAuditEventSubmitContext(connectorConfig, auditEvent, r365Configuration, cancellationToken);
                     await _r365Pipelines.AuditEventPipeline.Submit(submitContext).ConfigureAwait(false);
                     return submitContext.SubmitResult;
@@ -179,10 +178,10 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <returns>Submit result</returns>
         public async Task<SubmitResult> SubmitRecord(ConnectorConfigModel connectorConfig, Record record, CancellationToken cancellationToken)
         {
-            return await _scopeManager.InvokeAsync(
+            return await _observabilityScope.InvokeAsync(
                 GetDimensions(), async () =>
                 {
-                    var r365Configuration = LoadConfiguration();
+                    var r365Configuration = LoadConfiguration(connectorConfig.ConnectorTypeConfigurationId);
                     var submitContext = CreateRecordSubmitContext(connectorConfig, record, r365Configuration, cancellationToken);
                     await _r365Pipelines.RecordPipeline.Submit(submitContext).ConfigureAwait(false);
                     return submitContext.SubmitResult;
@@ -261,10 +260,10 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <returns>Submit result</returns>
         public async Task<SubmitResult> SubmitBinary(ConnectorConfigModel connectorConfig, BinaryMetaInfo binaryMetaInfo, Stream binaryStream, CancellationToken cancellationToken)
         {
-            return await _scopeManager.InvokeAsync(
+            return await _observabilityScope.InvokeAsync(
                 GetDimensions(), async () =>
                 {
-                    var r365Configuration = LoadConfiguration();
+                    var r365Configuration = LoadConfiguration(connectorConfig.ConnectorTypeConfigurationId);
                     var submitContext = CreateBinarySubmitContext(connectorConfig, binaryMetaInfo, binaryStream, r365Configuration, cancellationToken);
                     await _r365Pipelines.BinaryPipeline.Submit(submitContext).ConfigureAwait(false);
                     return submitContext.SubmitResult;
@@ -315,10 +314,10 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <returns>Submit result</returns>
         public async Task<SubmitResult> SubmitAggregation(ConnectorConfigModel connectorConfig, Aggregation aggregation, CancellationToken cancellationToken)
         {
-            return await _scopeManager.InvokeAsync(
+            return await _observabilityScope.InvokeAsync(
                 GetDimensions(), async () =>
                 {
-                    var r365Configuration = LoadConfiguration();
+                    var r365Configuration = LoadConfiguration(connectorConfig.ConnectorTypeConfigurationId);
                     var submitContext = CreateAggregationSubmitContext(connectorConfig, aggregation, r365Configuration, cancellationToken);
                     await _r365Pipelines.AggregationPipeline.Submit(submitContext).ConfigureAwait(false);
                     return submitContext.SubmitResult;

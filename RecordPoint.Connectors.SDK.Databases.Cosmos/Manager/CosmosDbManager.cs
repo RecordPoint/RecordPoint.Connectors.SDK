@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
-using Microsoft.Extensions.Logging;
+using RecordPoint.Connectors.SDK.Observability;
 using System.Runtime.CompilerServices;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
@@ -12,9 +12,9 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
     public class CosmosDbManager<T> : ICosmosDbManager<T> where T : BaseCosmosDbItem
     {
         /// <summary>
-        /// The logger.
+        /// The telemetry tracker.
         /// </summary>
-        private readonly ILogger<CosmosDbManager<T>> _logger;
+        private readonly ITelemetryTracker _telemetryTracker;
         /// <summary>
         /// The container.
         /// </summary>
@@ -26,11 +26,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         /// <param name="cosmosClient">The cosmos client.</param>
         /// <param name="databaseId">The database id.</param>
         /// <param name="containerId">The container id.</param>
-        /// <param name="logger">The logger.</param>
-        public CosmosDbManager(CosmosClient cosmosClient, string databaseId, string containerId, ILogger<CosmosDbManager<T>> logger)
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        public CosmosDbManager(CosmosClient cosmosClient, string databaseId, string containerId, ITelemetryTracker telemetryTracker)
         {
             _container = cosmosClient.GetContainer(databaseId, containerId);
-            _logger = logger;
+            _telemetryTracker = telemetryTracker;
         }
 
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
             }
             catch (CosmosException ex)
             {
-                _logger.LogError(ex, "Error");
+                _telemetryTracker.TrackException(ex);
                 throw;
             }
         }

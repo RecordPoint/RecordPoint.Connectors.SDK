@@ -23,7 +23,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                     var contentManagerConfiguration = context.Configuration.GetSection("ContentManager");
                     svcs
                         .Configure<ContentManagerOptions>(contentManagerConfiguration)
-                        .AddTransient<ContentSynchronisationOperation>();
+                        .AddScoped<ContentSynchronisationOperation>();
                 });
         }
 

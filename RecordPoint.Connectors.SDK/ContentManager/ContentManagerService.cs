@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Work;
 using System;
@@ -14,7 +13,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
     public class ContentManagerService : BackgroundService
     {
         private readonly IOptions<ContentManagerOptions> _options;
-        private readonly ILogger<ContentManagerService> _logger;
         private readonly IManagedWorkFactory _managedWorkFactory;
         private readonly IManagedWorkStatusManager _managedWorkStatusManager;
 
@@ -22,17 +20,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// 
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="logger"></param>
         /// <param name="managedWorkFactory"></param>
         /// <param name="managedWorkStatusManager"></param>
         public ContentManagerService(
             IOptions<ContentManagerOptions> options,
-            ILogger<ContentManagerService> logger,
             IManagedWorkFactory managedWorkFactory,
             IManagedWorkStatusManager managedWorkStatusManager)
         {
             _options = options;
-            _logger = logger;
             _managedWorkFactory = managedWorkFactory;
             _managedWorkStatusManager = managedWorkStatusManager;
         }
@@ -53,8 +48,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     .Delay(TimeSpan.FromSeconds(_options.Value.DelaySeconds), stoppingToken)
                     .ConfigureAwait(false);
             }
-
-            _logger.LogInformation("Content Manager Service execution has been cancelled.");
         }
 
 
@@ -63,7 +56,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             var isContentManagerRunning = await _managedWorkStatusManager.IsAnyAsync(a => a.WorkType == ContentManagerOperation.WORK_TYPE, cancellationToken);
             if (!isContentManagerRunning)
             {
-                var work = _managedWorkFactory.CreateContentManagerOperation();
+                using var work = _managedWorkFactory.CreateContentManagerOperation();
                 await work.StartAsync(cancellationToken);
             }
         }

@@ -2,47 +2,31 @@
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace RecordPoint.Connectors.SDK.Work
+namespace RecordPoint.Connectors.SDK.Work;
+
+/// <summary>
+/// Host builder extensions for work management
+/// </summary>
+public static class WorkBuilderExtensions
 {
     /// <summary>
-    /// Host builder extensions for work management
+    /// Use the standard work manager
     /// </summary>
-    public static class WorkBuilderExtensions
+    /// <param name="hostBuilder">Host builder to customize</param>
+    /// <returns>Updated host builder</returns>
+    public static IHostBuilder UseWorkManager(this IHostBuilder hostBuilder)
     {
-        /// <summary>
-        /// Use the standard work manager
-        /// </summary>
-        /// <param name="hostBuilder">Host builder to customize</param>
-        /// <returns>Updated host builder</returns>
-        public static IHostBuilder UseWorkManager(this IHostBuilder hostBuilder)
-        {
-            return hostBuilder.ConfigureServices(svcs => svcs.AddSingleton<IQueueableWorkManager, QueueableWorkManager>());
-        }
+        return hostBuilder.ConfigureServices(svcs => svcs.AddSingleton<IQueueableWorkManager, QueueableWorkManager>());
+    }
 
-        /// <summary>
-        /// Add a work item for a given work type
-        /// </summary>
-        /// <param name="services">Target services collection</param>
-        /// <param name="workType">Work type identifier</param>
-        /// <returns>Original service collection</returns>
-        public static IServiceCollection AddAddQueueableWorkOperation<TQueueableWork>(this IServiceCollection services, string workType)
-            where TQueueableWork : IQueueableWork
-        {
-            return AddAddQueueableWorkOperation(services, workType, typeof(TQueueableWork));
-        }
-
-        /// <summary>
-        /// Add a work queue item for a given work type
-        /// </summary>
-        /// <param name="services">Target services collection</param>
-        /// <param name="workType">Work type identifier</param>
-        /// <param name="implementationType">Work Operation implementation type</param>
-        /// <returns>Original service collection</returns>
-        public static IServiceCollection AddAddQueueableWorkOperation(this IServiceCollection services, string workType, Type implementationType)
-        {
-            return services
-                .AddSingleton(typeof(IQueueableWorkFactory), sp => new QueueableWorkFactory(workType, implementationType, sp))
-                .AddTransient(implementationType);
-        }
+    /// <summary>
+    /// Add a work queue item for a given work type
+    /// </summary>
+    /// <param name="services">Target services collection</param>
+    /// <returns>Original service collection</returns>
+    public static IServiceCollection AddQueueableWorkOperation<TQueueableWork>(this IServiceCollection services)
+        where TQueueableWork : class, IQueueableWork
+    {
+        return services.AddScoped<IQueueableWork, TQueueableWork>();
     }
 }

@@ -20,7 +20,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
                 .ConfigureServices(svcs =>
                     svcs.AddMockWorkQueue()
-                        .AddAddQueueableWorkOperation<NullManagedQueueableWork>(nameof(NullManagedQueueableWork))
+                        .AddQueueableWorkOperation<NullManagedQueueableWork>()
                 );
         }
     }
@@ -35,14 +35,13 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             IServiceProvider serviceProvider,
             IManagedWorkFactory workFactory,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<NullManagedQueueableWork> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, workFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, workFactory, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         { }
 
-        public override string ServiceName => nameof(WorkWorkItemBaseTests);
+        public override string ServiceName => nameof(NullManagedQueueableWork);
 
         public override string WorkType => nameof(NullManagedQueueableWork);
 
@@ -65,40 +64,6 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         {
             return ("", "");
         }
-    }
-
-
-    /// <summary>
-    /// Tests for the work work items
-    /// </summary>
-    public class WorkWorkItemBaseTests : CommonTestBase<WorkItemSut>
-    {
-
-        [Fact]
-        public async Task TryGetWorkWorkItemType_ReturnsFactory()
-        {
-            await StartSutAsync();
-
-            var workType = nameof(NullManagedQueueableWork);
-            var workManager = Services.GetRequiredService<IQueueableWorkManager>();
-            var success = workManager.TryGetQueueableWorkFactory(workType, out var workItemFactory);
-            Assert.True(success);
-            Assert.Equal(workType, workItemFactory.WorkType);
-        }
-
-        [Fact]
-        public async Task InvokeCreateWorkItem_ReturnsWorkItem()
-        {
-            await StartSutAsync();
-
-            var workType = nameof(NullManagedQueueableWork);
-            var workManager = Services.GetRequiredService<IQueueableWorkManager>();
-            _ = workManager.TryGetQueueableWorkFactory(workType, out var workItemFactory);
-            var workItem = workItemFactory.CreateWorkOperation();
-            Assert.IsType<NullManagedQueueableWork>(workItem);
-        }
-
-
     }
 
 }

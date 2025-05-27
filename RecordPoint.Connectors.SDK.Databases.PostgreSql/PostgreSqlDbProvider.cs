@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Observability;
 using System.Data.SqlClient;
 
 namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
@@ -28,14 +28,14 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="options">The options.</param>
         protected PostgreSqlDbProvider(
             ISystemContext systemContext,
-            ILogger<PostgreSqlDbProvider<TDbContext>> logger,
+            ITelemetryTracker telemetryTracker,
             IPostgreSqlConnectionFactory connectionFactory,
-            IOptions<PostgreSqlConnectorDbOptions> options) : base(systemContext, logger)
+            IOptions<PostgreSqlConnectorDbOptions> options) : base(systemContext, telemetryTracker)
         {
             if (options.Value.ConnectionString == null)
                 throw new RequiredValueNullException(nameof(options.Value.ConnectionString));
@@ -54,7 +54,7 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
 
             if (Exists())
             {
-                _logger.LogInformation("Database '{databaseName}' connection successful.", databaseName);
+                _telemetryTracker.TrackTrace(string.Format("Database '{0}' connection successful.", databaseName), SeverityLevel.Information);
 
                 // Create schema is it doesn't exist
                 using var connection = _connectionFactory.GetConnection(GetAdminConnectionString());
@@ -63,7 +63,7 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
             }
             else
             {
-                _logger.LogCritical("Database '{databaseName}' cannot be connected with or does not exist.", databaseName);
+                _telemetryTracker.TrackTrace(string.Format("Database '{0}' cannot be connected with or does not exist.", databaseName), SeverityLevel.Error);
                 throw new InvalidOperationException($"Database '{databaseName}' cannot be connected with or does not exist.");
             }
         }
@@ -77,7 +77,7 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
         {
             var paramName = "SchemaName";
             RunScript(SQL_CREATE_SCHEMA_SCRIPT, paramName, schemaName, connection);
-            _logger.LogInformation("Schema '{schemaName}' created if not exists.", schemaName);
+            _telemetryTracker.TrackTrace(string.Format("Schema '{0}' created if not exists.", schemaName), SeverityLevel.Information);
         }
 
         /// <summary>

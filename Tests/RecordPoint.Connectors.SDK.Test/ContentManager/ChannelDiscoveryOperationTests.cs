@@ -55,11 +55,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Abandoned, workItem.ResultType);
@@ -81,11 +82,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Single(workStatuses);
@@ -112,10 +114,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var priorWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
-            var priorWorks = await SUT.GetWorkStatusManager()
+            var priorWorks = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Single(priorWorks);
@@ -125,12 +128,13 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             await SUT.SetWorkContinue(workMessage);
 
-            var afterWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var afterWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, afterWorkItem.ResultType);
 
-            var afterWorks = await SUT.GetWorkStatusManager()
+            var afterWorks = await ContentManagerSutBase.GetWorkStatusManager(servicesScope2.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Single(afterWorks);
@@ -167,11 +171,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
-            var managedWorkStatuses = await SUT.GetWorkStatusManager()
+            var managedWorkStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(2, managedWorkStatuses.Count);
@@ -204,10 +209,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var priorWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
-            var priorWorks = await SUT.GetWorkStatusManager()
+            var priorWorks = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             var priorWork = priorWorks.Single();
@@ -218,10 +224,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 new Channel() { ExternalId = "CHANNEL_2", Title = "Channel 2" }
             };
             await SUT.SetWorkContinue(workMessage);
-            var afterWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+
+            using var servicesScope2 = Services.CreateScope();
+            var afterWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
-            var afterWorks = await SUT.GetWorkStatusManager()
+            var afterWorks = await ContentManagerSutBase.GetWorkStatusManager(servicesScope2.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
 
             // Check results
@@ -255,11 +263,13 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var priorWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             await SUT.SetWorkContinue(workMessage);
-            var afterWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var afterWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             // Check results
@@ -290,11 +300,13 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var priorWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             await SUT.SetWorkContinue(workMessage);
-            var afterWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var afterWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             // Check results
@@ -325,14 +337,16 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var priorWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
             scanner.ChannelDiscoveryResultType = ChannelDiscoveryResultType.Complete;
 
             await SUT.SetWorkContinue(workMessage);
-            var afterWorkItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var afterWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             // Check results
@@ -361,7 +375,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
@@ -400,7 +415,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ChannelDiscoveryOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 

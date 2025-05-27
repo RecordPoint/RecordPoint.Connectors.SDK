@@ -126,7 +126,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
 
-            var workResult = submitBinaryItem.WorkResult;
+            var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
             Assert.Equal(WorkResultType.Complete, workResult.ResultType);
@@ -160,7 +160,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
 
-            var workResult = submitBinaryItem.WorkResult;
+            var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
             Assert.Equal(WorkResultType.Complete, workResult.ResultType);

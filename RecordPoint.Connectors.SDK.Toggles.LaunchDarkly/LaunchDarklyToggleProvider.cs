@@ -40,5 +40,20 @@ namespace RecordPoint.Connectors.SDK.Toggles.LaunchDarkly
         public bool GetToggleBool(string toggle, string userKey, bool @default)
             => _launchDarklyFeatureToggleProvider.GetBoolValue(new FeatureToggle(toggle), userKey, @default);
 
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, string userKey, int @default)
+            => _launchDarklyFeatureToggleProvider.GetNumberValue(new FeatureToggle(toggle), userKey, @default);
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, int @default)
+            => _launchDarklyFeatureToggleProvider.GetNumberValue(new FeatureToggle(toggle), @default);
+
+        /// <inheritdoc/>
+        public string? GetToggleString(string toggle, string userKey, string? @default = null)
+            => _launchDarklyFeatureToggleProvider.GetStringValue(new FeatureToggle(toggle), userKey, @default);
+
+        /// <inheritdoc/>
+        public string? GetToggleString(string toggle, string? @default = null)
+            => _launchDarklyFeatureToggleProvider.GetStringValue(new FeatureToggle(toggle), @default);
     }
 }

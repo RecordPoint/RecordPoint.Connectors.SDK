@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Observability;
+﻿using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
 
@@ -30,18 +29,16 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// </summary>
         /// <param name="notificationManager">The notification manager.</param>
         /// <param name="r365NotificationClient">The r365 notification client.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         public PollNotificationsOperation(
             INotificationManager notificationManager,
             IR365NotificationClient r365NotificationClient,
-            IScopeManager scopeManager,
-            ILogger<PollNotificationsOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _notificationManager = notificationManager;
             _r365NotificationClient = r365NotificationClient;

@@ -13,7 +13,7 @@
         /// <summary>
         /// Result of the unit of work
         /// </summary>
-        WorkResult WorkResult { get; }
+        WorkResult GetWorkResult();
 
         /// <summary>
         /// Use this work item to run a work request

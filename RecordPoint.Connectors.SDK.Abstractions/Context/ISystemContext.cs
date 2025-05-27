@@ -22,6 +22,12 @@
         string GetShortName();
 
         /// <summary>
+        /// Name of the running service
+        /// </summary>
+        /// <returns></returns>
+        string GetServiceName();
+
+        /// <summary>
         /// Get the root path for data
         /// </summary>
         /// <returns></returns>

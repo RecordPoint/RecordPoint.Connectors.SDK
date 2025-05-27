@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Client.Models;
+﻿using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
@@ -45,8 +44,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="contentManagerActionProvider">The content manager action provider.</param>
         /// <param name="connectorManager">The connector manager.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         public RecordDisposalOperation(
@@ -54,11 +52,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IContentManagerActionProvider contentManagerActionProvider,
             IConnectorConfigurationManager connectorManager,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<RecordDisposalOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _connectorManager = connectorManager;
@@ -214,6 +211,17 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }
 
             return measures;
+        }
+        #endregion
+
+        #region Disposable
+        /// <summary>
+        /// Dispose invocation results
+        /// </summary>
+        protected override void InnerDispose()
+        {
+            _connectorConfiguration = null;
+            _recordDisposalResult = null;
         }
         #endregion
     }

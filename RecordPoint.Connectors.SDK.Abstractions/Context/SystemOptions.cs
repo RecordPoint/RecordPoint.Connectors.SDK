@@ -11,23 +11,28 @@
         /// Configuration section name
         /// </summary>
         public const string SECTION_NAME = "System";
+        private const string COMPANY_NAME = "RecordPoint";
+        private const string UNDEFINED = "Undefined";
 
         /// <summary>
         /// Company name
         /// </summary>
-        public string CompanyName { get; set; } = "Undefined";
+        public string CompanyName { get; set; } = COMPANY_NAME;
 
         /// <summary>
         /// System name
         /// </summary>
-        public string ConnectorName { get; set; } = "Undefined";
+        public string ConnectorName { get; set; } = UNDEFINED;
 
         /// <summary>
         /// Short name
         /// </summary>
-        public string ShortName { get; set; } = "Undefined";
+        public string ShortName { get; set; } = UNDEFINED;
 
-        // TODO: Remove once we supporting clustering and dependant services removed
+        /// <summary>
+        /// Service name
+        /// </summary>
+        public string ServiceName { get; set; } = UNDEFINED;
 
         /// <summary>
         /// Root path for the connectors data.

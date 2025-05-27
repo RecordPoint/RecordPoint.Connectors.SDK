@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Connectors;
+﻿using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
@@ -53,11 +52,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IR365Client r365Client,
             IWorkQueueClient workQueueClient,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             R365Client = r365Client;
             WorkQueueClient = workQueueClient;
@@ -217,6 +215,16 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return suggestedDateTime ?? DateTimeProvider.UtcNow + TimeSpan.FromSeconds(DEFAULT_DEFERRAL_SECONDS);
         }
 
+        #endregion
+
+        #region Dispose
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        protected override void InnerDispose()
+        {
+        }
         #endregion
     }
 }

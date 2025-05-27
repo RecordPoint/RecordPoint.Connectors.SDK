@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -48,8 +47,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="workQueueClient">The work queue client.</param>
         /// <param name="connectorManager">The connector manager.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         public SubmitRecordOperation(
@@ -59,11 +57,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IWorkQueueClient workQueueClient,
             IConnectorConfigurationManager connectorManager,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<SubmitRecordOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, r365Client, workQueueClient, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, r365Client, workQueueClient, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _connectorManager = connectorManager;

@@ -73,13 +73,17 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         }
 
         [Fact]
-        public async Task Works_AreTransient()
+        public async Task Works_AreScoped()
         {
             await StartSutAsync();
 
-            var workFactory = Services.GetRequiredService<IManagedWorkFactory>();
-            var work1 = workFactory.CreateWork("TestWorkId1", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
-            var work2 = workFactory.CreateWork("TestWorkId2", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
+            using var scope1 = Services.CreateScope();
+            using var scope2 = Services.CreateScope();
+
+            var workFactory1 = scope1.ServiceProvider.GetRequiredService<IManagedWorkFactory>();
+            var workFactory2 = scope2.ServiceProvider.GetRequiredService<IManagedWorkFactory>();
+            var work1 = workFactory1.CreateWork("TestWorkId1", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
+            var work2 = workFactory2.CreateWork("TestWorkId2", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
             Assert.NotSame(work1, work2);
             Assert.NotSame(work1.WorkStatus.WorkId, work2.WorkStatus.WorkId);
         }

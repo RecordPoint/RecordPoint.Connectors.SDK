@@ -29,31 +29,37 @@ public class ManagedWorkManagerTests : CommonTestBase<ManagedWorkManagerSut>
     public async Task FaultyAsync_TestFaultedOutcomes()
     {
         await StartSutAsync();
-        var workManager = Services.GetRequiredService<IManagedWorkManager>();
 
-        var work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 5);
+        var managedWorkStatusManager = Services.GetRequiredService<IManagedWorkStatusManager>();
+        var workQueueClient = Services.GetRequiredService<IWorkQueueClient>();
+        var workManager = new ManagedWorkManager(managedWorkStatusManager, workQueueClient);
+
+        var work = await workManager.FaultyAsync("BadWorkId", new Exception("BadWorkId"), CancellationToken.None, 5);
         Assert.Equal(WorkResultType.DeadLetter, work.ResultType);
 
-        work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 2);
+        work = await workManager.FaultyAsync("BadWorkId", new Exception("BadWorkId"), CancellationToken.None, 2);
         Assert.Equal(WorkResultType.Complete, work.ResultType);
-
     }
+
     [Fact]
     public async Task FaultyAsyncUnlimitedRetries_TestFaultedOutcomes()
     {
         await StartSutAsync();
 
-        var workManager = Services.GetRequiredService<IManagedWorkManager>();
+        var managedWorkStatusManager = Services.GetRequiredService<IManagedWorkStatusManager>();
+        var workQueueClient = Services.GetRequiredService<IWorkQueueClient>();
+        var workManager = new ManagedWorkManager(managedWorkStatusManager, workQueueClient);
+
         workManager.WorkStatus.RetryOnFailure = true;
         workManager.WorkStatus.MaxRetries = -1;
 
-        var work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 5);
+        var work = await workManager.FaultyAsync("BadWorkId", new Exception("BadWorkId"), CancellationToken.None, 5);
         Assert.Equal(WorkResultType.Complete, work.ResultType);
 
-        work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 0);
+        work = await workManager.FaultyAsync("BadWorkId", new Exception("BadWorkId"), CancellationToken.None, 0);
         Assert.Equal(WorkResultType.Complete, work.ResultType);
 
-        work = await workManager.FaultyAsync("BadWorkId", CancellationToken.None, 100);
+        work = await workManager.FaultyAsync("BadWorkId", new Exception("BadWorkId"), CancellationToken.None, 100);
         Assert.Equal(WorkResultType.Complete, work.ResultType);
 
     }

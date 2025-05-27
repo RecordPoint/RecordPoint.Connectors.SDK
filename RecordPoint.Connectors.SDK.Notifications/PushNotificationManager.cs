@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Client.Models;
+﻿using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Observability;
 
 namespace RecordPoint.Connectors.SDK.Notifications
@@ -12,16 +11,14 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="notificationStrategies"></param>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         /// <param name="telemetryTracker"></param>
         public PushNotificationManager(
-            ILogger<PullNotificationManager> logger,
             IEnumerable<INotificationStrategy> notificationStrategies,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker)
-            : base(logger, notificationStrategies, scopeManager, telemetryTracker)
+            : base(notificationStrategies, observabilityScope, telemetryTracker)
         {
         }
 
@@ -33,35 +30,34 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <returns></returns>
         public override async Task HandleNotificationAsync(ConnectorNotificationModel notification, CancellationToken cancellationToken)
         {
+            using var notificationScope = _observabilityScope.BeginScope(GetDimensions(notification));
+
             var notificationType = notification.NotificationType;
             if (!_notificationStrategies.ContainsKey(notificationType))
             {
                 var errorReason = $"Received unknown notification type {notificationType}";
-                _logger.LogWarning(errorReason);
+                _telemetryTracker.TrackTrace(errorReason, SeverityLevel.Warning);
                 return;
             }
             var strategy = _notificationStrategies[notificationType];
-            using var notificationScope = _scopeManager.BeginScope(GetDimensions(notification));
             try
             {
                 var outcome = await strategy.HandleNotificationAsync(notification, cancellationToken);
                 switch (outcome.OutcomeType)
                 {
                     case NotificationOutcomeType.Ok:
-                        _logger.LogEvent(notificationType, GetOutcomeDimensions(outcome));
+                        _telemetryTracker.TrackTrace("Notification Processed OK", SeverityLevel.Information, GetOutcomeDimensions(outcome));
                         break;
 
                     case NotificationOutcomeType.Failed:
-                        _logger.LogEvent(notificationType, GetOutcomeDimensions(outcome));
+                        _telemetryTracker.TrackTrace("Notification Processing Failed", SeverityLevel.Error, GetOutcomeDimensions(outcome));
                         break;
                 }
             }
             catch (Exception ex)
             {
-                _telemetryTracker.TrackException(notificationType, ex);
-                _logger.LogEventException(notificationType, ex);
+                _telemetryTracker.TrackException(ex);
             }
         }
-
     }
 }

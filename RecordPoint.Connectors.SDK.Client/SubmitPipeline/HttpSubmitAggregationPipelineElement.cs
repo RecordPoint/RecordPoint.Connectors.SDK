@@ -79,8 +79,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     async (ct) =>
                     {
                         var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                        return await apiClient.ApiAggregationsPostWithHttpMessagesAsync(
-                            aggregationModel,
+                        return await apiClient.POST.ApiAggregationsWithHttpMessagesAsync(
+                            body: aggregationModel,
                             customHeaders: headers,
                             cancellationToken: ct
                         ).ConfigureAwait(false);

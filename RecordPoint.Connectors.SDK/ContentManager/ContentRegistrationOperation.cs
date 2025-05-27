@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -65,9 +64,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="workQueueClient">The work queue client.</param>
         /// <param name="managedWorkFactory">The managed work factory.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
-        /// <param name="logger">The logger.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="options">The options.</param>
@@ -80,14 +78,13 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IWorkQueueClient workQueueClient,
             IManagedWorkFactory managedWorkFactory,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             IToggleProvider toggleProvider,
-            ILogger<ContentRegistrationOperation> logger,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
             IOptions<ContentRegistrationOperationOptions> options,
             IOptions<ContentManagerOptions> contentManagerOptions)
-            : base(serviceProvider, managedWorkFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, managedWorkFactory, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _connectorManager = connectorManager;
@@ -495,6 +492,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }
 
             return measures;
+        }
+        #endregion
+
+        #region Disposable
+        /// <summary>
+        /// Dispose invocation results
+        /// </summary>
+        protected override void InnerDispose()
+        {
+            _connectorConfiguration = null;
+            _contentResult = null;
+            _actionExecutionTimespan = null;
+            _submitTimespan = null;
+
+            base.InnerDispose();
         }
         #endregion
     }

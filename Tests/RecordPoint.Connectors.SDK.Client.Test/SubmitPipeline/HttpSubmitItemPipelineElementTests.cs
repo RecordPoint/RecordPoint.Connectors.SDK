@@ -37,13 +37,13 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
 
             _mockClient
                 .Setup(x =>
-                    x.ApiItemsPostWithHttpMessagesAsync(
-                        It.IsAny<ItemSubmissionInputModel>(),
+                    x.POST.ApiItemsWithHttpMessagesAsync(
                         It.IsAny<string>(),
+                        It.IsAny<ItemSubmissionInputModel>(),
                         It.IsAny<Dictionary<string, List<string>>>(),
                         CancellationToken.None))
-                .Callback<ItemSubmissionInputModel, string, Dictionary<string, List<string>>, CancellationToken>(
-                    (model, lan, headers, ct) => inputModelBuiltOnSubmit = model)
+                .Callback<string, ItemSubmissionInputModel, Dictionary<string, List<string>>, CancellationToken>(
+                    (lan, model, headers, ct) => inputModelBuiltOnSubmit = model)
                 .ReturnsAsync(() => new HttpOperationResponse<object> { Body = new { text = "test ok" }, Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.OK) });
 
             _mockClientFactory.Setup(x => x.CreateApiClient(It.IsAny<ApiClientFactorySettings>())).Returns(_mockClient.Object);
