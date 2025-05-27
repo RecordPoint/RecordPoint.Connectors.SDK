@@ -10,6 +10,7 @@ namespace RecordPoint.Connectors.SDK.Test.SUT
         public const string RECORDPOINT_COMPANY_NAME = "RecordPoint";
         public const string CONNECTOR_NAME = "Test Connector";
         public const string CONNECTOR_SHORT_NAME = "TstConn";
+        public const string SERVICE_NAME = "Test Service";
         public const string DATA_ROOT_PATH = "c:\temp";
 
         public string GetCompanyName() => RECORDPOINT_COMPANY_NAME;
@@ -19,6 +20,8 @@ namespace RecordPoint.Connectors.SDK.Test.SUT
         public string GetDataRootPath() => DATA_ROOT_PATH;
 
         public string GetShortName() => CONNECTOR_SHORT_NAME;
+
+        public string GetServiceName() => SERVICE_NAME;
     }
 
 }

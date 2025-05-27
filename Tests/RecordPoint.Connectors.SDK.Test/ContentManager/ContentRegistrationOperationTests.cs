@@ -82,11 +82,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Abandoned, workItem.ResultType);
@@ -109,11 +110,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Abandoned, workItem.ResultType);
@@ -145,11 +147,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, workItem.ResultType);
@@ -193,11 +196,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Abandoned, workItem.ResultType);
@@ -231,7 +235,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
 
             await workItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
@@ -267,10 +272,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
@@ -282,7 +288,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             scanner.Cursor = testCursor2;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
             Assert.Equal(testCursor1, scanner.ReportedContinueCursor);
@@ -317,10 +324,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
@@ -335,10 +343,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             scanner.Cursor = testCursor2;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope2.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, continueWorkItem.ResultType);
@@ -372,10 +381,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
@@ -388,10 +398,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             scanner.Cursor = testCursor2;
             scanner.ResultType = ContentResultType.Failed;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope2.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(testCursor1, continueWorkItem.State.Cursor);
@@ -435,10 +446,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
@@ -451,10 +463,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             scanner.Cursor = testCursor2;
             scanner.ResultType = ContentResultType.Failed;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
-            var workStatuses = await SUT.GetWorkStatusManager()
+            var workStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope2.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(testCursor1, continueWorkItem.State.Cursor);
@@ -488,17 +501,19 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
 
             scanner.Cursor = testCursor1;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
             // Check results
@@ -533,17 +548,19 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
 
             scanner.Cursor = testCursor1;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
             // Check results
@@ -578,10 +595,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentRegistrationManagedWorkStatusModel(connector, channel);
             await SUT.SetWorkRunning(workMessage);
 
-            var beginWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var beginWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await beginWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(workMessage), cancellationToken);
 
-            var beginWorkStatus = await SUT.GetWorkStatusManager()
+            var beginWorkStatus = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(j => j.WorkType == ContentRegistrationOperation.WORK_TYPE, cancellationToken);
 
             var continueWorkMessage = beginWorkStatus.Single();
@@ -590,7 +608,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             scanner.Cursor = testCursor1;
             scanner.ResultType = ContentResultType.Complete;
             await SUT.SetWorkContinue(continueWorkMessage);
-            var continueWorkItem = Services.GetRequiredService<ContentRegistrationOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var continueWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentRegistrationOperation>();
             await continueWorkItem.RunWorkRequestAsync(SUT.CreateContentRegistrationRequest(continueWorkMessage), cancellationToken);
 
             // Check results

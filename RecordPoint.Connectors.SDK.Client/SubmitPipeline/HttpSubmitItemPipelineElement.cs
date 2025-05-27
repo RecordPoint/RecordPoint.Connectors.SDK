@@ -84,8 +84,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     async (ct) =>
                     {
                         var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                        return await apiClient.ApiItemsPostWithHttpMessagesAsync(
-                            itemModel,
+                        return await apiClient.POST.ApiItemsWithHttpMessagesAsync(
+                            body: itemModel,
                             customHeaders: headers,
                             cancellationToken: ct
                         ).ConfigureAwait(false);

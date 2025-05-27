@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using RecordPoint.Connectors.SDK.Observability;
+﻿using RecordPoint.Connectors.SDK.Observability;
 using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.Observability
@@ -12,25 +10,17 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
     public class ScopeTrackerTests
     {
 
-        private readonly NullLoggerFactory _nullLoggerFactory = new NullLoggerFactory();
-
-        private ILogger<ScopeManager> CreateTestLogger()
-        {
-            return _nullLoggerFactory.CreateLogger<ScopeManager>();
-        }
-
-
         [Fact]
         public void Dimensions_EmptyByDefault()
         {
-            var scope = new ScopeManager(CreateTestLogger());
+            var scope = new ObservabilityScope();
             Assert.Empty(scope.Dimensions);
         }
 
         [Fact]
         public void Dimensions_SetByInitialScope()
         {
-            var tracker = new ScopeManager(CreateTestLogger());
+            var tracker = new ObservabilityScope();
             var dimensions = new Dimensions()
             {
                 ["Test1"] = "1"
@@ -42,7 +32,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
         [Fact]
         public void Dimensions_ResetByScopeDiscard()
         {
-            var tracker = new ScopeManager(CreateTestLogger());
+            var tracker = new ObservabilityScope();
             var dimensions = new Dimensions()
             {
                 ["Test1"] = "1"
@@ -65,21 +55,21 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
             {
                 ["Test2"] = "2"
             };
-            async Task CheckScopeProperties1(ScopeManager tracker)
+            async Task CheckScopeProperties1(ObservabilityScope tracker)
             {
                 using var scope = tracker.BeginScope(dimensions1);
                 await Task.Delay(100); // Wait for the other task to be running
                 Assert.Equal(dimensions1, tracker.Dimensions);
                 await Task.Delay(100); // Wait for the other task to check
             }
-            async Task CheckScopeProperties2(ScopeManager tracker)
+            async Task CheckScopeProperties2(ObservabilityScope tracker)
             {
                 using var scope = tracker.BeginScope(dimensions2);
                 await Task.Delay(100); // Wait for the other task to be running
                 Assert.Equal(dimensions2, tracker.Dimensions);
                 await Task.Delay(100); // Wait for the other task to check
             }
-            var tracker = new ScopeManager(CreateTestLogger());
+            var tracker = new ObservabilityScope();
             var task1 = CheckScopeProperties1(tracker);
             var task2 = CheckScopeProperties2(tracker);
             await Task.WhenAll(task1, task2);
@@ -88,11 +78,11 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
         [Fact]
         public async Task DimensionsEmpty_WhenTrackerCreatedByOtherAsync()
         {
-            ScopeManager scopeTracker;
-            async Task<ScopeManager> CreateTracker()
+            ObservabilityScope scopeTracker;
+            async Task<ObservabilityScope> CreateTracker()
             {
                 await Task.Delay(1).ConfigureAwait(false); // Make sure we are in a differnet s
-                return new ScopeManager(CreateTestLogger());
+                return new ObservabilityScope();
             }
             async Task CheckDimensions()
             {
@@ -106,7 +96,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
         [Fact]
         public void NestedScopeInheritsDimensions()
         {
-            var tracker = new ScopeManager(CreateTestLogger());
+            var tracker = new ObservabilityScope();
             var dimensions1 = new Dimensions()
             {
                 ["Test1"] = "1"
@@ -125,7 +115,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
         [Fact]
         public void DiscardNestedScopeRevertsDimensions()
         {
-            var tracker = new ScopeManager(CreateTestLogger());
+            var tracker = new ObservabilityScope();
             var dimensions1 = new Dimensions()
             {
                 ["Test1"] = "1"
@@ -146,7 +136,7 @@ namespace RecordPoint.Connectors.SDK.Test.Observability
         [Fact]
         public void ExtendingDimensions_Happy()
         {
-            var tracker = new ScopeManager(CreateTestLogger());
+            var tracker = new ObservabilityScope();
             var dimensions = new Dimensions()
             {
                 ["TestA"] = "A",

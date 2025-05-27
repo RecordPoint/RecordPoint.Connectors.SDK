@@ -39,6 +39,17 @@ namespace RecordPoint.Connectors.SDK.Work
         };
 
         /// <summary>
+        /// Unit of work has critically failed due to an exception
+        /// </summary>
+        /// <returns></returns>
+        public static WorkResult Failed(string reason, Exception exception) => new()
+        {
+            ResultType = WorkResultType.Failed,
+            Reason = reason,
+            Exception = exception
+        };
+
+        /// <summary>
         /// Unit of work has been abandoned
         /// </summary>
         /// <returns></returns>

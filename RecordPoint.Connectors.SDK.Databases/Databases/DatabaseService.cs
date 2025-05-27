@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
@@ -21,50 +20,37 @@ namespace RecordPoint.Connectors.SDK.Databases
 
         private readonly ISystemContext _systemContext;
         private readonly TDbProvider _databaseProvider;
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         private readonly ITelemetryTracker _telemetryTracker;
-        private readonly ILogger<DatabaseService<TDbContext, TDbProvider>> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IHostApplicationLifetime _applicationLifetime;
-
-        private readonly string _serviceId;
 
         /// <summary>
         /// Instantiates a new Database Service
         /// </summary>
         /// <param name="systemContext"></param>
         /// <param name="databaseProvider"></param>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         /// <param name="telemetryTracker"></param>
-        /// <param name="logger"></param>
         /// <param name="dateTimeProvider"></param>
         /// <param name="applicationLifetime"></param>
         public DatabaseService(
             ISystemContext systemContext,
             TDbProvider databaseProvider,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
-            ILogger<DatabaseService<TDbContext, TDbProvider>> logger,
             IDateTimeProvider dateTimeProvider,
             IHostApplicationLifetime applicationLifetime)
         {
             _systemContext = systemContext;
             _databaseProvider = databaseProvider;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _telemetryTracker = telemetryTracker;
-            _logger = logger;
             _dateTimeProvider = dateTimeProvider;
 
             _applicationLifetime = applicationLifetime;
-
-            _serviceId = Guid.NewGuid().ToString();
         }
 
-        /// <summary>
-        /// Get the name of the service
-        /// </summary>
-        /// <returns></returns>
-        protected string GetServiceName() => "Database Service";
 
         /// <summary>
         /// Starts the service
@@ -75,8 +61,7 @@ namespace RecordPoint.Connectors.SDK.Databases
         {
             _applicationLifetime.ApplicationStopped.Register(OnShutdown);
 
-            using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
-            using var serviceScope = _scopeManager.BeginServiceScope(GetServiceName(), _serviceId);
+            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
 
             var prepareOutcome = await PrepareDatabaseAsync(cancellationToken);
             if (prepareOutcome != WorkResultType.Complete)
@@ -93,7 +78,7 @@ namespace RecordPoint.Connectors.SDK.Databases
         private async Task<WorkResultType> PrepareDatabaseAsync(CancellationToken cancellationToken)
         {
             // Work items already log so no need to repeat it
-            var prepareDatabaseOperation = new PrepareDatabaseOperation<TDbContext, TDbProvider>(_databaseProvider, _scopeManager, _logger, _telemetryTracker, _dateTimeProvider);
+            var prepareDatabaseOperation = new PrepareDatabaseOperation<TDbContext, TDbProvider>(_databaseProvider, _observabilityScope, _telemetryTracker, _dateTimeProvider);
             await prepareDatabaseOperation.RunAsync(null, cancellationToken);
             if (prepareDatabaseOperation.Exception != null)
                 _databaseProvider.SetReady(prepareDatabaseOperation.Exception);
@@ -109,26 +94,25 @@ namespace RecordPoint.Connectors.SDK.Databases
 
         private void OnShutdown()
         {
-            using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
-            using var serviceScope = _scopeManager.BeginServiceScope(GetServiceName(), _serviceId);
+            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
 
             var startupDimensions = new Dimensions()
             {
                 [StandardDimensions.EVENT_TYPE] = EventType.Shutdown.ToString()
             };
-            using var cleanupScope = _scopeManager.BeginScope(startupDimensions);
-            _logger.LogEvent($"Cleaning up {GetServiceName()}", startupDimensions);
+            using var cleanupScope = _observabilityScope.BeginScope(startupDimensions);
+            _telemetryTracker.TrackTrace($"Cleaning up Database Service", SeverityLevel.Information, startupDimensions);
 
             try
             {
                 var dimensions = new Dimensions();
-                _scopeManager.InvokeAsync(dimensions, () =>
+                _observabilityScope.InvokeAsync(dimensions, () =>
                     _databaseProvider.CleanupAsync(CancellationToken.None)
                 ).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                _logger.LogEventException($"Cleaning up {GetServiceName()}", ex);
+                _telemetryTracker.TrackException(ex);
             }
         }
 

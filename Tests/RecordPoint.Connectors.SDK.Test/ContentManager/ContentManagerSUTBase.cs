@@ -119,7 +119,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         #region Work
 
-        public IManagedWorkStatusManager GetWorkStatusManager() => Services.GetRequiredService<IManagedWorkStatusManager>();
+        public static IManagedWorkStatusManager GetWorkStatusManager(IServiceProvider serviceProvider) => serviceProvider.GetRequiredService<IManagedWorkStatusManager>();
 
         #endregion
 

@@ -71,7 +71,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 mimeType: binarySubmitContext.MimeType ?? binarySubmitContext.SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.MimeType)?.Value,
                 correlationId: binarySubmitContext.CorrelationId.ToString(),
                 isOldVersion: binarySubmitContext.IsOldVersion ?? default,
-                skipEnrichment: binarySubmitContext.SkipEnrichment ?? default
+                skipEnrichment: binarySubmitContext.SkipEnrichment ?? default,
+                itemSourceLastModifiedDate: binarySubmitContext.ItemSourceLastModifiedDate
             );
 
             // Get token and URL via Autorest-generated API call
@@ -83,8 +84,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 async (ct) =>
                 {
                     var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                    return await apiClient.ApiBinariesGetSASTokenPostWithHttpMessagesAsync(
-                        binarySubmissionInputModel: binarySubmissionInputModel,
+                    return await apiClient.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
+                        body: binarySubmissionInputModel,
                         customHeaders: headers,
                         cancellationToken: ct
                     ).ConfigureAwait(false);
@@ -208,8 +209,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 {
                     //If the item corresponding to the submitted binary is not yet present, the platform will have to handle this.
                     var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                    return await apiClient.ApiBinariesNotifyBinarySubmissionPostWithHttpMessagesAsync(
-                        binarySubmissionInputModel: binarySubmissionInputModel,
+                    return await apiClient.POST.ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(
+                        body: binarySubmissionInputModel,
                         customHeaders: headers,
                         cancellationToken: ct
                     ).ConfigureAwait(false);

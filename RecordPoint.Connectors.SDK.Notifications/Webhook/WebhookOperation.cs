@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Client.Models;
+﻿using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
@@ -25,17 +24,15 @@ namespace RecordPoint.Connectors.SDK.Notifications.Webhook
         /// Initializes a new instance of the <see cref="WebhookOperation"/> class.
         /// </summary>
         /// <param name="notificationManager">The notification manager.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         public WebhookOperation(
             INotificationManager notificationManager,
-            IScopeManager scopeManager,
-            ILogger<WebhookOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _notificationManager = notificationManager;
         }

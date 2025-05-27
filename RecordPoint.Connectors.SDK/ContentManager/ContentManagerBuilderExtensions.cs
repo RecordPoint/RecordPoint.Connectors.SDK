@@ -22,8 +22,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 var configuration = hostContext.Configuration;
                 services
                     .Configure<ContentManagerOptions>(configuration.GetSection(ContentManagerOptions.SECTION_NAME))
-                    .AddAddQueueableWorkOperation<ContentManagerOperation>(ContentManagerOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddQueueableWorkOperation<ContentManagerOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
                     .AddHostedService<ContentManagerService>();
             });
         }
@@ -42,7 +42,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 .ConfigureServices(services =>
                 {
                     services
-                        .AddTransient<IContentManagerCallbackAction, TCallbackAction>();
+                        .AddScoped<IContentManagerCallbackAction, TCallbackAction>();
                 });
         }
 
@@ -61,9 +61,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 services
                     .Configure<ChannelDiscoveryOperationOptions>(configuration.GetSection(ChannelDiscoveryOperationOptions.SECTION_NAME))
                     .Configure<ContentManagerOptions>(configuration.GetSection(ContentManagerOptions.SECTION_NAME))
-                    .AddAddQueueableWorkOperation<ChannelDiscoveryOperation>(ChannelDiscoveryOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IChannelDiscoveryAction, TAction>();
+                    .AddQueueableWorkOperation<ChannelDiscoveryOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IChannelDiscoveryAction, TAction>();
             });
         }
 
@@ -82,9 +82,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 services
                     .Configure<ContentSynchronisationOperationOptions>(configuration.GetSection(ContentSynchronisationOperationOptions.SECTION_NAME))
                     .Configure<ContentManagerOptions>(configuration.GetSection(ContentManagerOptions.SECTION_NAME))
-                    .AddAddQueueableWorkOperation<ContentSynchronisationOperation>(ContentSynchronisationOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IContentSynchronisationAction, TAction>();
+                    .AddQueueableWorkOperation<ContentSynchronisationOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IContentSynchronisationAction, TAction>();
             });
         }
 
@@ -103,9 +103,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 services
                     .Configure<ContentRegistrationOperationOptions>(configuration.GetSection(ContentRegistrationOperationOptions.SECTION_NAME))
                     .Configure<ContentManagerOptions>(configuration.GetSection(ContentManagerOptions.SECTION_NAME))
-                    .AddAddQueueableWorkOperation<ContentRegistrationOperation>(ContentRegistrationOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IContentRegistrationAction, TAction>();
+                    .AddQueueableWorkOperation<ContentRegistrationOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IContentRegistrationAction, TAction>();
             });
         }
 
@@ -119,8 +119,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitRecordOperation>(SubmitRecordOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>();
+                    .AddQueueableWorkOperation<SubmitRecordOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>();
             });
         }
 
@@ -136,9 +136,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitRecordOperation>(SubmitRecordOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IRecordSubmissionCallbackAction, TCallbackAction>();
+                    .AddQueueableWorkOperation<SubmitRecordOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IRecordSubmissionCallbackAction, TCallbackAction>();
             });
         }
 
@@ -154,9 +154,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitBinaryOperation>(SubmitBinaryOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IBinaryRetrievalAction, TAction>();
+                    .AddQueueableWorkOperation<SubmitBinaryOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IBinaryRetrievalAction, TAction>();
             });
         }
 
@@ -174,10 +174,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitBinaryOperation>(SubmitBinaryOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IBinaryRetrievalAction, TAction>()
-                    .AddTransient<IBinarySubmissionCallbackAction, TCallbackAction>();
+                    .AddQueueableWorkOperation<SubmitBinaryOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IBinaryRetrievalAction, TAction>()
+                    .AddScoped<IBinarySubmissionCallbackAction, TCallbackAction>();
             });
         }
 
@@ -191,8 +191,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitAggregationOperation>(SubmitAggregationOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>();
+                    .AddQueueableWorkOperation<SubmitAggregationOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>();
             });
         }
 
@@ -208,9 +208,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitAggregationOperation>(SubmitAggregationOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IAggregationSubmissionCallbackAction, TCallbackAction>();
+                    .AddQueueableWorkOperation<SubmitAggregationOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IAggregationSubmissionCallbackAction, TCallbackAction>();
             });
         }
 
@@ -224,8 +224,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitAuditEventOperation>(SubmitAuditEventOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>();
+                    .AddQueueableWorkOperation<SubmitAuditEventOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>();
             });
         }
 
@@ -241,9 +241,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<SubmitAuditEventOperation>(SubmitAuditEventOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IAuditEventSubmissionCallbackAction, TCallbackAction>();
+                    .AddQueueableWorkOperation<SubmitAuditEventOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IAuditEventSubmissionCallbackAction, TCallbackAction>();
             });
         }
 
@@ -259,9 +259,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<RecordDisposalOperation>(RecordDisposalOperation.WORK_TYPE)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IRecordDisposalAction, TAction>();
+                    .AddQueueableWorkOperation<RecordDisposalOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IRecordDisposalAction, TAction>();
             });
         }
 
@@ -273,19 +273,18 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <typeparam name="TInput"/>
         /// <typeparam name="TOutput"/>
         /// <param name="hostBuilder">The host builder.</param>
-        /// <param name="workType">String to represent the type of work</param>
         /// <returns>An IHostBuilder</returns>
-        public static IHostBuilder UseGenericQueueableWorkOperation<TOperation, TAction, TInput, TOutput>(this IHostBuilder hostBuilder, string workType)
-            where TOperation : IQueueableWork
+        public static IHostBuilder UseGenericQueueableWorkOperation<TOperation, TAction, TInput, TOutput>(this IHostBuilder hostBuilder)
+            where TOperation : class, IQueueableWork
             where TAction : class, IGenericAction<TInput, TOutput>
             where TOutput : ActionResultBase
         {
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddAddQueueableWorkOperation<TOperation>(workType)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IGenericAction<TInput, TOutput>, TAction>();
+                    .AddQueueableWorkOperation<TOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IGenericAction<TInput, TOutput>, TAction>();
             });
         }
 
@@ -301,11 +300,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <typeparam name="TOutput"/>
         /// <typeparam name="TOptions"/>
         /// <param name="hostBuilder">The host builder.</param>
-        /// <param name="workType">String to represent the type of work</param>
         /// <param name="configSectionName">Section name for where to find the Options in the configuration root</param>
         /// <returns>An IHostBuilder</returns>
-        public static IHostBuilder UseGenericManagedWorkOperation<TOperation, TAction, TInput, TOutput, TOptions>(this IHostBuilder hostBuilder, string workType, string configSectionName)
-            where TOperation : IQueueableWork
+        public static IHostBuilder UseGenericManagedWorkOperation<TOperation, TAction, TInput, TOutput, TOptions>(this IHostBuilder hostBuilder, string configSectionName)
+            where TOperation : class, IQueueableWork
             where TAction : class, IGenericManagedAction<TInput, TOutput>
             where TOutput : ActionResultBase
             where TOptions : class
@@ -315,9 +313,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 var configuration = hostContext.Configuration;
                 services
                     .Configure<TOptions>(configuration.GetSection(configSectionName))
-                    .AddAddQueueableWorkOperation<TOperation>(workType)
-                    .AddTransient<IContentManagerActionProvider, ContentManagerActionProvider>()
-                    .AddTransient<IGenericManagedAction<TInput, TOutput>, TAction>();
+                    .AddQueueableWorkOperation<TOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IGenericManagedAction<TInput, TOutput>, TAction>();
             });
         }
     }

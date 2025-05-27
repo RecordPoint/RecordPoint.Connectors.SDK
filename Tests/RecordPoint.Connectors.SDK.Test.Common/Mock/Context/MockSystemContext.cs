@@ -9,6 +9,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Context
         public const string TEST_COMPANY_NAME = "Test";
         public const string TEST_CONNECTOR_NAME = "Test";
         public const string TEST_SHORT_NAME = "Test";
+        public const string TEST_SERVICE_NAME = "Test";
 
         private readonly IOptions<MockSystemOptions> _systemOptions;
 
@@ -40,6 +41,11 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Context
         public string? GetSystemName()
         {
             return _systemOptions.Value.SUTName;
+        }
+
+        public string GetServiceName()
+        {
+            return TEST_SERVICE_NAME;
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Client;
+﻿using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Connectors;
@@ -17,21 +16,21 @@ namespace RecordPoint.Connectors.SDK.Notifications
 
         private readonly IR365ConfigurationClient _r365ConfigurationClient;
         private readonly IConnectorConfigurationManager _connectorConfigurationManager;
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
+        private readonly ITelemetryTracker _telemetryTracker;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="r365ConfigurationClient"></param>
-        /// <param name="scopeManager"></param>
-        /// <param name="connectorConfigurationManager"></param>
         public R365NotificationClient(
             IR365ConfigurationClient r365ConfigurationClient,
-            IScopeManager scopeManager,
-            IConnectorConfigurationManager connectorConfigurationManager)
+            IObservabilityScope observabilityScope,
+            IConnectorConfigurationManager connectorConfigurationManager,
+            ITelemetryTracker telemetryTracker)
         {
             _r365ConfigurationClient = r365ConfigurationClient;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
+            _telemetryTracker = telemetryTracker;
             _connectorConfigurationManager = connectorConfigurationManager;
         }
 
@@ -47,9 +46,9 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <summary>
         /// Ensure configuration is loaded
         /// </summary>
-        private R365ConfigurationModel LoadConfiguration()
+        private R365ConfigurationModel LoadConfiguration(string key = "")
         {
-            return _r365ConfigurationClient.GetR365Configuration();
+            return _r365ConfigurationClient.GetR365Configuration(key);
         }
 
         /// <summary>
@@ -58,8 +57,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <returns></returns>
         public bool IsConfigured()
         {
-            var r365Configuration = LoadConfiguration();
-            return r365Configuration != null;
+            return _r365ConfigurationClient.R365ConfigurationExists();
         }
 
         private static ApiClientFactorySettings GetApiClientFactorySettings(R365ConfigurationModel r365Configuration)
@@ -91,7 +89,6 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <returns>List<ConnectorNotificationModel/>></returns>
         public async Task<List<ConnectorNotificationModel>> GetAllPendingNotifications(CancellationToken cancellationToken)
         {
-            var r365Configuration = LoadConfiguration();
             var connectorConfigs = await _connectorConfigurationManager.ListConnectorsAsync(cancellationToken);
             var notifications = new List<ConnectorNotificationModel>();
             var pullManager = new NotificationPullManager();
@@ -99,6 +96,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
             {
                 try
                 {
+                    var r365Configuration = LoadConfiguration(connector.ConnectorTypeConfigurationId);
                     var authenticationHelperSettings =
                         GetAuthenticationHelperSettings(r365Configuration, connector.TenantDomainName);
                     var apiClientFactorySettings = GetApiClientFactorySettings(r365Configuration);
@@ -109,10 +107,9 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 }
                 catch (Exception ex)
                 {
-                    _scopeManager.Invoke(GetDimensions(), () =>
+                    _observabilityScope.Invoke(GetDimensions(), () =>
                     {
-                        _scopeManager.Logger.LogError(ex, "Error getting notifications for connector {ConnectorId}",
-                            connector.Id);
+                        _telemetryTracker.TrackException(ex);
                     });
                 }
             }
@@ -129,10 +126,10 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <returns></returns>
         public async Task AcknowledgeNotificationAsync(ConnectorNotificationModel notification, ProcessingResult result, string message, CancellationToken cancellationToken)
         {
-            await _scopeManager.InvokeAsync(
+            await _observabilityScope.InvokeAsync(
                 GetDimensions(), async () =>
                 {
-                    var r365Configuration = LoadConfiguration();
+                    var r365Configuration = LoadConfiguration(notification.ConnectorConfig.ConnectorTypeConfigurationId);
                     var pullManager = new NotificationPullManager();
                     await pullManager.AcknowledgeNotification(
                         GetApiClientFactorySettings(r365Configuration),

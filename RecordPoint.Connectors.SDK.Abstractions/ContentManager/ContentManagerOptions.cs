@@ -137,6 +137,11 @@
         /// 
         /// </summary>
         public const string SECTION_NAME = "ContentManager:ChannelDiscovery";
+
+        /// <summary>
+        /// Size of each channel call batch
+        /// </summary>
+        public int BatchSize { get; set; } = 100;
     }
 
     /// <summary>

@@ -16,23 +16,23 @@ namespace RecordPoint.Connectors.SDK.Content
         public const string CONNECTOR_ID_DIMENSION = "ConnectorId";
 
         private readonly IConnectorDatabaseClient _databaseClient;
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="databaseClient"></param>
-        /// <param name="scopeManager"></param>
-        public DatabaseAggregationManager(IConnectorDatabaseClient databaseClient, IScopeManager scopeManager)
+        /// <param name="observabilityScope"></param>
+        public DatabaseAggregationManager(IConnectorDatabaseClient databaseClient, IObservabilityScope observabilityScope)
         {
             _databaseClient = databaseClient;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
         }
 
         /// <inheritdoc/>
         public async Task<bool> AggregationExistsAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return (await dbContext.Aggregations
@@ -46,7 +46,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<AggregationModel> GetAggregationAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Aggregations
@@ -57,7 +57,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<List<AggregationModel>> GetAggregationsAsync(CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Aggregations.ToListAsync(cancellationToken);
@@ -67,7 +67,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<List<AggregationModel>> GetAggregationsAsync(Expression<Func<AggregationModel, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Aggregations
@@ -79,7 +79,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<List<AggregationModel>> GetAggregationsAsync(string connectorId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Aggregations
@@ -91,7 +91,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task UpsertAggregationAsync(AggregationModel aggregation, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
@@ -117,7 +117,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task UpsertAggregationsAsync(List<AggregationModel> aggregations, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
@@ -182,7 +182,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task RemoveAggregationAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
              {
                  using var dbContext = _databaseClient.CreateDbContext();
                  var aggregation = await dbContext.Aggregations
@@ -198,7 +198,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task RemoveAggregationsAsync(string connectorId, string[] externalIds, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 var aggregations = await dbContext.Aggregations
@@ -213,7 +213,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task RemoveAggregationsAsync(IEnumerable<AggregationModel> aggregationModels, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 

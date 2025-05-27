@@ -13,7 +13,7 @@ namespace RecordPoint.Connectors.SDK.Toggles.Development
         /// <summary>
         /// Gets the toggles.
         /// </summary>
-        public Dictionary<string, bool> Toggles { get; } = new Dictionary<string, bool>();
+        public Dictionary<string, object> Toggles { get; } = new Dictionary<string, object>();
 
         /// <summary>
         /// Get toggle bool.
@@ -23,7 +23,7 @@ namespace RecordPoint.Connectors.SDK.Toggles.Development
         /// <returns>A bool</returns>
         public bool GetToggleBool(string toggle, bool @default)
         {
-            return Toggles.GetValueOrDefault(toggle, @default);
+            return (bool)Toggles.GetValueOrDefault(toggle, @default);
         }
 
         /// <summary>
@@ -35,7 +35,31 @@ namespace RecordPoint.Connectors.SDK.Toggles.Development
         /// <returns>A bool</returns>
         public bool GetToggleBool(string toggle, string userKey, bool @default)
         {
-            return Toggles.GetValueOrDefault(toggle, @default);
+            return (bool)Toggles.GetValueOrDefault(toggle, @default);
+        }
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, string userKey, int @default)
+        {
+            return (int)Toggles.GetValueOrDefault(toggle, @default);
+        }
+
+        /// <inheritdoc/>
+        public int GetToggleNumber(string toggle, int @default)
+        {
+            return (int)Toggles.GetValueOrDefault(toggle, @default);
+        }
+
+        /// <inheritdoc/>
+        public string GetToggleString(string toggle, string userKey, string @default = null)
+        {
+            return (string)Toggles.GetValueOrDefault(toggle, @default);
+        }
+
+        /// <inheritdoc/>
+        public string GetToggleString(string toggle, string @default = null)
+        {
+            return (string)Toggles.GetValueOrDefault(toggle, @default);
         }
     }
 }

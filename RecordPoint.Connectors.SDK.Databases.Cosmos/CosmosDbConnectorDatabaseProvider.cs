@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Toggles;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos
@@ -21,16 +21,16 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         /// </summary>
         /// <param name="systemContext">The system context.</param>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
         /// <param name="databaseOptions">The database options.</param>
         public CosmosDbConnectorDatabaseProvider(
             ISystemContext systemContext,
             IConfiguration configuration,
-            ILogger<CosmosDbDatabaseProvider<ConnectorDbContext>> logger,
+            ITelemetryTracker telemetryTracker,
             IToggleProvider toggleProvider,
             IOptions<CosmosDbConnectorDatabaseOptions> databaseOptions)
-            : base(systemContext, configuration, logger, toggleProvider, databaseOptions)
+            : base(systemContext, configuration, telemetryTracker, toggleProvider, databaseOptions)
         {
             _databaseOptions = databaseOptions;
         }

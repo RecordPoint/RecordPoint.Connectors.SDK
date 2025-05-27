@@ -32,7 +32,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         public ManagedWorkStatusModel CreateSubmitBinaryManagedWorkStatusModel(string connectorConfigurationId) => new()
         {
             WorkId = SubmitBinaryOperationWorkId1,
-            WorkType = ChannelDiscoveryOperation.WORK_TYPE,
+            WorkType = SubmitBinaryOperation.WORK_TYPE,
             ConnectorId = connectorConfigurationId,
             Id = SubmitBinaryOperationWorkId1
         };

@@ -16,25 +16,25 @@ namespace RecordPoint.Connectors.SDK.Work
         public const string WORK_STATUS_ID_DIMENSION = "WorkStatusId";
 
         private readonly IConnectorDatabaseClient _databaseClient;
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="databaseClient"></param>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         public DatabaseManagedWorkStatusManager(
             IConnectorDatabaseClient databaseClient,
-            IScopeManager scopeManager)
+            IObservabilityScope observabilityScope)
         {
             _databaseClient = databaseClient;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
         }
 
         /// <inheritdoc/>
         public async Task<ManagedWorkStatusModel> GetWorkStatusAsync(string workStatusId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(workStatusId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(workStatusId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.ManagedWorkStatuses.FirstOrDefaultAsync(a => a.Id == workStatusId, cancellationToken);
@@ -44,7 +44,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <inheritdoc/>
         public async Task AddWorkStatusAsync(ManagedWorkStatusModel managedWorkStatusModel, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 await dbContext.ManagedWorkStatuses.AddAsync(managedWorkStatusModel, cancellationToken);
@@ -79,7 +79,7 @@ namespace RecordPoint.Connectors.SDK.Work
 
         private async Task SetWorkStatusAsync(string workStatusId, ManagedWorkStatuses status, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(workStatusId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(workStatusId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 var workStatus = await dbContext.ManagedWorkStatuses.FirstOrDefaultAsync(a => a.Id == workStatusId, cancellationToken);
@@ -93,7 +93,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <inheritdoc/>
         public async Task SetWorkContinueAsync(string workStatusId, string continuedWorkId, string state, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(workStatusId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(workStatusId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 var workStatus = await dbContext.ManagedWorkStatuses.FirstOrDefaultAsync(a => a.Id == workStatusId, cancellationToken);
@@ -108,7 +108,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <inheritdoc/>
         public async Task<List<ManagedWorkStatusModel>> GetAllWorkStatusesAsync(CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.ManagedWorkStatuses.ToListAsync(cancellationToken);
@@ -118,7 +118,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <inheritdoc/>
         public async Task<bool> IsAnyAsync(Expression<Func<ManagedWorkStatusModel, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 //We have to use linq any on the client side, as the cosmos provider for EF doesn't support it
@@ -132,7 +132,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <inheritdoc/>
         public async Task<List<ManagedWorkStatusModel>> GetWorkStatusesAsync(Expression<Func<ManagedWorkStatusModel, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.ManagedWorkStatuses.Where(predicate).ToListAsync(cancellationToken);
@@ -142,7 +142,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <inheritdoc/>
         public async Task RemoveWorkStatusesAsync(string[] workIds, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 var workStatuses = await dbContext.ManagedWorkStatuses

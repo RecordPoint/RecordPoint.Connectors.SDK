@@ -24,15 +24,15 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
                 .ConfigureServices(svcs =>
                     svcs.AddMockWorkQueue()
-                        .AddAddQueueableWorkOperation<NotImplementedWorkItem>(nameof(NotImplementedWorkItem))
-                        .AddAddQueueableWorkOperation<CompletesWorkItem>(nameof(CompletesWorkItem))
+                        .AddQueueableWorkOperation<NotImplementedWorkItem>()
+                        .AddQueueableWorkOperation<CompletesWorkItem>()
                 );
         }
     }
 
     public class NotImplementedWorkItem : IQueueableWork
     {
-        public string WorkType => throw new NotImplementedException();
+        public string WorkType => nameof(NotImplementedWorkItem);
 
         public string Id => throw new NotImplementedException();
 
@@ -40,7 +40,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
         public DateTimeOffset StartDateTime => throw new NotImplementedException();
 
-        public WorkResult WorkResult => throw new NotImplementedException();
+        public WorkResult GetWorkResult() => throw new NotImplementedException();
 
         public WorkRequest WorkRequest => throw new NotImplementedException();
 
@@ -93,11 +93,10 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         public CompletesWorkItem(
             IServiceProvider serviceProvider,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<CompletesWorkItem> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
 
         }
@@ -109,6 +108,10 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         protected override object DeserializeParameter()
         {
             return null;
+        }
+
+        protected override void InnerDispose()
+        {
         }
 
         protected override async Task InnerRunAsync(CancellationToken cancellationToken)
@@ -123,55 +126,6 @@ namespace RecordPoint.Connectors.SDK.Test.Work
     /// </summary>
     public class QueueableWorkFactoryTests : CommonTestBase<QueueableWorkFactorySUT>
     {
-
-        [Fact]
-        public async Task TryGetQueueableWorkFactory_FailsIfNotRegisterd()
-        {
-            await StartSutAsync();
-
-            var unknownWorkType = "UnknownWorkType";
-            var queueableWorkFactory = Services.GetRequiredService<IQueueableWorkManager>();
-            var success = queueableWorkFactory.TryGetQueueableWorkFactory(unknownWorkType, out var _);
-            Assert.False(success);
-        }
-
-        [Fact]
-        public async Task TryGetWorkItemType_ReturnsAddedFactory()
-        {
-            await StartSutAsync();
-
-            var workType = nameof(NotImplementedWorkItem);
-            var queueableWorkFactory = Services.GetRequiredService<IQueueableWorkManager>();
-            var success = queueableWorkFactory.TryGetQueueableWorkFactory(workType, out var workItemFactory);
-            Assert.True(success);
-            Assert.Equal(workType, workItemFactory.WorkType);
-        }
-
-        [Fact]
-        public async Task FactoryForRegisteredWorkType_CreatesWorkItem()
-        {
-            await StartSutAsync();
-
-            var workType = nameof(NotImplementedWorkItem);
-            var queueableWorkFactory = Services.GetRequiredService<IQueueableWorkManager>();
-            queueableWorkFactory.TryGetQueueableWorkFactory(workType, out var workItemFactory);
-            var workItem = workItemFactory.CreateWorkOperation();
-            Assert.NotNull(workItem);
-            Assert.IsType<NotImplementedWorkItem>(workItem);
-        }
-
-        [Fact]
-        public async Task TryGetWorkStrategy_FailsIfNotAdded()
-        {
-            await StartSutAsync();
-
-            var unknownWorkType = "UnknownWorkType";
-            var queueableWorkFactory = Services.GetRequiredService<IQueueableWorkManager>();
-            var success = queueableWorkFactory.TryGetQueueableWorkFactory(unknownWorkType, out var _);
-            Assert.False(success);
-        }
-
-
         [Fact]
         public async Task HandleWorkRequest_SuccessfullyRuns()
         {

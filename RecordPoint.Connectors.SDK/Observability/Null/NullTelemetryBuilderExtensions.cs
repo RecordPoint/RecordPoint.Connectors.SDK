@@ -19,7 +19,7 @@ namespace RecordPoint.Connectors.SDK.Observability.Null
         {
             hostBuilder.ConfigureServices((hostContext, services) =>
             {
-                services.AddSingleton<IScopeManager, ScopeManager>();
+                services.AddSingleton<IObservabilityScope, ObservabilityScope>();
                 services.AddSingleton<ITelemetryTracker, NullTelemetryTracker>();
             });
             return hostBuilder;

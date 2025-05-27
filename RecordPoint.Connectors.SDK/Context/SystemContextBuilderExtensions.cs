@@ -17,8 +17,9 @@ namespace RecordPoint.Connectors.SDK.Context
         /// <param name="companyName">Optional connector company name</param>
         /// <param name="connectorName">Optional connector name</param>
         /// <param name="shortName">Connector short name</param>
+        /// <param name="serviceName">Connector service name</param>
         /// <returns>The updated host builder</returns>
-        public static IHostBuilder UseSystemContext(this IHostBuilder hostBuilder, string companyName = null, string connectorName = null, string shortName = null)
+        public static IHostBuilder UseSystemContext(this IHostBuilder hostBuilder, string companyName = null, string connectorName = null, string shortName = null, string serviceName = null)
         {
             hostBuilder.ConfigureServices((hostContext, services) =>
             {
@@ -29,6 +30,7 @@ namespace RecordPoint.Connectors.SDK.Context
                     options.CompanyName = companyName ?? options.CompanyName;
                     options.ConnectorName = connectorName ?? options.ConnectorName;
                     options.ShortName = shortName ?? options.ShortName;
+                    options.ServiceName = serviceName ?? options.ServiceName;
                 });
                 services.AddSingleton<ISystemContext, SystemContext>();
             });

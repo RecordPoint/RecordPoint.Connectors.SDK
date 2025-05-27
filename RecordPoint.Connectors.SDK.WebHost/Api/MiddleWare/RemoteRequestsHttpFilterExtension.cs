@@ -2,6 +2,9 @@
 
 namespace RecordPoint.Connectors.SDK.WebHost.MiddleWare
 {
+    /// <summary>
+    /// The remote requests http filter extension.
+    /// </summary>
     public static class RemoteRequestsHttpFilterExtension
     {
 

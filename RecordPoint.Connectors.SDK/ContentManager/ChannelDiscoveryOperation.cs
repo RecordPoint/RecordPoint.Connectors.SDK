@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -69,8 +68,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="managedWorkFactory">The managed work factory.</param>
         /// <param name="managedWorkStatusManager">The managed work status manager.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="options">The options.</param>
@@ -84,13 +82,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IManagedWorkFactory managedWorkFactory,
             IManagedWorkStatusManager managedWorkStatusManager,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<ChannelDiscoveryOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
             IOptions<ChannelDiscoveryOperationOptions> options,
             IOptions<ContentManagerOptions> contentManagerOptions)
-            : base(serviceProvider, managedWorkFactory, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, managedWorkFactory, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _workQueueClient = workQueueClient;
@@ -219,7 +216,13 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 .UnionBy(channelResult.NewChannelRegistrations.ToChannelModelList(), a => a.ExternalId)
                 .ToList();
             channelModels.ForEach(channelModel => channelModel.ConnectorId = _connectorConfiguration.Id);
-            await _channelManager.UpsertChannelsAsync(channelModels, cancellationToken);
+            
+            // Upsert in batches
+            var channelBatches = channelModels.Chunk(_options.Value.BatchSize);
+            foreach (var batch in channelBatches)
+            {
+                await _channelManager.UpsertChannelsAsync(batch.ToList(), cancellationToken);
+            }
 
             // Determine how long we should wait until we run again
             var backOffSeconds = channelResult.NextDelay ?? CalculateBackOffSeconds(
@@ -437,6 +440,21 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }
 
             return measures;
+        }
+        #endregion
+
+        #region Disposable
+        /// <summary>
+        /// Dispose invocation results
+        /// </summary>
+        protected override void InnerDispose()
+        {
+            _connectorConfiguration = null;
+            _channelDiscoveryResult = null;
+            _actionExecutionTimespan = null;
+            _submitTimespan = null;
+
+            base.InnerDispose();
         }
         #endregion
     }

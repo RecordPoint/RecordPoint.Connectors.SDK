@@ -11,32 +11,31 @@ namespace RecordPoint.Connectors.SDK.Context
         /// <summary>
         /// Begin system observability scope
         /// </summary>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         /// <param name="systemContext"></param>
-        public static IDisposable BeginSystemScope(this IScopeManager scopeManager, ISystemContext systemContext)
+        public static IDisposable BeginSystemScope(this IObservabilityScope observabilityScope, ISystemContext systemContext)
         {
             var dimensions = new Dimensions
             {
                 [StandardDimensions.COMPANY] = systemContext.GetCompanyName(),
-                [StandardDimensions.SYSTEM] = systemContext.GetConnectorName()
+                [StandardDimensions.SYSTEM] = systemContext.GetConnectorName(),
+                [StandardDimensions.SERVICE] = systemContext.GetServiceName()
             };
-            return scopeManager.BeginScope(dimensions);
+            return observabilityScope.BeginScope(dimensions);
         }
 
         /// <summary>
         /// Begin service observability scope
         /// </summary>
-        /// <param name="scopeManager"></param>
-        /// <param name="service">Name of the service</param>
+        /// <param name="observabilityScope"></param>
         /// <param name="serviceId">Unique correlation ID of the service</param>
-        public static IDisposable BeginServiceScope(this IScopeManager scopeManager, string service, string serviceId)
+        public static IDisposable BeginServiceScope(this IObservabilityScope observabilityScope, string serviceId)
         {
             var dimensions = new Dimensions
             {
-                [StandardDimensions.SERVICE] = service,
                 [StandardDimensions.SERVICE_ID] = serviceId
             };
-            return scopeManager.BeginScope(dimensions);
+            return observabilityScope.BeginScope(dimensions);
         }
     }
 }

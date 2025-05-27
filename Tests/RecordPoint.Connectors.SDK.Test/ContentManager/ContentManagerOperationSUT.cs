@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Moq;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.ContentManager;
@@ -13,6 +14,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         protected override IHostBuilder CreateSutBuilder()
         {
+            SelectContentManagerCallbackActionMock(new Mock<IContentManagerCallbackAction>());
+
             return base
                 .CreateSutBuilder()
                 .UseDatabaseConnectorConfigurationManager()
@@ -23,7 +26,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                      var contentManagerConfiguration = context.Configuration.GetSection("ContentManager");
                      svcs
                          .Configure<ContentManagerOptions>(contentManagerConfiguration)
-                         .AddTransient<ContentManagerOperation>();
+                         .AddScoped<ContentManagerOperation>();
                  });
         }
 

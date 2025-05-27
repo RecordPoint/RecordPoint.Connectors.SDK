@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -58,8 +57,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="r365Client">The r365 client.</param>
         /// <param name="connectorManager">The connector manager.</param>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="workQueueClient">The work queue client.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
@@ -69,12 +67,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             IR365Client r365Client,
             IConnectorConfigurationManager connectorManager,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger<SubmitBinaryOperation> logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IWorkQueueClient workQueueClient,
             IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _r365Client = r365Client;
@@ -210,7 +207,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _actionExecutionTimespan = DateTimeProvider.UtcNow - startTime;
 
 
-            SubmitResult submitResult = null;
+            SubmitResult submitResult;
 
             switch (_binaryRetrievalResult.ResultType)
             {
@@ -228,14 +225,15 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 case BinaryRetrievalResultType.ZeroBinary:
                     submitResult = new SubmitResult
                     {
-                        SubmitStatus = SubmitResult.Status.Skipped
+                        SubmitStatus = SubmitResult.Status.Skipped,
+                        Reason = !string.IsNullOrEmpty(_binaryRetrievalResult.Reason) ? _binaryRetrievalResult.Reason : "Binary stream has a length of zero"
                     };
                     break;
-
                 case BinaryRetrievalResultType.Deleted:
                     submitResult = new SubmitResult
                     {
-                        SubmitStatus = SubmitResult.Status.Skipped
+                        SubmitStatus = SubmitResult.Status.Skipped,
+                        Reason = !string.IsNullOrEmpty(_binaryRetrievalResult.Reason) ? _binaryRetrievalResult.Reason : "Binary has been deleted"
                     };
                     break;
 
@@ -244,17 +242,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
                 case BinaryRetrievalResultType.BackOff:
                     await HandleBackOffResultAsync(_connectorConfiguration, BinaryMetaInfo, _binaryRetrievalResult.SemaphoreLockType, _binaryRetrievalResult.NextDelay, cancellationToken);
-                    break;
+                    return;
+
+                case BinaryRetrievalResultType.Abandoned:
+                    await HandleAbandonedResultAsync(_binaryRetrievalResult.Exception?.Message ?? _binaryRetrievalResult.Reason, cancellationToken);
+                    return;
 
                 default:
                     throw new InvalidOperationException($"Unexpected get binary result {_binaryRetrievalResult.ResultType}");
-            }
-
-
-            if (submitResult == null)
-            {
-                await FailAsync("No result returned by Records365", cancellationToken);
-                return;
             }
 
             if (submitResult.SubmitStatus == SubmitResult.Status.OK)
@@ -262,8 +257,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 await InvokeSubmissionCallbackAsync(SubmissionActionType.PostSubmit, cancellationToken)
                     .ConfigureAwait(false);
             }
-            else if (submitResult.SubmitStatus == SubmitResult.Status.Deferred ||
-                submitResult.SubmitStatus == SubmitResult.Status.TooManyRequests)
+            else if (submitResult.SubmitStatus is SubmitResult.Status.Deferred or SubmitResult.Status.TooManyRequests)
             {
                 var finalWaitUntil = submitResult.WaitUntilTime ??
                                      DateTimeProvider.UtcNow + TimeSpan.FromSeconds(DEFAULT_DEFERRAL_SECONDS);
@@ -276,14 +270,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }
 
             await RecordOutcomeAsync(submitResult, cancellationToken);
-        }
-
-        /// <summary>
-        /// Dispose binary stream
-        /// </summary>
-        protected override void InnerDispose()
-        {
-            _binaryRetrievalResult?.Stream?.Dispose();
         }
 
         /// <summary>
@@ -350,6 +336,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             await binarySubmissionCallbackAction
                 .ExecuteAsync(_connectorConfiguration, BinaryMetaInfo, submissionActionType, cancellationToken)
                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispose binary stream
+        /// </summary>
+        protected override void InnerDispose()
+        {
+            _binaryRetrievalResult?.Stream?.Dispose();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -13,6 +12,7 @@ using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Toggles;
 using RecordPoint.Connectors.SDK.Work;
 using System.Text;
+using RecordPoint.Connectors.SDK.Abstractions.Work;
 
 namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 {
@@ -57,11 +57,11 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// <summary>
         /// The scope manager.
         /// </summary>
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         /// <summary>
-        /// The logger.
+        /// The telemetry tracker.
         /// </summary>
-        private readonly ILogger<RabbitMqWorkServer> _logger;
+        private readonly ITelemetryTracker _telemetryTracker;
         /// <summary>
         /// The date time provider.
         /// </summary>
@@ -85,13 +85,30 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// </summary>
         private readonly IWorkQueueClient _workQueueClient;
         /// <summary>
-        /// The service id.
-        /// </summary>
-        private readonly string _serviceId;
-        /// <summary>
         /// Processing token.
         /// </summary>
         private readonly CancellationTokenSource _processingToken = new();
+
+        /// <summary>
+        /// Operation types to be used when creating Service Bus Processors
+        /// </summary>
+        private readonly IList<Type> _operationTypes;
+
+        /// <summary>
+        /// Default list of Operation types to be used if none are provided
+        /// </summary>
+        private static readonly IList<Type> DefaultOperationTypes = new List<Type>
+        {
+            typeof(ContentManagerOperation),
+            typeof(ChannelDiscoveryOperation),
+            typeof(ContentRegistrationOperation),
+            typeof(ContentSynchronisationOperation),
+            typeof(RecordDisposalOperation),
+            typeof(SubmitAggregationOperation),
+            typeof(SubmitBinaryOperation),
+            typeof(SubmitRecordOperation),
+            typeof(SubmitAuditEventOperation)
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RabbitMqWorkServer"/> class.
@@ -102,10 +119,11 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// <param name="workManager">The work manager.</param>
         /// <param name="rabbitMqClientFactory">The rabbit mq client factory.</param>
         /// <param name="rabbitMqOptions">The rabbit mq options.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
+        /// <param name="operationTypes">An optional list of operation types to create RabbitMq consumers for</param>
         public RabbitMqWorkServer(
             IWorkQueueClient workQueueClient,
             IServiceProvider serviceProvider,
@@ -113,23 +131,25 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             IQueueableWorkManager workManager,
             IRabbitMqClientFactory rabbitMqClientFactory,
             IOptions<RabbitMqOptions> rabbitMqOptions,
-            IScopeManager scopeManager,
-            ILogger<RabbitMqWorkServer> logger,
+            IObservabilityScope observabilityScope,
+            ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
-            IToggleProvider toggleProvider)
+            IToggleProvider toggleProvider,
+            IList<Type>? operationTypes = null)
         {
             _serviceProvider = serviceProvider;
             _systemContext = systemContext;
             _workManager = workManager;
             _rabbitMqOptions = rabbitMqOptions;
-            _logger = logger;
+            _telemetryTracker = telemetryTracker;
             _dateTimeProvider = dateTimeProvider;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _toggleProvider = toggleProvider;
 
-            _serviceId = Guid.NewGuid().ToString();
             _rabbitMqConnection = rabbitMqClientFactory.CreateRabbitMqConnection();
             _workQueueClient = workQueueClient;
+
+            _operationTypes = ValidateOperationTypes(operationTypes ?? []);
         }
 
         /// <summary>
@@ -157,24 +177,23 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
-            using var serviceScope = _scopeManager.BeginServiceScope(RabbitMqDimensions.SERVICE_NAME, _serviceId);
+            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
 
             var startupDimensions = new Dimensions()
             {
                 [StandardDimensions.EVENT_TYPE] = EventType.Startup.ToString()
             };
-            _logger.LogEvent("Connecting to RabbitMq", startupDimensions);
+            _telemetryTracker.TrackTrace("Connecting to RabbitMq", SeverityLevel.Information, startupDimensions);
 
             try
             {
                 if (_rabbitMqOptions == null)
                 {
-                    _logger.LogEvent("RabbitMqSettings not found");
+                    _telemetryTracker.TrackTrace("RabbitMqSettings not found", SeverityLevel.Critical);
                     return;
                 }
 
-                _logger.LogEvent("RabbitMqSettings found");
+                _telemetryTracker.TrackTrace("RabbitMqSettings found", SeverityLevel.Information);
 
                 CreateProcessors();
 
@@ -217,16 +236,16 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
                 CloseModels();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError(e, "Exception thrown");
+                _telemetryTracker.TrackException(ex);
             }
 
             var shutdownDimensions = new Dimensions()
             {
                 [StandardDimensions.EVENT_TYPE] = EventType.Shutdown.ToString()
             };
-            _logger.LogEvent("Consumer stopped", shutdownDimensions);
+            _telemetryTracker.TrackTrace("Consumer stopped", SeverityLevel.Information, shutdownDimensions);
         }
 
         /// <summary>
@@ -263,7 +282,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                     case WorkResultType.Failed:
                         //Move the message to the Dead Letter Queue
                         eventingBasicConsumer.Model.BasicNack(args.DeliveryTag, false, false);
-                        throw new WorkResultException(result.Reason);
+                        throw new WorkResultException(result.Reason, result.Exception);
 
                     case WorkResultType.Deferred:
                         eventingBasicConsumer.Model.BasicAck(args.DeliveryTag, false);
@@ -271,9 +290,10 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                         break;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError(e, "Exception thrown when trying to handle incoming message");
+                var workRequestException = new UnknownWorkRequestException(ex);
+                _telemetryTracker.TrackException(workRequestException);
             }
         }
 
@@ -290,15 +310,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
         private void CreateProcessors()
         {
-            TryCreateRabbitMqConsumer<ContentManagerOperation>();
-            TryCreateRabbitMqConsumer<ChannelDiscoveryOperation>();
-            TryCreateRabbitMqConsumer<ContentRegistrationOperation>();
-            TryCreateRabbitMqConsumer<ContentSynchronisationOperation>();
-            TryCreateRabbitMqConsumer<RecordDisposalOperation>();
-            TryCreateRabbitMqConsumer<SubmitAggregationOperation>();
-            TryCreateRabbitMqConsumer<SubmitBinaryOperation>();
-            TryCreateRabbitMqConsumer<SubmitRecordOperation>();
-            TryCreateRabbitMqConsumer<SubmitAuditEventOperation>();
+            var queueableWorkOperations = _serviceProvider.GetServices<IQueueableWork>();
+            foreach (var type in _operationTypes)
+            {
+                var queueableWorkOperation = queueableWorkOperations.FirstOrDefault(queueableWorkOperation => queueableWorkOperation.GetType() == type);
+                if (queueableWorkOperation == null)
+                    continue;
+
+                TryCreateRabbitMqConsumer(queueableWorkOperation.WorkType);
+            }
         }
 
         private void StartConsumers()
@@ -330,12 +350,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             }
         }
 
-        private void TryCreateRabbitMqConsumer<TQueueableWork>()
-            where TQueueableWork : class, IQueueableWork
+        private void TryCreateRabbitMqConsumer(string workType)
         {
-            var service = _serviceProvider.GetService<TQueueableWork>();
-            if (service == null) return;
-
             var model = _rabbitMqConnection.CreateModel();
 
             // Set prefetch count if required
@@ -348,13 +364,13 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             var processor = new RabbitMqProcessModel
             {
                 RabbitMqModel = model,
-                RabbitMqEventingBasicConsumer = DeclareAndBindQueueToExchange(model, service.WorkType)
+                RabbitMqEventingBasicConsumer = DeclareAndBindQueueToExchange(model, workType)
             };
             // add handler to process messages
             processor.RabbitMqEventingBasicConsumer.Received += HandleIncomingMessagesAsync;
 
             //Add Processor to internal Cache
-            var queueName = QueueNameHelper.GetQueueName(service.WorkType, _rabbitMqOptions.Value.QueuePrefix);
+            var queueName = QueueNameHelper.GetQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
             _rabbitMqProcessors.Add(queueName, processor);
         }
 
@@ -385,6 +401,29 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             model.QueueBind(dlQueueName, DeadletterExchange, dlQueueName);
 
             return consumer;
+        }
+
+        /// <summary>
+        /// Ensures a default list of types is used if the provided list is empty.
+        /// Also validates that the List of types provided all implement IQueueableWork,
+        /// throws if it does not.
+        /// </summary>
+        /// <param name="types">List of types to validate</param>
+        /// <returns>List of types of IQueueableWork</returns>
+        /// <exception cref="ArgumentException"></exception>
+        private static IList<Type> ValidateOperationTypes(IList<Type> types)
+        {
+            if (!types.Any())
+            {
+                return DefaultOperationTypes;
+            }
+
+            if (types.Any(type => !typeof(IQueueableWork).IsAssignableFrom(type)))
+            {
+                throw new ArgumentException($"At least one Operation type passed to {nameof(RabbitMqWorkServer)} does not implement {nameof(IQueueableWork)}");
+            }
+
+            return types;
         }
     }
 }

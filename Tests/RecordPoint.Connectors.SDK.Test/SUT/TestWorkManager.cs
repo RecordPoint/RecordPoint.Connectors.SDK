@@ -19,11 +19,5 @@ namespace RecordPoint.Connectors.SDK.Tests.SUT
             };
             return Task.FromResult(outcome);
         }
-
-        public bool TryGetQueueableWorkFactory(string workType, out IQueueableWorkFactory queueableWorkFactory)
-        {
-            queueableWorkFactory = null;
-            return false;
-        }
     }
 }

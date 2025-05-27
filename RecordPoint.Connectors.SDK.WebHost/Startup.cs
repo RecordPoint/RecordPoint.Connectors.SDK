@@ -45,19 +45,10 @@ namespace RecordPoint.Connectors.SDK.WebHost
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            //Setup Multi Authentication
-            var multiAuthenticationConfigurations = _configuration.GetSection(WebHostAuthenticationOptions.MULTI_CONFIG_SECTION_NAME)
-                .GetChildren().ToList();
-            foreach (var section in multiAuthenticationConfigurations)
-            {
-                services.AddAuthentication()
-                    .AddMicrosoftIdentityWebApp(section, section.Key, null);
-            }
-
-            //Setup Singular Authentication
+            //Setup Authentication
             var authenticationConfiguration = _configuration.GetSection(WebHostAuthenticationOptions.SECTION_NAME)
                 .Get<WebHostAuthenticationOptions>();
-            if (multiAuthenticationConfigurations.Count == 0 && authenticationConfiguration != null)
+            if (authenticationConfiguration != null)
             {
                 services.AddMicrosoftIdentityWebApiAuthentication(_configuration, WebHostAuthenticationOptions.SECTION_NAME);
             }
@@ -66,7 +57,7 @@ namespace RecordPoint.Connectors.SDK.WebHost
             services
                 .AddControllers(o =>
                 {
-                    if (multiAuthenticationConfigurations.Count != 0 || authenticationConfiguration != null)
+                    if (authenticationConfiguration != null)
                     {
                         var policy = new AuthorizationPolicyBuilder()
                             .RequireAuthenticatedUser()

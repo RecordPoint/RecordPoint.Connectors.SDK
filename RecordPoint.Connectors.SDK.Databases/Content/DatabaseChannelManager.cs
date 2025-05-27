@@ -16,23 +16,23 @@ namespace RecordPoint.Connectors.SDK.Content
         public const string CONNECTOR_ID_DIMENSION = "ConnectorId";
 
         private readonly IConnectorDatabaseClient _databaseClient;
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="databaseClient"></param>
-        /// <param name="scopeManager"></param>
-        public DatabaseChannelManager(IConnectorDatabaseClient databaseClient, IScopeManager scopeManager)
+        /// <param name="observabilityScope"></param>
+        public DatabaseChannelManager(IConnectorDatabaseClient databaseClient, IObservabilityScope observabilityScope)
         {
             _databaseClient = databaseClient;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
         }
 
         /// <inheritdoc/>
         public async Task<bool> ChannelExistsAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return (await dbContext.Channels
@@ -46,7 +46,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<ChannelModel> GetChannelAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Channels
@@ -57,7 +57,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<List<ChannelModel>> GetChannelsAsync(CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Channels.ToListAsync(cancellationToken);
@@ -67,7 +67,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<List<ChannelModel>> GetChannelsAsync(Expression<Func<ChannelModel, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Channels
@@ -79,7 +79,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task<List<ChannelModel>> GetChannelsAsync(string connectorId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Channels
@@ -91,7 +91,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task UpsertChannelAsync(ChannelModel channel, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
@@ -117,7 +117,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task UpsertChannelsAsync(List<ChannelModel> channels, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
@@ -182,7 +182,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task RemoveChannelAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
              {
                  using var dbContext = _databaseClient.CreateDbContext();
                  var channel = await dbContext.Channels
@@ -198,7 +198,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task RemoveChannelsAsync(string connectorId, string[] externalIds, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 var channels = await dbContext.Channels
@@ -213,7 +213,7 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <inheritdoc/>
         public async Task RemoveChannelsAsync(IEnumerable<ChannelModel> channelModels, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(null), async () =>
+            await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 

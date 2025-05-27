@@ -52,6 +52,12 @@
         public bool? SkipEnrichment { get; set; }
 
         /// <summary>
+        /// (Optional) The source last modified date of the corresponding item submission.
+        /// This must match the item submission as it is used to match the binary submission to the item.
+        /// </summary>
+        public DateTime? ItemSourceLastModifiedDate { get; set; }
+
+        /// <summary>
         /// Retrieve the title from the strongly typed FileName field instead of the Core Metadata for binaries
         /// </summary>
         /// <returns></returns>

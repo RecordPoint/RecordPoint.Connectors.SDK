@@ -14,17 +14,23 @@
         /// </summary>
         Failed,
         /// <summary>
-        /// The content cannot be obtained because it has neen deleted
+        /// The content cannot be obtained because it has been deleted
         /// </summary>
+        [Obsolete("Use Abandoned instead")]
         Deleted,
         /// <summary>
         /// The BinaryStream has a length of zero and can't be written to blob
         /// </summary>
+        [Obsolete("Use Abandoned instead")]
         ZeroBinary,
         /// <summary>
         /// Content Source has throttled requests
         /// </summary>
-        BackOff
+        BackOff,
+        /// <summary>
+        /// We decided the content item should not be submitted, should be abandoned
+        /// </summary>
+        Abandoned,
     }
 
 }

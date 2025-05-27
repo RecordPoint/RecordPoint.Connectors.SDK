@@ -59,6 +59,15 @@ namespace RecordPoint.Connectors.SDK.Context
         }
 
         /// <summary>
+        /// Get short name.
+        /// </summary>
+        /// <returns>A string</returns>
+        public string GetServiceName()
+        {
+            return _systemOptions.Value.ServiceName;
+        }
+
+        /// <summary>
         /// Get content root path.
         /// </summary>
         /// <returns>A string</returns>

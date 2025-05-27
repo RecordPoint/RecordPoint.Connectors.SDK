@@ -51,7 +51,7 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
             var connectorSecrets = notification.Context.ContextToList<ConnectorSecret>();
             foreach (var secret in connectorSecrets)
             {
-                secret.Value = DecryptSecret(secret);
+                secret.Value = DecryptSecret(secret, notification.ConnectorConfig);
             }
 
             var connectorConfiguration = await _connectorManager.GetConnectorAsync(notification.ConnectorId, cancellationToken);
@@ -66,12 +66,13 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
         /// Expects secret to be a Base64String for easy translation to byte array.
         /// </summary>
         /// <param name="secret">Base64string to decrypt.</param>
+        /// <param name="connectorConfig">Connector Config the notification belongs to.</param>
         /// <returns>decrypted secret value.</returns>
         /// <exception cref="RequiredValueNullException"></exception>
-        private string DecryptSecret(ConnectorSecret secret)
+        private string DecryptSecret(ConnectorSecret secret, ConnectorConfigModel connectorConfig)
         {
             // Fetch values for decryption
-            var r365Options = _configurationClient.GetR365Configuration();
+            var r365Options = _configurationClient.GetR365Configuration(connectorConfig.ConnectorTypeConfigurationId);
             var clientId = r365Options?.ClientId ?? throw new RequiredValueNullException(nameof(r365Options.ClientSecret));
             var clientSecret = r365Options.ClientSecret ?? throw new RequiredValueNullException(nameof(r365Options.ClientId));
 

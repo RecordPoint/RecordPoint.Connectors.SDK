@@ -27,5 +27,40 @@
         /// <param name="default">Default value</param>
         /// <returns>Toggle value</returns>
         bool GetToggleBool(string toggle, string userKey, bool @default);
+
+        /// <summary>
+        /// Get a string toggle value
+        /// </summary>
+        /// <param name="toggle">toggle to get</param>
+        /// <param name="userKey">Targeted user key</param>
+        /// <param name="default">Default value</param>
+        /// <returns></returns>
+        string? GetToggleString(string toggle, string userKey, string? @default = null);
+
+        /// <summary>
+        /// Get a string toggle value
+        /// </summary>
+        /// <param name="toggle">toggle to get</param>
+        /// <param name="default">Default value</param>
+        /// <returns></returns>
+        string? GetToggleString(string toggle, string? @default = null);
+
+        /// <summary>
+        /// Get a number toggle value
+        /// </summary>
+        /// <param name="toggle">toggle to get</param>
+        /// <param name="userKey">Targeted user key</param>
+        /// <param name="default">Default value</param>
+        /// <returns></returns>
+        int GetToggleNumber(string toggle, string userKey, int @default);
+
+        /// <summary>
+        /// Get a number toggle value
+        /// </summary>
+        /// <param name="toggle">toggle to get</param>
+        /// <param name="default">Default value</param>
+        /// <returns></returns>
+        int GetToggleNumber(string toggle, int @default);
+
     }
 }

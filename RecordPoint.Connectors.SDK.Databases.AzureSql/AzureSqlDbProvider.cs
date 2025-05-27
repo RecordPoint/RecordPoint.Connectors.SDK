@@ -1,8 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Observability;
 
 namespace RecordPoint.Connectors.SDK.Databases.AzureSql
 {
@@ -27,14 +27,14 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="options">The options.</param>
         protected AzureSqlDbProvider(
             ISystemContext systemContext,
-            ILogger<AzureSqlDbProvider<TDbContext>> logger,
+            ITelemetryTracker telemetryTracker,
             IAzureSqlConnectionFactory connectionFactory,
-            IOptions<AzureSqlConnectorDbOptions> options) : base(systemContext, logger)
+            IOptions<AzureSqlConnectorDbOptions> options) : base(systemContext, telemetryTracker)
         {
             if (options.Value.ConnectionString == null)
                 throw new RequiredValueNullException(nameof(options.Value.ConnectionString));
@@ -53,7 +53,7 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql
 
             if (Exists())
             {
-                _logger.LogInformation("Database '{databaseName}' connection successful.", databaseName);
+                _telemetryTracker.TrackTrace(string.Format("Database '{0}' connection successful.", databaseName), SeverityLevel.Information);
 
                 // Create schema is it doesn't exist
                 using var connection = _connectionFactory.GetConnection(GetAdminConnectionString());
@@ -62,7 +62,7 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql
             }
             else
             {
-                _logger.LogCritical("Database '{databaseName}' cannot be connected with or does not exist.", databaseName);
+                _telemetryTracker.TrackTrace(string.Format("Database '{0}' cannot be connected with or does not exist.", databaseName), SeverityLevel.Error);
                 throw new ConnectorDatabaseException($"Database '{databaseName}' cannot be connected with or does not exist.");
             }
         }
@@ -76,7 +76,7 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql
         {
             var paramName = "SchemaName";
             RunScript(SQL_CREATE_SCHEMA_SCRIPT, paramName, schemaName, connection);
-            _logger.LogInformation("Schema '{schemaName}' created if not exists.", schemaName);
+            _telemetryTracker.TrackTrace(string.Format("Schema '{0}' created if not exists.", schemaName), SeverityLevel.Information);
         }
 
         /// <summary>

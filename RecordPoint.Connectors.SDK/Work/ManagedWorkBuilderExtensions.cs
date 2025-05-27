@@ -16,9 +16,9 @@ namespace RecordPoint.Connectors.SDK.Work
         public static IServiceCollection AddWorkStateManagement<TManagedWorkStatusManager>(this IServiceCollection services)
             where TManagedWorkStatusManager : class, IManagedWorkStatusManager
         {
-            services.AddSingleton<IManagedWorkStatusManager, TManagedWorkStatusManager>();
-            services.AddSingleton<IManagedWorkFactory, ManagedWorkFactory>();
-            services.AddTransient<IManagedWorkManager, ManagedWorkManager>();
+            services
+                .AddScoped<IManagedWorkStatusManager, TManagedWorkStatusManager>()
+                .AddScoped<IManagedWorkFactory, ManagedWorkFactory>();
             return services;
         }
 

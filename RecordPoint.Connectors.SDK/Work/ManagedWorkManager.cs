@@ -238,12 +238,13 @@ namespace RecordPoint.Connectors.SDK.Work
         /// Set that the Work has had a possibly transient fault
         /// </summary>
         /// <param name="reason">Reason why</param>
+        /// <param name="exception">Exception</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <param name="faultedCount">faulted count</param>
         /// <returns>Outcome to pass onto the work queue</returns>
-        public async Task<WorkResult> FaultyAsync(string reason, CancellationToken cancellationToken, int? faultedCount = 0)
+        public async Task<WorkResult> FaultyAsync(string reason, Exception exception, CancellationToken cancellationToken, int? faultedCount = 0)
         {
-            // Continue exponential backoff the job     
+            // Continue exponential backoff the job
             var faulted = faultedCount ?? 0;
             if (WorkStatus.RetryOnFailure)
             {
@@ -260,14 +261,12 @@ namespace RecordPoint.Connectors.SDK.Work
 
                 //The Work has failed the maximum allowed times, so mark the Work Status as Failed
                 await _managedWorkStatusManager.SetWorkFailedAsync(WorkStatus.Id, cancellationToken).ConfigureAwait(false);
-                return WorkResult.DeadLetter(reason, null);
+                return WorkResult.DeadLetter(reason, exception);
             }
-            else
-            {
-                //The Work has failed so mark the Work Status as Failed
-                await _managedWorkStatusManager.SetWorkFailedAsync(WorkStatus.Id, cancellationToken).ConfigureAwait(false);
-                return WorkResult.Failed(reason);
-            }
+
+            //The Work has failed so mark the Work Status as Failed
+            await _managedWorkStatusManager.SetWorkFailedAsync(WorkStatus.Id, cancellationToken).ConfigureAwait(false);
+            return WorkResult.Failed(reason, exception);
         }
 
         /// <summary>
@@ -289,5 +288,34 @@ namespace RecordPoint.Connectors.SDK.Work
             return workStatus;
         }
 
+        #region Disposal
+        private bool disposedValue;
+
+        /// <summary>
+        /// Free managed resources
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    WorkStatus = null;
+                }
+                disposedValue = true;
+            }
+        }
+
+        /// <summary>
+        /// Dispose of the Managed Work Manager
+        /// </summary>
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        } 
+        #endregion
     }
 }

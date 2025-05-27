@@ -14,25 +14,22 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
     [ApiController]
     public class NotificationsController : ControllerBase
     {
-        private const string NOTIFICATIONS_SERVICE_NAME = "Notifications";
-        private static readonly Lazy<string> _serviceId = new(() => Guid.NewGuid().ToString());
-
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISystemContext _systemContext;
 
         /// <summary>
         /// Initialises the Controller
         /// </summary>
-        /// <param name="scopeManager"></param>
+        /// <param name="observabilityScope"></param>
         /// <param name="serviceProvider"></param>
         /// <param name="systemContext"></param>
         public NotificationsController(
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             IServiceProvider serviceProvider,
             ISystemContext systemContext)
         {
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _serviceProvider = serviceProvider;
             _systemContext = systemContext;
         }
@@ -57,8 +54,7 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ConnectorNotificationModel notification)
         {
-            using var systemScope = _scopeManager.BeginSystemScope(_systemContext);
-            using var serviceScope = _scopeManager.BeginServiceScope(NOTIFICATIONS_SERVICE_NAME, _serviceId.Value);
+            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
 
             var webhookOperation = _serviceProvider.GetRequiredService<WebhookOperation>();
             await webhookOperation.RunAsync(notification, CancellationToken.None);

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Caching.Semaphore;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Context;
@@ -8,7 +7,6 @@ using RecordPoint.Connectors.SDK.Providers;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace RecordPoint.Connectors.SDK.Work
@@ -25,11 +23,10 @@ namespace RecordPoint.Connectors.SDK.Work
         protected QueueableWorkBase(
             IServiceProvider serviceProvider,
             ISystemContext systemContext,
-            IScopeManager scopeManager,
-            ILogger logger,
+            IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(scopeManager, logger, telemetryTracker, dateTimeProvider)
+            : base(observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _serviceProvider = serviceProvider;
             _semaphoreLockManager = serviceProvider.GetService<ISemaphoreLockManager>();
@@ -147,7 +144,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Outcome for the work item
         /// </summary>
-        public WorkResult WorkResult => new()
+        public WorkResult GetWorkResult() => new()
         {
             ResultType = ResultType,
             Reason = ResultReason,
@@ -271,11 +268,7 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <summary>
         /// Dispose
         /// </summary>
-        protected virtual void InnerDispose()
-        {
-            // free unmanaged resources (unmanaged objects) and override finalizer
-            // set large fields to null
-        }
+        protected abstract void InnerDispose();
 
         /// <summary>
         /// Dispose
@@ -284,6 +277,7 @@ namespace RecordPoint.Connectors.SDK.Work
         {
             if (!_hasDisposed)
             {
+                WorkRequest = null;
                 InnerDispose();
                 _hasDisposed = true;
             }

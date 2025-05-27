@@ -97,7 +97,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <summary>
         /// The scope manager.
         /// </summary>
-        private readonly IScopeManager _scopeManager;
+        private readonly IObservabilityScope _observabilityScope;
         /// <summary>
         /// The system context.
         /// </summary>
@@ -111,19 +111,19 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// Initializes a new instance of the <see cref="DatabaseConnectorConfigurationManager"/> class.
         /// </summary>
         /// <param name="databaseClient">The database client.</param>
-        /// <param name="scopeManager">The scope manager.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="connectorOptions">The connector options.</param>
         /// <param name="systemContext">The system context.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
         public DatabaseConnectorConfigurationManager(
             IConnectorDatabaseClient databaseClient,
-            IScopeManager scopeManager,
+            IObservabilityScope observabilityScope,
             IOptions<ConnectorOptions> connectorOptions,
             ISystemContext systemContext,
             IToggleProvider toggleProvider)
         {
             _databaseClient = databaseClient;
-            _scopeManager = scopeManager;
+            _observabilityScope = observabilityScope;
             _connectorOptions = connectorOptions;
             _systemContext = systemContext;
             _toggleProvider = toggleProvider;
@@ -137,7 +137,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <returns><![CDATA[Task<bool>]]></returns>
         public async Task<bool> ConnectorConfigurationExistsAsync(string connectorId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return (await dbContext.Connectors
@@ -155,7 +155,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <returns><![CDATA[Task<ConnectorConfigurationModel>]]></returns>
         public async Task<ConnectorConfigurationModel> GetConnectorConfigurationAsync(string connectorId, CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Connectors.FirstOrDefaultAsync(a => a.ConnectorId == connectorId, cancellationToken);
@@ -170,7 +170,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <returns>A Task</returns>
         public async Task SetConnectorConfigurationAsync(ConnectorConfigurationModel connectorData, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(connectorData.ConnectorId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(connectorData.ConnectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
@@ -218,7 +218,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <returns>A Task</returns>
         public async Task DeleteConnectorConfigurationAsync(string connectorId, CancellationToken cancellationToken)
         {
-            await _scopeManager.Invoke(GetDimensions(connectorId), async () =>
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
 
@@ -238,7 +238,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <returns><![CDATA[Task<List<ConnectorConfigurationModel>>]]></returns>
         public async Task<List<ConnectorConfigurationModel>> GetAllConnectorConfigurationsAsync(CancellationToken cancellationToken)
         {
-            return await _scopeManager.Invoke(GetDimensions(null), async () =>
+            return await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Connectors.ToListAsync(cancellationToken);

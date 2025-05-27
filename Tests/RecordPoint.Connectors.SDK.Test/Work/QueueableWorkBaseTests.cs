@@ -30,11 +30,10 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             public NullQueueWorkItem(
                 IServiceProvider serviceProvider,
                 ISystemContext systemContext,
-                IScopeManager scopeManager,
-                ILogger logger,
+                IObservabilityScope observabilityScope,
                 ITelemetryTracker telemetryTracker,
                 IDateTimeProvider dateTimeProvider)
-                : base(serviceProvider, systemContext, scopeManager, logger, telemetryTracker, dateTimeProvider)
+                : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
             { }
 
             public override string ServiceName => nameof(QueueableWorkBaseTests);
@@ -44,6 +43,10 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             protected override object DeserializeParameter()
             {
                 return null;
+            }
+
+            protected override void InnerDispose()
+            {
             }
 
             protected override Task InnerRunAsync(CancellationToken cancellationToken)
@@ -76,7 +79,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 await StartSutAsync();
                 var workRequest = CreateTestWorkRequest(nameof(NullQueueWorkItem));
 
-                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
+                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IObservabilityScope>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
                 await workItem.RunWorkRequestAsync(workRequest, CancellationToken.None);
 
                 Assert.Equal(TestWorkId, workItem.Id);
@@ -95,7 +98,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 await StartSutAsync();
                 var workRequest = CreateTestWorkRequest(nameof(NullQueueWorkItem));
 
-                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
+                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IObservabilityScope>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
                 await workItem.RunWorkRequestAsync(workRequest, CancellationToken.None);
 
                 Assert.Equal(TestSubmitDateTime, workItem.SubmitDateTime);
@@ -116,7 +119,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 var dateTimeProvider = Services.GetRequiredService<IDateTimeProvider>();
                 var startTime = dateTimeProvider.UtcNow;
 
-                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
+                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IObservabilityScope>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
                 await workItem.RunWorkRequestAsync(workRequest, CancellationToken.None);
 
                 Assert.True(workItem.StartDateTime - startTime < TimeSpan.FromSeconds(1));
@@ -138,7 +141,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 var dateTimeProvider = Services.GetRequiredService<IDateTimeProvider>();
                 var startTime = dateTimeProvider.UtcNow;
 
-                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
+                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IObservabilityScope>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
                 await workItem.RunWorkRequestAsync(workRequest, CancellationToken.None);
 
                 Assert.Equal(workType, workItem.WorkType);
@@ -161,7 +164,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
                 var dateTimeProvider = Services.GetRequiredService<IDateTimeProvider>();
                 var startTime = dateTimeProvider.UtcNow;
 
-                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
+                var workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IObservabilityScope>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>());
                 await Assert.ThrowsAsync<InvalidOperationException>(() => workItem.RunWorkRequestAsync(workRequest, CancellationToken.None));
             }
             finally
@@ -183,7 +186,7 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
                 NullQueueWorkItem workItem;
 
-                using (workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IScopeManager>(), Services.GetRequiredService<ILogger<NullQueueWorkItem>>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>())) {
+                using (workItem = new NullQueueWorkItem(Services, Services.GetRequiredService<ISystemContext>(), Services.GetRequiredService<IObservabilityScope>(), Services.GetRequiredService<ITelemetryTracker>(), Services.GetRequiredService<IDateTimeProvider>())) {
                     Assert.False(workItem.HasDisposed);
                 }
 

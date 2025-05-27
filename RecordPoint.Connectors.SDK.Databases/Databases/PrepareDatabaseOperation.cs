@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
@@ -31,12 +30,11 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="databaseProvider">The database provider.</param>
-        /// <param name="scopeManager">The scope manager.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
-        public PrepareDatabaseOperation(TDbProvider databaseProvider, IScopeManager scopeManager, ILogger logger, ITelemetryTracker telemetryTracker, IDateTimeProvider dateTimeProvider)
-            : base(scopeManager, logger, telemetryTracker, dateTimeProvider)
+        public PrepareDatabaseOperation(TDbProvider databaseProvider, IObservabilityScope observabilityScope, ITelemetryTracker telemetryTracker, IDateTimeProvider dateTimeProvider)
+            : base(observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _databaseProvider = databaseProvider;
         }

@@ -39,28 +39,5 @@
         /// If a duration is not provided, no indication of the duration should occur in the final logging</param>
         void LogWarning(Type callerType, string methodName, string message, long? elapsedTimeTicks = null);
 
-        /// <summary>
-        /// Logs an error message.
-        /// Used to indicate a significant fault of some sort, most likely an unhandled / unexpected exception 
-        /// </summary>
-        /// <param name="callerType">The Type of the calling class (Use GetType() or typeof() depending on context)</param>
-        /// <param name="methodName">The name of the method being timed. The name of the method will be appended with _Faulted if an exception occurs</param>
-        /// <param name="ex">The exception raised</param>
-        /// <param name="message">Any message to be output. Generally, this should just be enough information to provide some context for the event,
-        /// for Error / Critical events the fact than an exception of this type occurred at all may be more important than the context. If no message is 
-        /// provided, only the exception should be logged</param>
-        void LogError(Type callerType, string methodName, Exception ex, string message = null);
-
-        /// <summary>
-        /// Logs a critical message.
-        /// Used to indicate a fault which has the potential to affect the overall service
-        /// </summary>
-        /// <param name="callerType">The Type of the calling class (Use GetType() or typeof() depending on context)</param>
-        /// <param name="methodName">The name of the method being timed. The name of the method will be appended with _Faulted if an exception occurs</param>
-        /// <param name="ex">The exception raised</param>
-        /// <param name="message">Any message to be output. Generally, this should just be enough information to provide some context for the event,
-        /// for Error / Critical events the fact than an exception of this type occurred at all may be more important than the context. If no message is 
-        /// provided, only the exception should be logged</param>
-        void LogCritical(Type callerType, string methodName, Exception ex, string message = null);
     }
 }

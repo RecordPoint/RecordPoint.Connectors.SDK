@@ -19,7 +19,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .UseDatabaseConnectorConfigurationManager()
                 .UseMockConnectorDatabase()
                 .UseDatabaseChannelManager()
-                .ConfigureServices(svcs => svcs.AddTransient<ChannelDiscoveryOperation>());
+                .ConfigureServices(svcs => svcs.AddScoped<ChannelDiscoveryOperation>());
         }
 
         #region Channel Discovery Work Request

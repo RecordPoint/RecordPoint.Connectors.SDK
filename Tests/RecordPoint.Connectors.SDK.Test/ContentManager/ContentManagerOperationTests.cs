@@ -20,10 +20,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentManagerOperation>();
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
             await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
-            var managedWorkStatuses = await SUT.GetWorkStatusManager()
+            var managedWorkStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType != ContentManagerOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, workItem.ResultType);
@@ -43,10 +44,12 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var workItem = Services.GetRequiredService<ContentManagerOperation>();
-            await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
+            var workRequest = SUT.CreateContentManagerRequest(workMessage);
+            await workItem.RunWorkRequestAsync(workRequest, cancellationToken);
 
-            var managedWorkStatuses = await SUT.GetWorkStatusManager()
+            var managedWorkStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType != ContentManagerOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, workItem.ResultType);
@@ -75,21 +78,23 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            using var servicesScope1 = Services.CreateScope();
+            var priorWorkItem = servicesScope1.ServiceProvider.GetRequiredService<ContentManagerOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
-            var priorWorks = await SUT.GetWorkStatusManager()
+            var priorWorks = await ContentManagerSutBase.GetWorkStatusManager(servicesScope1.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType == ContentManagerOperation.WORK_TYPE, cancellationToken);
             var priorWork = priorWorks.Single();
 
             await SUT.SetWorkContinue(workMessage);
 
-            var afterWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            using var servicesScope2 = Services.CreateScope();
+            var afterWorkItem = servicesScope2.ServiceProvider.GetRequiredService<ContentManagerOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             Assert.Equal(WorkResultType.Complete, afterWorkItem.ResultType);
 
-            var afterWorks = await SUT.GetWorkStatusManager()
+            var afterWorks = await ContentManagerSutBase.GetWorkStatusManager(servicesScope2.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType == ContentManagerOperation.WORK_TYPE, cancellationToken);
 
             Assert.Single(afterWorks);
@@ -119,7 +124,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
+            using var servicesScope = Services.CreateScope();
+            var priorWorkItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
@@ -157,8 +163,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
-            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
+            await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
 
@@ -195,8 +202,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
-            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
+            await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             channels = await SUT.GetChannelManager().GetChannelsAsync(cancellationToken);
 
@@ -220,8 +228,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
-            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
+            await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
 
@@ -258,8 +267,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
-            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
+            await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
 
@@ -296,8 +306,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workMessage = SUT.CreateContentManagerManagedWorkStatusModel();
             await SUT.SetWorkRunning(workMessage);
 
-            var priorWorkItem = Services.GetRequiredService<ContentManagerOperation>();
-            await priorWorkItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ContentManagerOperation>();
+            await workItem.RunWorkRequestAsync(SUT.CreateContentManagerRequest(workMessage), cancellationToken);
 
             aggregations = await SUT.GetAggregationManager().GetAggregationsAsync(cancellationToken);
 

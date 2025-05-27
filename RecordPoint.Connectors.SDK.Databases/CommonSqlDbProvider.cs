@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Observability;
 
 namespace RecordPoint.Connectors.SDK.Databases
 {
@@ -16,9 +16,9 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// </summary>
         protected readonly ISystemContext _systemContext;
         /// <summary>
-        /// The logger.
+        /// The telemetry tracker.
         /// </summary>
-        protected readonly ILogger _logger;
+        protected readonly ITelemetryTracker _telemetryTracker;
         /// <summary>
         /// The ready source.
         /// </summary>
@@ -28,13 +28,13 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="systemContext">The system context.</param>
-        /// <param name="logger">The logger.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
         protected CommonSqlDbProvider(
             ISystemContext systemContext,
-            ILogger logger)
+            ITelemetryTracker telemetryTracker)
         {
             _systemContext = systemContext;
-            _logger = logger;
+            _telemetryTracker = telemetryTracker;
         }
 
         /// <summary>

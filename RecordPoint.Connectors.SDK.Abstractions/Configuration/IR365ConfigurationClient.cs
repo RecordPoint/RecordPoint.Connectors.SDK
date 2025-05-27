@@ -15,6 +15,6 @@
         /// Get the Records 365 configuration
         /// </summary>
         /// <returns>Default records 365 configuration, null if it doesn't exist</returns>
-        R365ConfigurationModel GetR365Configuration();
+        R365ConfigurationModel GetR365Configuration(string key = "");
     }
 }

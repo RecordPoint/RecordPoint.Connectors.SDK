@@ -5,7 +5,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_doc.md</DocumentationMarkdown>
     <PackageId>RecordPoint.Connectors.SDK</PackageId>
-    <PackageIconUrl>https://www.gravatar.com/avatar/df77d14f06c2069ab099dbb8d96c20f3.png?size=64</PackageIconUrl>
+    <PackageIcon>Rex.png</PackageIcon>
     <PackageTags>RecordPoint</PackageTags>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://www.recordpoint.com/records365/</PackageProjectUrl>
@@ -20,6 +20,10 @@
     <Compile Remove="Work\QueueableManagedWorkBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lightrun" Version="1.55.2" PrivateAssets="analyzers;build" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="8.0.11" />
