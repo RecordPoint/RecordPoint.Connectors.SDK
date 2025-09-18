@@ -48,7 +48,7 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
                 Log = _mockLog.Object
             };
 
-            _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object)
+            _pipelineElement = new DirectSubmitBinaryPipelineElement(_mockSubmission.Object, false)
             {
                 ApiClientFactory = _mockClientFactory.Object,
                 Log = _mockLog.Object,

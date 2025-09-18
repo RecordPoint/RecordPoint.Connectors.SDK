@@ -1,7 +1,9 @@
 ﻿using Azure.Storage.Blobs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Client;
+using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Diagnostics;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
@@ -21,9 +23,14 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <param name="hostBuilder">Host builder to target</param>
         public static IHostBuilder UseR365Integration(this IHostBuilder hostBuilder)
         {
-            return hostBuilder.ConfigureServices(services =>
+            return hostBuilder.ConfigureServices((hostContext, services) =>
             {
-                services.AddR365Integration();
+                var options = hostContext.Configuration
+                    .GetSection(RecordSubmissionOptions.SECTION_NAME)
+                    .Get<RecordSubmissionOptions>()
+                    ?? new RecordSubmissionOptions();
+                
+                services.AddR365Integration(options.SubmitRecordAndBinariesSynchronously);
             });
         }
 
@@ -31,14 +38,15 @@ namespace RecordPoint.Connectors.SDK.R365
         /// Add R365 Access component
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="submitRecordAndBinariesSynchronously"></param>
         /// <returns></returns>
-        public static IServiceCollection AddR365Integration(this IServiceCollection services)
+        public static IServiceCollection AddR365Integration(this IServiceCollection services, bool submitRecordAndBinariesSynchronously)
         {
             services
                 .AddR365ClientComponents()
                 .AddSingleton<ILog, SDKLogAdapter>()
                 .AddSingleton<IR365Client, R365Client>()
-                .AddSingleton(provider => CreatePipelines(provider));
+                .AddSingleton(provider => CreatePipelines(provider, submitRecordAndBinariesSynchronously));
             return services;
         }
 
@@ -81,11 +89,11 @@ namespace RecordPoint.Connectors.SDK.R365
             return services;
         }
 
-        private static IR365Pipelines CreatePipelines(this IServiceProvider provider)
+        private static IR365Pipelines CreatePipelines(this IServiceProvider provider, bool submitRecordAndBinariesSynchronously)
         {
             return new R365Pipelines(
                 CreateRecordPipeline(provider),
-                CreateBinaryPipeline(provider),
+                CreateBinaryPipeline(provider, submitRecordAndBinariesSynchronously),
                 CreateAggregationPipeline(provider),
                 CreateAuditEventPipeline(provider));
         }
@@ -116,9 +124,9 @@ namespace RecordPoint.Connectors.SDK.R365
             return filterSubmission;
         }
 
-        private static ISubmission CreateBinaryPipeline(this IServiceProvider provider)
+        private static DirectSubmitBinaryPipelineElement CreateBinaryPipeline(this IServiceProvider provider, bool submitRecordAndBinariesSynchronously)
         {
-            var pipeline = new DirectSubmitBinaryPipelineElement(null)
+            return new DirectSubmitBinaryPipelineElement(null, submitRecordAndBinariesSynchronously)
             {
                 BlobFactory = provider.GetRequiredService<Func<string, BlobClient>>(),
                 ApiClientFactory = provider.GetRequiredService<IApiClientFactory>(),
@@ -126,17 +134,15 @@ namespace RecordPoint.Connectors.SDK.R365
                 RetryProvider = provider.GetRequiredService<ISdkAzureBlobRetryProvider>(),
                 Log = provider.GetService<ILog>()
             };
-            return pipeline;
         }
 
-        private static ISubmission CreateAggregationPipeline(this IServiceProvider provider)
+        private static HttpSubmitAggregationPipelineElement CreateAggregationPipeline(this IServiceProvider provider)
         {
-            var element = new HttpSubmitAggregationPipelineElement(null)
+            return new HttpSubmitAggregationPipelineElement(null)
             {
                 ApiClientFactory = provider.GetService<IApiClientFactory>(),
                 Log = provider.GetRequiredService<ILog>()
             };
-            return element;
         }
 
         /// <summary>
@@ -144,14 +150,13 @@ namespace RecordPoint.Connectors.SDK.R365
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ISubmission CreateAuditEventPipeline(this IServiceProvider provider)
+        public static HttpSubmitAuditEventPipelineElement CreateAuditEventPipeline(this IServiceProvider provider)
         {
-            var element = new HttpSubmitAuditEventPipelineElement(null)
+            return new HttpSubmitAuditEventPipelineElement(null)
             {
                 ApiClientFactory = provider.GetService<IApiClientFactory>(),
                 Log = provider.GetRequiredService<ILog>()
             };
-            return element;
         }
 
     }

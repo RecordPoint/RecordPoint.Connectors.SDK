@@ -1,7 +1,7 @@
 ﻿namespace RecordPoint.Connectors.SDK.Content
 {
     /// <summary>
-    /// Aggreation
+    /// Aggregation
     /// </summary>
     public sealed class AggregationModel : IEquatable<AggregationModel>
     {
@@ -40,11 +40,7 @@
         /// </summary>
         public string Location { get; set; } = string.Empty;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
+        /// <inheritdoc></inheritdoc>
         public bool Equals(AggregationModel? other)
         {
             if (other == null)
@@ -57,11 +53,7 @@
                  && MetaData == other.MetaData;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <inheritdoc></inheritdoc>
         public override bool Equals(object? obj)
         {
             if (obj == null)
@@ -73,10 +65,7 @@
                 return Equals(other);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc></inheritdoc>
         public override int GetHashCode()
         {
             if (ExternalId == null) return 0;

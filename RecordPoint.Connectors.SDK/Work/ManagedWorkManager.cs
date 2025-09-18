@@ -57,8 +57,9 @@ namespace RecordPoint.Connectors.SDK.Work
         /// Start the work running
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
+        /// <param name="waitTill"></param>
         /// <returns>Start Task</returns>
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken, DateTimeOffset? waitTill = null)
         {
             // Does this work already exist?
             var existingWork = await _managedWorkStatusManager.GetWorkStatusAsync(WorkStatus.Id, cancellationToken);
@@ -86,7 +87,8 @@ namespace RecordPoint.Connectors.SDK.Work
             {
                 WorkId = workStatus.WorkId,
                 WorkType = WorkStatus.WorkType,
-                Body = workStatus.Serialize()
+                Body = workStatus.Serialize(),
+                WaitTill = waitTill
             };
 
             // Submit the work before updating status. 

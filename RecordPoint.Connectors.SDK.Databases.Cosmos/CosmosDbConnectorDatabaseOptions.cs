@@ -40,6 +40,11 @@
         /// Force to use Gateway connection mode
         /// </summary>
         public bool UseGateWayConnectionMode { get; set; } = false;
+
+        /// <summary>
+        /// TLS version to use for Cosmos DB connections (e.g., "Tls12", "Tls13", "Tls12,Tls13")
+        /// </summary>
+        public string? TlsVersion { get; set; }
     
     }
 }

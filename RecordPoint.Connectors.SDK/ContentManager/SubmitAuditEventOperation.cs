@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -142,7 +143,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 return;
             }
 
-            await InvokeSubmissionCallbackAsync(SubmissionActionType.PreSubmit, cancellationToken)
+            using var scope = _serviceProvider.CreateScope();
+
+            await InvokeSubmissionCallbackAsync(scope, SubmissionActionType.PreSubmit, cancellationToken)
                 .ConfigureAwait(false);
 
             var submitResult = await SubmitAsync(cancellationToken).ConfigureAwait(false);
@@ -155,7 +158,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             switch (submitResult.SubmitStatus)
             {
                 case SubmitResult.Status.OK:
-                    await InvokeSubmissionCallbackAsync(SubmissionActionType.PostSubmit, cancellationToken);
+                    await InvokeSubmissionCallbackAsync(scope, SubmissionActionType.PostSubmit, cancellationToken);
                     await CompleteAsync($"{CONTENT_LABEL} submitted", cancellationToken);
                     break;
 
@@ -244,11 +247,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }, Parameter, waitTill, cancellationToken);
         }
 
-        private IAuditEventSubmissionCallbackAction CreateAuditEventSubmissionCallbackAction() => _contentManagerActionProvider.CreateAuditEventSubmissionCallbackAction();
-
-        private async Task InvokeSubmissionCallbackAsync(SubmissionActionType submissionActionType, CancellationToken cancellationToken)
+        private async Task InvokeSubmissionCallbackAsync(IServiceScope scope, SubmissionActionType submissionActionType, CancellationToken cancellationToken)
         {
-            var auditEventSubmissionCallbackAction = CreateAuditEventSubmissionCallbackAction();
+            var auditEventSubmissionCallbackAction = _contentManagerActionProvider.CreateAuditEventSubmissionCallbackAction(scope);
 
             //If no callback action has been registered, just bail out now
             if (auditEventSubmissionCallbackAction == null)

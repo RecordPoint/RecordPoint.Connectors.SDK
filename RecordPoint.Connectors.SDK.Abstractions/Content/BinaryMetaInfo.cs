@@ -1,4 +1,6 @@
-﻿namespace RecordPoint.Connectors.SDK.Content
+﻿using RecordPoint.Connectors.SDK.Abstractions.Content;
+
+namespace RecordPoint.Connectors.SDK.Content
 {
     /// <summary>
     /// Represents meta information about a binary
@@ -46,6 +48,16 @@
         /// Flag to skip the enrichment pipeline
         /// </summary>
         public bool? SkipEnrichment { get; set; }
+
+        /// <summary>
+        /// Indicates if the binary has been succesfully submitted to the platform or should be skipped
+        /// </summary>
+        public BinarySubmissionStatus BinarySubmissionStatus { get; set; } = BinarySubmissionStatus.NotSubmitted;
+
+        /// <summary>
+        /// The number of times the binary submission has been retried
+        /// </summary>
+        public int SubmissionAttempts { get; set; } = 0;
 
         /// <summary>
         /// 

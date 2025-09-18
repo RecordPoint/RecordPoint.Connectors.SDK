@@ -23,44 +23,75 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         }
 
         /// <inheritdoc/>
-        public IContentManagerCallbackAction CreateContentManagerCallbackAction() => _serviceProvider.GetService<IContentManagerCallbackAction>();
+        public IContentManagerCallbackAction CreateContentManagerCallbackAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IContentManagerCallbackAction>()
+                : _serviceProvider.GetService<IContentManagerCallbackAction>();
 
         /// <inheritdoc/>
-        public IChannelDiscoveryAction CreateChannelDiscoveryAction() => _serviceProvider.GetRequiredService<IChannelDiscoveryAction>();
+        public IChannelDiscoveryAction CreateChannelDiscoveryAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IChannelDiscoveryAction>()
+                : _serviceProvider.GetService<IChannelDiscoveryAction>();
 
         /// <inheritdoc/>
-        public IContentRegistrationAction CreateContentRegistrationAction() => _serviceProvider.GetRequiredService<IContentRegistrationAction>();
+        public IContentRegistrationAction CreateContentRegistrationAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IContentRegistrationAction>()
+                : _serviceProvider.GetService<IContentRegistrationAction>();
 
         /// <inheritdoc/>
-        public IContentSynchronisationAction CreateContentSynchronisationAction() => _serviceProvider.GetRequiredService<IContentSynchronisationAction>();
+        public IContentSynchronisationAction CreateContentSynchronisationAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IContentSynchronisationAction>()
+                : _serviceProvider.GetService<IContentSynchronisationAction>();
 
         /// <inheritdoc/>
-        public IBinaryRetrievalAction CreateBinaryRetrievalAction() => _serviceProvider.GetRequiredService<IBinaryRetrievalAction>();
+        public IBinaryRetrievalAction CreateBinaryRetrievalAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IBinaryRetrievalAction>()
+                : _serviceProvider.GetService<IBinaryRetrievalAction>();
 
         /// <inheritdoc/>
-        public IAggregationSubmissionCallbackAction CreateAggregationSubmissionCallbackAction() => _serviceProvider.GetService<IAggregationSubmissionCallbackAction>();
+        public IAggregationSubmissionCallbackAction CreateAggregationSubmissionCallbackAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IAggregationSubmissionCallbackAction>()
+                : _serviceProvider.GetService<IAggregationSubmissionCallbackAction>();
 
         /// <inheritdoc/>
-        public IAuditEventSubmissionCallbackAction CreateAuditEventSubmissionCallbackAction() => _serviceProvider.GetService<IAuditEventSubmissionCallbackAction>();
+        public IAuditEventSubmissionCallbackAction CreateAuditEventSubmissionCallbackAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IAuditEventSubmissionCallbackAction>()
+                : _serviceProvider.GetService<IAuditEventSubmissionCallbackAction>();
 
         /// <inheritdoc/>
-        public IRecordSubmissionCallbackAction CreateRecordSubmissionCallbackAction() => _serviceProvider.GetService<IRecordSubmissionCallbackAction>();
+        public IRecordSubmissionCallbackAction CreateRecordSubmissionCallbackAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IRecordSubmissionCallbackAction>()
+                : _serviceProvider.GetService<IRecordSubmissionCallbackAction>();
 
         /// <inheritdoc/>
-        public IBinarySubmissionCallbackAction CreateBinarySubmissionCallbackAction() => _serviceProvider.GetService<IBinarySubmissionCallbackAction>();
+        public IBinarySubmissionCallbackAction CreateBinarySubmissionCallbackAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IBinarySubmissionCallbackAction>()
+                : _serviceProvider.GetService<IBinarySubmissionCallbackAction>();
 
         /// <inheritdoc/>
-        public IRecordDisposalAction CreateRecordDisposalAction() => _serviceProvider.GetRequiredService<IRecordDisposalAction>();
+        public IRecordDisposalAction CreateRecordDisposalAction(IServiceScope scope = null) =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IRecordDisposalAction>()
+                : _serviceProvider.GetService<IRecordDisposalAction>();
 
         /// <inheritdoc/>
-        public IGenerateReportAction CreateGenerationReportAction() => _serviceProvider.GetRequiredService<IGenerateReportAction>();
+        public IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>(IServiceScope scope = null) where TOutput : ActionResultBase =>
+           scope != null
+                ? scope.ServiceProvider.GetService<IGenericAction<TInput, TOutput>>()
+                : _serviceProvider.GetService<IGenericAction<TInput, TOutput>>();
 
         /// <inheritdoc/>
-        public IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>() where TOutput : ActionResultBase =>
-            _serviceProvider.GetRequiredService<IGenericAction<TInput, TOutput>>();
-
-        /// <inheritdoc/>
-        public IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>() where TOutput : ActionResultBase =>
-            _serviceProvider.GetRequiredService<IGenericManagedAction<TInput, TOutput>>();
+        public IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>(IServiceScope scope = null) where TOutput : ActionResultBase =>
+            scope != null
+                ? scope.ServiceProvider.GetService<IGenericManagedAction<TInput, TOutput>>()
+                : _serviceProvider.GetService<IGenericManagedAction<TInput, TOutput>>();
     }
 }

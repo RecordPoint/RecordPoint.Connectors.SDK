@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -138,33 +139,27 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             }, Aggregation, waitTill, cancellationToken);
         }
 
-        private IAggregationSubmissionCallbackAction CreateAggregationSubmissionCallbackAction() => _contentManagerActionProvider.CreateAggregationSubmissionCallbackAction();
-
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        protected override async Task PreSubmitAsync(CancellationToken cancellationToken)
+        protected override async Task PreSubmitAsync(IServiceScope scope, CancellationToken cancellationToken)
         {
-            await InvokeSubmissionCallbackAsync(SubmissionActionType.PreSubmit, cancellationToken)
+            await InvokeSubmissionCallbackAsync(scope, SubmissionActionType.PreSubmit, cancellationToken)
                 .ConfigureAwait(false);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        protected override async Task SubmitSuccessfulAsync(CancellationToken cancellationToken)
+        protected override async Task SubmitSuccessfulAsync(IServiceScope scope, CancellationToken cancellationToken)
         {
-            await InvokeSubmissionCallbackAsync(SubmissionActionType.PostSubmit, cancellationToken)
+            await InvokeSubmissionCallbackAsync(scope, SubmissionActionType.PostSubmit, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task InvokeSubmissionCallbackAsync(SubmissionActionType submissionActionType, CancellationToken cancellationToken)
+        private async Task InvokeSubmissionCallbackAsync(IServiceScope scope, SubmissionActionType submissionActionType, CancellationToken cancellationToken)
         {
-            var aggregationSubmissionCallbackAction = CreateAggregationSubmissionCallbackAction();
+            var aggregationSubmissionCallbackAction = _contentManagerActionProvider.CreateAggregationSubmissionCallbackAction(scope);
 
             //If no callback action has been registered, just bail out now
             if (aggregationSubmissionCallbackAction == null)

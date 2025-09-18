@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Abstractions.ContentManager;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -199,7 +200,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             //Invoke retrieval action to obtain binary stream
             var startTime = DateTimeProvider.UtcNow;
 
-            var binaryRetrievalAction = CreateBinaryRetrievalAction();
+            using var scope = _serviceProvider.CreateScope();
+            var binaryRetrievalAction = _contentManagerActionProvider.CreateBinaryRetrievalAction(scope);
             _binaryRetrievalResult = await binaryRetrievalAction
                 .ExecuteAsync(_connectorConfiguration, BinaryMetaInfo, cancellationToken)
                 .ConfigureAwait(false);
@@ -212,7 +214,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             switch (_binaryRetrievalResult.ResultType)
             {
                 case BinaryRetrievalResultType.Complete:
-                    await InvokeSubmissionCallbackAsync(SubmissionActionType.PreSubmit, cancellationToken)
+                    await InvokeSubmissionCallbackAsync(scope, SubmissionActionType.PreSubmit, cancellationToken)
                         .ConfigureAwait(false);
 
                     var submissionStartTime = DateTimeProvider.UtcNow;
@@ -254,7 +256,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
             if (submitResult.SubmitStatus == SubmitResult.Status.OK)
             {
-                await InvokeSubmissionCallbackAsync(SubmissionActionType.PostSubmit, cancellationToken)
+                await InvokeSubmissionCallbackAsync(scope, SubmissionActionType.PostSubmit, cancellationToken)
                     .ConfigureAwait(false);
             }
             else if (submitResult.SubmitStatus is SubmitResult.Status.Deferred or SubmitResult.Status.TooManyRequests)
@@ -271,17 +273,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
             await RecordOutcomeAsync(submitResult, cancellationToken);
         }
-
-        /// <summary>
-        /// Creates binary retrieval action.
-        /// </summary>
-        /// <returns>An IBinaryRetrievalAction</returns>
-        private IBinaryRetrievalAction CreateBinaryRetrievalAction() => _contentManagerActionProvider.CreateBinaryRetrievalAction();
-        /// <summary>
-        /// Creates binary submission callback action.
-        /// </summary>
-        /// <returns>An IBinarySubmissionCallbackAction</returns>
-        private IBinarySubmissionCallbackAction CreateBinarySubmissionCallbackAction() => _contentManagerActionProvider.CreateBinarySubmissionCallbackAction();
 
         /// <summary>
         /// Record the work outcome
@@ -322,12 +313,13 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Invokes submission callback asynchronously.
         /// </summary>
+        /// <param name="scope">Service scope for dependency injection</param>
         /// <param name="submissionActionType">The submission action type.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A Task</returns>
-        private async Task InvokeSubmissionCallbackAsync(SubmissionActionType submissionActionType, CancellationToken cancellationToken)
+        private async Task InvokeSubmissionCallbackAsync(IServiceScope scope, SubmissionActionType submissionActionType, CancellationToken cancellationToken)
         {
-            var binarySubmissionCallbackAction = CreateBinarySubmissionCallbackAction();
+            var binarySubmissionCallbackAction = _contentManagerActionProvider.CreateBinarySubmissionCallbackAction(scope);
 
             //If no callback action has been registered, just bail out now
             if (binarySubmissionCallbackAction == null)

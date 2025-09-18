@@ -7,26 +7,24 @@ See [Content Manager](./content_manager.md)
 Your connector, with its many services and responsibilities needs any entry point to initiate the execution of the connectors various functions,
 and the main point of orchestration for the Connectors SDK is the content manager.
 
-The content manager is responsible for monitoring the known Connector Confgurations and ensuring channel discovery operations are running for every known connector configuration.
+The content manager is responsible for monitoring the known Connector Configurations and ensuring channel discovery operations are running for every known connector configuration.
 
 ### Channel Discovery
 See [Channel Discovery](./channel_discovery.md)
 
 The Connectors SDK is based upon the concept that all content sources have one or more high-level aggregations referred to as Channels.
 
-A Channel is a grouping, aggregation, or collection of records within the content source.
+A Channel is a grouping, aggregation, or collection of records within the content source. Channels will be used in later operations to poll the content source for changes (so we don't poll the entire content source at once).
+
+> The channel concept allows your connector to manage record ingestion on small subsets of records from within the content source, opposed to dealing with larger volumes of records.<br>This is designed to limit the amount of processing work required for each execution of the running content synchronisation operations.
 
 Each connector configuration will result in the continued execution of a channel discovery operation.
-The channel discovery operation will invoke the channel discovery action that has been implemented as part of your connector.
 
 The channel discovery action should query the content source and discover channels.
 When a channel has been discovered, the channel meta data is returned to the SDK which will spawn new content synchronisation operations for each newly discovered channel.
 The action can also inform the SDK to spawn new content registration operations for various channels.
 
 Channels returned via the Channel Discovery Action are stored within the Channel cache, and subsequent executions can return updated details for already discovered channels that will automatically be updated within the cache.
-
-The channel concept allows your connector to manage record ingestion on small subsets of records from within the content source, opposed to dealing with larger volumes of records.
-This is designed to limit the amount of processing work required for each execution of the running content synchronisation operations.
 
 ### Content Synchronisation
 See [Content Synchronisation](./content_synchronisation.md)
@@ -78,14 +76,11 @@ See [Aggregation Submission](./aggregation_submission.md)
 Aggregations are low-level groupings of records within a content source channel.
 As with record submission, no code is required to be implemented within the connector other than setting up the role within a deployable service via the relevent dependency injection extensions.
 
+### Audit Submission
+See [Audit Submission](./audit_submission.md)
+
 ### Record Disposal
 See [Record Disposal](./record_disposal.md)
 
 Record disposal is an operation that is initiated via notifications from Records365 and is intended to remove records from the Content Source when a disposal is actioned from within Records 365.
 The record disposal operation will invoke the `IRecordDisposalAction` where the logic for deletion of the record within content source should be implemented.
-
-### Content Report
-See [Content Report](./content_report.md)
-
-The Content Report is intended to produce a reprt of Records that would be submitted to Records 365 for a given Connector Configuration.
-The Content Report is not yet implemented within the SDK.

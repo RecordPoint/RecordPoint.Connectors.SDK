@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Caching.Semaphore;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
@@ -7,6 +8,7 @@ using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Test.Common;
 using RecordPoint.Connectors.SDK.Work;
+using System.Text.Json;
 using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
@@ -17,19 +19,19 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public class ChannelDiscoveryAction : IChannelDiscoveryAction
         {
-
             public List<Channel> NewChannels { get; set; } = new();
             public List<Channel> NewChannelRegistrations { get; set; } = new();
 
             public int? NextDelay { get; set; } = null;
             public ChannelDiscoveryResultType ChannelDiscoveryResultType { get; set; } = ChannelDiscoveryResultType.Complete;
             public SemaphoreLockType SemaphoreLockType { get; set; } = SemaphoreLockType.Global;
+            public string OutgoingCursor { get; set; } = string.Empty;
 
-            public bool ThrowExecption { get; set; } = false;
+            public bool ThrowException { get; set; } = false;
 
-            public Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken)
+            public Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken, string cursor = null)
             {
-                if (ThrowExecption) throw new TestException();
+                if (ThrowException) throw new TestException();
 
                 var channelOutcome = new ChannelDiscoveryResult()
                 {
@@ -37,8 +39,10 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                     NewChannelRegistrations = NewChannelRegistrations,
                     ResultType = ChannelDiscoveryResultType,
                     NextDelay = NextDelay,
-                    SemaphoreLockType = SemaphoreLockType
+                    SemaphoreLockType = SemaphoreLockType,
+                    Cursor = OutgoingCursor
                 };
+
                 return Task.FromResult(channelOutcome);
             }
         }
@@ -149,17 +153,18 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         }
 
         [Fact]
-        public async Task IfChannelsProvided_ContentSyncPerChannelAdded()
+        public async Task IfChannelsProvided_ReturnsComplete_ContentSyncPerChannelAdded_NewChannelDiscoveryWorkAdded()
         {
             var cancellationToken = CancellationToken.None;
 
             var scanner = new ChannelDiscoveryAction
             {
-                NewChannels = new List<Channel>()
+                NewChannels = new List<Channel>
                 {
-                    new Channel() { ExternalId = "CHANNEL_1", Title = "Channel 1"},
-                    new Channel() { ExternalId = "CHANNEL_2", Title = "Channel 2"}
-                }
+                    new() { ExternalId = "CHANNEL_1", Title = "Channel 1"},
+                    new() { ExternalId = "CHANNEL_2", Title = "Channel 2"}
+                },
+                ChannelDiscoveryResultType = ChannelDiscoveryResultType.Complete
             };
             SUT.SelectChannelDiscoveryAction(scanner);
 
@@ -173,11 +178,21 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             using var servicesScope = Services.CreateScope();
             var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
+            var channelDiscoveryOperationOptions = servicesScope.ServiceProvider.GetRequiredService<IOptions<ChannelDiscoveryOperationOptions>>();
+
+            var channelDiscoveryManagedWorkStatusesBeforeRun = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE, cancellationToken);
+            Assert.Single(channelDiscoveryManagedWorkStatusesBeforeRun);
+            var channelDiscoveryManagedWorkStatusBeforeRunState = JsonSerializer.Deserialize<ChannelDiscoveryState>(channelDiscoveryManagedWorkStatusesBeforeRun[0].State);
+            Assert.Null(channelDiscoveryManagedWorkStatusBeforeRunState.Cursor);
 
             await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
 
             var managedWorkStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
                 .GetWorkStatusesAsync(a => a.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
+
+            var channelDiscoveryManagedWorkStatusesAfterRun = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE, cancellationToken);
 
             Assert.Equal(2, managedWorkStatuses.Count);
             Assert.Equal(WorkResultType.Complete, workItem.ResultType);
@@ -185,6 +200,120 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             Assert.Contains(managedWorkStatuses, j => j.DeserialiseContentSynchronisationConfiguration().ChannelExternalId == "CHANNEL_1");
             Assert.Contains(managedWorkStatuses, j => j.DeserialiseContentSynchronisationConfiguration().ChannelExternalId == "CHANNEL_2");
+
+            Assert.Single(channelDiscoveryManagedWorkStatusesAfterRun);
+            Assert.NotEqual(channelDiscoveryManagedWorkStatusesBeforeRun[0].WorkId, channelDiscoveryManagedWorkStatusesAfterRun[0].WorkId);
+            var channelDiscoveryManagedWorkStatusAfterRunState = JsonSerializer.Deserialize<ChannelDiscoveryState>(channelDiscoveryManagedWorkStatusesAfterRun[0].State);
+            Assert.Null(channelDiscoveryManagedWorkStatusAfterRunState.Cursor);
+            Assert.Equal(channelDiscoveryOperationOptions.Value.DelaySeconds, channelDiscoveryManagedWorkStatusAfterRunState.LastBackOffDelaySeconds);
+        }
+
+        [Fact]
+        public async Task IfChannelsProvided_BatchCursorIsProvided_ReturnsIncomplete_ContentSyncPerChannelAdded_NewChannelDiscoveryBatchWorkAddedIncludingNextBatchCursor()
+        {
+            var cancellationToken = CancellationToken.None;
+            var incomingCursor = $"https://dummyCursorLink/{DateTimeOffset.UtcNow.Ticks}";
+
+            var scanner = new ChannelDiscoveryAction
+            {
+                NewChannels = new List<Channel>
+                {
+                    new() { ExternalId = "CHANNEL_1", Title = "Channel 1"},
+                    new() { ExternalId = "CHANNEL_2", Title = "Channel 2"}
+                },
+                ChannelDiscoveryResultType = ChannelDiscoveryResultType.Incomplete,
+                OutgoingCursor = $"https://dummyCursorLink/{DateTimeOffset.UtcNow.Ticks}"
+            };
+            SUT.SelectChannelDiscoveryAction(scanner);
+
+            await StartSutAsync();
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+
+            var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector, incomingCursor);
+            await SUT.SetWorkRunning(workMessage);
+
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
+
+            var channelDiscoveryManagedWorkStatusesBeforeRun = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE, cancellationToken);
+            Assert.Single(channelDiscoveryManagedWorkStatusesBeforeRun);
+            var channelDiscoveryManagedWorkStatusBeforeRunState = JsonSerializer.Deserialize<ChannelDiscoveryState>(channelDiscoveryManagedWorkStatusesBeforeRun[0].State);
+            Assert.Equal(incomingCursor, channelDiscoveryManagedWorkStatusBeforeRunState.Cursor);
+
+            await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
+
+            var contentSyncManagedWorkStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
+
+            var channelDiscoveryManagedWorkStatusesAfterRun = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE, cancellationToken);
+
+            Assert.Equal(2, contentSyncManagedWorkStatuses.Count);
+            Assert.Equal(WorkResultType.Complete, workItem.ResultType);
+            Assert.Equal(ManagedWorkStatuses.Running, workItem.WorkManager.WorkStatus.Status);
+
+            Assert.Contains(contentSyncManagedWorkStatuses, j => j.DeserialiseContentSynchronisationConfiguration().ChannelExternalId == "CHANNEL_1");
+            Assert.Contains(contentSyncManagedWorkStatuses, j => j.DeserialiseContentSynchronisationConfiguration().ChannelExternalId == "CHANNEL_2");
+
+            Assert.Single(channelDiscoveryManagedWorkStatusesAfterRun);
+            Assert.NotEqual(channelDiscoveryManagedWorkStatusesBeforeRun[0].WorkId, channelDiscoveryManagedWorkStatusesAfterRun[0].WorkId);
+            var channelDiscoveryManagedWorkStatusAfterRunState = JsonSerializer.Deserialize<ChannelDiscoveryState>(channelDiscoveryManagedWorkStatusesAfterRun[0].State);
+            Assert.Equal(scanner.OutgoingCursor, channelDiscoveryManagedWorkStatusAfterRunState.Cursor);
+            Assert.Equal(0, channelDiscoveryManagedWorkStatusAfterRunState.LastBackOffDelaySeconds);
+        }
+
+        [Fact]
+        public async Task IfChannelsProvided_BatchCursorIsProvided_ReturnsAbandoned_ContentSyncPerChannelNotAdded_NewChannelDiscoveryBatchWorkNotAdded()
+        {
+            var cancellationToken = CancellationToken.None;
+            var incomingCursor = $"https://dummyCursorLink/{DateTimeOffset.UtcNow.Ticks}";
+
+            var scanner = new ChannelDiscoveryAction
+            {
+                NewChannels = new List<Channel>
+                {
+                    new() { ExternalId = "CHANNEL_1", Title = "Channel 1"}
+                },
+                ChannelDiscoveryResultType = ChannelDiscoveryResultType.Abandoned
+            };
+            SUT.SelectChannelDiscoveryAction(scanner);
+
+            await StartSutAsync();
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+
+            var workMessage = SUT.CreateChannelDiscoveryManagedWorkStatusModel(connector, incomingCursor);
+            await SUT.SetWorkRunning(workMessage);
+
+            using var servicesScope = Services.CreateScope();
+            var workItem = servicesScope.ServiceProvider.GetRequiredService<ChannelDiscoveryOperation>();
+
+            var channelDiscoveryManagedWorkStatusesBeforeRun = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE, cancellationToken);
+            Assert.Single(channelDiscoveryManagedWorkStatusesBeforeRun);
+            var channelDiscoveryManagedWorkStatusBeforeRunState = JsonSerializer.Deserialize<ChannelDiscoveryState>(channelDiscoveryManagedWorkStatusesBeforeRun[0].State);
+            Assert.Equal(incomingCursor, channelDiscoveryManagedWorkStatusBeforeRunState.Cursor);
+
+            await workItem.RunWorkRequestAsync(SUT.CreateChannelDiscoveryRequest(workMessage), cancellationToken);
+
+            var contentSyncManagedWorkStatuses = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ContentSynchronisationOperation.WORK_TYPE, cancellationToken);
+
+            var channelDiscoveryManagedWorkStatusesAfterRun = await ContentManagerSutBase.GetWorkStatusManager(servicesScope.ServiceProvider)
+                .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE, cancellationToken);
+
+            Assert.Empty(contentSyncManagedWorkStatuses);
+            Assert.Equal(WorkResultType.Abandoned, workItem.ResultType);
+            Assert.Equal(ManagedWorkStatuses.Running, workItem.WorkManager.WorkStatus.Status);
+
+            // Only contains same Channel Discovery work as before, just abandoned
+            Assert.Single(channelDiscoveryManagedWorkStatusesAfterRun);
+            Assert.Equal(channelDiscoveryManagedWorkStatusesBeforeRun[0].WorkId, channelDiscoveryManagedWorkStatusesAfterRun[0].WorkId);
+            Assert.Equal(ManagedWorkStatuses.Abandoned, channelDiscoveryManagedWorkStatusesAfterRun[0].Status);
         }
 
         [Fact]
@@ -363,7 +492,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var scanner = new ChannelDiscoveryAction
             {
-                ThrowExecption = true
+                ThrowException = true
             };
             SUT.SelectChannelDiscoveryAction(scanner);
 
@@ -394,7 +523,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var scanner = new ChannelDiscoveryAction
             {
-                ThrowExecption = true
+                ThrowException = true
             };
             SUT.SelectChannelDiscoveryAction(scanner);
 

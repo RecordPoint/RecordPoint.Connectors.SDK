@@ -5,6 +5,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
     /// <summary>
     /// Defines a Content Manager callback which is executed after the content manager operation is invoked
     /// </summary>
+    /// <remarks>
+    /// May be used to add custom Work Operations.
+    /// e.g. a replacement service for Content Sync that runs per tenant instead of per channel
+    /// </remarks>
     public interface IContentManagerCallbackAction
     {
         /// <summary>

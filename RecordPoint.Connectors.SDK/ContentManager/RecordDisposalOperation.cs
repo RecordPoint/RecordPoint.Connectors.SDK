@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.Client.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
@@ -118,7 +119,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 return;
             }
 
-            var recordDisposalAction = CreateRecordDisposalAction();
+            using var scope = _serviceProvider.CreateScope();
+            var recordDisposalAction = _contentManagerActionProvider.CreateRecordDisposalAction(scope);
             _recordDisposalResult = await recordDisposalAction
                 .ExecuteAsync(_connectorConfiguration, Record, cancellationToken)
                 .ConfigureAwait(false);
@@ -144,12 +146,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     throw new InvalidOperationException($"Unexpected record disposal result {_recordDisposalResult.ResultType}");
             }
         }
-
-        /// <summary>
-        /// Create a syncer for the current connector configuration
-        /// </summary>
-        /// <returns>Content syncer</returns>
-        protected IRecordDisposalAction CreateRecordDisposalAction() => _contentManagerActionProvider.CreateRecordDisposalAction();
 
         #region Observability
         /// <summary>

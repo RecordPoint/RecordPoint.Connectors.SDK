@@ -16,8 +16,8 @@
 		<Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.16" />
 		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

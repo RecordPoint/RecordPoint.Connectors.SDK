@@ -61,7 +61,13 @@ that implement a given responsibility covering various aspects such as content d
 
 ![Connector Architecture](./docs/connector_architecture.png)
 
-See the [operations documentation](./docs/operations/) for detailed information on services.
+**See the [operations documentation](./docs/operations/) for detailed information on each service.**
+
+## Writing a connector
+
+Before starting, please read the [operations documentation](./docs/operations/) to understand what services you need to implement.
+Use the Cloud Reference Connector to set up the connector infra from template.
+Use the Reference Connector to assist with writing connector code using the SDK. Other existing connectors may be used for this purpose but beware that some do not follow 'standard' patterns. 
 
 ## How the Connectors SDK Works
 
@@ -92,9 +98,7 @@ For a detailed explanation of every Work Operation within the SDK, see [The Reco
 Queued Work is a type of work that is submitted to a queue for future execution on any available instance of the relevant consuming service.
 Each different type of work has its own queue on the underlying queueing resource so each connector responsbility can be self contained and independently scalable.
 
-The Work Queue is implemented via the `RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus` package and uses Azure Service Bus as the underlying queueing resource.
-
-The Work Queue is also implemented via the RecordPoint.Connectors.SDK.WorkQueue.RabbitMq and uses RabbitMq as an underlying queueing resource for On-Premise connector deployments.
+The Work Queue is implemented via the `RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus` package for hosted connectors and `RecordPoint.Connectors.SDK.WorkQueue.RabbitMq` for On-Premise connector deployments.
 
 ##### Managed Queueable Work
 See [Managed Work Queue](./docs/managedworkqueue.md)
@@ -126,7 +130,24 @@ There are some global configuration settings (default values shown):
 
 See [ConnectorOptions](./docs/packages/recordpoint_connectors_sdk_abstractions_doc.md?anchor=T-RecordPoint-Connectors-SDK-Connectors-ConnectorOptions)
 
-### State Information
+### Authentication 
+Connectors use Azure Active Directory to authenticate to the Records365 Connector API. 
+Connectors use the [OAuth 2.0 client credentials grant flow](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-service-to-service) to obtain a bearer token from Azure Active Directory. The bearer token is then used in each call to the Connector API.
+
+### Architecture
+
+#### Hosting
+Hosted connectors are typically deployed to Kubernetes. 
+Refer to the Cloud Reference Connector for a sample of Hosting & CICD code.
+
+#### Queuing
+
+See [Queued Work Operations](#user-content-queued-work-operations) above.
+
+* Hosted connectors: `RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus`
+* On-premises connectors: `RecordPoint.Connectors.SDK.WorkQueue.RabbitMq`
+
+#### State Information
 A database is used for storing state information such as connector configurations, work status, and channel information.
 
 Some state information is also stored within work queue messages.
@@ -137,6 +158,9 @@ The SDK includes several different database providers allowing flexibility when 
 *  RecordPoint.Connectors.SDK.Databases.LocalDb
 *  RecordPoint.Connectors.SDK.Databases.PostgreSql
 *  RecordPoint.Connectors.SDK.Databases.Sqlite
+
+Hosted connectors typically use Cosmos.
+On-premises connectors typically use Sqlite or LocalDB.
 
 ### Integration with Records365
 See [Record.Connectors.SDK.Notifications](./docs/packages/recordpoint_connectors_sdk_notifications.md)

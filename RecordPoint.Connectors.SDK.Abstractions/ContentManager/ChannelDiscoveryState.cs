@@ -22,6 +22,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         public static string LatestStateType => nameof(ChannelDiscoveryState);
 
         /// <summary>
+        /// Current position in batch discovery, if applicable
+        /// </summary>
+        public string? Cursor { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>

@@ -45,7 +45,7 @@
   - [_workQueueClient](#F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-_workQueueClient 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation._workQueueClient')
   - [ServiceName](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-ServiceName 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.ServiceName')
   - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.WorkType')
-  - [CreateChannelDiscoveryAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-CreateChannelDiscoveryAction 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.CreateChannelDiscoveryAction')
+  - [CreateChannelDiscoveryAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-CreateChannelDiscoveryAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.CreateChannelDiscoveryAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
   - [DeserializeConfiguration(configurationType,configurationText)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-DeserializeConfiguration-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.DeserializeConfiguration(System.String,System.String)')
   - [DeserializeState(stateType,stateText)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-DeserializeState-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.DeserializeState(System.String,System.String)')
   - [FetchAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-FetchAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.FetchAsync(System.Threading.CancellationToken)')
@@ -53,8 +53,11 @@
   - [GetCustomResultDimensions()](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-GetCustomResultDimensions 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.GetCustomResultDimensions')
   - [GetCustomResultMeasures()](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-GetCustomResultMeasures 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.GetCustomResultMeasures')
   - [GetMissingChannelsForWorkTypeAsync()](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-GetMissingChannelsForWorkTypeAsync-System-Collections-Generic-List{RecordPoint-Connectors-SDK-Content-Channel},System-String,System-Func{RecordPoint-Connectors-SDK-Work-ManagedWorkStatusModel,System-String},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.GetMissingChannelsForWorkTypeAsync(System.Collections.Generic.List{RecordPoint.Connectors.SDK.Content.Channel},System.String,System.Func{RecordPoint.Connectors.SDK.Work.ManagedWorkStatusModel,System.String},System.Threading.CancellationToken)')
+  - [HandleAbandonedResultAsync(channelResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleAbandonedResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.HandleAbandonedResultAsync(RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult,System.Threading.CancellationToken)')
   - [HandleCompleteResultAsync(channelResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleCompleteResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.HandleCompleteResultAsync(RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult,System.Threading.CancellationToken)')
   - [HandleFailedResultAsync(channelResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleFailedResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.HandleFailedResultAsync(RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult,System.Threading.CancellationToken)')
+  - [HandleIncompleteResultAsync(channelResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleIncompleteResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.HandleIncompleteResultAsync(RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult,System.Threading.CancellationToken)')
+  - [HandleSuccessfulResultAsync(channelResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleSuccessfulResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.HandleSuccessfulResultAsync(RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult,System.Threading.CancellationToken)')
   - [InnerDispose()](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-InnerDispose 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.InnerDispose')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.InnerRunAsync(System.Threading.CancellationToken)')
   - [SerializeState(state)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-SerializeState-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryOperation.SerializeState(RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryState)')
@@ -91,19 +94,18 @@
 - [ContentManagerActionProvider](#T-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider')
   - [#ctor(serviceProvider)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-#ctor-System-IServiceProvider- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.#ctor(System.IServiceProvider)')
   - [_serviceProvider](#F-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-_serviceProvider 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider._serviceProvider')
-  - [CreateAggregationSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAggregationSubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateAggregationSubmissionCallbackAction')
-  - [CreateAuditEventSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateAuditEventSubmissionCallbackAction')
-  - [CreateBinaryRetrievalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinaryRetrievalAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateBinaryRetrievalAction')
-  - [CreateBinarySubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinarySubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateBinarySubmissionCallbackAction')
-  - [CreateChannelDiscoveryAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateChannelDiscoveryAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateChannelDiscoveryAction')
-  - [CreateContentManagerCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentManagerCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateContentManagerCallbackAction')
-  - [CreateContentRegistrationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentRegistrationAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateContentRegistrationAction')
-  - [CreateContentSynchronisationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentSynchronisationAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateContentSynchronisationAction')
-  - [CreateGenerationReportAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenerationReportAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateGenerationReportAction')
-  - [CreateGenericAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericAction``2 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateGenericAction``2')
-  - [CreateGenericManagedAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericManagedAction``2 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateGenericManagedAction``2')
-  - [CreateRecordDisposalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordDisposalAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateRecordDisposalAction')
-  - [CreateRecordSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordSubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateRecordSubmissionCallbackAction')
+  - [CreateAggregationSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAggregationSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateAggregationSubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateAuditEventSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateAuditEventSubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateBinaryRetrievalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinaryRetrievalAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateBinaryRetrievalAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateBinarySubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinarySubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateBinarySubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateChannelDiscoveryAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateChannelDiscoveryAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateChannelDiscoveryAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateContentManagerCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentManagerCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateContentManagerCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateContentRegistrationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentRegistrationAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateContentRegistrationAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateContentSynchronisationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentSynchronisationAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateContentSynchronisationAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateGenericAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateGenericAction``2(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateGenericManagedAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericManagedAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateGenericManagedAction``2(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateRecordDisposalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordDisposalAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateRecordDisposalAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateRecordSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerActionProvider.CreateRecordSubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
 - [ContentManagerBuilderExtensions](#T-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions')
   - [UseAggregationSubmissionOperation(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseAggregationSubmissionOperation-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseAggregationSubmissionOperation(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseAggregationSubmissionOperation\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseAggregationSubmissionOperation``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseAggregationSubmissionOperation``1(Microsoft.Extensions.Hosting.IHostBuilder)')
@@ -121,6 +123,8 @@
   - [UseRecordDisposalOperation\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseRecordDisposalOperation``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseRecordDisposalOperation``1(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseRecordSubmissionOperation(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseRecordSubmissionOperation-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseRecordSubmissionOperation(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseRecordSubmissionOperation\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseRecordSubmissionOperation``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseRecordSubmissionOperation``1(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseSynchronousRecordSubmissionOperation\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseSynchronousRecordSubmissionOperation``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseSynchronousRecordSubmissionOperation``1(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseSynchronousRecordSubmissionOperation\`\`3(hostBuilder)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseSynchronousRecordSubmissionOperation``3-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerBuilderExtensions.UseSynchronousRecordSubmissionOperation``3(Microsoft.Extensions.Hosting.IHostBuilder)')
 - [ContentManagerOperation](#T-RecordPoint-Connectors-SDK-ContentManager-ContentManagerOperation 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerOperation')
   - [#ctor(serviceProvider,contentManagerActionProvider,connectorConfigManager,channelManager,managedWorkStatusManager,managedWorkFactory,systemContext,options,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Content.IChannelManager,RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager,RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Context.ISystemContext,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
   - [CONTENT_SOURCE_INTEGRATION_COMPLETED](#F-RecordPoint-Connectors-SDK-ContentManager-ContentManagerOperation-CONTENT_SOURCE_INTEGRATION_COMPLETED 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerOperation.CONTENT_SOURCE_INTEGRATION_COMPLETED')
@@ -148,7 +152,7 @@
   - [#ctor(options,managedWorkFactory,managedWorkStatusManager)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerService-#ctor-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions},RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerService.#ctor(Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions},RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager)')
   - [ExecuteAsync(stoppingToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerService-ExecuteAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentManagerService.ExecuteAsync(System.Threading.CancellationToken)')
 - [ContentRegistrationOperation](#T-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation')
-  - [#ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions}- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Content.IChannelManager,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperationOptions},Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions})')
+  - [#ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions,recordSubmissionOptions)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions}- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Content.IChannelManager,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperationOptions},Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions},Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions})')
   - [WORK_TYPE](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-WORK_TYPE 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.WORK_TYPE')
   - [_actionExecutionTimespan](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_actionExecutionTimespan 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._actionExecutionTimespan')
   - [_channelManager](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_channelManager 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._channelManager')
@@ -158,6 +162,7 @@
   - [_contentManagerOptions](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_contentManagerOptions 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._contentManagerOptions')
   - [_contentResult](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_contentResult 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._contentResult')
   - [_options](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_options 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._options')
+  - [_recordSubmissionOptions](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_recordSubmissionOptions 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._recordSubmissionOptions')
   - [_submitTimespan](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_submitTimespan 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._submitTimespan')
   - [_toggleProvider](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_toggleProvider 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._toggleProvider')
   - [_workQueueClient](#F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_workQueueClient 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation._workQueueClient')
@@ -165,7 +170,6 @@
   - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.WorkType')
   - [BeginAsync(channel,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-BeginAsync-RecordPoint-Connectors-SDK-Content-Channel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.BeginAsync(RecordPoint.Connectors.SDK.Content.Channel,System.Threading.CancellationToken)')
   - [ContinueSync(channel,cursor,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-ContinueSync-RecordPoint-Connectors-SDK-Content-Channel,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.ContinueSync(RecordPoint.Connectors.SDK.Content.Channel,System.String,System.Threading.CancellationToken)')
-  - [CreateContentRegistrationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-CreateContentRegistrationAction 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.CreateContentRegistrationAction')
   - [DeserializeConfiguration(configurationType,configurationText)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-DeserializeConfiguration-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.DeserializeConfiguration(System.String,System.String)')
   - [DeserializeState(stateType,stateText)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-DeserializeState-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.DeserializeState(System.String,System.String)')
   - [FetchAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-FetchAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.FetchAsync(System.Threading.CancellationToken)')
@@ -181,7 +185,7 @@
   - [SerializeState(state)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-SerializeState-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationState- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.SerializeState(RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationState)')
   - [SubmitContentAsync(contentResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-SubmitContentAsync-RecordPoint-Connectors-SDK-ContentManager-ContentResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperation.SubmitContentAsync(RecordPoint.Connectors.SDK.ContentManager.ContentResult,System.Threading.CancellationToken)')
 - [ContentSynchronisationOperation](#T-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation')
-  - [#ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions}- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Content.IChannelManager,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperationOptions},Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions})')
+  - [#ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions,recordSubmissionOptions)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions}- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Content.IChannelManager,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperationOptions},Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions},Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions})')
   - [WORK_TYPE](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-WORK_TYPE 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.WORK_TYPE')
   - [_actionExecutionTimespan](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_actionExecutionTimespan 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._actionExecutionTimespan')
   - [_channelManager](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_channelManager 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._channelManager')
@@ -191,6 +195,7 @@
   - [_contentManagerOptions](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_contentManagerOptions 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._contentManagerOptions')
   - [_contentResult](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_contentResult 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._contentResult')
   - [_options](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_options 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._options')
+  - [_recordSubmissionOptions](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_recordSubmissionOptions 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._recordSubmissionOptions')
   - [_submitTimespan](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_submitTimespan 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._submitTimespan')
   - [_toggleProvider](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_toggleProvider 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._toggleProvider')
   - [_workQueueClient](#F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_workQueueClient 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation._workQueueClient')
@@ -198,7 +203,6 @@
   - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.WorkType')
   - [BeginAsync(channel,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-BeginAsync-RecordPoint-Connectors-SDK-Content-Channel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.BeginAsync(RecordPoint.Connectors.SDK.Content.Channel,System.Threading.CancellationToken)')
   - [ContinueSync(channel,cursor,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-ContinueSync-RecordPoint-Connectors-SDK-Content-Channel,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.ContinueSync(RecordPoint.Connectors.SDK.Content.Channel,System.String,System.Threading.CancellationToken)')
-  - [CreateContentSynchronisationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-CreateContentSynchronisationAction 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.CreateContentSynchronisationAction')
   - [DeserializeConfiguration(configurationType,configurationText)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-DeserializeConfiguration-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.DeserializeConfiguration(System.String,System.String)')
   - [DeserializeState(stateType,stateText)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-DeserializeState-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.DeserializeState(System.String,System.String)')
   - [FetchAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-FetchAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperation.FetchAsync(System.Threading.CancellationToken)')
@@ -362,7 +366,7 @@
   - [FailedAsync(reason,cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-FailedAsync-System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.ManagedWorkManager.FailedAsync(System.String,System.Threading.CancellationToken)')
   - [FaultyAsync(reason,exception,cancellationToken,faultedCount)](#M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-FaultyAsync-System-String,System-Exception,System-Threading-CancellationToken,System-Nullable{System-Int32}- 'RecordPoint.Connectors.SDK.Work.ManagedWorkManager.FaultyAsync(System.String,System.Exception,System.Threading.CancellationToken,System.Nullable{System.Int32})')
   - [RetryAsync(waitTill,cancellationToken,faultedCount)](#M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-RetryAsync-System-DateTimeOffset,System-Threading-CancellationToken,System-Nullable{System-Int32}- 'RecordPoint.Connectors.SDK.Work.ManagedWorkManager.RetryAsync(System.DateTimeOffset,System.Threading.CancellationToken,System.Nullable{System.Int32})')
-  - [StartAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-StartAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.ManagedWorkManager.StartAsync(System.Threading.CancellationToken)')
+  - [StartAsync(cancellationToken,waitTill)](#M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-StartAsync-System-Threading-CancellationToken,System-Nullable{System-DateTimeOffset}- 'RecordPoint.Connectors.SDK.Work.ManagedWorkManager.StartAsync(System.Threading.CancellationToken,System.Nullable{System.DateTimeOffset})')
 - [ManagedWorkManagerExtensions](#T-RecordPoint-Connectors-SDK-ContentManager-ManagedWorkManagerExtensions 'RecordPoint.Connectors.SDK.ContentManager.ManagedWorkManagerExtensions')
   - [CreateChannelDiscoveryOperation(managedWorkFactory,connectorConfigModel)](#M-RecordPoint-Connectors-SDK-ContentManager-ManagedWorkManagerExtensions-CreateChannelDiscoveryOperation-RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel- 'RecordPoint.Connectors.SDK.ContentManager.ManagedWorkManagerExtensions.CreateChannelDiscoveryOperation(RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel)')
   - [CreateContentManagerOperation(managedWorkFactory)](#M-RecordPoint-Connectors-SDK-ContentManager-ManagedWorkManagerExtensions-CreateContentManagerOperation-RecordPoint-Connectors-SDK-Work-IManagedWorkFactory- 'RecordPoint.Connectors.SDK.ContentManager.ManagedWorkManagerExtensions.CreateContentManagerOperation(RecordPoint.Connectors.SDK.Work.IManagedWorkFactory)')
@@ -375,7 +379,7 @@
 - [NullChannelDiscoveryAction](#T-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction 'RecordPoint.Connectors.SDK.ContentManager.NullChannelDiscoveryAction')
   - [#ctor(channelManager)](#M-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction-#ctor-RecordPoint-Connectors-SDK-Content-IChannelManager- 'RecordPoint.Connectors.SDK.ContentManager.NullChannelDiscoveryAction.#ctor(RecordPoint.Connectors.SDK.Content.IChannelManager)')
   - [_channelManager](#F-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction-_channelManager 'RecordPoint.Connectors.SDK.ContentManager.NullChannelDiscoveryAction._channelManager')
-  - [ExecuteAsync(connectorConfiguration,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.NullChannelDiscoveryAction.ExecuteAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,System.Threading.CancellationToken)')
+  - [ExecuteAsync(connectorConfiguration,cancellationToken,cursor)](#M-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken,System-String- 'RecordPoint.Connectors.SDK.ContentManager.NullChannelDiscoveryAction.ExecuteAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,System.Threading.CancellationToken,System.String)')
 - [NullObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-Null-NullObservabilityScope 'RecordPoint.Connectors.SDK.Observability.Null.NullObservabilityScope')
   - [Dispose(disposing)](#M-RecordPoint-Connectors-SDK-Observability-Null-NullObservabilityScope-Dispose-System-Boolean- 'RecordPoint.Connectors.SDK.Observability.Null.NullObservabilityScope.Dispose(System.Boolean)')
   - [Dispose()](#M-RecordPoint-Connectors-SDK-Observability-Null-NullObservabilityScope-Dispose 'RecordPoint.Connectors.SDK.Observability.Null.NullObservabilityScope.Dispose')
@@ -434,7 +438,7 @@
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Work-QueueableWorkManager-#ctor-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,System-IServiceProvider- 'RecordPoint.Connectors.SDK.Work.QueueableWorkManager.#ctor(RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,System.IServiceProvider)')
   - [HandleWorkRequestAsync(workRequest,cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-QueueableWorkManager-HandleWorkRequestAsync-RecordPoint-Connectors-SDK-Work-WorkRequest,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.QueueableWorkManager.HandleWorkRequestAsync(RecordPoint.Connectors.SDK.Work.WorkRequest,System.Threading.CancellationToken)')
 - [R365BuilderExtensions](#T-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions 'RecordPoint.Connectors.SDK.R365.R365BuilderExtensions')
-  - [AddR365Integration(services)](#M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-AddR365Integration-Microsoft-Extensions-DependencyInjection-IServiceCollection- 'RecordPoint.Connectors.SDK.R365.R365BuilderExtensions.AddR365Integration(Microsoft.Extensions.DependencyInjection.IServiceCollection)')
+  - [AddR365Integration(services,submitRecordAndBinariesSynchronously)](#M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-AddR365Integration-Microsoft-Extensions-DependencyInjection-IServiceCollection,System-Boolean- 'RecordPoint.Connectors.SDK.R365.R365BuilderExtensions.AddR365Integration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Boolean)')
   - [CreateAuditEventPipeline(provider)](#M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-CreateAuditEventPipeline-System-IServiceProvider- 'RecordPoint.Connectors.SDK.R365.R365BuilderExtensions.CreateAuditEventPipeline(System.IServiceProvider)')
   - [CreateRecordPipeline(provider)](#M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-CreateRecordPipeline-System-IServiceProvider- 'RecordPoint.Connectors.SDK.R365.R365BuilderExtensions.CreateRecordPipeline(System.IServiceProvider)')
   - [UseR365Integration(hostBuilder)](#M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-UseR365Integration-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.R365.R365BuilderExtensions.UseR365Integration(Microsoft.Extensions.Hosting.IHostBuilder)')
@@ -471,7 +475,6 @@
   - [Record](#P-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-Record 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.Record')
   - [ServiceName](#P-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-ServiceName 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.ServiceName')
   - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.WorkType')
-  - [CreateRecordDisposalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-CreateRecordDisposalAction 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.CreateRecordDisposalAction')
   - [GetCustomKeyDimensions()](#M-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-GetCustomKeyDimensions 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.GetCustomKeyDimensions')
   - [GetCustomResultDimensions()](#M-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-GetCustomResultDimensions 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.GetCustomResultDimensions')
   - [GetCustomResultMeasures()](#M-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-GetCustomResultMeasures 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalOperation.GetCustomResultMeasures')
@@ -511,10 +514,10 @@
   - [GetFeatureStatus(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-GetFeatureStatus-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.GetFeatureStatus(System.Threading.CancellationToken)')
   - [InnerDispose()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-InnerDispose 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.InnerDispose')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.InnerRunAsync(System.Threading.CancellationToken)')
-  - [PreSubmitAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-PreSubmitAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.PreSubmitAsync(System.Threading.CancellationToken)')
+  - [PreSubmitAsync()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-PreSubmitAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.PreSubmitAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,System.Threading.CancellationToken)')
   - [RequeueAsync(waitTill,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-RequeueAsync-System-DateTimeOffset,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.RequeueAsync(System.DateTimeOffset,System.Threading.CancellationToken)')
   - [SubmitAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-SubmitAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.SubmitAsync(System.Threading.CancellationToken)')
-  - [SubmitSuccessfulAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-SubmitSuccessfulAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.SubmitSuccessfulAsync(System.Threading.CancellationToken)')
+  - [SubmitSuccessfulAsync()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-SubmitSuccessfulAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAggregationOperation.SubmitSuccessfulAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,System.Threading.CancellationToken)')
 - [SubmitAuditEventOperation](#T-RecordPoint-Connectors-SDK-ContentManager-SubmitAuditEventOperation 'RecordPoint.Connectors.SDK.ContentManager.SubmitAuditEventOperation')
   - [#ctor(serviceProvider,contentManagerActionProvider,r365Client,connectorManager,systemContext,observabilityScope,telemetryTracker,workQueueClient,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitAuditEventOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-R365-IR365Client,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.ContentManager.SubmitAuditEventOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.R365.IR365Client,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
   - [CONTENT_LABEL](#F-RecordPoint-Connectors-SDK-ContentManager-SubmitAuditEventOperation-CONTENT_LABEL 'RecordPoint.Connectors.SDK.ContentManager.SubmitAuditEventOperation.CONTENT_LABEL')
@@ -553,13 +556,11 @@
   - [ConnectorConfigId](#P-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-ConnectorConfigId 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.ConnectorConfigId')
   - [ServiceName](#P-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-ServiceName 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.ServiceName')
   - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.WorkType')
-  - [CreateBinaryRetrievalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-CreateBinaryRetrievalAction 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.CreateBinaryRetrievalAction')
-  - [CreateBinarySubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-CreateBinarySubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.CreateBinarySubmissionCallbackAction')
   - [GetCustomKeyDimensions()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-GetCustomKeyDimensions 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.GetCustomKeyDimensions')
   - [GetCustomResultMeasures()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-GetCustomResultMeasures 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.GetCustomResultMeasures')
   - [InnerDispose()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-InnerDispose 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.InnerDispose')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.InnerRunAsync(System.Threading.CancellationToken)')
-  - [InvokeSubmissionCallbackAsync(submissionActionType,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-InvokeSubmissionCallbackAsync-RecordPoint-Connectors-SDK-Abstractions-ContentManager-SubmissionActionType,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.InvokeSubmissionCallbackAsync(RecordPoint.Connectors.SDK.Abstractions.ContentManager.SubmissionActionType,System.Threading.CancellationToken)')
+  - [InvokeSubmissionCallbackAsync(scope,submissionActionType,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-InvokeSubmissionCallbackAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,RecordPoint-Connectors-SDK-Abstractions-ContentManager-SubmissionActionType,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.InvokeSubmissionCallbackAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,RecordPoint.Connectors.SDK.Abstractions.ContentManager.SubmissionActionType,System.Threading.CancellationToken)')
   - [RecordOutcomeAsync(submitResult,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-RecordOutcomeAsync-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitBinaryOperation.RecordOutcomeAsync(RecordPoint.Connectors.SDK.SubmitPipeline.SubmitResult,System.Threading.CancellationToken)')
 - [SubmitOperationBase\`1](#T-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-R365-IR365Client,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.R365.IR365Client,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
@@ -576,10 +577,10 @@
   - [GetFeatureStatus(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-GetFeatureStatus-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.GetFeatureStatus(System.Threading.CancellationToken)')
   - [InnerDispose()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-InnerDispose 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.InnerDispose')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.InnerRunAsync(System.Threading.CancellationToken)')
-  - [PreSubmitAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-PreSubmitAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.PreSubmitAsync(System.Threading.CancellationToken)')
+  - [PreSubmitAsync(scope,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-PreSubmitAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.PreSubmitAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,System.Threading.CancellationToken)')
   - [RequeueAsync(waitTill,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-RequeueAsync-System-DateTimeOffset,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.RequeueAsync(System.DateTimeOffset,System.Threading.CancellationToken)')
   - [SubmitAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-SubmitAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.SubmitAsync(System.Threading.CancellationToken)')
-  - [SubmitSuccessfulAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-SubmitSuccessfulAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.SubmitSuccessfulAsync(System.Threading.CancellationToken)')
+  - [SubmitSuccessfulAsync(scope,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-SubmitSuccessfulAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitOperationBase`1.SubmitSuccessfulAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,System.Threading.CancellationToken)')
 - [SubmitRecordOperation](#T-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation')
   - [#ctor(serviceProvider,contentManagerActionProvider,r365Client,workQueueClient,connectorManager,systemContext,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-R365-IR365Client,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.R365.IR365Client,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
   - [CONTENT_LABEL](#F-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-CONTENT_LABEL 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.CONTENT_LABEL')
@@ -592,10 +593,20 @@
   - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.WorkType')
   - [GetFeatureStatus(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-GetFeatureStatus-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.GetFeatureStatus(System.Threading.CancellationToken)')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.InnerRunAsync(System.Threading.CancellationToken)')
-  - [PreSubmitAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-PreSubmitAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.PreSubmitAsync(System.Threading.CancellationToken)')
+  - [PreSubmitAsync()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-PreSubmitAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.PreSubmitAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,System.Threading.CancellationToken)')
   - [RequeueAsync(waitTill,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-RequeueAsync-System-DateTimeOffset,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.RequeueAsync(System.DateTimeOffset,System.Threading.CancellationToken)')
   - [SubmitAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-SubmitAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.SubmitAsync(System.Threading.CancellationToken)')
-  - [SubmitSuccessfulAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-SubmitSuccessfulAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.SubmitSuccessfulAsync(System.Threading.CancellationToken)')
+  - [SubmitSuccessfulAsync()](#M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-SubmitSuccessfulAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SubmitRecordOperation.SubmitSuccessfulAsync(Microsoft.Extensions.DependencyInjection.IServiceScope,System.Threading.CancellationToken)')
+- [SynchronousSubmitRecordOperation](#T-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation')
+  - [#ctor(serviceProvider,contentManagerActionProvider,r365Client,connectorManager,systemContext,observabilityScope,telemetryTracker,workQueueClient,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-R365-IR365Client,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider,RecordPoint.Connectors.SDK.R365.IR365Client,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
+  - [WORK_TYPE](#F-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-WORK_TYPE 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.WORK_TYPE')
+  - [_connectorConfiguration](#F-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-_connectorConfiguration 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation._connectorConfiguration')
+  - [ConnectorConfigId](#P-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-ConnectorConfigId 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.ConnectorConfigId')
+  - [ServiceName](#P-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-ServiceName 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.ServiceName')
+  - [WorkType](#P-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-WorkType 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.WorkType')
+  - [GetCustomKeyDimensions()](#M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-GetCustomKeyDimensions 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.GetCustomKeyDimensions')
+  - [InnerDispose()](#M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-InnerDispose 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.InnerDispose')
+  - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation.InnerRunAsync(System.Threading.CancellationToken)')
 - [SystemContext](#T-RecordPoint-Connectors-SDK-Context-SystemContext 'RecordPoint.Connectors.SDK.Context.SystemContext')
   - [#ctor(hostEnvironment,systemOptions)](#M-RecordPoint-Connectors-SDK-Context-SystemContext-#ctor-Microsoft-Extensions-Hosting-IHostEnvironment,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Context-SystemOptions}- 'RecordPoint.Connectors.SDK.Context.SystemContext.#ctor(Microsoft.Extensions.Hosting.IHostEnvironment,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Context.SystemOptions})')
   - [_hostEnvironment](#F-RecordPoint-Connectors-SDK-Context-SystemContext-_hostEnvironment 'RecordPoint.Connectors.SDK.Context.SystemContext._hostEnvironment')
@@ -637,6 +648,7 @@
   - [Id](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-Id 'RecordPoint.Connectors.SDK.Work.WorkBase`1.Id')
   - [Parameter](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-Parameter 'RecordPoint.Connectors.SDK.Work.WorkBase`1.Parameter')
   - [ResultReason](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-ResultReason 'RecordPoint.Connectors.SDK.Work.WorkBase`1.ResultReason')
+  - [ResultReasonDetails](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-ResultReasonDetails 'RecordPoint.Connectors.SDK.Work.WorkBase`1.ResultReasonDetails')
   - [ResultType](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-ResultType 'RecordPoint.Connectors.SDK.Work.WorkBase`1.ResultType')
   - [ScopeManager](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-ScopeManager 'RecordPoint.Connectors.SDK.Work.WorkBase`1.ScopeManager')
   - [StartDateTime](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-StartDateTime 'RecordPoint.Connectors.SDK.Work.WorkBase`1.StartDateTime')
@@ -645,6 +657,7 @@
   - [WorkType](#P-RecordPoint-Connectors-SDK-Work-WorkBase`1-WorkType 'RecordPoint.Connectors.SDK.Work.WorkBase`1.WorkType')
   - [BeginObservabilityScope()](#M-RecordPoint-Connectors-SDK-Work-WorkBase`1-BeginObservabilityScope 'RecordPoint.Connectors.SDK.Work.WorkBase`1.BeginObservabilityScope')
   - [CompleteAsync()](#M-RecordPoint-Connectors-SDK-Work-WorkBase`1-CompleteAsync-System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.WorkBase`1.CompleteAsync(System.String,System.Threading.CancellationToken)')
+  - [CompleteAsync()](#M-RecordPoint-Connectors-SDK-Work-WorkBase`1-CompleteAsync-System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.WorkBase`1.CompleteAsync(System.String,System.String,System.Threading.CancellationToken)')
   - [EnsureHasOutcome()](#M-RecordPoint-Connectors-SDK-Work-WorkBase`1-EnsureHasOutcome 'RecordPoint.Connectors.SDK.Work.WorkBase`1.EnsureHasOutcome')
   - [EnsureIncomplete()](#M-RecordPoint-Connectors-SDK-Work-WorkBase`1-EnsureIncomplete 'RecordPoint.Connectors.SDK.Work.WorkBase`1.EnsureIncomplete')
   - [FailAsync(reason,cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-WorkBase`1-FailAsync-System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.WorkBase`1.FailAsync(System.String,System.Threading.CancellationToken)')
@@ -1111,7 +1124,7 @@ Gets the service name.
 
 Gets the work type.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-CreateChannelDiscoveryAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-CreateChannelDiscoveryAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateChannelDiscoveryAction() `method`
 
 ##### Summary
@@ -1231,6 +1244,24 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleAbandonedResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken-'></a>
+### HandleAbandonedResultAsync(channelResult,cancellationToken) `method`
+
+##### Summary
+
+Handle abandoned result asynchronously.
+
+##### Returns
+
+A Task
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| channelResult | [RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult](#T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult') | The channel result. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleCompleteResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken-'></a>
 ### HandleCompleteResultAsync(channelResult,cancellationToken) `method`
 
@@ -1259,6 +1290,42 @@ Handle failed result asynchronously.
 ##### Returns
 
 A Task
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| channelResult | [RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult](#T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult') | The channel result. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleIncompleteResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken-'></a>
+### HandleIncompleteResultAsync(channelResult,cancellationToken) `method`
+
+##### Summary
+
+Handle incomplete result asynchronously. Further Channel Discovery work is expected, tracked via cursor.
+
+##### Returns
+
+A Task
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| channelResult | [RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult](#T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult') | The channel result. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperation-HandleSuccessfulResultAsync-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult,System-Threading-CancellationToken-'></a>
+### HandleSuccessfulResultAsync(channelResult,cancellationToken) `method`
+
+##### Summary
+
+Common subsequent logic for successful Channel Discovery fetch.
+
+##### Returns
+
+Start time of successful Channel Discovery result handling.
 
 ##### Parameters
 
@@ -1813,7 +1880,7 @@ Initializes a new instance of the [ContentManagerActionProvider](#T-RecordPoint-
 
 The service provider.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAggregationSubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAggregationSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateAggregationSubmissionCallbackAction() `method`
 
 ##### Summary
@@ -1824,7 +1891,7 @@ The service provider.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateAuditEventSubmissionCallbackAction() `method`
 
 ##### Summary
@@ -1835,7 +1902,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinaryRetrievalAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinaryRetrievalAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateBinaryRetrievalAction() `method`
 
 ##### Summary
@@ -1846,7 +1913,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinarySubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateBinarySubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateBinarySubmissionCallbackAction() `method`
 
 ##### Summary
@@ -1857,7 +1924,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateChannelDiscoveryAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateChannelDiscoveryAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateChannelDiscoveryAction() `method`
 
 ##### Summary
@@ -1868,7 +1935,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentManagerCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentManagerCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateContentManagerCallbackAction() `method`
 
 ##### Summary
@@ -1879,7 +1946,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentRegistrationAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentRegistrationAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateContentRegistrationAction() `method`
 
 ##### Summary
@@ -1890,7 +1957,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentSynchronisationAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateContentSynchronisationAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateContentSynchronisationAction() `method`
 
 ##### Summary
@@ -1901,18 +1968,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenerationReportAction'></a>
-### CreateGenerationReportAction() `method`
-
-##### Summary
-
-*Inherit from parent.*
-
-##### Parameters
-
-This method has no parameters.
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericAction``2'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateGenericAction\`\`2() `method`
 
 ##### Summary
@@ -1923,7 +1979,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericManagedAction``2'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateGenericManagedAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateGenericManagedAction\`\`2() `method`
 
 ##### Summary
@@ -1934,7 +1990,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordDisposalAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordDisposalAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateRecordDisposalAction() `method`
 
 ##### Summary
@@ -1945,7 +2001,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordSubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerActionProvider-CreateRecordSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateRecordSubmissionCallbackAction() `method`
 
 ##### Summary
@@ -2323,6 +2379,54 @@ An IHostBuilder
 | ---- | ----------- |
 | TCallbackAction |  |
 
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseSynchronousRecordSubmissionOperation``1-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseSynchronousRecordSubmissionOperation\`\`1(hostBuilder) `method`
+
+##### Summary
+
+Use synchronous record submission operation.
+
+##### Returns
+
+An IHostBuilder
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| TBinaryRetrieavalAction |  |
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentManagerBuilderExtensions-UseSynchronousRecordSubmissionOperation``3-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseSynchronousRecordSubmissionOperation\`\`3(hostBuilder) `method`
+
+##### Summary
+
+Use synchronous record submission operation.
+
+##### Returns
+
+An IHostBuilder
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| TBinaryRetrieavalAction |  |
+| TRecordSubmissionCallbackAction |  |
+| TBinaryRetrieavalCallbackAction |  |
+
 <a name='T-RecordPoint-Connectors-SDK-ContentManager-ContentManagerOperation'></a>
 ## ContentManagerOperation `type`
 
@@ -2658,8 +2762,8 @@ RecordPoint.Connectors.SDK.ContentManager
 
 The content registration operation.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions}-'></a>
-### #ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions}-'></a>
+### #ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions,recordSubmissionOptions) `constructor`
 
 ##### Summary
 
@@ -2682,6 +2786,7 @@ Initializes a new instance of the [ContentRegistrationOperation](#T-RecordPoint-
 | dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
 | options | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperationOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperationOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentRegistrationOperationOptions}') | The options. |
 | contentManagerOptions | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions}') | The content manager options. |
+| recordSubmissionOptions | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions}') | The record submission options. |
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-WORK_TYPE'></a>
 ### WORK_TYPE `constants`
@@ -2745,6 +2850,13 @@ Outcome of the operation
 ##### Summary
 
 The options.
+
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_recordSubmissionOptions'></a>
+### _recordSubmissionOptions `constants`
+
+##### Summary
+
+The record submission options.
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-_submitTimespan'></a>
 ### _submitTimespan `constants`
@@ -2817,21 +2929,6 @@ Task<ContentResult>
 | channel | [RecordPoint.Connectors.SDK.Content.Channel](#T-RecordPoint-Connectors-SDK-Content-Channel 'RecordPoint.Connectors.SDK.Content.Channel') | The channel. |
 | cursor | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The cursor. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-CreateContentRegistrationAction'></a>
-### CreateContentRegistrationAction() `method`
-
-##### Summary
-
-Create a Content Registration Operation for the current connector configuration
-
-##### Returns
-
-Content syncer
-
-##### Parameters
-
-This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperation-DeserializeConfiguration-System-String,System-String-'></a>
 ### DeserializeConfiguration(configurationType,configurationText) `method`
@@ -3083,8 +3180,8 @@ RecordPoint.Connectors.SDK.ContentManager
 
 The content synchronisation operation.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions}-'></a>
-### #ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Content-IChannelManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperationOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions},Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions}-'></a>
+### #ctor(serviceProvider,contentManagerActionProvider,connectorManager,channelManager,workQueueClient,managedWorkFactory,systemContext,observabilityScope,toggleProvider,telemetryTracker,dateTimeProvider,options,contentManagerOptions,recordSubmissionOptions) `constructor`
 
 ##### Summary
 
@@ -3107,6 +3204,7 @@ Initializes a new instance of the [ContentSynchronisationOperation](#T-RecordPoi
 | dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
 | options | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperationOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperationOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentSynchronisationOperationOptions}') | The options. |
 | contentManagerOptions | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.ContentManagerOptions}') | The content manager options. |
+| recordSubmissionOptions | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions}') | The record submission options. |
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-WORK_TYPE'></a>
 ### WORK_TYPE `constants`
@@ -3170,6 +3268,13 @@ Outcome of the operation
 ##### Summary
 
 The options.
+
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_recordSubmissionOptions'></a>
+### _recordSubmissionOptions `constants`
+
+##### Summary
+
+The record submission options.
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-_submitTimespan'></a>
 ### _submitTimespan `constants`
@@ -3242,21 +3347,6 @@ Task<ContentResult>
 | channel | [RecordPoint.Connectors.SDK.Content.Channel](#T-RecordPoint-Connectors-SDK-Content-Channel 'RecordPoint.Connectors.SDK.Content.Channel') | The channel. |
 | cursor | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The cursor. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-CreateContentSynchronisationAction'></a>
-### CreateContentSynchronisationAction() `method`
-
-##### Summary
-
-Create a Content Synchronisation Operation for the current connector configuration
-
-##### Returns
-
-Content syncer
-
-##### Parameters
-
-This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperation-DeserializeConfiguration-System-String,System-String-'></a>
 ### DeserializeConfiguration(configurationType,configurationText) `method`
@@ -5376,8 +5466,8 @@ Outcome to pass onto the work queue
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
 | faultedCount | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | number of faulty to control retries |
 
-<a name='M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-StartAsync-System-Threading-CancellationToken-'></a>
-### StartAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Work-ManagedWorkManager-StartAsync-System-Threading-CancellationToken,System-Nullable{System-DateTimeOffset}-'></a>
+### StartAsync(cancellationToken,waitTill) `method`
 
 ##### Summary
 
@@ -5392,6 +5482,7 @@ Start Task
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
+| waitTill | [System.Nullable{System.DateTimeOffset}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.DateTimeOffset}') |  |
 
 <a name='T-RecordPoint-Connectors-SDK-ContentManager-ManagedWorkManagerExtensions'></a>
 ## ManagedWorkManagerExtensions `type`
@@ -5577,8 +5668,8 @@ Initializes a new instance of the [NullChannelDiscoveryAction](#T-RecordPoint-Co
 
 The channel manager.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken-'></a>
-### ExecuteAsync(connectorConfiguration,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-NullChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken,System-String-'></a>
+### ExecuteAsync(connectorConfiguration,cancellationToken,cursor) `method`
 
 ##### Summary
 
@@ -5594,6 +5685,7 @@ Task<ChannelDiscoveryResult>
 | ---- | ---- | ----------- |
 | connectorConfiguration | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') | The connector configuration. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+| cursor | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Scan cursor provided by a prior batch discovery operation (though not applicable here). |
 
 <a name='T-RecordPoint-Connectors-SDK-Observability-Null-NullObservabilityScope'></a>
 ## NullObservabilityScope `type`
@@ -6302,8 +6394,8 @@ RecordPoint.Connectors.SDK.R365
 
 R365 Builder Extensions
 
-<a name='M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-AddR365Integration-Microsoft-Extensions-DependencyInjection-IServiceCollection-'></a>
-### AddR365Integration(services) `method`
+<a name='M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-AddR365Integration-Microsoft-Extensions-DependencyInjection-IServiceCollection,System-Boolean-'></a>
+### AddR365Integration(services,submitRecordAndBinariesSynchronously) `method`
 
 ##### Summary
 
@@ -6318,6 +6410,7 @@ Add R365 Access component
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | services | [Microsoft.Extensions.DependencyInjection.IServiceCollection](#T-Microsoft-Extensions-DependencyInjection-IServiceCollection 'Microsoft.Extensions.DependencyInjection.IServiceCollection') |  |
+| submitRecordAndBinariesSynchronously | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') |  |
 
 <a name='M-RecordPoint-Connectors-SDK-R365-R365BuilderExtensions-CreateAuditEventPipeline-System-IServiceProvider-'></a>
 ### CreateAuditEventPipeline(provider) `method`
@@ -6727,21 +6820,6 @@ Gets the service name.
 ##### Summary
 
 Gets the work type.
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-CreateRecordDisposalAction'></a>
-### CreateRecordDisposalAction() `method`
-
-##### Summary
-
-Create a syncer for the current connector configuration
-
-##### Returns
-
-Content syncer
-
-##### Parameters
-
-This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalOperation-GetCustomKeyDimensions'></a>
 ### GetCustomKeyDimensions() `method`
@@ -7211,22 +7289,16 @@ A Task
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-PreSubmitAsync-System-Threading-CancellationToken-'></a>
-### PreSubmitAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-PreSubmitAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken-'></a>
+### PreSubmitAsync() `method`
 
 ##### Summary
 
 
 
-##### Returns
-
-
-
 ##### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-RequeueAsync-System-DateTimeOffset,System-Threading-CancellationToken-'></a>
 ### RequeueAsync(waitTill,cancellationToken) `method`
@@ -7263,22 +7335,16 @@ Task<SubmitResult>
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-SubmitSuccessfulAsync-System-Threading-CancellationToken-'></a>
-### SubmitSuccessfulAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitAggregationOperation-SubmitSuccessfulAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken-'></a>
+### SubmitSuccessfulAsync() `method`
 
 ##### Summary
 
 
 
-##### Returns
-
-
-
 ##### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-ContentManager-SubmitAuditEventOperation'></a>
 ## SubmitAuditEventOperation `type`
@@ -7644,36 +7710,6 @@ Gets the service name.
 
 Gets the work type.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-CreateBinaryRetrievalAction'></a>
-### CreateBinaryRetrievalAction() `method`
-
-##### Summary
-
-Creates binary retrieval action.
-
-##### Returns
-
-An IBinaryRetrievalAction
-
-##### Parameters
-
-This method has no parameters.
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-CreateBinarySubmissionCallbackAction'></a>
-### CreateBinarySubmissionCallbackAction() `method`
-
-##### Summary
-
-Creates binary submission callback action.
-
-##### Returns
-
-An IBinarySubmissionCallbackAction
-
-##### Parameters
-
-This method has no parameters.
-
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-GetCustomKeyDimensions'></a>
 ### GetCustomKeyDimensions() `method`
 
@@ -7738,8 +7774,8 @@ A Task
 | ---- | ----------- |
 | [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-InvokeSubmissionCallbackAsync-RecordPoint-Connectors-SDK-Abstractions-ContentManager-SubmissionActionType,System-Threading-CancellationToken-'></a>
-### InvokeSubmissionCallbackAsync(submissionActionType,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitBinaryOperation-InvokeSubmissionCallbackAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,RecordPoint-Connectors-SDK-Abstractions-ContentManager-SubmissionActionType,System-Threading-CancellationToken-'></a>
+### InvokeSubmissionCallbackAsync(scope,submissionActionType,cancellationToken) `method`
 
 ##### Summary
 
@@ -7753,6 +7789,7 @@ A Task
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| scope | [Microsoft.Extensions.DependencyInjection.IServiceScope](#T-Microsoft-Extensions-DependencyInjection-IServiceScope 'Microsoft.Extensions.DependencyInjection.IServiceScope') | Service scope for dependency injection |
 | submissionActionType | [RecordPoint.Connectors.SDK.Abstractions.ContentManager.SubmissionActionType](#T-RecordPoint-Connectors-SDK-Abstractions-ContentManager-SubmissionActionType 'RecordPoint.Connectors.SDK.Abstractions.ContentManager.SubmissionActionType') | The submission action type. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
@@ -7942,8 +7979,8 @@ This method has no parameters.
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-PreSubmitAsync-System-Threading-CancellationToken-'></a>
-### PreSubmitAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-PreSubmitAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken-'></a>
+### PreSubmitAsync(scope,cancellationToken) `method`
 
 ##### Summary
 
@@ -7957,6 +7994,7 @@ Submit result
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| scope | [Microsoft.Extensions.DependencyInjection.IServiceScope](#T-Microsoft-Extensions-DependencyInjection-IServiceScope 'Microsoft.Extensions.DependencyInjection.IServiceScope') | Service scope |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
 
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-RequeueAsync-System-DateTimeOffset,System-Threading-CancellationToken-'></a>
@@ -7994,8 +8032,8 @@ Submit result
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-SubmitSuccessfulAsync-System-Threading-CancellationToken-'></a>
-### SubmitSuccessfulAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitOperationBase`1-SubmitSuccessfulAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken-'></a>
+### SubmitSuccessfulAsync(scope,cancellationToken) `method`
 
 ##### Summary
 
@@ -8009,6 +8047,7 @@ Submit result
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| scope | [Microsoft.Extensions.DependencyInjection.IServiceScope](#T-Microsoft-Extensions-DependencyInjection-IServiceScope 'Microsoft.Extensions.DependencyInjection.IServiceScope') | Service scope |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
 
 <a name='T-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation'></a>
@@ -8133,22 +8172,16 @@ A Task
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-PreSubmitAsync-System-Threading-CancellationToken-'></a>
-### PreSubmitAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-PreSubmitAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken-'></a>
+### PreSubmitAsync() `method`
 
 ##### Summary
 
 
 
-##### Returns
-
-
-
 ##### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-RequeueAsync-System-DateTimeOffset,System-Threading-CancellationToken-'></a>
 ### RequeueAsync(waitTill,cancellationToken) `method`
@@ -8185,22 +8218,146 @@ Task<SubmitResult>
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-SubmitSuccessfulAsync-System-Threading-CancellationToken-'></a>
-### SubmitSuccessfulAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SubmitRecordOperation-SubmitSuccessfulAsync-Microsoft-Extensions-DependencyInjection-IServiceScope,System-Threading-CancellationToken-'></a>
+### SubmitSuccessfulAsync() `method`
 
 ##### Summary
 
 
 
-##### Returns
+##### Parameters
 
+This method has no parameters.
 
+<a name='T-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation'></a>
+## SynchronousSubmitRecordOperation `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.ContentManager
+
+##### Summary
+
+Synchronously submits records and all associated binaries to the R365 system.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+| serviceProvider | [T:RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation](#T-T-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation 'T:RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation') | The service provider. |
+
+##### Remarks
+
+Initializes a new instance of the [SynchronousSubmitRecordOperation](#T-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation') class.
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider,RecordPoint-Connectors-SDK-R365-IR365Client,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
+### #ctor(serviceProvider,contentManagerActionProvider,r365Client,connectorManager,systemContext,observabilityScope,telemetryTracker,workQueueClient,dateTimeProvider) `constructor`
+
+##### Summary
+
+Synchronously submits records and all associated binaries to the R365 system.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') | The service provider. |
+| contentManagerActionProvider | [RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider](#T-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider') | The content manager action provider. |
+| r365Client | [RecordPoint.Connectors.SDK.R365.IR365Client](#T-RecordPoint-Connectors-SDK-R365-IR365Client 'RecordPoint.Connectors.SDK.R365.IR365Client') | The r365 client. |
+| connectorManager | [RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager](#T-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager 'RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager') | The connector manager. |
+| systemContext | [RecordPoint.Connectors.SDK.Context.ISystemContext](#T-RecordPoint-Connectors-SDK-Context-ISystemContext 'RecordPoint.Connectors.SDK.Context.ISystemContext') | The system context. |
+| observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The scope manager. |
+| telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
+| workQueueClient | [RecordPoint.Connectors.SDK.Work.IWorkQueueClient](#T-RecordPoint-Connectors-SDK-Work-IWorkQueueClient 'RecordPoint.Connectors.SDK.Work.IWorkQueueClient') | The work queue client. |
+| dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
+
+##### Remarks
+
+Initializes a new instance of the [SynchronousSubmitRecordOperation](#T-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation 'RecordPoint.Connectors.SDK.ContentManager.SynchronousSubmitRecordOperation') class.
+
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-WORK_TYPE'></a>
+### WORK_TYPE `constants`
+
+##### Summary
+
+WORK TYPE.
+
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-_connectorConfiguration'></a>
+### _connectorConfiguration `constants`
+
+##### Summary
+
+The connector configuration.
+
+<a name='P-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-ConnectorConfigId'></a>
+### ConnectorConfigId `property`
+
+##### Summary
+
+Gets the connector config id.
+
+<a name='P-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-ServiceName'></a>
+### ServiceName `property`
+
+##### Summary
+
+Gets the service name.
+
+<a name='P-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-WorkType'></a>
+### WorkType `property`
+
+##### Summary
+
+Gets the work type.
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-GetCustomKeyDimensions'></a>
+### GetCustomKeyDimensions() `method`
+
+##### Summary
+
+Get custom key dimensions.
+
+##### Returns
+
+A Dimensions
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-InnerDispose'></a>
+### InnerDispose() `method`
+
+##### Summary
+
+Dispose
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-SynchronousSubmitRecordOperation-InnerRunAsync-System-Threading-CancellationToken-'></a>
+### InnerRunAsync(cancellationToken) `method`
+
+##### Summary
+
+Inner the run asynchronously.
+
+##### Returns
+
+A Task
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') |  |
 
 <a name='T-RecordPoint-Connectors-SDK-Context-SystemContext'></a>
 ## SystemContext `type`
@@ -8687,6 +8844,13 @@ Date Time provider
 
 *Inherit from parent.*
 
+<a name='P-RecordPoint-Connectors-SDK-Work-WorkBase`1-ResultReasonDetails'></a>
+### ResultReasonDetails `property`
+
+##### Summary
+
+*Inherit from parent.*
+
 <a name='P-RecordPoint-Connectors-SDK-Work-WorkBase`1-ResultType'></a>
 ### ResultType `property`
 
@@ -8750,6 +8914,17 @@ This method has no parameters.
 ##### Summary
 
 Record that this work item has completed
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Work-WorkBase`1-CompleteAsync-System-String,System-String,System-Threading-CancellationToken-'></a>
+### CompleteAsync() `method`
+
+##### Summary
+
+Record that this work item has completed, with reason details
 
 ##### Parameters
 

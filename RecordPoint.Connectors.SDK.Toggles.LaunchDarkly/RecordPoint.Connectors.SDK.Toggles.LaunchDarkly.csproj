@@ -24,7 +24,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RecordPoint.Common.FeatureToggles.LaunchDarkly" Version="1.0.224967" />
-		<PackageReference Include="RecordPoint.Services.Common" Version="2.2.213330" />
+		<PackageReference Include="RecordPoint.Common.FeatureToggles.LaunchDarkly" Version="1.0.240061" />
+		<PackageReference Include="RecordPoint.Services.Common" Version="2.2.290344" />
 	</ItemGroup>
 </Project>

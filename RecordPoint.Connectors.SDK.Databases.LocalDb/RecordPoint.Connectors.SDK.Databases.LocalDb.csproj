@@ -26,8 +26,8 @@
 		<EmbeddedResource Include="LocalDb_DbDetach.sql" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.16" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.16">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
