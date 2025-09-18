@@ -107,7 +107,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             typeof(SubmitAggregationOperation),
             typeof(SubmitBinaryOperation),
             typeof(SubmitRecordOperation),
-            typeof(SubmitAuditEventOperation)
+            typeof(SubmitAuditEventOperation),
+            typeof(SynchronousSubmitRecordOperation)
         };
 
         /// <summary>
@@ -232,7 +233,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
                 //Delay to allow currently processing operations to complete
                 await Task.Delay(_rabbitMqOptions.Value.ServiceShutdownDelay, CancellationToken.None);
-                _processingToken.Cancel();
+                await _processingToken.CancelAsync();
 
                 CloseModels();
             }

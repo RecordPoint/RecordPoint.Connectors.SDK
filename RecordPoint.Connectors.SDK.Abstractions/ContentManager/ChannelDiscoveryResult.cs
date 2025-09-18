@@ -38,5 +38,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// Audit Events
         /// </summary>
         public List<AuditEvent> AuditEvents { get; set; } = new List<AuditEvent>();
+        
+        /// <summary>
+        /// Progress cursor. Will be needed on subsequent operations to get the next section of work.
+        /// </summary>
+        public string? Cursor { get; set; }
     }
 }

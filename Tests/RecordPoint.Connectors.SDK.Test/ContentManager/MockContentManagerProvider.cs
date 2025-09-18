@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.ContentManager;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.ContentManager;
 
 namespace RecordPoint.Connectors.SDK.Test.ContentManager
 {
@@ -50,36 +51,34 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         public Func<IRecordDisposalAction> RecordDisposalActionFactory { get; set; }
 
 
-        public IContentManagerCallbackAction CreateContentManagerCallbackAction() => ContentManagerCallbackActionFactory();
+        public IContentManagerCallbackAction CreateContentManagerCallbackAction(IServiceScope scope = null) => ContentManagerCallbackActionFactory();
 
-        public IChannelDiscoveryAction CreateChannelDiscoveryAction() => ChannelDiscoveryActionFactory();
+        public IChannelDiscoveryAction CreateChannelDiscoveryAction(IServiceScope scope = null) => ChannelDiscoveryActionFactory();
 
-        public IContentRegistrationAction CreateContentRegistrationAction() => ContentRegistrationActionFactory();
+        public IContentRegistrationAction CreateContentRegistrationAction(IServiceScope scope = null) => ContentRegistrationActionFactory();
 
-        public IContentSynchronisationAction CreateContentSynchronisationAction() => ContentSynchronisationActionFactory();
+        public IContentSynchronisationAction CreateContentSynchronisationAction(IServiceScope scope = null) => ContentSynchronisationActionFactory();
 
-        public IBinaryRetrievalAction CreateBinaryRetrievalAction() => BinaryRetrievalActionFactory();
+        public IBinaryRetrievalAction CreateBinaryRetrievalAction(IServiceScope scope = null) => BinaryRetrievalActionFactory();
 
-        public IAggregationSubmissionCallbackAction CreateAggregationSubmissionCallbackAction() => AggregationSubmissionCallbackActionFactory();
+        public IAggregationSubmissionCallbackAction CreateAggregationSubmissionCallbackAction(IServiceScope scope = null) => AggregationSubmissionCallbackActionFactory();
 
-        public IAuditEventSubmissionCallbackAction CreateAuditEventSubmissionCallbackAction() => AuditEventSubmissionCallbackActionFactory();
+        public IAuditEventSubmissionCallbackAction CreateAuditEventSubmissionCallbackAction(IServiceScope scope = null) => AuditEventSubmissionCallbackActionFactory();
 
-        public IRecordSubmissionCallbackAction CreateRecordSubmissionCallbackAction() => RecordSubmissionCallbackActionFactory();
+        public IRecordSubmissionCallbackAction CreateRecordSubmissionCallbackAction(IServiceScope scope = null) => RecordSubmissionCallbackActionFactory();
 
-        public IBinarySubmissionCallbackAction CreateBinarySubmissionCallbackAction() => BinarySubmissionCallbackActionFactory();
+        public IBinarySubmissionCallbackAction CreateBinarySubmissionCallbackAction(IServiceScope scope = null) => BinarySubmissionCallbackActionFactory();
 
-        public IRecordDisposalAction CreateRecordDisposalAction() => RecordDisposalActionFactory();
+        public IRecordDisposalAction CreateRecordDisposalAction(IServiceScope scope = null) => RecordDisposalActionFactory();
 
-        public IGenerateReportAction CreateGenerationReportAction()
+        public IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>(IServiceScope scope = null) 
+            where TOutput : ActionResultBase
         {
             throw new NotImplementedException();
         }
-        public IGenericAction<TInput, TOutput> CreateGenericAction<TInput, TOutput>() where TOutput : ActionResultBase
-        {
-            throw new NotImplementedException();
-        }
 
-        public IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>() where TOutput : ActionResultBase
+        public IGenericManagedAction<TInput, TOutput> CreateGenericManagedAction<TInput, TOutput>(IServiceScope scope = null) 
+            where TOutput : ActionResultBase
         {
             throw new NotImplementedException();
         }

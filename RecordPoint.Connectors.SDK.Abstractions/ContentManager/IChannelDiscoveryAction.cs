@@ -13,7 +13,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// </summary>
         /// <param name="connectorConfiguration">The connector configuration</param>
         /// <param name="cancellationToken">Cancellation token</param>
+        /// <param name="cursor">Scan cursor provided by a prior batch discovery operation, if Channel Discovery is in progress</param>
         /// <returns>Result of the scan</returns>
-        Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken);
+        Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken, string? cursor = null);
     }
 }

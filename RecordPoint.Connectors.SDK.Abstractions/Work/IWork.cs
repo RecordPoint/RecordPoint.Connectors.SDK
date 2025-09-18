@@ -36,6 +36,11 @@
         string ResultReason { get; }
 
         /// <summary>
+        /// Optional message to provide details on why a particular result was reached
+        /// </summary>
+        string ResultReasonDetails { get; }
+
+        /// <summary>
         /// The time that we got a result
         /// </summary>
         DateTimeOffset FinishDateTime { get; }

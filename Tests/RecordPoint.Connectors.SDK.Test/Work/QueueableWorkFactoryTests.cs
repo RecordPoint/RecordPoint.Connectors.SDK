@@ -50,6 +50,8 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
         public string ResultReason => throw new NotImplementedException();
 
+        public string ResultReasonDetails => throw new NotImplementedException();
+
         public DateTimeOffset FinishDateTime => throw new NotImplementedException();
 
         public Exception Exception => throw new NotImplementedException();

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -53,6 +54,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// The content manager options.
         /// </summary>
         private readonly IOptions<ContentManagerOptions> _contentManagerOptions;
+        /// <summary>
+        /// The record submission options.
+        /// </summary>
+        private readonly IOptions<RecordSubmissionOptions> _recordSubmissionOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentRegistrationOperation"/> class.
@@ -70,6 +75,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="options">The options.</param>
         /// <param name="contentManagerOptions">The content manager options.</param>
+        /// <param name="recordSubmissionOptions">The record submission options.</param>
         public ContentRegistrationOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -83,7 +89,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider,
             IOptions<ContentRegistrationOperationOptions> options,
-            IOptions<ContentManagerOptions> contentManagerOptions)
+            IOptions<ContentManagerOptions> contentManagerOptions,
+            IOptions<RecordSubmissionOptions> recordSubmissionOptions)
             : base(serviceProvider, managedWorkFactory, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
@@ -93,6 +100,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             _toggleProvider = toggleProvider;
             _options = options;
             _contentManagerOptions = contentManagerOptions;
+            _recordSubmissionOptions = recordSubmissionOptions;
         }
 
         /// <summary>
@@ -169,12 +177,6 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
         #region Fetching
         /// <summary>
-        /// Create a Content Registration Operation for the current connector configuration
-        /// </summary>
-        /// <returns>Content syncer</returns>
-        protected IContentRegistrationAction CreateContentRegistrationAction() => _contentManagerActionProvider.CreateContentRegistrationAction();
-
-        /// <summary>
         /// Assuming that everything is setup correct, go and fetch new Content
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
@@ -220,7 +222,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns><![CDATA[Task<ContentResult>]]></returns>
         protected async Task<ContentResult> BeginAsync(Channel channel, CancellationToken cancellationToken)
         {
-            var action = CreateContentRegistrationAction();
+            using var scope = _serviceProvider.CreateScope();
+            var action = _contentManagerActionProvider.CreateContentRegistrationAction(scope);
             return await action.BeginAsync(_connectorConfiguration, channel, Configuration.Context, cancellationToken);
         }
 
@@ -233,7 +236,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns><![CDATA[Task<ContentResult>]]></returns>
         protected async Task<ContentResult> ContinueSync(Channel channel, string cursor, CancellationToken cancellationToken)
         {
-            var action = CreateContentRegistrationAction();
+            using var scope = _serviceProvider.CreateScope();
+            var action = _contentManagerActionProvider.CreateContentRegistrationAction(scope);
             return await action.ContinueAsync(_connectorConfiguration, channel, cursor, Configuration.Context, cancellationToken);
         }
         #endregion
@@ -336,16 +340,19 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     TenantDomainName = _connectorConfiguration.TenantDomainName
                 }, record, null, cancellationToken));
 
-                var binaries = record.Binaries;
-                foreach (var binary in binaries)
+                if (!_recordSubmissionOptions.Value.SubmitRecordAndBinariesSynchronously)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    tasks.Add(_workQueueClient.SubmitBinaryAsync(new ContentSubmissionConfiguration
+                    var binaries = record.Binaries;
+                    foreach (var binary in binaries)
                     {
-                        ConnectorConfigurationId = _connectorConfiguration.Id,
-                        TenantId = _connectorConfiguration.TenantId,
-                        TenantDomainName = _connectorConfiguration.TenantDomainName
-                    }, binary, null, cancellationToken));
+                        cancellationToken.ThrowIfCancellationRequested();
+                        tasks.Add(_workQueueClient.SubmitBinaryAsync(new ContentSubmissionConfiguration
+                        {
+                            ConnectorConfigurationId = _connectorConfiguration.Id,
+                            TenantId = _connectorConfiguration.TenantId,
+                            TenantDomainName = _connectorConfiguration.TenantDomainName
+                        }, binary, null, cancellationToken));
+                    }
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using System.Security.Authentication;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Configuration;
@@ -84,6 +85,15 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
                 }
             };
 
+            if (!string.IsNullOrWhiteSpace(options.TlsVersion))
+            {
+                cosmosSerializationOptions.HttpClientFactory = () =>
+                {
+                    var handler = new HttpClientHandler() { SslProtocols = ParseTlsVersion(options.TlsVersion) };
+                    return new HttpClient(handler);
+                };
+            }
+
             if (!string.IsNullOrEmpty(options.ConnectionString))
             {
                 SetConnectionMode(cosmosSerializationOptions, options.ConnectionString, options.UseGateWayConnectionMode);
@@ -107,6 +117,9 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
                     ? ConnectionMode.Gateway
                     : ConnectionMode.Direct;
         }
+
+        private static SslProtocols ParseTlsVersion(string tlsVersion)
+            => Enum.TryParse<SslProtocols>(tlsVersion, ignoreCase: true, out var result) ? result : SslProtocols.None; // Note: None allows the OS to choose, this is the default behaviour.
 
     }
 }

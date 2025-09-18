@@ -20,6 +20,7 @@
   - [ConnectionString](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-ConnectionString 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.ConnectionString')
   - [CosmosDbAccountName](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-CosmosDbAccountName 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.CosmosDbAccountName')
   - [DatabaseName](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-DatabaseName 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.DatabaseName')
+  - [TlsVersion](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-TlsVersion 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.TlsVersion')
   - [UseCamelCaseNamingPolicy](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseCamelCaseNamingPolicy 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.UseCamelCaseNamingPolicy')
   - [UseGateWayConnectionMode](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseGateWayConnectionMode 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.UseGateWayConnectionMode')
 - [CosmosDbConnectorDatabaseProvider](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseProvider 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseProvider')
@@ -276,6 +277,13 @@ The endpoint to the Cosmos Resource
 ##### Summary
 
 Name of the database
+
+<a name='P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-TlsVersion'></a>
+### TlsVersion `property`
+
+##### Summary
+
+TLS version to use for Cosmos DB connections (e.g., "Tls12", "Tls13", "Tls12,Tls13")
 
 <a name='P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseCamelCaseNamingPolicy'></a>
 ### UseCamelCaseNamingPolicy `property`

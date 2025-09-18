@@ -76,7 +76,7 @@
   - [Instance](#P-RecordPoint-Connectors-SDK-Providers-DateTimeProvider-Instance 'RecordPoint.Connectors.SDK.Providers.DateTimeProvider.Instance')
   - [UtcNow](#P-RecordPoint-Connectors-SDK-Providers-DateTimeProvider-UtcNow 'RecordPoint.Connectors.SDK.Providers.DateTimeProvider.UtcNow')
 - [DirectSubmitBinaryPipelineElement](#T-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement 'RecordPoint.Connectors.SDK.SubmitPipeline.DirectSubmitBinaryPipelineElement')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-#ctor-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission- 'RecordPoint.Connectors.SDK.SubmitPipeline.DirectSubmitBinaryPipelineElement.#ctor(RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission)')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-#ctor-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission,System-Boolean- 'RecordPoint.Connectors.SDK.SubmitPipeline.DirectSubmitBinaryPipelineElement.#ctor(RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission,System.Boolean)')
   - [BlobFactory](#P-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-BlobFactory 'RecordPoint.Connectors.SDK.SubmitPipeline.DirectSubmitBinaryPipelineElement.BlobFactory')
   - [CircuitProvider](#P-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-CircuitProvider 'RecordPoint.Connectors.SDK.SubmitPipeline.DirectSubmitBinaryPipelineElement.CircuitProvider')
   - [RetryProvider](#P-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-RetryProvider 'RecordPoint.Connectors.SDK.SubmitPipeline.DirectSubmitBinaryPipelineElement.RetryProvider')
@@ -1129,7 +1129,7 @@ RecordPoint.Connectors.SDK.SubmitPipeline
 
 Pipeline element stream binary directly to blob storage
 
-<a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-#ctor-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission-'></a>
+<a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-DirectSubmitBinaryPipelineElement-#ctor-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission,System-Boolean-'></a>
 ### #ctor() `constructor`
 
 ##### Summary

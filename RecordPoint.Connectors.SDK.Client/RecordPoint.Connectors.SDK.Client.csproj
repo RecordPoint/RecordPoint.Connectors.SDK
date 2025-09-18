@@ -24,13 +24,13 @@
 		<None Remove="TaskRunner\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.72.0" />
 		<PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
 		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Polly" Version="8.5.0" />
+		<PackageReference Include="Polly" Version="8.5.2" />
 		<PackageReference Include="RecordPoint.Code.Documentation" Version="1.0.208304">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

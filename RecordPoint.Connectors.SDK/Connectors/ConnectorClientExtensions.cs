@@ -17,7 +17,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// </summary>
         /// <param name="connectorConfig">Notification model containing a connector notification</param>
         /// <returns></returns>
-        private static ConnectorConfigurationModel ConvertToConnectorData(ConnectorConfigModel connectorConfig)
+        public static ConnectorConfigurationModel ConvertToConnectorData(ConnectorConfigModel connectorConfig)
         {
             var data = JsonSerializer.Serialize(connectorConfig);
             var connectorData = new ConnectorConfigurationModel
@@ -32,13 +32,12 @@ namespace RecordPoint.Connectors.SDK.Connectors
             return connectorData;
         }
 
-
         /// <summary>
         /// Convert a connector data model back into a connector config
         /// </summary>
         /// <param name="connectorData">Connector data to convert</param>
         /// <returns>Connector config</returns>
-        private static ConnectorConfigModel ConvertToConnectorConfig(ConnectorConfigurationModel connectorData)
+        public static ConnectorConfigModel ConvertToConnectorConfig(ConnectorConfigurationModel connectorData)
         {
             var connectorConfig = JsonSerializer.Deserialize<ConnectorConfigModel>(connectorData.Data);
             return connectorConfig;

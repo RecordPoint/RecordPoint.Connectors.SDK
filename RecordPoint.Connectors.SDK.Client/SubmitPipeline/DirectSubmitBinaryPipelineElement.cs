@@ -34,12 +34,16 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// </summary>
         public ISdkAzureBlobRetryProvider RetryProvider { get; set; }
 
+        private readonly bool _uploadBinaryOnly = false;
+
         /// <summary>
         /// Constructor
         /// <param name="next"></param>
+        /// <param name="uploadBinaryOnly">Indicates if the binary should be uploaded without notifying the platform of the submission</param>
         /// </summary>
-        public DirectSubmitBinaryPipelineElement(ISubmission next) : base(next)
+        public DirectSubmitBinaryPipelineElement(ISubmission next, bool uploadBinaryOnly) : base(next)
         {
+            _uploadBinaryOnly = uploadBinaryOnly;
         }
 
         /// <summary>
@@ -202,6 +206,13 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
 
             }
 
+            if (_uploadBinaryOnly) {
+                //If the connector is configured to perform synchronous record sumissions
+                //We do not need to notify the platform of the successful upload
+                //As the binaries will be included as part of the record submission
+                return true;
+            }
+            
             var authHelper = ApiClientFactory.CreateAuthenticationProvider(submitContext.AuthenticationHelperSettings);
 
             var notifyResult = await retryPolicy.ExecuteAsync(

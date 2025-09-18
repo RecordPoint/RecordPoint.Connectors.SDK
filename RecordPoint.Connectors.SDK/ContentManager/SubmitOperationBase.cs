@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.Connectors;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
@@ -108,7 +109,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 return;
             }
 
-            await PreSubmitAsync(cancellationToken)
+            using var scope = _serviceProvider.CreateScope();
+
+            await PreSubmitAsync(scope, cancellationToken)
                 .ConfigureAwait(false);
 
             var submitResult = await SubmitAsync(cancellationToken).ConfigureAwait(false);
@@ -121,7 +124,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             switch (submitResult.SubmitStatus)
             {
                 case SubmitResult.Status.OK:
-                    await SubmitSuccessfulAsync(cancellationToken).ConfigureAwait(false);
+                    await SubmitSuccessfulAsync(scope, cancellationToken).ConfigureAwait(false);
                     await CompleteAsync($"{ContentLabel} submitted", cancellationToken).ConfigureAwait(false);
                     break;
 
@@ -184,16 +187,18 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Required override that is called prior to submission to R365
         /// </summary>
+        /// <param name="scope">Service scope</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Submit result</returns>
-        protected abstract Task PreSubmitAsync(CancellationToken cancellationToken);
+        protected abstract Task PreSubmitAsync(IServiceScope scope, CancellationToken cancellationToken);
 
         /// <summary>
         /// Required override that is called after a successfull submission to R365
         /// </summary>
+        /// <param name="scope">Service scope</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Submit result</returns>
-        protected abstract Task SubmitSuccessfulAsync(CancellationToken cancellationToken);
+        protected abstract Task SubmitSuccessfulAsync(IServiceScope scope, CancellationToken cancellationToken);
 
         /// <summary>
         /// Get deferral date time

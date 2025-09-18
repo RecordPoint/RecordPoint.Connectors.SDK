@@ -108,6 +108,9 @@ namespace RecordPoint.Connectors.SDK.Work
         public string ResultReason { get; protected set; }
 
         /// <inheritdoc/>
+        public string ResultReasonDetails { get; protected set; }
+
+        /// <inheritdoc/>
         public WorkResultType ResultType { get; protected set; }
 
         /// <summary>
@@ -128,6 +131,16 @@ namespace RecordPoint.Connectors.SDK.Work
             HasResult = true;
             ResultReason = reason;
             ResultType = WorkResultType.Complete;
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Record that this work item has completed, with reason details
+        /// </summary>
+        protected Task CompleteAsync(string reason, string reasonDetails, CancellationToken cancellationToken)
+        {
+            ResultReasonDetails = reasonDetails;
+            CompleteAsync(reason, cancellationToken);
             return Task.CompletedTask;
         }
 
@@ -281,12 +294,22 @@ namespace RecordPoint.Connectors.SDK.Work
         /// <remarks>
         /// This method is intended to be overridden in base classes
         /// </remarks>
-        protected virtual Dimensions GetCoreResultDimensions() => new()
+        protected virtual Dimensions GetCoreResultDimensions()
         {
-            [StandardDimensions.EVENT_TYPE] = EventType.Finish.ToString(),
-            [StandardDimensions.OUTCOME] = ResultType.ToString(),
-            [StandardDimensions.OUTCOME_REASON] = ResultReason,
-        };
+            var output = new Dimensions()
+            {
+                [StandardDimensions.EVENT_TYPE] = EventType.Finish.ToString(),
+                [StandardDimensions.OUTCOME] = ResultType.ToString(),
+                [StandardDimensions.OUTCOME_REASON] = ResultReason,
+            };
+
+            if (!string.IsNullOrEmpty(ResultReasonDetails))
+            {
+                output[StandardDimensions.ACTION_RESULT_REASON] = ResultReasonDetails;
+            }
+
+            return output;
+        }
 
         /// <summary>
         /// Get the core result measures

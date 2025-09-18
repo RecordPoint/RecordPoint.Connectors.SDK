@@ -6,7 +6,7 @@
     public class ContentManagerOptions
     {
         /// <summary>
-        /// 
+        /// Name for the configuration section
         /// </summary>
         public const string SECTION_NAME = "ContentManager";
 
@@ -134,7 +134,7 @@
     public class ChannelDiscoveryOperationOptions : ContentManagerOperationOptionsBase
     {
         /// <summary>
-        /// 
+        /// Name for the configuration section
         /// </summary>
         public const string SECTION_NAME = "ContentManager:ChannelDiscovery";
 
@@ -150,7 +150,7 @@
     public class ContentRegistrationOperationOptions : ContentManagerOperationOptionsBase
     {
         /// <summary>
-        /// 
+        /// Name for the configuration section
         /// </summary>
         public const string SECTION_NAME = "ContentManager:ContentRegistration";
 
@@ -166,7 +166,7 @@
     public class ContentSynchronisationOperationOptions : ContentManagerOperationOptionsBase
     {
         /// <summary>
-        /// 
+        /// Name for the configuration section
         /// </summary>
         public const string SECTION_NAME = "ContentManager:ContentSynchronisation";
 
@@ -174,6 +174,22 @@
         /// The maximum number of records to retrieve in a single Content Synchronisation execution
         /// </summary>
         public int MaxFetchBatchSize { get; set; } = 1000;
+    }
+
+    /// <summary>
+    /// Configuration settings for Record Submission
+    /// </summary>
+    public class RecordSubmissionOptions 
+    {
+        /// <summary>
+        /// Name for the configuration section
+        /// </summary>
+        public const string SECTION_NAME = "ContentManager:RecordSubmission";
+
+        /// <summary>
+        /// Submits the record and binaries together within a single unit of work
+        /// </summary>
+        public bool SubmitRecordAndBinariesSynchronously { get; set; } = false;
     }
 
 }

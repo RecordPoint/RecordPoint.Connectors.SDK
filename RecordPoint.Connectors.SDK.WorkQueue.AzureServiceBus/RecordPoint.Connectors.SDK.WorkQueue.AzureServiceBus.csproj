@@ -16,7 +16,7 @@
 		<Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.2" />
+		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.19.0" />
 		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -142,7 +142,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 ContentSynchronisationOperationsStarted = State.ContentSynchronisationOperationsStarted
             };
             var nextRunTime = DateTimeProvider.UtcNow.AddSeconds(_options.Value.DelaySeconds);
-            await ContinueAsync("Channel Discovery completed normally", finalState, nextRunTime, cancellationToken);
+            await ContinueAsync("Content Manager completed normally", finalState, nextRunTime, cancellationToken);
         }
 
         #region Channel Discovery
@@ -284,15 +284,14 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             return measures;
         }
 
-        private IContentManagerCallbackAction CreateContentManagerCallbackAction() => _contentManagerActionProvider.CreateContentManagerCallbackAction();
-
         private async Task InvokeContentManagerCallbackAsync(List<ConnectorConfigModel> connectorConfigurations, CancellationToken cancellationToken)
         {
             //Do not invoke if we have not found any new configurations
             if (connectorConfigurations.Count == 0)
                 return;
 
-            var contentManagerCallbackAction = CreateContentManagerCallbackAction();
+            using var scope = _serviceProvider.CreateScope();
+            var contentManagerCallbackAction = _contentManagerActionProvider.CreateContentManagerCallbackAction(scope);
 
             //If no callback action has been registered, just bail out now
             if (contentManagerCallbackAction == null)

@@ -28,8 +28,8 @@
   - [MetaData](#P-RecordPoint-Connectors-SDK-Content-AggregationModel-MetaData 'RecordPoint.Connectors.SDK.Content.AggregationModel.MetaData')
   - [ParentExternalId](#P-RecordPoint-Connectors-SDK-Content-AggregationModel-ParentExternalId 'RecordPoint.Connectors.SDK.Content.AggregationModel.ParentExternalId')
   - [Title](#P-RecordPoint-Connectors-SDK-Content-AggregationModel-Title 'RecordPoint.Connectors.SDK.Content.AggregationModel.Title')
-  - [Equals(other)](#M-RecordPoint-Connectors-SDK-Content-AggregationModel-Equals-RecordPoint-Connectors-SDK-Content-AggregationModel- 'RecordPoint.Connectors.SDK.Content.AggregationModel.Equals(RecordPoint.Connectors.SDK.Content.AggregationModel)')
-  - [Equals(obj)](#M-RecordPoint-Connectors-SDK-Content-AggregationModel-Equals-System-Object- 'RecordPoint.Connectors.SDK.Content.AggregationModel.Equals(System.Object)')
+  - [Equals()](#M-RecordPoint-Connectors-SDK-Content-AggregationModel-Equals-RecordPoint-Connectors-SDK-Content-AggregationModel- 'RecordPoint.Connectors.SDK.Content.AggregationModel.Equals(RecordPoint.Connectors.SDK.Content.AggregationModel)')
+  - [Equals()](#M-RecordPoint-Connectors-SDK-Content-AggregationModel-Equals-System-Object- 'RecordPoint.Connectors.SDK.Content.AggregationModel.Equals(System.Object)')
   - [GetHashCode()](#M-RecordPoint-Connectors-SDK-Content-AggregationModel-GetHashCode 'RecordPoint.Connectors.SDK.Content.AggregationModel.GetHashCode')
 - [ApplicationInsightOptions](#T-RecordPoint-Connectors-SDK-Observability-AppInsights-ApplicationInsightOptions 'RecordPoint.Connectors.SDK.Observability.AppInsights.ApplicationInsightOptions')
   - [OPTION_NAME](#F-RecordPoint-Connectors-SDK-Observability-AppInsights-ApplicationInsightOptions-OPTION_NAME 'RecordPoint.Connectors.SDK.Observability.AppInsights.ApplicationInsightOptions.OPTION_NAME')
@@ -58,6 +58,7 @@
 - [AzureAuthenticationOptionsExtensions](#T-RecordPoint-Connectors-SDK-Configuration-AzureAuthenticationOptionsExtensions 'RecordPoint.Connectors.SDK.Configuration.AzureAuthenticationOptionsExtensions')
   - [GetTokenCredential(options)](#M-RecordPoint-Connectors-SDK-Configuration-AzureAuthenticationOptionsExtensions-GetTokenCredential-RecordPoint-Connectors-SDK-Configuration-AzureAuthenticationOptions- 'RecordPoint.Connectors.SDK.Configuration.AzureAuthenticationOptionsExtensions.GetTokenCredential(RecordPoint.Connectors.SDK.Configuration.AzureAuthenticationOptions)')
 - [BinaryMetaInfo](#T-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo')
+  - [BinarySubmissionStatus](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-BinarySubmissionStatus 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.BinarySubmissionStatus')
   - [ContentToken](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-ContentToken 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.ContentToken')
   - [ContentTokenType](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-ContentTokenType 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.ContentTokenType')
   - [FileHash](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-FileHash 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.FileHash')
@@ -66,6 +67,7 @@
   - [ItemExternalId](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-ItemExternalId 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.ItemExternalId')
   - [MimeType](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-MimeType 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.MimeType')
   - [SkipEnrichment](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-SkipEnrichment 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.SkipEnrichment')
+  - [SubmissionAttempts](#P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-SubmissionAttempts 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.SubmissionAttempts')
   - [Equals(other)](#M-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-Equals-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo- 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.Equals(RecordPoint.Connectors.SDK.Content.BinaryMetaInfo)')
   - [Equals(obj)](#M-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-Equals-System-Object- 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.Equals(System.Object)')
   - [GetHashCode()](#M-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-GetHashCode 'RecordPoint.Connectors.SDK.Content.BinaryMetaInfo.GetHashCode')
@@ -83,6 +85,10 @@
   - [Deleted](#F-RecordPoint-Connectors-SDK-ContentManager-BinaryRetrievalResultType-Deleted 'RecordPoint.Connectors.SDK.ContentManager.BinaryRetrievalResultType.Deleted')
   - [Failed](#F-RecordPoint-Connectors-SDK-ContentManager-BinaryRetrievalResultType-Failed 'RecordPoint.Connectors.SDK.ContentManager.BinaryRetrievalResultType.Failed')
   - [ZeroBinary](#F-RecordPoint-Connectors-SDK-ContentManager-BinaryRetrievalResultType-ZeroBinary 'RecordPoint.Connectors.SDK.ContentManager.BinaryRetrievalResultType.ZeroBinary')
+- [BinarySubmissionStatus](#T-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus 'RecordPoint.Connectors.SDK.Content.BinarySubmissionStatus')
+  - [NotSubmitted](#F-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus-NotSubmitted 'RecordPoint.Connectors.SDK.Content.BinarySubmissionStatus.NotSubmitted')
+  - [Skipped](#F-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus-Skipped 'RecordPoint.Connectors.SDK.Content.BinarySubmissionStatus.Skipped')
+  - [Submitted](#F-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus-Submitted 'RecordPoint.Connectors.SDK.Content.BinarySubmissionStatus.Submitted')
 - [Channel](#T-RecordPoint-Connectors-SDK-Content-Channel 'RecordPoint.Connectors.SDK.Content.Channel')
   - [NULL_CHANNEL_ID](#F-RecordPoint-Connectors-SDK-Content-Channel-NULL_CHANNEL_ID 'RecordPoint.Connectors.SDK.Content.Channel.NULL_CHANNEL_ID')
   - [NULL_CHANNEL_TITLE](#F-RecordPoint-Connectors-SDK-Content-Channel-NULL_CHANNEL_TITLE 'RecordPoint.Connectors.SDK.Content.Channel.NULL_CHANNEL_TITLE')
@@ -106,15 +112,19 @@
 - [ChannelDiscoveryResult](#T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult')
   - [AuditEvents](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-AuditEvents 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.AuditEvents')
   - [Channels](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-Channels 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.Channels')
+  - [Cursor](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-Cursor 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.Cursor')
   - [Exception](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-Exception 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.Exception')
   - [NewChannelRegistrations](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-NewChannelRegistrations 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.NewChannelRegistrations')
   - [Reason](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-Reason 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.Reason')
   - [ResultType](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-ResultType 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResult.ResultType')
 - [ChannelDiscoveryResultType](#T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResultType')
+  - [Abandoned](#F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Abandoned 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResultType.Abandoned')
   - [BackOff](#F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-BackOff 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResultType.BackOff')
   - [Complete](#F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Complete 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResultType.Complete')
   - [Failed](#F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Failed 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResultType.Failed')
+  - [Incomplete](#F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Incomplete 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryResultType.Incomplete')
 - [ChannelDiscoveryState](#T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryState')
+  - [Cursor](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState-Cursor 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryState.Cursor')
   - [LastBackOffDelaySeconds](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState-LastBackOffDelaySeconds 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryState.LastBackOffDelaySeconds')
   - [LatestStateType](#P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState-LatestStateType 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryState.LatestStateType')
   - [Deserialize(stateType,stateText)](#M-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState-Deserialize-System-String,System-String- 'RecordPoint.Connectors.SDK.ContentManager.ChannelDiscoveryState.Deserialize(System.String,System.String)')
@@ -339,7 +349,7 @@
 - [IBinarySubmissionCallbackAction](#T-RecordPoint-Connectors-SDK-ContentManager-IBinarySubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IBinarySubmissionCallbackAction')
   - [ExecuteAsync(connectorConfiguration,binaryMetaInfo,submissionActionType,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-IBinarySubmissionCallbackAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,RecordPoint-Connectors-SDK-Content-BinaryMetaInfo,RecordPoint-Connectors-SDK-Abstractions-ContentManager-SubmissionActionType,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.IBinarySubmissionCallbackAction.ExecuteAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,RecordPoint.Connectors.SDK.Content.BinaryMetaInfo,RecordPoint.Connectors.SDK.Abstractions.ContentManager.SubmissionActionType,System.Threading.CancellationToken)')
 - [IChannelDiscoveryAction](#T-RecordPoint-Connectors-SDK-ContentManager-IChannelDiscoveryAction 'RecordPoint.Connectors.SDK.ContentManager.IChannelDiscoveryAction')
-  - [ExecuteAsync(connectorConfiguration,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-IChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.IChannelDiscoveryAction.ExecuteAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,System.Threading.CancellationToken)')
+  - [ExecuteAsync(connectorConfiguration,cancellationToken,cursor)](#M-RecordPoint-Connectors-SDK-ContentManager-IChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken,System-String- 'RecordPoint.Connectors.SDK.ContentManager.IChannelDiscoveryAction.ExecuteAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,System.Threading.CancellationToken,System.String)')
 - [IChannelManager](#T-RecordPoint-Connectors-SDK-Content-IChannelManager 'RecordPoint.Connectors.SDK.Content.IChannelManager')
   - [ChannelExistsAsync(connectorId,externalId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Content-IChannelManager-ChannelExistsAsync-System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Content.IChannelManager.ChannelExistsAsync(System.String,System.String,System.Threading.CancellationToken)')
   - [GetChannelAsync(connectorId,externalId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Content-IChannelManager-GetChannelAsync-System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Content.IChannelManager.GetChannelAsync(System.String,System.String,System.Threading.CancellationToken)')
@@ -365,19 +375,18 @@
 - [IContentDiscoveryState](#T-RecordPoint-Connectors-SDK-Abstractions-ContentManager-IContentDiscoveryState 'RecordPoint.Connectors.SDK.Abstractions.ContentManager.IContentDiscoveryState')
   - [LastBackOffDelaySeconds](#P-RecordPoint-Connectors-SDK-Abstractions-ContentManager-IContentDiscoveryState-LastBackOffDelaySeconds 'RecordPoint.Connectors.SDK.Abstractions.ContentManager.IContentDiscoveryState.LastBackOffDelaySeconds')
 - [IContentManagerActionProvider](#T-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider')
-  - [CreateAggregationSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAggregationSubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateAggregationSubmissionCallbackAction')
-  - [CreateAuditEventSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateAuditEventSubmissionCallbackAction')
-  - [CreateBinaryRetrievalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinaryRetrievalAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateBinaryRetrievalAction')
-  - [CreateBinarySubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinarySubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateBinarySubmissionCallbackAction')
-  - [CreateChannelDiscoveryAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateChannelDiscoveryAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateChannelDiscoveryAction')
-  - [CreateContentManagerCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentManagerCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateContentManagerCallbackAction')
-  - [CreateContentRegistrationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentRegistrationAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateContentRegistrationAction')
-  - [CreateContentSynchronisationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentSynchronisationAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateContentSynchronisationAction')
-  - [CreateGenerationReportAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenerationReportAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateGenerationReportAction')
-  - [CreateGenericAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericAction``2 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateGenericAction``2')
-  - [CreateGenericManagedAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericManagedAction``2 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateGenericManagedAction``2')
-  - [CreateRecordDisposalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordDisposalAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateRecordDisposalAction')
-  - [CreateRecordSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordSubmissionCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateRecordSubmissionCallbackAction')
+  - [CreateAggregationSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAggregationSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateAggregationSubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateAuditEventSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateAuditEventSubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateBinaryRetrievalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinaryRetrievalAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateBinaryRetrievalAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateBinarySubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinarySubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateBinarySubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateChannelDiscoveryAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateChannelDiscoveryAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateChannelDiscoveryAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateContentManagerCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentManagerCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateContentManagerCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateContentRegistrationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentRegistrationAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateContentRegistrationAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateContentSynchronisationAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentSynchronisationAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateContentSynchronisationAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateGenericAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateGenericAction``2(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateGenericManagedAction\`\`2()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericManagedAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateGenericManagedAction``2(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateRecordDisposalAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordDisposalAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateRecordDisposalAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
+  - [CreateRecordSubmissionCallbackAction()](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerActionProvider.CreateRecordSubmissionCallbackAction(Microsoft.Extensions.DependencyInjection.IServiceScope)')
 - [IContentManagerCallbackAction](#T-RecordPoint-Connectors-SDK-ContentManager-IContentManagerCallbackAction 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerCallbackAction')
   - [ExecuteAsync(connectorConfigurations,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerCallbackAction-ExecuteAsync-System-Collections-Generic-List{RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.IContentManagerCallbackAction.ExecuteAsync(System.Collections.Generic.List{RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel},System.Threading.CancellationToken)')
 - [IContentRegistrationAction](#T-RecordPoint-Connectors-SDK-ContentManager-IContentRegistrationAction 'RecordPoint.Connectors.SDK.ContentManager.IContentRegistrationAction')
@@ -398,9 +407,6 @@
   - [GetAllMessagesAsync(queueName)](#M-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService-GetAllMessagesAsync-System-String- 'RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService.GetAllMessagesAsync(System.String)')
   - [GetMessageAsync(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService-GetMessageAsync-System-String,System-Int64- 'RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService.GetMessageAsync(System.String,System.Int64)')
   - [ResubmitMessagesAsync(queueName,sequenceNumbers)](#M-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]- 'RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService.ResubmitMessagesAsync(System.String,System.Int64[])')
-- [IGenerateReportAction](#T-RecordPoint-Connectors-SDK-ContentManager-IGenerateReportAction 'RecordPoint.Connectors.SDK.ContentManager.IGenerateReportAction')
-  - [BeginAsync(connectorConfiguration,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-IGenerateReportAction-BeginAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.IGenerateReportAction.BeginAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,System.Threading.CancellationToken)')
-  - [ContinueAsync(connectorConfiguration,cursor,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-IGenerateReportAction-ContinueAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.IGenerateReportAction.ContinueAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,System.String,System.Threading.CancellationToken)')
 - [IGenericAction\`2](#T-RecordPoint-Connectors-SDK-ContentManager-IGenericAction`2 'RecordPoint.Connectors.SDK.ContentManager.IGenericAction`2')
   - [ExecuteAsync(connectorConfiguration,item,cancellationToken)](#M-RecordPoint-Connectors-SDK-ContentManager-IGenericAction`2-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,`0,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.ContentManager.IGenericAction`2.ExecuteAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,`0,System.Threading.CancellationToken)')
 - [IGenericManagedAction\`2](#T-RecordPoint-Connectors-SDK-ContentManager-IGenericManagedAction`2 'RecordPoint.Connectors.SDK.ContentManager.IGenericManagedAction`2')
@@ -428,7 +434,7 @@
   - [FailedAsync(reason,cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-FailedAsync-System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.IManagedWorkManager.FailedAsync(System.String,System.Threading.CancellationToken)')
   - [FaultyAsync(reason,exception,cancellationToken,faultedCount)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-FaultyAsync-System-String,System-Exception,System-Threading-CancellationToken,System-Nullable{System-Int32}- 'RecordPoint.Connectors.SDK.Work.IManagedWorkManager.FaultyAsync(System.String,System.Exception,System.Threading.CancellationToken,System.Nullable{System.Int32})')
   - [RetryAsync(waitTill,cancellationToken,faultedCount)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-RetryAsync-System-DateTimeOffset,System-Threading-CancellationToken,System-Nullable{System-Int32}- 'RecordPoint.Connectors.SDK.Work.IManagedWorkManager.RetryAsync(System.DateTimeOffset,System.Threading.CancellationToken,System.Nullable{System.Int32})')
-  - [StartAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-StartAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.IManagedWorkManager.StartAsync(System.Threading.CancellationToken)')
+  - [StartAsync(cancellationToken,waitTill)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-StartAsync-System-Threading-CancellationToken,System-Nullable{System-DateTimeOffset}- 'RecordPoint.Connectors.SDK.Work.IManagedWorkManager.StartAsync(System.Threading.CancellationToken,System.Nullable{System.DateTimeOffset})')
 - [IManagedWorkStatusManager](#T-RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager 'RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager')
   - [AddWorkStatusAsync(managedWorkStatusModel,cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager-AddWorkStatusAsync-RecordPoint-Connectors-SDK-Work-ManagedWorkStatusModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager.AddWorkStatusAsync(RecordPoint.Connectors.SDK.Work.ManagedWorkStatusModel,System.Threading.CancellationToken)')
   - [GetAllWorkStatusesAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager-GetAllWorkStatusesAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager.GetAllWorkStatusesAsync(System.Threading.CancellationToken)')
@@ -515,6 +521,7 @@
   - [HasResult](#P-RecordPoint-Connectors-SDK-Work-IWork-HasResult 'RecordPoint.Connectors.SDK.Work.IWork.HasResult')
   - [Id](#P-RecordPoint-Connectors-SDK-Work-IWork-Id 'RecordPoint.Connectors.SDK.Work.IWork.Id')
   - [ResultReason](#P-RecordPoint-Connectors-SDK-Work-IWork-ResultReason 'RecordPoint.Connectors.SDK.Work.IWork.ResultReason')
+  - [ResultReasonDetails](#P-RecordPoint-Connectors-SDK-Work-IWork-ResultReasonDetails 'RecordPoint.Connectors.SDK.Work.IWork.ResultReasonDetails')
   - [ResultType](#P-RecordPoint-Connectors-SDK-Work-IWork-ResultType 'RecordPoint.Connectors.SDK.Work.IWork.ResultType')
   - [StartDateTime](#P-RecordPoint-Connectors-SDK-Work-IWork-StartDateTime 'RecordPoint.Connectors.SDK.Work.IWork.StartDateTime')
   - [WorkDuration](#P-RecordPoint-Connectors-SDK-Work-IWork-WorkDuration 'RecordPoint.Connectors.SDK.Work.IWork.WorkDuration')
@@ -605,6 +612,9 @@
   - [Complete](#F-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalResultType-Complete 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalResultType.Complete')
   - [Deleted](#F-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalResultType-Deleted 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalResultType.Deleted')
   - [Failed](#F-RecordPoint-Connectors-SDK-ContentManager-RecordDisposalResultType-Failed 'RecordPoint.Connectors.SDK.ContentManager.RecordDisposalResultType.Failed')
+- [RecordSubmissionOptions](#T-RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions 'RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions')
+  - [SECTION_NAME](#F-RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions-SECTION_NAME 'RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions.SECTION_NAME')
+  - [SubmitRecordAndBinariesSynchronously](#P-RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions-SubmitRecordAndBinariesSynchronously 'RecordPoint.Connectors.SDK.ContentManager.RecordSubmissionOptions.SubmitRecordAndBinariesSynchronously')
 - [RequiredValueNullException](#T-RecordPoint-Connectors-SDK-RequiredValueNullException 'RecordPoint.Connectors.SDK.RequiredValueNullException')
   - [#ctor(paramName)](#M-RecordPoint-Connectors-SDK-RequiredValueNullException-#ctor-System-String- 'RecordPoint.Connectors.SDK.RequiredValueNullException.#ctor(System.String)')
   - [NULL_VALUE_MESSAGE](#F-RecordPoint-Connectors-SDK-RequiredValueNullException-NULL_VALUE_MESSAGE 'RecordPoint.Connectors.SDK.RequiredValueNullException.NULL_VALUE_MESSAGE')
@@ -641,6 +651,7 @@
   - [EXTERNAL_ID](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-EXTERNAL_ID 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.EXTERNAL_ID')
   - [OUTCOME](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-OUTCOME 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.OUTCOME')
   - [OUTCOME_REASON](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-OUTCOME_REASON 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.OUTCOME_REASON')
+  - [OUTCOME_REASON_DETAILS](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-OUTCOME_REASON_DETAILS 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.OUTCOME_REASON_DETAILS')
   - [SERVICE](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-SERVICE 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.SERVICE')
   - [SERVICE_ID](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-SERVICE_ID 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.SERVICE_ID')
   - [SYSTEM](#F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-SYSTEM 'RecordPoint.Connectors.SDK.Observability.StandardDimensions.SYSTEM')
@@ -936,7 +947,7 @@ RecordPoint.Connectors.SDK.Content
 
 ##### Summary
 
-Aggreation
+Aggregation
 
 <a name='P-RecordPoint-Connectors-SDK-Content-AggregationModel-ConnectorId'></a>
 ### ConnectorId `property`
@@ -988,49 +999,33 @@ Parent External ID that uniquely identifies the Parent Aggregation
 Aggregation title
 
 <a name='M-RecordPoint-Connectors-SDK-Content-AggregationModel-Equals-RecordPoint-Connectors-SDK-Content-AggregationModel-'></a>
-### Equals(other) `method`
+### Equals() `method`
 
 ##### Summary
 
-
-
-##### Returns
-
-
+*Inherit from parent.*
 
 ##### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| other | [RecordPoint.Connectors.SDK.Content.AggregationModel](#T-RecordPoint-Connectors-SDK-Content-AggregationModel 'RecordPoint.Connectors.SDK.Content.AggregationModel') |  |
+This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-Content-AggregationModel-Equals-System-Object-'></a>
-### Equals(obj) `method`
+### Equals() `method`
 
 ##### Summary
 
-
-
-##### Returns
-
-
+*Inherit from parent.*
 
 ##### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| obj | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') |  |
+This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-Content-AggregationModel-GetHashCode'></a>
 ### GetHashCode() `method`
 
 ##### Summary
 
-
-
-##### Returns
-
-
+*Inherit from parent.*
 
 ##### Parameters
 
@@ -1283,6 +1278,13 @@ RecordPoint.Connectors.SDK.Content
 
 Represents meta information about a binary
 
+<a name='P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-BinarySubmissionStatus'></a>
+### BinarySubmissionStatus `property`
+
+##### Summary
+
+Indicates if the binary has been succesfully submitted to the platform or should be skipped
+
 <a name='P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-ContentToken'></a>
 ### ContentToken `property`
 
@@ -1340,6 +1342,13 @@ Mime Type of the content
 ##### Summary
 
 Flag to skip the enrichment pipeline
+
+<a name='P-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-SubmissionAttempts'></a>
+### SubmissionAttempts `property`
+
+##### Summary
+
+The number of times the binary submission has been retried
 
 <a name='M-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-Equals-RecordPoint-Connectors-SDK-Content-BinaryMetaInfo-'></a>
 ### Equals(other) `method`
@@ -1510,6 +1519,38 @@ We failed to get the content item due to an error
 ##### Summary
 
 The BinaryStream has a length of zero and can't be written to blob
+
+<a name='T-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus'></a>
+## BinarySubmissionStatus `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Content
+
+##### Summary
+
+Represents the status of a binary submission.
+
+<a name='F-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus-NotSubmitted'></a>
+### NotSubmitted `constants`
+
+##### Summary
+
+The binary has not been successfully submitted yet.
+
+<a name='F-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus-Skipped'></a>
+### Skipped `constants`
+
+##### Summary
+
+The binary submission will be skipped and should not be retried.
+
+<a name='F-RecordPoint-Connectors-SDK-Content-BinarySubmissionStatus-Submitted'></a>
+### Submitted `constants`
+
+##### Summary
+
+The binary has been successfully submitted.
 
 <a name='T-RecordPoint-Connectors-SDK-Content-Channel'></a>
 ## Channel `type`
@@ -1720,7 +1761,7 @@ Configuration settings for Channel Discovery
 
 ##### Summary
 
-
+Name for the configuration section
 
 <a name='P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryOperationOptions-BatchSize'></a>
 ### BatchSize `property`
@@ -1754,6 +1795,13 @@ Audit Events
 
 Channels that were discovered or updated.
 The Channel Discovery operation will upsert any Channels returned in this list.
+
+<a name='P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-Cursor'></a>
+### Cursor `property`
+
+##### Summary
+
+Progress cursor. Will be needed on subsequent operations to get the next section of work.
 
 <a name='P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResult-Exception'></a>
 ### Exception `property`
@@ -1793,28 +1841,44 @@ RecordPoint.Connectors.SDK.ContentManager
 
 ##### Summary
 
-Channel discovery result type
+Types/Statuses representing Channel Discovery result.
+
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Abandoned'></a>
+### Abandoned `constants`
+
+##### Summary
+
+Represents Channel Discovery work for a Connector Source has been abandoned due to invalid or unsupported operation(s).
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-BackOff'></a>
 ### BackOff `constants`
 
 ##### Summary
 
-
+Represents Channel Discovery work for a Connector Source has encountered a likely transient error, such as throttling,
+so it is appropriate to defer and retry when error condition(s) subside.
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Complete'></a>
 ### Complete `constants`
 
 ##### Summary
 
-
+Represents Channel Discovery work for a Connector Source is fully complete.
 
 <a name='F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Failed'></a>
 ### Failed `constants`
 
 ##### Summary
 
+Represents Channel Discovery work for a Connector Source has failed, although is subjected to limited retry attempts.
 
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryResultType-Incomplete'></a>
+### Incomplete `constants`
+
+##### Summary
+
+Represents Channel Discovery work for a Connector Source is not complete, and that further work needs to be done,
+potentially via batching and cursor.
 
 <a name='T-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState'></a>
 ## ChannelDiscoveryState `type`
@@ -1826,6 +1890,13 @@ RecordPoint.Connectors.SDK.ContentManager
 ##### Summary
 
 Operational state for a Channel Discovery Operation
+
+<a name='P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState-Cursor'></a>
+### Cursor `property`
+
+##### Summary
+
+Current position in batch discovery, if applicable
 
 <a name='P-RecordPoint-Connectors-SDK-ContentManager-ChannelDiscoveryState-LastBackOffDelaySeconds'></a>
 ### LastBackOffDelaySeconds `property`
@@ -2650,7 +2721,7 @@ RecordPoint.Connectors.SDK.ContentManager
 
 ##### Summary
 
-
+Name for the configuration section
 
 <a name='P-RecordPoint-Connectors-SDK-ContentManager-ContentManagerOptions-CleanUpAggregations'></a>
 ### CleanUpAggregations `property`
@@ -2912,7 +2983,7 @@ Configuration settings for Content Registration
 
 ##### Summary
 
-
+Name for the configuration section
 
 <a name='P-RecordPoint-Connectors-SDK-ContentManager-ContentRegistrationOperationOptions-MaxFetchBatchSize'></a>
 ### MaxFetchBatchSize `property`
@@ -3248,7 +3319,7 @@ Configuration settings for Content Synchronisation
 
 ##### Summary
 
-
+Name for the configuration section
 
 <a name='P-RecordPoint-Connectors-SDK-ContentManager-ContentSynchronisationOperationOptions-MaxFetchBatchSize'></a>
 ### MaxFetchBatchSize `property`
@@ -4107,8 +4178,8 @@ RecordPoint.Connectors.SDK.ContentManager
 Defines a Channel discovery action, which is responsible for discovering Channels within the Content Source
 available for a content source
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken-'></a>
-### ExecuteAsync(connectorConfiguration,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IChannelDiscoveryAction-ExecuteAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken,System-String-'></a>
+### ExecuteAsync(connectorConfiguration,cancellationToken,cursor) `method`
 
 ##### Summary
 
@@ -4124,6 +4195,7 @@ Result of the scan
 | ---- | ---- | ----------- |
 | connectorConfiguration | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') | The connector configuration |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
+| cursor | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Scan cursor provided by a prior batch discovery operation, if Channel Discovery is in progress |
 
 <a name='T-RecordPoint-Connectors-SDK-Content-IChannelManager'></a>
 ## IChannelManager `type`
@@ -4521,7 +4593,7 @@ RecordPoint.Connectors.SDK.ContentManager
 
 Contract for a Content Manager Action Provider
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAggregationSubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAggregationSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateAggregationSubmissionCallbackAction() `method`
 
 ##### Summary
@@ -4536,7 +4608,7 @@ Aggregation Submission Callback Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateAuditEventSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateAuditEventSubmissionCallbackAction() `method`
 
 ##### Summary
@@ -4551,7 +4623,7 @@ Create a new audit event submission callback action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinaryRetrievalAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinaryRetrievalAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateBinaryRetrievalAction() `method`
 
 ##### Summary
@@ -4566,7 +4638,7 @@ Binary Retrieval Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinarySubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateBinarySubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateBinarySubmissionCallbackAction() `method`
 
 ##### Summary
@@ -4581,7 +4653,7 @@ Binary Submission Callback Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateChannelDiscoveryAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateChannelDiscoveryAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateChannelDiscoveryAction() `method`
 
 ##### Summary
@@ -4596,7 +4668,7 @@ Channel scanner
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentManagerCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentManagerCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateContentManagerCallbackAction() `method`
 
 ##### Summary
@@ -4611,7 +4683,7 @@ Content Manager Callback Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentRegistrationAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentRegistrationAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateContentRegistrationAction() `method`
 
 ##### Summary
@@ -4626,7 +4698,7 @@ Content Registration Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentSynchronisationAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateContentSynchronisationAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateContentSynchronisationAction() `method`
 
 ##### Summary
@@ -4641,22 +4713,7 @@ Content Synchronisation Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenerationReportAction'></a>
-### CreateGenerationReportAction() `method`
-
-##### Summary
-
-Create a new report generation action
-
-##### Returns
-
-Generate Report Action
-
-##### Parameters
-
-This method has no parameters.
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericAction``2'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateGenericAction\`\`2() `method`
 
 ##### Summary
@@ -4671,7 +4728,7 @@ Generic Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericManagedAction``2'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateGenericManagedAction``2-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateGenericManagedAction\`\`2() `method`
 
 ##### Summary
@@ -4686,7 +4743,7 @@ Generic Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordDisposalAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordDisposalAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateRecordDisposalAction() `method`
 
 ##### Summary
@@ -4701,7 +4758,7 @@ Record Disposal Action
 
 This method has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordSubmissionCallbackAction'></a>
+<a name='M-RecordPoint-Connectors-SDK-ContentManager-IContentManagerActionProvider-CreateRecordSubmissionCallbackAction-Microsoft-Extensions-DependencyInjection-IServiceScope-'></a>
 ### CreateRecordSubmissionCallbackAction() `method`
 
 ##### Summary
@@ -5030,54 +5087,6 @@ Resubmit to queue based on the queueName and sequenceNumbers
 | ---- | ---- | ----------- |
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumbers | [System.Int64[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64[] 'System.Int64[]') |  |
-
-<a name='T-RecordPoint-Connectors-SDK-ContentManager-IGenerateReportAction'></a>
-## IGenerateReportAction `type`
-
-##### Namespace
-
-RecordPoint.Connectors.SDK.ContentManager
-
-##### Summary
-
-Definition for a Content Report Generation action
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IGenerateReportAction-BeginAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-Threading-CancellationToken-'></a>
-### BeginAsync(connectorConfiguration,cancellationToken) `method`
-
-##### Summary
-
-Begin a new content report generation operation
-
-##### Returns
-
-Result of the discovery operation
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| connectorConfiguration | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') | The onnector configuration |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
-
-<a name='M-RecordPoint-Connectors-SDK-ContentManager-IGenerateReportAction-ContinueAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,System-String,System-Threading-CancellationToken-'></a>
-### ContinueAsync(connectorConfiguration,cursor,cancellationToken) `method`
-
-##### Summary
-
-Continue a content report generation
-
-##### Returns
-
-Result of the discovery operation
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| connectorConfiguration | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') | The onnector configuration |
-| cursor | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Scan cursor provided by the prior sync operation |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token |
 
 <a name='T-RecordPoint-Connectors-SDK-ContentManager-IGenericAction`2'></a>
 ## IGenericAction\`2 `type`
@@ -5485,8 +5494,8 @@ RecordPoint.Connectors.SDK.Work
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 | faultedCount | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-StartAsync-System-Threading-CancellationToken-'></a>
-### StartAsync(cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Work-IManagedWorkManager-StartAsync-System-Threading-CancellationToken,System-Nullable{System-DateTimeOffset}-'></a>
+### StartAsync(cancellationToken,waitTill) `method`
 
 ##### Summary
 
@@ -5501,6 +5510,7 @@ RecordPoint.Connectors.SDK.Work
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+| waitTill | [System.Nullable{System.DateTimeOffset}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.DateTimeOffset}') |  |
 
 <a name='T-RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager'></a>
 ## IManagedWorkStatusManager `type`
@@ -6698,6 +6708,13 @@ Unique Work ID that identifies the unit of work
 
 Optional message that describes why a particular result was reached
 
+<a name='P-RecordPoint-Connectors-SDK-Work-IWork-ResultReasonDetails'></a>
+### ResultReasonDetails `property`
+
+##### Summary
+
+Optional message to provide details on why a particular result was reached
+
 <a name='P-RecordPoint-Connectors-SDK-Work-IWork-ResultType'></a>
 ### ResultType `property`
 
@@ -7542,6 +7559,31 @@ The record cannot be disposed because it has already been deleted
 
 We failed to dispose of the record
 
+<a name='T-RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions'></a>
+## RecordSubmissionOptions `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.ContentManager
+
+##### Summary
+
+Configuration settings for Record Submission
+
+<a name='F-RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions-SECTION_NAME'></a>
+### SECTION_NAME `constants`
+
+##### Summary
+
+Name for the configuration section
+
+<a name='P-RecordPoint-Connectors-SDK-ContentManager-RecordSubmissionOptions-SubmitRecordAndBinariesSynchronously'></a>
+### SubmitRecordAndBinariesSynchronously `property`
+
+##### Summary
+
+Submits the record and binaries together within a single unit of work
+
 <a name='T-RecordPoint-Connectors-SDK-RequiredValueNullException'></a>
 ## RequiredValueNullException `type`
 
@@ -7847,6 +7889,13 @@ Set of standard cross-cutting dimensions
 
 <a name='F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-OUTCOME_REASON'></a>
 ### OUTCOME_REASON `constants`
+
+##### Summary
+
+
+
+<a name='F-RecordPoint-Connectors-SDK-Observability-StandardDimensions-OUTCOME_REASON_DETAILS'></a>
+### OUTCOME_REASON_DETAILS `constants`
 
 ##### Summary
 

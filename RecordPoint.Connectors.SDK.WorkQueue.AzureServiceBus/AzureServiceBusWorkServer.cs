@@ -92,7 +92,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             typeof(SubmitAggregationOperation),
             typeof(SubmitBinaryOperation),
             typeof(SubmitRecordOperation),
-            typeof(SubmitAuditEventOperation)
+            typeof(SubmitAuditEventOperation),
+            typeof(SynchronousSubmitRecordOperation)
         };
 
         /// <summary>
@@ -220,7 +221,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
                 //Delay to allow currently processing operations to complete
                 await Task.Delay(_serviceBusOptions.Value.ServiceShutdownDelay, CancellationToken.None);
-                _processingToken.Cancel();
+                await _processingToken.CancelAsync();
 
                 await CloseProcessorsAsync(CancellationToken.None);
             }

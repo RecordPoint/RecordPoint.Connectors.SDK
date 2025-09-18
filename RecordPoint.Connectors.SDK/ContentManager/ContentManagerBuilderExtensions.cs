@@ -82,6 +82,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 services
                     .Configure<ContentSynchronisationOperationOptions>(configuration.GetSection(ContentSynchronisationOperationOptions.SECTION_NAME))
                     .Configure<ContentManagerOptions>(configuration.GetSection(ContentManagerOptions.SECTION_NAME))
+                    .Configure<RecordSubmissionOptions>(configuration.GetSection(RecordSubmissionOptions.SECTION_NAME))
                     .AddQueueableWorkOperation<ContentSynchronisationOperation>()
                     .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
                     .AddScoped<IContentSynchronisationAction, TAction>();
@@ -103,6 +104,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 services
                     .Configure<ContentRegistrationOperationOptions>(configuration.GetSection(ContentRegistrationOperationOptions.SECTION_NAME))
                     .Configure<ContentManagerOptions>(configuration.GetSection(ContentManagerOptions.SECTION_NAME))
+                    .Configure<RecordSubmissionOptions>(configuration.GetSection(RecordSubmissionOptions.SECTION_NAME))
                     .AddQueueableWorkOperation<ContentRegistrationOperation>()
                     .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
                     .AddScoped<IContentRegistrationAction, TAction>();
@@ -178,6 +180,48 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
                     .AddScoped<IBinaryRetrievalAction, TAction>()
                     .AddScoped<IBinarySubmissionCallbackAction, TCallbackAction>();
+            });
+        }
+
+        /// <summary>
+        /// Use synchronous record submission operation.
+        /// </summary>
+        /// <typeparam name="TBinaryRetrieavalAction"/>
+        /// <param name="hostBuilder">The host builder.</param>
+        /// <returns>An IHostBuilder</returns>
+        public static IHostBuilder UseSynchronousRecordSubmissionOperation<TBinaryRetrieavalAction>(this IHostBuilder hostBuilder)
+            where TBinaryRetrieavalAction : class, IBinaryRetrievalAction
+        {
+            return hostBuilder.ConfigureServices(services =>
+            {
+                services
+                    .AddQueueableWorkOperation<SynchronousSubmitRecordOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IBinaryRetrievalAction, TBinaryRetrieavalAction>();
+            });
+        }
+
+        /// <summary>
+        /// Use synchronous record submission operation.
+        /// </summary>
+        /// <typeparam name="TBinaryRetrieavalAction"/>
+        /// <typeparam name="TRecordSubmissionCallbackAction"/>
+        /// <typeparam name="TBinaryRetrieavalCallbackAction"/>
+        /// <param name="hostBuilder">The host builder.</param>
+        /// <returns>An IHostBuilder</returns>
+        public static IHostBuilder UseSynchronousRecordSubmissionOperation<TBinaryRetrieavalAction, TRecordSubmissionCallbackAction, TBinaryRetrieavalCallbackAction>(this IHostBuilder hostBuilder)
+            where TBinaryRetrieavalAction : class, IBinaryRetrievalAction
+            where TRecordSubmissionCallbackAction : class, IRecordSubmissionCallbackAction
+            where TBinaryRetrieavalCallbackAction : class, IBinarySubmissionCallbackAction
+        {
+            return hostBuilder.ConfigureServices(services =>
+            {
+                services
+                    .AddQueueableWorkOperation<SynchronousSubmitRecordOperation>()
+                    .AddScoped<IContentManagerActionProvider, ContentManagerActionProvider>()
+                    .AddScoped<IBinaryRetrievalAction, TBinaryRetrieavalAction>()
+                    .AddScoped<IRecordSubmissionCallbackAction, TRecordSubmissionCallbackAction>()
+                    .AddScoped<IBinarySubmissionCallbackAction, TBinaryRetrieavalCallbackAction>();
             });
         }
 

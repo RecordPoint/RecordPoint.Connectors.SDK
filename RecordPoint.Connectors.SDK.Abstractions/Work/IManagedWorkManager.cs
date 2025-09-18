@@ -67,7 +67,8 @@
         /// 
         /// </summary>
         /// <param name="cancellationToken"></param>
+        /// <param name="waitTill"></param>
         /// <returns></returns>
-        Task StartAsync(CancellationToken cancellationToken);
+        Task StartAsync(CancellationToken cancellationToken, DateTimeOffset? waitTill = null);
     }
 }

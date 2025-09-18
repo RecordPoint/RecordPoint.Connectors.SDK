@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -140,11 +141,15 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 case ChannelDiscoveryResultType.Complete:
                     await HandleCompleteResultAsync(_channelDiscoveryResult, cancellationToken);
                     break;
-
+                case ChannelDiscoveryResultType.Incomplete:
+                    await HandleIncompleteResultAsync(_channelDiscoveryResult, cancellationToken);
+                    break;
                 case ChannelDiscoveryResultType.Failed:
                     await HandleFailedResultAsync(_channelDiscoveryResult, cancellationToken);
                     break;
-
+                case ChannelDiscoveryResultType.Abandoned:
+                    await HandleAbandonedResultAsync(_channelDiscoveryResult, cancellationToken);
+                    break;
                 case ChannelDiscoveryResultType.BackOff:
                     await HandleBackOffResultAsync(_connectorConfiguration, null, _channelDiscoveryResult.SemaphoreLockType, _channelDiscoveryResult.NextDelay, cancellationToken);
                     break;
@@ -159,11 +164,11 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// Create a Channel Discovery Operation for the current connector configuration
         /// </summary>
         /// <returns>Channel scanner</returns>
-        protected IChannelDiscoveryAction CreateChannelDiscoveryAction()
+        protected IChannelDiscoveryAction CreateChannelDiscoveryAction(IServiceScope scope)
         {
             try
             {
-                return _contentManagerActionProvider.CreateChannelDiscoveryAction();
+                return _contentManagerActionProvider.CreateChannelDiscoveryAction(scope);
             }
             catch (NotImplementedException)
             {
@@ -184,8 +189,10 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             ChannelDiscoveryResult result;
             try
             {
-                var channelScanner = CreateChannelDiscoveryAction();
-                result = await channelScanner.ExecuteAsync(_connectorConfiguration, cancellationToken);
+                using var scope = _serviceProvider.CreateScope();
+                var channelScanner = CreateChannelDiscoveryAction(scope);
+                var cursor = State.Cursor;
+                result = await channelScanner.ExecuteAsync(_connectorConfiguration, cancellationToken, cursor);
             }
             catch (Exception ex)
             {
@@ -211,12 +218,85 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns>A Task</returns>
         protected async Task HandleCompleteResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
         {
+            var startTime = await HandleSuccessfulResultAsync(channelResult, cancellationToken);
+
+            // Determine how long we should wait until we start a full channel discovery again
+            var backOffSeconds = channelResult.NextDelay ?? CalculateBackOffSeconds(
+                                                                    _options.Value,
+                                                                    channelResult.Channels.Any(),
+                                                                    State.LastBackOffDelaySeconds);
+            var nextRunTime = DateTimeProvider.UtcNow.AddSeconds(backOffSeconds);
+
+            // Ensure Work is queued for each Channel
+            var finalState = new ChannelDiscoveryState
+            {
+                LastBackOffDelaySeconds = backOffSeconds
+            };
+            _submitTimespan = DateTimeProvider.UtcNow - startTime;
+            await ContinueAsync("Channel Discovery completed normally", finalState, nextRunTime, cancellationToken);
+        }
+
+        /// <summary>
+        /// Handle incomplete result asynchronously. Further Channel Discovery work is expected, tracked via cursor.
+        /// </summary>
+        /// <param name="channelResult">The channel result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
+        protected async Task HandleIncompleteResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
+        {
+            var startTime = await HandleSuccessfulResultAsync(channelResult, cancellationToken);
+
+            // Incomplete result means there is still more channels to discover based on the current execution
+            // so we should re-execute immediately (unless a delay has been requested by the action)
+            var backOffSeconds = channelResult.NextDelay ?? 0;
+            var nextRunTime = DateTimeProvider.UtcNow.AddSeconds(backOffSeconds);
+
+            var finalState = new ChannelDiscoveryState
+            {
+                LastBackOffDelaySeconds = backOffSeconds,
+                Cursor = channelResult.Cursor
+            };
+            _submitTimespan = DateTimeProvider.UtcNow - startTime;
+            await ContinueAsync("Channel Discovery batch completed normally", finalState, nextRunTime, cancellationToken);
+        }
+
+        /// <summary>
+        /// Handle failed result asynchronously.
+        /// </summary>
+        /// <param name="channelResult">The channel result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
+        protected Task HandleFailedResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
+        {
+            // Should continue the failed Channel work in the next runs
+            return FaultedAsync(channelResult.Reason, channelResult.Exception, cancellationToken);
+        }
+
+        /// <summary>
+        /// Handle abandoned result asynchronously.
+        /// </summary>
+        /// <param name="channelResult">The channel result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
+        protected Task HandleAbandonedResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
+        {
+            return AbandonedAsync(channelResult.Reason, cancellationToken);
+        }
+
+        /// <summary>
+        /// Common subsequent logic for successful Channel Discovery fetch.
+        /// </summary>
+        /// <param name="channelResult">The channel result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>Start time of successful Channel Discovery result handling.</returns>
+        protected async Task<DateTime> HandleSuccessfulResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
+        {
             //Add the new Channels to Storage
             var channelModels = channelResult.Channels.ToChannelModelList()
                 .UnionBy(channelResult.NewChannelRegistrations.ToChannelModelList(), a => a.ExternalId)
                 .ToList();
             channelModels.ForEach(channelModel => channelModel.ConnectorId = _connectorConfiguration.Id);
-            
+
             // Upsert in batches
             var channelBatches = channelModels.Chunk(_options.Value.BatchSize);
             foreach (var batch in channelBatches)
@@ -224,14 +304,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                 await _channelManager.UpsertChannelsAsync(batch.ToList(), cancellationToken);
             }
 
-            // Determine how long we should wait until we run again
-            var backOffSeconds = channelResult.NextDelay ?? CalculateBackOffSeconds(
-                    _options.Value,
-                    channelResult.Channels.Any(),
-                    State.LastBackOffDelaySeconds);
-
             var startTime = DateTimeProvider.UtcNow;
-            var nextRunTime = DateTimeProvider.UtcNow.AddSeconds(backOffSeconds);
 
             var tasks = new List<Task>();
 
@@ -279,25 +352,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            // Ensure Work is queued for each Channel
-            var finalState = new ChannelDiscoveryState
-            {
-                LastBackOffDelaySeconds = backOffSeconds,
-            };
-            _submitTimespan = DateTimeProvider.UtcNow - startTime;
-            await ContinueAsync("Channel Discovery completed normally", finalState, nextRunTime, cancellationToken);
-        }
-
-        /// <summary>
-        /// Handle failed result asynchronously.
-        /// </summary>
-        /// <param name="channelResult">The channel result.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
-        protected Task HandleFailedResultAsync(ChannelDiscoveryResult channelResult, CancellationToken cancellationToken)
-        {
-            // Should continue the failed Channel work in the next runs
-            return FaultedAsync(channelResult.Reason, channelResult.Exception, cancellationToken);
+            return startTime;
         }
 
         /// Get a list of Channels for which operations are missing for the specified work type

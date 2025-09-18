@@ -24,11 +24,14 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         #region Channel Discovery Work Request
 
-        public string ChannelDiscoveryOpterationWorkId1 { get; set; } = "ChannelDiscoveryWorkId1";
+        public string ChannelDiscoveryOperationWorkId1 { get; set; } = "ChannelDiscoveryWorkId1";
 
         public DateTime ChannelDiscoverySubmitTime1 { get; set; } = new DateTime(2000, 1, 1, 0, 0, 0);
 
-        public static ChannelDiscoveryState CreateChannelDiscoverySyncState() => new();
+        public static ChannelDiscoveryState CreateChannelDiscoverySyncState(string cursor = null) => new()
+        {
+            Cursor = cursor
+        };
 
         public static ChannelDiscoveryConfiguration CreateChannelDiscoveryConfiguration(ConnectorConfigModel connectorConfig) => new()
         {
@@ -46,9 +49,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             Body = workMessage.Serialize()
         };
 
-        public ManagedWorkStatusModel CreateChannelDiscoveryManagedWorkStatusModel(ConnectorConfigModel connector)
+        public ManagedWorkStatusModel CreateChannelDiscoveryManagedWorkStatusModel(ConnectorConfigModel connector, string cursor = null)
         {
-            var state = CreateChannelDiscoverySyncState();
+            var state = CreateChannelDiscoverySyncState(cursor);
             var config = CreateChannelDiscoveryConfiguration(connector);
             var message = CreateChannelDiscoveryManagedWorkStatusModel(config, state);
             return message;
@@ -56,14 +59,14 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public ManagedWorkStatusModel CreateChannelDiscoveryManagedWorkStatusModel(ChannelDiscoveryConfiguration configuration, ChannelDiscoveryState state) => new()
         {
-            WorkId = ChannelDiscoveryOpterationWorkId1,
+            WorkId = ChannelDiscoveryOperationWorkId1,
             WorkType = ChannelDiscoveryOperation.WORK_TYPE,
             Configuration = configuration.Serialize(),
             ConfigurationType = ChannelDiscoveryConfiguration.ConfigurationType,
             State = state.Serialize(),
             StateType = ChannelDiscoveryState.LatestStateType,
             ConnectorId = configuration.ConnectorConfigurationId,
-            Id = ChannelDiscoveryOpterationWorkId1
+            Id = ChannelDiscoveryOperationWorkId1
         };
 
         public async Task SetWorkRunning(ManagedWorkStatusModel workMessage)

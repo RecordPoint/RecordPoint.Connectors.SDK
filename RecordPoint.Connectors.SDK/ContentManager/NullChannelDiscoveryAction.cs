@@ -30,8 +30,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// </summary>
         /// <param name="connectorConfiguration">The connector configuration.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="cursor">Scan cursor provided by a prior batch discovery operation (though not applicable here).</param>
         /// <returns><![CDATA[Task<ChannelDiscoveryResult>]]></returns>
-        public async Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken)
+        public async Task<ChannelDiscoveryResult> ExecuteAsync(ConnectorConfigModel connectorConfiguration, CancellationToken cancellationToken, string cursor = null)
         {
             var result = new ChannelDiscoveryResult()
             {
