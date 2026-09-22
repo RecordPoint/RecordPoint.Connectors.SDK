@@ -20,10 +20,11 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .UseMockConnectorDatabase()
                 .UseDatabaseChannelManager()
                 .ConfigureServices((context, svcs) => {
-                     var contentManagerConfiguration = context.Configuration.GetSection("ContentManager");
                      svcs
-                         .Configure<ContentManagerOptions>(contentManagerConfiguration)
-                         .AddScoped<ContentRegistrationOperation>();
+                        .Configure<ContentRegistrationOperationOptions>(context.Configuration.GetSection(ContentRegistrationOperationOptions.SECTION_NAME))
+                        .Configure<ContentManagerOptions>(context.Configuration.GetSection(ContentManagerOptions.SECTION_NAME))
+                        .Configure<RecordSubmissionOptions>(context.Configuration.GetSection(RecordSubmissionOptions.SECTION_NAME))
+                        .AddScoped<ContentRegistrationOperation>();
                  });
         }
 
@@ -35,11 +36,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public static ContentRegistrationState CreateContentRegistrationSyncState() => new();
 
-        public static ContentRegistrationConfiguration CreateContentRegistrationConfiguration(ConnectorConfigModel connectorConfig, ChannelModel channel) => new()
+        public static ContentRegistrationConfiguration CreateContentRegistrationConfiguration(ChannelModel channel) => new()
         {
-            ConnectorConfigurationId = connectorConfig.Id,
-            TenantId = connectorConfig.TenantId,
-            TenantDomainName = connectorConfig.TenantDomainName,
             ChannelExternalId = channel.ExternalId,
             ChannelTitle = channel.Title
         };
@@ -56,35 +54,22 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         public ManagedWorkStatusModel CreateContentRegistrationManagedWorkStatusModel(ConnectorConfigModel connector, ChannelModel channel)
         {
             var state = CreateContentRegistrationSyncState();
-            var config = CreateContentRegistrationConfiguration(connector, channel);
-            var message = CreateContentRegistrationManagedWorkStatusModel(config, state);
+            var config = CreateContentRegistrationConfiguration(channel);
+            var message = CreateContentRegistrationManagedWorkStatusModel(connector, config, state);
             return message;
         }
 
-        public ManagedWorkStatusModel CreateContentRegistrationManagedWorkStatusModel(ContentRegistrationConfiguration configuration, ContentRegistrationState state) => new()
+        public ManagedWorkStatusModel CreateContentRegistrationManagedWorkStatusModel(ConnectorConfigModel connector, ContentRegistrationConfiguration configuration, ContentRegistrationState state) => new()
         {
             WorkId = ContentRegistrationOpterationWorkId1,
             WorkType = ContentRegistrationOperation.WORK_TYPE,
             Configuration = configuration.Serialize(),
             ConfigurationType = ContentRegistrationConfiguration.ConfigurationType,
             State = state.Serialize(),
-            StateType = ContentRegistrationState.LatestStateType,
-            ConnectorId = configuration.ConnectorConfigurationId,
+            StateType = ContentRegistrationState.StateType,
+            ConnectorId = connector.Id,
             Id = ContentRegistrationOpterationWorkId1
         };
-
-        public async Task SetWorkRunning(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .AddWorkStatusAsync(workMessage, CancellationToken.None);
-        }
-
-        public async Task SetWorkContinue(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .SetWorkContinueAsync(workMessage.WorkId, workMessage.WorkId, string.Empty, CancellationToken.None);
-        }
-
         #endregion
 
 

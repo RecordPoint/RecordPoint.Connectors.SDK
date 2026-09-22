@@ -9,50 +9,49 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         : ISubmission
     {
         /// <summary>
-        /// A log.
+        /// Logger used by pipeline elements.
         /// </summary>
         public ILog Log { get; set; } = null;
 
         private readonly ISubmission _next;
 
         /// <summary>
-        /// Constructs a new SubmitPipelineElementBase with an optional next submit
-        /// pipeline element.
+        /// Constructs a new submit pipeline element.
         /// </summary>
-        /// <param name="next"></param>
+        /// <param name="next">The next pipeline element to invoke.</param>
         protected SubmitPipelineElementBase(ISubmission next)
         {
             _next = next;
         }
 
         /// <summary>
-        /// Logs a verbose message, providing information from the SubmitContext.
+        /// Logs a verbose message using the current submission context.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="methodName"></param>
-        /// <param name="message"></param>
+        /// <param name="context">The current submission context.</param>
+        /// <param name="methodName">The calling method name.</param>
+        /// <param name="message">The message to write.</param>
         protected void LogVerbose(SubmitContext context, string methodName, string message)
         {
             Log?.LogVerbose(GetType(), methodName, $"{context.LogPrefix()} {message}");
         }
 
         /// <summary>
-        /// Logs a message, providing information from the SubmitContext.
+        /// Logs an informational message using the current submission context.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="methodName"></param>
-        /// <param name="message"></param>
+        /// <param name="context">The current submission context.</param>
+        /// <param name="methodName">The calling method name.</param>
+        /// <param name="message">The message to write.</param>
         protected void LogMessage(SubmitContext context, string methodName, string message)
         {
             Log?.LogMessage(GetType(), methodName, $"{context.LogPrefix()} {message}");
         }
 
         /// <summary>
-        /// Logs a warning message, providing information from the SubmitContext.
+        /// Logs a warning message using the current submission context.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="methodName"></param>
-        /// <param name="message"></param>
+        /// <param name="context">The current submission context.</param>
+        /// <param name="methodName">The calling method name.</param>
+        /// <param name="message">The message to write.</param>
         protected void LogWarning(SubmitContext context, string methodName, string message)
         {
             Log?.LogWarning(GetType(), methodName, $"{context.LogPrefix()} {message}");
@@ -64,12 +63,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         }
 
         /// <summary>
-        /// Indicates that this pipeline element is terminating the pipeline.
-        /// Note this method only performs the appropriate logging and sets the SubmitContext.SubmitResult to Skipped.
-        /// The calling method still needs to be careful to return early or otherwise skip the rest of the pipeline.
+        /// Marks the submission as skipped and records the skip reason.
         /// </summary>
-        /// <param name="submitContext"></param>
-        /// <param name="reason"></param>
+        /// <param name="submitContext">The current submission context.</param>
+        /// <param name="reason">The reason the submission pipeline is being skipped.</param>
         protected void SkipNext(SubmitContext submitContext, string reason)
         {
             var title = submitContext.CoreMetaData?.Where(x => x.Name == Fields.Title)?.FirstOrDefault()?.Value;
@@ -81,8 +78,8 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         /// <summary>
         /// Invokes the next element in the submission pipeline, if one exists.
         /// </summary>
-        /// <param name="submitContext"></param>
-        /// <returns></returns>
+        /// <param name="submitContext">The current submission context.</param>
+        /// <returns>A task that completes when the next element finishes.</returns>
         protected async Task InvokeNext(SubmitContext submitContext)
         {
             if (_next != null)
@@ -105,10 +102,10 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         }
 
         /// <summary>
-        /// Implement in a derived class to provide custom submit pipeline functionality.
+        /// Implements submit behavior for the pipeline element.
         /// </summary>
-        /// <param name="submitContext"></param>
-        /// <returns></returns>
+        /// <param name="submitContext">The current submission context.</param>
+        /// <returns>A task that completes when submission processing finishes.</returns>
         public abstract Task Submit(SubmitContext submitContext);
     }
 }

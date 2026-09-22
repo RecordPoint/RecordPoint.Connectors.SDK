@@ -175,6 +175,26 @@ You can instruct your connector to use either method by calling the relevant dep
 Push notifications are implemented via a web-hook to the Connector.
 Records365 will push notificatons directly to the Connector as they are generated.
 
+###### Asynchronous Push Notifications
+Some notification types can be moved off the webhook request path and processed later from the SDK work queue.
+This is useful when a notification handler performs expensive work and the connector needs to return an HTTP response quickly.
+
+To enable this mode:
+* Register the queued async notification operation on the host that already owns webhook notifications:
+  `hostBuilder.UseAsyncNotificationOperation()`
+* Add the relevant notification type names to `AsyncNotifications.NotificationTypes`
+* Ensure the corresponding queue exists in the target environment before enabling the notification type
+
+For Azure Service Bus deployments, the queue name follows the existing SDK work queue naming rule:
+* `{QueuePrefix}-async-notifications` when `AzureServiceBusSettings:QueuePrefix` is configured
+* `async-notifications` when no queue prefix is configured
+
+In the first iteration of this feature, the webhook accepts the notification, submits an `Async Notifications` work item to the queue, and returns.
+The queued `AsyncNotificationOperation` later invokes the normal `HandleNotificationAsync(...)` notification pipeline for the original payload.
+
 ##### Poll Notifications
 Poll based notifications are implemented via a service that periodically calls the Records365 Connector Api.
-The current implementation of poll based notifications is functionally limited in comparison to push notifications but can be used for development purposes.
+Poll based notitications need to implement/config additional logic such as:
+    * Config TenantDomainName to be able to authenticate to the Connector API when we don't have connector context.
+      Also, only notifications of deployed tenant will be received.
+    * Config ConnectorTypes to specify which connector types to be deployed and receive notifications for.

@@ -47,18 +47,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         };
 
         public ManagedWorkStatusModel CreateSubmitBinaryManagedWorkStatusModel(ConnectorConfigModel connector) => CreateSubmitBinaryManagedWorkStatusModel(connector.Id);
-
-        public async Task SetWorkRunning(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .AddWorkStatusAsync(workMessage, CancellationToken.None);
-        }
-
-        public async Task SetWorkContinue(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .SetWorkContinueAsync(workMessage.WorkId, workMessage.WorkId, string.Empty, CancellationToken.None);
-        }
         #endregion
 
     }

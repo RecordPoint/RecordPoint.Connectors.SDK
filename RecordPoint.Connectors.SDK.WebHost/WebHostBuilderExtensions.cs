@@ -11,11 +11,11 @@
         private static readonly string[] DEFAULT_API_URLS = new[] { "https://localhost:44342" };
 
         /// <summary>
-        /// 
+        /// Configures and enables the SDK web host with configured or default URLs.
         /// </summary>
-        /// <param name="hostBuilder"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
+        /// <param name="hostBuilder">The host builder to configure.</param>
+        /// <param name="configuration">The application configuration root.</param>
+        /// <returns>The configured host builder.</returns>
         public static IHostBuilder UseWebHost(this IHostBuilder hostBuilder, IConfigurationRoot configuration)
         {
             var configuredUrls = configuration

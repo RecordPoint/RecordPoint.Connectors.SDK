@@ -31,6 +31,12 @@
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         /// <summary>
+        /// The Id of the active Content Synchronisation Work Item that owns this Channel.
+        /// Used to detect and discard superseded Content Synchronisation work.
+        /// </summary>
+        public string? ContentSynchronisationWorkId { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>

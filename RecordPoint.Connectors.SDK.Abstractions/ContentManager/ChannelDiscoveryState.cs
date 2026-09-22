@@ -19,7 +19,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Latest version of the sync state type
         /// </summary>
-        public static string LatestStateType => nameof(ChannelDiscoveryState);
+        public static string StateType => nameof(ChannelDiscoveryState);
 
         /// <summary>
         /// Current position in batch discovery, if applicable

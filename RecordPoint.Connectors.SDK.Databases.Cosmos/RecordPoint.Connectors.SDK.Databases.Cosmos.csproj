@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -16,15 +16,15 @@
 		<Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Azure.Identity" Version="1.14.0" />
-		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.51.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="[8.0.11]" />
-		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
+		<PackageReference Include="Azure.Identity" Version="1.21.0" />
+		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.62.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="10.0.11" />
+		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="10.0.400">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
 		<PackageReference Include="RecordPoint.Code.Documentation" Version="1.0.208304">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,6 +32,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\RecordPoint.Connectors.SDK.Databases\RecordPoint.Connectors.SDK.Databases.csproj" />
-		<ProjectReference Include="..\RecordPoint.Connectors.SDK.Toggles.LaunchDarkly\RecordPoint.Connectors.SDK.Toggles.LaunchDarkly.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="RecordPoint.Connectors.SDK.Databases.Cosmos.Test" />
 	</ItemGroup>
 </Project>

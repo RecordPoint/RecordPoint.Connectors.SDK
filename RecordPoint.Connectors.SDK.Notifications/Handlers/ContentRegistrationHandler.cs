@@ -60,12 +60,11 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
                 return NotificationOutcome.Failed("Connector is disabled");
             }
 
-            var workManagers = new List<IManagedWorkManager>();
             var tasks = new List<Task>();
             foreach (var contentRegistrationRequest in contentRegistrationRequests)
             {
                 var channels = await _contentRegistrationRequestAction.GetChannelsFromRequestAsync(connectorConfiguration, contentRegistrationRequest, cancellationToken);
-                if (channels.Count != 0)
+                if (channels.Any())
                 {
                     var context = new Dictionary<string, string>();
                     if (contentRegistrationRequest.StartDate.HasValue)
@@ -79,21 +78,13 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
 
                     foreach (var channel in channels)
                     {
-                        var contentRegistrationOperation = _managedWorkFactory.CreateContentRegistrationOperation(connectorConfiguration, channel, context);
-                        workManagers.Add(contentRegistrationOperation);
+                        using var contentRegistrationOperation = _managedWorkFactory.CreateContentRegistrationOperation(connectorConfiguration, channel, context);
                         tasks.Add(contentRegistrationOperation.StartAsync(cancellationToken));
                     }
                 }
             }
-            
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-            foreach (var workManager in workManagers)
-            {
-                workManager.Dispose();
-            }
 
-            workManagers.Clear();
-            tasks.Clear();
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return NotificationOutcome.OK();
         }

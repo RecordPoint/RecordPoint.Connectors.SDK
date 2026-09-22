@@ -11,10 +11,14 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// <summary>
         /// Gets or sets the rabbit mq eventing basic consumer.
         /// </summary>
-        public required EventingBasicConsumer RabbitMqEventingBasicConsumer { get; set; }
+        public required AsyncEventingBasicConsumer RabbitMqEventingBasicConsumer { get; set; }
         /// <summary>
         /// Gets or sets the rabbit mq model.
         /// </summary>
-        public required IModel RabbitMqModel { get; set; }
+        public required IChannel RabbitMqModel { get; set; }
+        /// <summary>
+        /// Gets or sets the consumer tag.
+        /// </summary>
+        public string? ConsumerTag { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using RecordPoint.Connectors.SDK.Caching.Semaphore;
@@ -50,6 +50,34 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             return binaryRetrievalActionMock;
         }
 
+        private static Mock<IBinaryRetrievalAction> CreateBinaryRetrievalActionMock(Stream stream)
+        {
+            var binaryRetrievalActionMock = new Mock<IBinaryRetrievalAction>();
+            binaryRetrievalActionMock
+                .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new BinaryRetrievalResult
+                {
+                    ResultType = BinaryRetrievalResultType.Complete,
+                    Stream = stream
+                });
+
+            return binaryRetrievalActionMock;
+        }
+
+        private static Mock<IBinaryRetrievalAction> CreateBinaryRetrievalActionMock(BinaryRetrievalResultType resultType, Stream stream)
+        {
+            var binaryRetrievalActionMock = new Mock<IBinaryRetrievalAction>();
+            binaryRetrievalActionMock
+                .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new BinaryRetrievalResult
+                {
+                    ResultType = resultType,
+                    Stream = stream
+                });
+
+            return binaryRetrievalActionMock;
+        }
+
         private static Mock<IBinaryRetrievalAction> CreateBinaryRetrievalActionMock(List<(BinaryRetrievalResultType ResultType, string Reason)> results)
         {
             var binaryRetrievalActionMock = new Mock<IBinaryRetrievalAction>();
@@ -78,7 +106,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var connector = ContentManagerSutBase.CreateConnector1();
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()), cancellationToken);
@@ -113,7 +140,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()), cancellationToken);
@@ -148,7 +174,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()), cancellationToken);
@@ -175,7 +200,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()), cancellationToken);
@@ -185,6 +209,52 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             // Assert
             Assert.Equal(WorkResultType.Complete, workResult.ResultType);
             Assert.Equal("Record submitted", submitRecordOperation.ResultReason);
+        }
+
+        [Fact]
+        public async Task SynchronousSubmitRecordOperation_SubmitRecord_DisposesRetrievedBinaryStream()
+        {
+            var cancellationToken = CancellationToken.None;
+            var stream = new MemoryStream([1, 2, 3]);
+            SUT.SelectBinaryRetrievalActionMock(CreateBinaryRetrievalActionMock(stream));
+            SUT.SelectBinarySubmissionCallbackActionMock(new Mock<IBinarySubmissionCallbackAction>());
+            SUT.SelectRecordSubmissionCallbackActionMock(new Mock<IRecordSubmissionCallbackAction>());
+
+            await StartSutAsync();
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+            var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
+
+            var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
+            await submitRecordOperation.RunWorkRequestAsync(
+                SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()),
+                cancellationToken);
+
+            Assert.False(stream.CanRead);
+        }
+
+        [Fact]
+        public async Task SynchronousSubmitRecordOperation_BackOff_DisposesUnexpectedBinaryStream()
+        {
+            var cancellationToken = CancellationToken.None;
+            var stream = new MemoryStream([1, 2, 3]);
+            SUT.SelectBinaryRetrievalActionMock(CreateBinaryRetrievalActionMock(BinaryRetrievalResultType.BackOff, stream));
+            SUT.SelectBinarySubmissionCallbackActionMock(new Mock<IBinarySubmissionCallbackAction>());
+            SUT.SelectRecordSubmissionCallbackActionMock(new Mock<IRecordSubmissionCallbackAction>());
+
+            await StartSutAsync();
+
+            var connector = ContentManagerSutBase.CreateConnector1();
+            await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
+            var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
+
+            var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
+            await submitRecordOperation.RunWorkRequestAsync(
+                SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()),
+                cancellationToken);
+
+            Assert.False(stream.CanRead);
         }
 
         [Fact]
@@ -204,7 +274,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord(5)), cancellationToken);
@@ -241,7 +310,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord(5)), cancellationToken);
@@ -262,7 +330,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var cancellationToken = CancellationToken.None;
 
             // Mock the ContentLoader
-            var binaryRetrievalActionMock = CreateBinaryRetrievalActionMock(BinaryRetrievalResultType.Deleted, "The binary does not exist on the content source");
+            var binaryRetrievalActionMock = CreateBinaryRetrievalActionMock(BinaryRetrievalResultType.Abandoned, "The binary does not exist on the content source");
             SUT.SelectBinaryRetrievalActionMock(binaryRetrievalActionMock);
             SUT.SelectBinarySubmissionCallbackActionMock(new Mock<IBinarySubmissionCallbackAction>());
             SUT.SelectRecordSubmissionCallbackActionMock(new Mock<IRecordSubmissionCallbackAction>());
@@ -273,7 +341,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()), cancellationToken);
@@ -291,7 +358,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var cancellationToken = CancellationToken.None;
 
             // Mock the ContentLoader
-            var binaryRetrievalActionMock = CreateBinaryRetrievalActionMock(BinaryRetrievalResultType.ZeroBinary, "File opened normally, skipping binary submission due to zero byte binary");
+            var binaryRetrievalActionMock = CreateBinaryRetrievalActionMock(BinaryRetrievalResultType.Abandoned, "File opened normally, skipping binary submission due to zero byte binary");
             SUT.SelectBinaryRetrievalActionMock(binaryRetrievalActionMock);
             SUT.SelectBinarySubmissionCallbackActionMock(new Mock<IBinarySubmissionCallbackAction>());
             SUT.SelectRecordSubmissionCallbackActionMock(new Mock<IRecordSubmissionCallbackAction>());
@@ -302,7 +369,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitRecordOperation = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
             await submitRecordOperation.RunWorkRequestAsync(SUT.CreateSynchronousSubmitRecordRequest(workMessage, SynchronousSubmitRecordOperationSut.CreateRecord()), cancellationToken);
@@ -334,7 +400,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, SynchronousSubmitRecordOperation.WORK_TYPE, null, 60, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var record = SynchronousSubmitRecordOperationSut.CreateRecord();
             var priorWorkItem = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
@@ -364,7 +429,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, SynchronousSubmitRecordOperation.WORK_TYPE, null, 60, cancellationToken);
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var record = SynchronousSubmitRecordOperationSut.CreateRecord();
             var priorWorkItem = Services.GetRequiredService<SynchronousSubmitRecordOperation>();
@@ -396,7 +460,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
             var workMessage = SUT.CreateSynchronousSubmitRecordManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var record = SynchronousSubmitRecordOperationSut.CreateRecord();
             var priorWorkItem = Services.GetRequiredService<SynchronousSubmitRecordOperation>();

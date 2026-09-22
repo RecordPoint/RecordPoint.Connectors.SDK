@@ -44,10 +44,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// </summary>
         private readonly ITelemetryTracker _telemetryTracker;
         /// <summary>
-        /// The date time provider.
-        /// </summary>
-        private readonly IDateTimeProvider _dateTimeProvider;
-        /// <summary>
         /// The toggle provider.
         /// </summary>
         private readonly IToggleProvider _toggleProvider;
@@ -84,7 +80,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// </summary>
         private static readonly IList<Type> DefaultOperationTypes = new List<Type>
         {
-            typeof(ContentManagerOperation),
             typeof(ChannelDiscoveryOperation),
             typeof(ContentRegistrationOperation),
             typeof(ContentSynchronisationOperation),
@@ -107,7 +102,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
         /// <param name="serviceBusOptions">The service bus options.</param>
         /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
-        /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
         /// <param name="operationTypes">An optional list of operation types to create service bus processors for</param>
         /// <param name="configuration">The configuration.</param>
@@ -120,7 +114,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             IOptions<AzureServiceBusOptions> serviceBusOptions,
             IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
-            IDateTimeProvider dateTimeProvider,
             IToggleProvider toggleProvider,
             IList<Type> operationTypes,
             IConfiguration configuration)
@@ -130,7 +123,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             _workManager = workManager;
             _serviceBusOptions = serviceBusOptions;
             _telemetryTracker = telemetryTracker;
-            _dateTimeProvider = dateTimeProvider;
             _observabilityScope = observabilityScope;
             _toggleProvider = toggleProvider;
             _configuration = configuration;
@@ -154,6 +146,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             }
 
             await _serviceBusClient.DisposeAsync();
+
+            _processingToken.Dispose();
 
             await base.StopAsync(cancellationToken);
         }
@@ -249,12 +243,24 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             var workRequest = JsonConvert.DeserializeObject<WorkRequest>(json);
             if (workRequest == null) return;
 
+            var processingTokenCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(_processingToken.Token);
+            args.MessageLockLostAsync += async (lockLostArgs) =>
+            {
+                var lockLostDimensions = new Dimensions
+                {
+                    { "ConnectorId", workRequest.ConnectorConfigId },
+                    { "TenantId", workRequest.TenantId },
+                    { "TenantDomainName", workRequest.TenantDomainName },
+                    { "Work", workRequest.WorkType },
+                    { "WorkId", workRequest.WorkId },
+                };
+                _telemetryTracker.TrackTrace("Message lock lost before processing could complete", SeverityLevel.Warning, lockLostDimensions);
+                await processingTokenCancellationSource.CancelAsync();
+            };
+
             try
             {
-                var result = await _workManager.HandleWorkRequestAsync(workRequest, _processingToken.Token);
-
-                workRequest.MustFinishDateTime = _dateTimeProvider.UtcNow + TimeSpan.FromMinutes(1);
-
+                var result = await _workManager.HandleWorkRequestAsync(workRequest, processingTokenCancellationSource.Token);
                 switch (result.ResultType)
                 {
                     case WorkResultType.Abandoned:
@@ -269,8 +275,30 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
                         break;
 
                     case WorkResultType.Deferred:
-                        await args.CompleteMessageAsync(args.Message);
-                        await DeferMessageAsync(workRequest, args.CancellationToken);
+                        try
+                        {
+                            await DeferMessageAsync(workRequest, result.WaitTill, args.CancellationToken);
+                            // Only complete the original message after successful re-queue
+                            await args.CompleteMessageAsync(args.Message);
+                        }
+                        catch (Exception deferException)
+                        {
+                            // If handles deferred message fails, move to dead letter queue with context
+                            // The work was successfully processed (result was Deferred),
+                            // but we failed to re-enqueue it for later processing
+                            var deferErrorDimensions = new Dimensions
+                            {
+                                { "ConnectorId", workRequest.ConnectorConfigId },
+                                { "TenantId", workRequest.TenantId },
+                                { "TenantDomainName", workRequest.TenantDomainName },
+                                { "Work", workRequest.WorkType },
+                                { "WorkId", workRequest.WorkId },
+                            };
+                            var deadLetterReason = "Failed to handle deferred message";
+                            var deadLetterDescription = $"{deferException.GetType().Name}: {deferException.Message}";
+                            _telemetryTracker.TrackException(new DeferredMessageRequeueFailedException(deadLetterReason, deferException), deferErrorDimensions);
+                            await args.DeadLetterMessageAsync(args.Message, deadLetterReason: deadLetterReason, deadLetterErrorDescription: deadLetterDescription);
+                        }
                         break;
 
                     case WorkResultType.Failed:
@@ -282,15 +310,31 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
             catch (Exception ex)
             {
                 var workRequestException = new UnknownWorkRequestException(ex);
-                _telemetryTracker.TrackException(workRequestException);
+                var dimensions = new Dimensions
+                {
+                    { "ConnectorId", workRequest.ConnectorConfigId },
+                    { "TenantId", workRequest.TenantId },
+                    { "TenantDomainName", workRequest.TenantDomainName },
+                    { "Work", workRequest.WorkType },
+                    { "WorkId", workRequest.WorkId },
+                };
+                _telemetryTracker.TrackException(workRequestException, dimensions);
+
+                // Abandon and let ASB retry; will eventually dead-letter after max retries
+                try { await args.AbandonMessageAsync(args.Message); }
+                catch (Exception abandonEx) { _telemetryTracker.TrackException(abandonEx, dimensions); }
             }
+
+            processingTokenCancellationSource.Dispose();
         }
 
-        private async Task DeferMessageAsync(WorkRequest request, CancellationToken cancellationToken)
+        private async Task DeferMessageAsync(WorkRequest request, DateTimeOffset? resultWaitTill, CancellationToken cancellationToken)
         {
-            var offsetWaitTill = request.WaitTill == null || request.WaitTill < DateTimeOffset.Now
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var offsetWaitTill = (resultWaitTill == null || resultWaitTill < DateTimeOffset.UtcNow)
                 ? DateTimeOffset.UtcNow.AddSeconds(20)
-                : (DateTimeOffset)request.WaitTill;
+                : resultWaitTill.Value;
 
             request.WaitTill = offsetWaitTill;
 

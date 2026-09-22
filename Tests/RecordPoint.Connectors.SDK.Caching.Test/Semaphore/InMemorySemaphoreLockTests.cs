@@ -66,6 +66,27 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
         }
 
         [Fact]
+        public async Task SetSemaphoreAsync_DoesNotExtendExistingLock()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            await StartSutAsync();
+            var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
+
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, WorkTypeContext1, null, 60, cancellationToken);
+            var firstLock = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
+            Assert.NotNull(firstLock);
+
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Global, WorkTypeContext1, null, 300, cancellationToken);
+            var secondLock = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
+            Assert.NotNull(secondLock);
+
+            var diffMs = Math.Abs((secondLock.Value - firstLock.Value).TotalMilliseconds);
+            Assert.True(diffMs < 100,
+                $"Lock should not be extended. First: {firstLock}, Second: {secondLock}, DiffMs: {diffMs}");
+        }
+
+        [Fact]
         public async Task CheckWaitIsNotDelayed_WhenSemaphoreLockNotSet()
         {
             var cancellationToken = CancellationToken.None;

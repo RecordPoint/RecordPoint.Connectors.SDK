@@ -28,6 +28,7 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
                         .AddSingleton<INotificationStrategy, ItemDestroyedHandler>()
                         .AddSingleton<INotificationStrategy, PingHandler>()
                         .AddSingleton<INotificationStrategy, ContentRegistrationHandler>()
+                        .AddSingleton<IConnectorSecretDecryptor, ConnectorSecretDecryptor>()
                         .AddSingleton<INotificationStrategy, ConnectorSecretHandler>()
                         .AddSingleton<IContentRegistrationRequestAction, TContentRegistrationRequestAction>()
                         .AddSingleton<IConnectorSecretAction, TConnectorSecretAction>();
@@ -68,6 +69,7 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
                 .ConfigureServices((hostContext, services) =>
                 {
                     services
+                        .AddSingleton<IConnectorSecretDecryptor, ConnectorSecretDecryptor>()
                         .AddSingleton<INotificationStrategy, ConnectorSecretHandler>()
                         .AddSingleton<IConnectorSecretAction, TConnectorSecretAction>();
                 });

@@ -81,6 +81,17 @@
         void TrackException(Exception? exception, Dimensions? dimensions = null, Measures? measures = null);
 
         /// <summary>
+        /// Tracks a pre-aggregated metric value with an optional single dimension.
+        /// Unlike TrackEvent, metrics are aggregated locally before transmission,
+        /// making them suitable for high-frequency tracking (e.g., per-request costs).
+        /// </summary>
+        /// <param name="name">The metric name (e.g., "Cosmos.RequestCharge")</param>
+        /// <param name="value">The numeric value to record</param>
+        /// <param name="dimensionName">Optional dimension name to partition the metric (e.g., "Container")</param>
+        /// <param name="dimensionValue">Optional dimension value (e.g., "channels")</param>
+        void TrackMetric(string name, double value, string? dimensionName = null, string? dimensionValue = null);
+
+        /// <summary>
         /// Begins a new Observability scope
         /// </summary>
         IDisposable BeginScope(Dimensions? dimensions = null, Measures? measures = null);

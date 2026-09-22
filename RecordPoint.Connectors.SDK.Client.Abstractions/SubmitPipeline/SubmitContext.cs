@@ -23,6 +23,12 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         protected const string NoExternalIdFound = "<no external id found>";
 
         /// <summary>
+        /// String to be returned if the SubmitContext's LogPrefix method is called and
+        /// no Location is present on the SubmitContext
+        /// </summary>
+        protected const string NoLocationFound = "<no location found>";
+
+        /// <summary>
         /// The ID of the Records365 vNext connector that this submission is being made through.
         /// </summary>
         public Guid ConnectorConfigId { get; set; }
@@ -105,7 +111,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
         public virtual string LogPrefix()
         {
             return
-                $"TenantId [{TenantId}] ConnectorConfigId [{ConnectorConfigId}] CorrelationId [{CorrelationId}] ExternalId [{GetExternalId()}] Title [{GetTitle()}] ";
+                $"TenantId [{TenantId}] ConnectorConfigId [{ConnectorConfigId}] CorrelationId [{CorrelationId}] ExternalId [{GetExternalId()}] Title [{GetTitle()}] Location [{GetItemLocation()}] ";
         }
 
         /// <summary>
@@ -130,6 +136,23 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             var externalId = CoreMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.ExternalId)?.Value;
 
             return !string.IsNullOrEmpty(externalId) ? externalId : NoExternalIdFound;
+        }
+
+        /// <summary>
+        /// Returns the Location of the object the SubmitContext is related to. Typically this is sourced from the Core metadata on the
+        /// SubmitContext, but in some cases (e.g. on the BinarySubmitContext) it may be stored in a strongly typed field
+        /// </summary>
+        /// <returns>Location value or a placeholder</returns>
+        protected virtual string GetItemLocation()
+        {
+            var itemLocation = CoreMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.Location)?.Value;
+
+            if (string.IsNullOrEmpty(itemLocation))
+            {
+                itemLocation = SourceMetaData?.FirstOrDefault(metaInfo => metaInfo.Name == Fields.Location)?.Value;
+            }
+
+            return !string.IsNullOrEmpty(itemLocation) ? itemLocation : NoLocationFound;
         }
     }
 }

@@ -84,18 +84,35 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             var authHelper = ApiClientFactory.CreateAuthenticationProvider(submitContext.AuthenticationHelperSettings);
             var retryPolicy = GetRetryPolicy(binarySubmitContext);
 
-            var result = await retryPolicy.ExecuteAsync(
-                async (ct) =>
+            HttpOperationResponse<object> result;
+
+            try
+            {
+                result = await retryPolicy.ExecuteAsync(
+                    async (ct) =>
+                    {
+                        var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
+                        return await apiClient.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
+                            body: binarySubmissionInputModel,
+                            customHeaders: headers,
+                            cancellationToken: ct
+                        ).ConfigureAwait(false);
+                    },
+                    submitContext.CancellationToken
+                ).ConfigureAwait(false);
+            }
+            catch (HttpOperationException ex)
+            {
+                // Only Forbidden should short-circuit the binary pipeline here.
+                // Other thrown statuses from the SAS-token endpoint should continue to propagate.
+                if (ex.Response?.StatusCode == HttpStatusCode.Forbidden &&
+                    TryHandleKnownHttpOperationException(submitContext, ex, "Binary", out _))
                 {
-                    var headers = await authHelper.GetHttpRequestHeaders(submitContext.AuthenticationHelperSettings).ConfigureAwait(false);
-                    return await apiClient.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
-                        body: binarySubmissionInputModel,
-                        customHeaders: headers,
-                        cancellationToken: ct
-                    ).ConfigureAwait(false);
-                },
-                submitContext.CancellationToken
-            ).ConfigureAwait(false);
+                    return;
+                }
+
+                throw;
+            }
 
             if (result.Response.StatusCode == HttpStatusCode.MethodNotAllowed)
             {

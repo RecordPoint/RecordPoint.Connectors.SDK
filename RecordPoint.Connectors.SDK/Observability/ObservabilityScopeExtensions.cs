@@ -92,5 +92,19 @@ namespace RecordPoint.Connectors.SDK.Observability
                 throw;
             }
         }
+
+        /// <summary>
+        /// Gets dimensions suitable for pre-aggregated metrics from the observability scope.
+        /// Returns only Service to conserve the limited dimension slots
+        /// available in metric pre-aggregation (max 4 in App Insights).
+        /// </summary>
+        public static Dimensions GetMetricDimensions(this IObservabilityScope observabilityScope)
+        {
+            var hasService = observabilityScope.Dimensions.TryGetValue(StandardDimensions.SERVICE, out var service);
+
+            return hasService && !string.IsNullOrEmpty(service)
+                ? new Dimensions { { StandardDimensions.SERVICE, service } }
+                : new Dimensions();
+        }
     }
 }

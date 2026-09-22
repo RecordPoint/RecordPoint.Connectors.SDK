@@ -63,10 +63,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// </summary>
         private readonly ITelemetryTracker _telemetryTracker;
         /// <summary>
-        /// The date time provider.
-        /// </summary>
-        private readonly IDateTimeProvider _dateTimeProvider;
-        /// <summary>
         /// The toggle provider.
         /// </summary>
         private readonly IToggleProvider _toggleProvider;
@@ -99,7 +95,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// </summary>
         private static readonly IList<Type> DefaultOperationTypes = new List<Type>
         {
-            typeof(ContentManagerOperation),
             typeof(ChannelDiscoveryOperation),
             typeof(ContentRegistrationOperation),
             typeof(ContentSynchronisationOperation),
@@ -122,7 +117,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// <param name="rabbitMqOptions">The rabbit mq options.</param>
         /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
-        /// <param name="dateTimeProvider">The date time provider.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
         /// <param name="operationTypes">An optional list of operation types to create RabbitMq consumers for</param>
         public RabbitMqWorkServer(
@@ -134,7 +128,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             IOptions<RabbitMqOptions> rabbitMqOptions,
             IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
-            IDateTimeProvider dateTimeProvider,
             IToggleProvider toggleProvider,
             IList<Type>? operationTypes = null)
         {
@@ -143,7 +136,6 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             _workManager = workManager;
             _rabbitMqOptions = rabbitMqOptions;
             _telemetryTracker = telemetryTracker;
-            _dateTimeProvider = dateTimeProvider;
             _observabilityScope = observabilityScope;
             _toggleProvider = toggleProvider;
 
@@ -154,19 +146,26 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         }
 
         /// <summary>
-        /// 
+        /// Stops all RabbitMQ consumers and closes open RabbitMQ resources.
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="cancellationToken">Cancellation token for shutdown operations.</param>
+        /// <returns>A task that completes when shutdown finishes.</returns>
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
             foreach (var model in _rabbitMqProcessors.Values.Select(processor => processor.RabbitMqModel))
             {
-                model.Close();
+                if (model.IsOpen)
+                {
+                    await model.CloseAsync(cancellationToken: cancellationToken);
+                }
+
                 model.Dispose();
             }
 
-            _rabbitMqConnection.Close();
+            if (_rabbitMqConnection.IsOpen)
+            {
+                await _rabbitMqConnection.CloseAsync(cancellationToken: cancellationToken);
+            }
 
             await base.StopAsync(cancellationToken);
         }
@@ -196,7 +195,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
                 _telemetryTracker.TrackTrace("RabbitMqSettings found", SeverityLevel.Information);
 
-                CreateProcessors();
+                await CreateProcessorsAsync();
 
                 var isProcessingStarted = false;
                 while (!stoppingToken.IsCancellationRequested)
@@ -207,14 +206,14 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                         if (isKillSwitched && isProcessingStarted)
                         {
                             //If the kill switch has just been enabled, lets stop the processors
-                            StopConsumers();
+                            await StopConsumersAsync();
                             isProcessingStarted = false;
                         }
                         else if (!isProcessingStarted && !isKillSwitched)
                         {
                             //If processing is stopped, but the kill switch is not enabled, lets start the processors
                             isProcessingStarted = true;
-                            StartConsumers();
+                            await StartConsumersAsync();
                         }
 
                         await Task.Delay(_rabbitMqOptions.Value.KillswitchCheckInterval, stoppingToken);
@@ -228,14 +227,14 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                 //If the background host is stopping, lets gracefully shutdown the processors
                 if (isProcessingStarted)
                 {
-                    StopConsumers();
+                    await StopConsumersAsync();
                 }
 
                 //Delay to allow currently processing operations to complete
                 await Task.Delay(_rabbitMqOptions.Value.ServiceShutdownDelay, CancellationToken.None);
                 await _processingToken.CancelAsync();
 
-                CloseModels();
+                await CloseModelsAsync();
             }
             catch (Exception ex)
             {
@@ -258,58 +257,104 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             base.Dispose();
         }
 
-        private async void HandleIncomingMessagesAsync(object? sender, BasicDeliverEventArgs args)
+        private async Task HandleIncomingMessagesAsync(object sender, BasicDeliverEventArgs args)
         {
             var json = Encoding.Default.GetString(args.Body.Span);
             var workRequest = JsonConvert.DeserializeObject<WorkRequest>(json);
-            var eventingBasicConsumer = (EventingBasicConsumer)sender!;
+            var eventingBasicConsumer = (AsyncEventingBasicConsumer)sender;
             if (workRequest == null) return;
 
+            var messageHandled = false;
             try
             {
                 var result = await _workManager.HandleWorkRequestAsync(workRequest, _processingToken.Token).ConfigureAwait(false);
-
-                workRequest.MustFinishDateTime = _dateTimeProvider.UtcNow + TimeSpan.FromMinutes(1);
 
                 switch (result.ResultType)
                 {
                     //When we abandon work, we need to complete the message on queue so it is removed from the queue
                     case WorkResultType.Abandoned:
                     case WorkResultType.Complete:
-                        eventingBasicConsumer.Model.BasicAck(args.DeliveryTag, false);
+                        await eventingBasicConsumer.Channel.BasicAckAsync(args.DeliveryTag, false, _processingToken.Token);
+                        messageHandled = true;
                         break;
 
                     case WorkResultType.DeadLetter:
                     case WorkResultType.Failed:
                         //Move the message to the Dead Letter Queue
-                        eventingBasicConsumer.Model.BasicNack(args.DeliveryTag, false, false);
+                        await eventingBasicConsumer.Channel.BasicNackAsync(args.DeliveryTag, false, false, _processingToken.Token);
+                        messageHandled = true;
                         throw new WorkResultException(result.Reason, result.Exception);
 
                     case WorkResultType.Deferred:
-                        eventingBasicConsumer.Model.BasicAck(args.DeliveryTag, false);
-                        await DeferMessageAsync(workRequest, CancellationToken.None);
+                        try
+                        {
+                            await DeferMessageAsync(workRequest, result.WaitTill, _processingToken.Token);
+                            // Only acknowledge the original message after successful re-queue
+                            await eventingBasicConsumer.Channel.BasicAckAsync(args.DeliveryTag, false, _processingToken.Token);
+                            messageHandled = true;
+                        }
+                        catch (Exception deferException)
+                        {
+                            // If re-queue fails, nack without requeue to send to dead letter
+                            // The work was successfully processed (result was Deferred),
+                            // but we failed to re-enqueue it for later processing
+                            var deferErrorDimensions = new Dimensions
+                            {
+                                { "ConnectorId", workRequest.ConnectorConfigId },
+                                { "TenantId", workRequest.TenantId },
+                                { "TenantDomainName", workRequest.TenantDomainName },
+                                { "Work", workRequest.WorkType },
+                                { "WorkId", workRequest.WorkId },
+                            };
+                            _telemetryTracker.TrackException(new DeferredMessageRequeueFailedException("Failed to requeue deferred message", deferException), deferErrorDimensions);
+                            await eventingBasicConsumer.Channel.BasicNackAsync(args.DeliveryTag, false, false, _processingToken.Token);
+                            messageHandled = true;
+                        }
                         break;
                 }
             }
             catch (Exception ex)
             {
                 var workRequestException = new UnknownWorkRequestException(ex);
-                _telemetryTracker.TrackException(workRequestException);
+                var dimensions = new Dimensions
+                {
+                    { "ConnectorId", workRequest.ConnectorConfigId },
+                    { "TenantId", workRequest.TenantId },
+                    { "TenantDomainName", workRequest.TenantDomainName },
+                    { "Work", workRequest.WorkType },
+                    { "WorkId", workRequest.WorkId },
+                };
+                _telemetryTracker.TrackException(workRequestException, dimensions);
+
+                // Nack and let RabbitMQ retry; will eventually reach dead letter after max retries
+                if (!messageHandled)
+                {
+                    try
+                    {
+                        await eventingBasicConsumer.Channel.BasicNackAsync(args.DeliveryTag, false, true, _processingToken.Token);
+                    }
+                    catch (Exception nackEx)
+                    {
+                        _telemetryTracker.TrackException(nackEx);
+                    }
+                }
             }
         }
 
-        private async Task DeferMessageAsync(WorkRequest request, CancellationToken cancellationToken)
+        private async Task DeferMessageAsync(WorkRequest request, DateTimeOffset? resultWaitTill, CancellationToken cancellationToken)
         {
-            var offsetWaitTill = request.WaitTill == null || request.WaitTill < DateTimeOffset.Now
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var offsetWaitTill = (resultWaitTill == null || resultWaitTill < DateTimeOffset.UtcNow)
                 ? DateTimeOffset.UtcNow.AddSeconds(20)
-                : (DateTimeOffset)request.WaitTill;
+                : resultWaitTill.Value;
 
             request.WaitTill = offsetWaitTill;
 
             await _workQueueClient.SubmitWorkAsync(request, cancellationToken);
         }
 
-        private void CreateProcessors()
+        private async Task CreateProcessorsAsync()
         {
             var queueableWorkOperations = _serviceProvider.GetServices<IQueueableWork>();
             foreach (var type in _operationTypes)
@@ -318,72 +363,70 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                 if (queueableWorkOperation == null)
                     continue;
 
-                TryCreateRabbitMqConsumer(queueableWorkOperation.WorkType);
+                await TryCreateRabbitMqConsumerAsync(queueableWorkOperation.WorkType);
             }
         }
 
-        private void StartConsumers()
+        private async Task StartConsumersAsync()
         {
             foreach (var queueProcessor in _rabbitMqProcessors)
             {
-                queueProcessor.Value.RabbitMqModel.BasicConsume(queueProcessor.Key, false, queueProcessor.Value.RabbitMqEventingBasicConsumer);
+                queueProcessor.Value.ConsumerTag = await queueProcessor.Value.RabbitMqModel.BasicConsumeAsync(queueProcessor.Key, false, queueProcessor.Value.RabbitMqEventingBasicConsumer, _processingToken.Token);
             }
         }
 
-        private void StopConsumers()
+        private async Task StopConsumersAsync()
         {
-            foreach (var queueProcessor in _rabbitMqProcessors!.Where(a => a.Value.RabbitMqModel.IsOpen))
+            var filteredProcessors = _rabbitMqProcessors.Where(queueProcessor => queueProcessor.Value.RabbitMqModel.IsOpen && !string.IsNullOrEmpty(queueProcessor.Value.ConsumerTag));
+            foreach (var queueProcessorValue in filteredProcessors.Select(queueProcessor => queueProcessor.Value))
             {
-                var consumerTags = queueProcessor.Value.RabbitMqEventingBasicConsumer.ConsumerTags;
-                foreach (var consumerTag in consumerTags)
-                {
-                    queueProcessor.Value.RabbitMqModel.BasicCancel(consumerTag);
-                }
+                await queueProcessorValue.RabbitMqModel.BasicCancelAsync(queueProcessorValue.ConsumerTag!, false, _processingToken.Token);
+                queueProcessorValue.ConsumerTag = null;
             }
         }
 
-        private void CloseModels()
+        private async Task CloseModelsAsync()
         {
             foreach (var processModel in _rabbitMqProcessors.Select(a => a.Value)
                 .Where(a => !a.RabbitMqModel.IsClosed))
             {
-                processModel.RabbitMqModel.Close();
+                await processModel.RabbitMqModel.CloseAsync(cancellationToken: CancellationToken.None);
             }
         }
 
-        private void TryCreateRabbitMqConsumer(string workType)
+        private async Task TryCreateRabbitMqConsumerAsync(string workType)
         {
-            var model = _rabbitMqConnection.CreateModel();
+            var model = await _rabbitMqConnection.CreateChannelAsync(cancellationToken: _processingToken.Token);
 
             // Set prefetch count if required
             var dop = _rabbitMqOptions.Value.MaxDegreeOfParallelism;
             if (dop != null)
             {
-                model.BasicQos(0, dop.Value, false);
+                await model.BasicQosAsync(0, dop.Value, false, _processingToken.Token);
             }
 
             var processor = new RabbitMqProcessModel
             {
                 RabbitMqModel = model,
-                RabbitMqEventingBasicConsumer = DeclareAndBindQueueToExchange(model, workType)
+                RabbitMqEventingBasicConsumer = await DeclareAndBindQueueToExchangeAsync(model, workType)
             };
             // add handler to process messages
-            processor.RabbitMqEventingBasicConsumer.Received += HandleIncomingMessagesAsync;
+            processor.RabbitMqEventingBasicConsumer.ReceivedAsync += HandleIncomingMessagesAsync;
 
             //Add Processor to internal Cache
             var queueName = QueueNameHelper.GetQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
             _rabbitMqProcessors.Add(queueName, processor);
         }
 
-        private EventingBasicConsumer DeclareAndBindQueueToExchange(IModel model, string workType)
+        private async Task<AsyncEventingBasicConsumer> DeclareAndBindQueueToExchangeAsync(IChannel model, string workType)
         {
             //Create Normal Queue
-            var dlExchangeArguments = new Dictionary<string, object>
+            var dlExchangeArguments = new Dictionary<string, object?>
             {
                 { DeadletterExchangeType, DeadletterExchange}
             };
 
-            var exchangeArguments = new Dictionary<string, object>
+            var exchangeArguments = new Dictionary<string, object?>
             {
                 { "x-delayed-type", "direct" }
             };
@@ -391,15 +434,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
             var queueName = QueueNameHelper.GetQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
             var dlQueueName = QueueNameHelper.GetDLQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
 
-            model.ExchangeDeclare(ExchangeName, ExchangeType, durable: true, arguments: exchangeArguments);
-            model.QueueDeclare(queueName, true, false, false, dlExchangeArguments);
-            model.QueueBind(queueName, ExchangeName, dlQueueName);
-            var consumer = new EventingBasicConsumer(model);
+            await model.ExchangeDeclareAsync(ExchangeName, ExchangeType, durable: true, arguments: exchangeArguments, cancellationToken: _processingToken.Token);
+            await model.QueueDeclareAsync(queueName, true, false, false, dlExchangeArguments, cancellationToken: _processingToken.Token);
+            await model.QueueBindAsync(queueName, ExchangeName, dlQueueName, cancellationToken: _processingToken.Token);
+            var consumer = new AsyncEventingBasicConsumer(model);
 
             //Create Dead Letter Queue            
-            model.ExchangeDeclare(DeadletterExchange, RabbitMQ.Client.ExchangeType.Direct, durable: true, false);
-            model.QueueDeclare(dlQueueName, true, false, false, dlExchangeArguments);
-            model.QueueBind(dlQueueName, DeadletterExchange, dlQueueName);
+            await model.ExchangeDeclareAsync(DeadletterExchange, RabbitMQ.Client.ExchangeType.Direct, durable: true, autoDelete: false, cancellationToken: _processingToken.Token);
+            await model.QueueDeclareAsync(dlQueueName, true, false, false, dlExchangeArguments, cancellationToken: _processingToken.Token);
+            await model.QueueBindAsync(dlQueueName, DeadletterExchange, dlQueueName, cancellationToken: _processingToken.Token);
 
             return consumer;
         }

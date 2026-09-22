@@ -120,12 +120,15 @@ public class SynchronousSubmitRecordOperation(
         }
 
         //Attempt to submit the binaries
-        var (shouldDeferRecordSubmissionReason, waitUntilTime, shouldAbandonRecordSubmissionReason) = await ProcessBinariesAsync(cancellationToken);
+        var (shouldDeferRecordSubmissionReason, waitUntilTime, shouldAbandonRecordSubmissionReason) =
+            await ProcessBinariesAsync(cancellationToken);
 
         if (string.IsNullOrEmpty(shouldDeferRecordSubmissionReason) && string.IsNullOrEmpty(shouldAbandonRecordSubmissionReason))
         {
             //If we didn't submit all the binaries we should still submit the record, but requeue it for further processing later
-            var shouldRequeue = Parameter.Binaries.Any(binary => binary.BinarySubmissionStatus == BinarySubmissionStatus.NotSubmitted && binary.SubmissionAttempts < MAX_BINARY_SUBMISSION_RETRIES);
+            var shouldRequeue = Parameter.Binaries.Any(binary =>
+                binary.BinarySubmissionStatus == BinarySubmissionStatus.NotSubmitted &&
+                binary.SubmissionAttempts < MAX_BINARY_SUBMISSION_RETRIES);
 
             //Submit the record to the platform
             await SubmitRecordAsync(shouldRequeue, waitUntilTime, cancellationToken);
@@ -145,46 +148,49 @@ public class SynchronousSubmitRecordOperation(
     private async Task<(string shouldDeferRecordSubmissionReason, DateTime? WaitUntilTime, string ShouldAbandonRecordSubmissionReason)> ProcessBinariesAsync(CancellationToken cancellationToken)
     {
         var binarySubmissionStatus = await connectorManager.GetBinarySubmissionStatusAsync(ConnectorConfigId, cancellationToken);
-        if (binarySubmissionStatus.Enabled)
+        if (!binarySubmissionStatus.Enabled) return (null, null, null);
+
+        //Get binaries that are unsubmitted and have not reached the max retry threshold
+        var unsubmittedBinaries = Parameter.Binaries
+            .Where(binary => binary.BinarySubmissionStatus == BinarySubmissionStatus.NotSubmitted &&
+                             binary.SubmissionAttempts < MAX_BINARY_SUBMISSION_RETRIES);
+
+        //Process unsubmitted binaries
+        foreach (var binary in unsubmittedBinaries)
         {
-            //Get binaries that are unsubmitted and have not reached the max retry threshold
-            var unsubmittedBinaries = Parameter.Binaries
-                .Where(binary => binary.BinarySubmissionStatus == BinarySubmissionStatus.NotSubmitted && binary.SubmissionAttempts < MAX_BINARY_SUBMISSION_RETRIES);
+            binary.SubmissionAttempts++;
 
-            //Process unsubmitted binaries
-            foreach (var binary in unsubmittedBinaries)
+            try
             {
-                binary.SubmissionAttempts++;
+                var binaryRetrievalResult = await RetrieveBinaryAsync(binary, cancellationToken);
+                if (!string.IsNullOrEmpty(binaryRetrievalResult.ShouldDeferBinarySubmissionsReason))
+                {
+                    //If we have received a backoff result from the content source for retrieving the binary
+                    //We should not attempt to retrieve any more binaries.
+                    //This won't stop us from submitting the record to the platform though
+                    //so we don't want to return a record deferal here, only the back off time for the content source.
+                    //We will requeue the record for further processing after this wait time.
+                    return (null, binaryRetrievalResult.WaitUntilTime, null);
+                }
 
-                try
+                if (binary.BinarySubmissionStatus != BinarySubmissionStatus.Skipped && binaryRetrievalResult.Stream != null)
                 {
-                    var binaryRetrievalResult = await RetrieveBinaryAsync(binary, cancellationToken);
-                    if (!string.IsNullOrEmpty(binaryRetrievalResult.ShouldDeferBinarySubmissionsReason))
+                    await using var stream = binaryRetrievalResult.Stream;
+                    var submitResult = await SubmitBinaryAsync(binary, stream, cancellationToken);
+                    if (!string.IsNullOrEmpty(submitResult.ShouldDeferRecordSubmissionReason))
                     {
-                        //If we have received a backoff result from the content source for retrieving the binary
-                        //We should not attempt to retrieve any more binaries.
-                        //This won't stop us from submitting the record to the platform though
-                        //so we don't want to return a record deferal here, only the back off time for the content source.
-                        //We will requeue the record for further processing after this wait time.
-                        return (null, binaryRetrievalResult.WaitUntilTime, null);
+                        return (submitResult.ShouldDeferRecordSubmissionReason, submitResult.WaitUntilTime, null);
                     }
-                    else
+
+                    if (!string.IsNullOrEmpty(submitResult.ShouldAbandonRecordSubmissionReason))
                     {
-                        var submitResult = await SubmitBinaryAsync(binary, binaryRetrievalResult.Stream, cancellationToken);
-                        if (!string.IsNullOrEmpty(submitResult.ShouldDeferRecordSubmissionReason))
-                        {
-                            return (submitResult.ShouldDeferRecordSubmissionReason, submitResult.WaitUntilTime, null);
-                        }
-                        else if (!string.IsNullOrEmpty(submitResult.ShouldAbandonRecordSubmissionReason))
-                        {
-                            return (null, null, submitResult.ShouldAbandonRecordSubmissionReason);
-                        }
+                        return (null, null, submitResult.ShouldAbandonRecordSubmissionReason);
                     }
                 }
-                catch (Exception ex)
-                {
-                    telemetryTracker.TrackException(ex, GetKeyDimensions());
-                }
+            }
+            catch (Exception ex)
+            {
+                telemetryTracker.TrackException(ex, GetKeyDimensions());
             }
         }
 
@@ -202,20 +208,34 @@ public class SynchronousSubmitRecordOperation(
             .ExecuteAsync(_connectorConfiguration, binary, cancellationToken)
             .ConfigureAwait(false);
 
-        //Could not successfully retrieve the binary stream
         switch (binaryRetrievalResult.ResultType)
         {
             case BinaryRetrievalResultType.BackOff:
+                await DisposeStreamAsync(binaryRetrievalResult.Stream);
                 return (TOO_MANY_REQUESTS_REASON,  DateTime.UtcNow.AddSeconds(binaryRetrievalResult.NextDelay ?? DEFAULT_DEFERRAL_SECONDS), null);
             case BinaryRetrievalResultType.Failed:
+                await DisposeStreamAsync(binaryRetrievalResult.Stream);
+                if (binaryRetrievalResult.Exception != null)
+                {
+                    telemetryTracker.TrackException(binaryRetrievalResult.Exception, GetKeyDimensions());
+                }
                 return (null, null, null);
             case BinaryRetrievalResultType.Abandoned:
             case BinaryRetrievalResultType.ZeroBinary:
             case BinaryRetrievalResultType.Deleted:
+                await DisposeStreamAsync(binaryRetrievalResult.Stream);
                 binary.BinarySubmissionStatus = BinarySubmissionStatus.Skipped;
                 return (null, null, null);
             default:
                 return (null, null, binaryRetrievalResult.Stream);
+        }
+    }
+
+    private static async ValueTask DisposeStreamAsync(Stream stream)
+    {
+        if (stream is not null)
+        {
+            await stream.DisposeAsync();
         }
     }
 
@@ -349,12 +369,7 @@ public class SynchronousSubmitRecordOperation(
 
     private Task RequeueAsync(DateTimeOffset waitTill, CancellationToken cancellationToken)
     {
-        return workQueueClient.SubmitRecordAsync(new ContentSubmissionConfiguration()
-        {
-            ConnectorConfigurationId = _connectorConfiguration.Id,
-            TenantId = _connectorConfiguration.TenantId,
-            TenantDomainName = _connectorConfiguration.TenantDomainName,
-        }, Parameter, waitTill, cancellationToken);
+        return workQueueClient.SubmitRecordAsync(_connectorConfiguration, Parameter, waitTill, cancellationToken);
     }
 
     /// <summary>

@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Notifications;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
+using RecordPoint.Connectors.SDK.R365;
 using RecordPoint.Connectors.SDK.Work;
 using System;
 using System.Threading;
@@ -38,6 +41,9 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// The connector manager.
         /// </summary>
         private readonly IConnectorConfigurationManager _connectorManager;
+        private readonly IR365Client _r365Client;
+        private readonly IOptions<RecordDisposalOptions> _options;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordDisposalOperation"/> class.
         /// </summary>
@@ -48,6 +54,8 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
+        /// <param name="r365Client">The notification client.</param>
+        /// <param name="options">The record disposal options.</param>
         public RecordDisposalOperation(
             IServiceProvider serviceProvider,
             IContentManagerActionProvider contentManagerActionProvider,
@@ -55,11 +63,15 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             ISystemContext systemContext,
             IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IR365Client r365Client,
+            IOptions<RecordDisposalOptions> options)
             : base(serviceProvider, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _contentManagerActionProvider = contentManagerActionProvider;
             _connectorManager = connectorManager;
+            _r365Client = r365Client;
+            _options = options;
         }
 
         /// <summary>
@@ -128,23 +140,44 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             switch (_recordDisposalResult.ResultType)
             {
                 case RecordDisposalResultType.Complete:
+                    await Callback(cancellationToken);
                     await CompleteAsync("Record successfully disposed", cancellationToken);
                     break;
 
                 case RecordDisposalResultType.Deleted:
+                    await Callback(cancellationToken);
                     await CompleteAsync("Record already deleted on content source", cancellationToken);
                     break;
 
                 case RecordDisposalResultType.Failed:
+                    // Ideally callback would only be done on the last attempt.
+                    await Callback(cancellationToken);
                     throw new InvalidOperationException(_recordDisposalResult.Reason, _recordDisposalResult.Exception);
 
                 case RecordDisposalResultType.BackOff:
-                    await HandleBackOffResultAsync(_connectorConfiguration, Record, _recordDisposalResult.SemaphoreLockType, _recordDisposalResult.NextDelay, cancellationToken);
+                    await HandleBackOffResultAsync(_connectorConfiguration, Record, _recordDisposalResult.SemaphoreLockType, _recordDisposalResult.NextDelay, _recordDisposalResult.MaxNextDelay, cancellationToken);
                     break;
 
                 default:
                     throw new InvalidOperationException($"Unexpected record disposal result {_recordDisposalResult.ResultType}");
             }
+        }
+
+        private async Task Callback(CancellationToken cancellationToken) {
+            if (!_options.Value.SendDisposalCallback) 
+                return; 
+
+            var disposalStatus = _recordDisposalResult.ResultType == RecordDisposalResultType.Failed ? ItemDisposalStatus.DestroyFailed : ItemDisposalStatus.Destroyed;
+            var disposalCallback = new ItemNotificationDisposalCallbackModel()
+            {
+                DisposalStatus = disposalStatus.ToString(),
+                ExternalId = Record.ExternalId,
+                ConnectorConfigId = Guid.Parse(_connectorConfiguration.Id),
+                CorrelationId = Id,
+                StatusMessage = _recordDisposalResult.ResultType == RecordDisposalResultType.Deleted ? "Record already deleted in content source" : string.Empty
+            };
+
+            await _r365Client.DisposalCallback(disposalCallback, _connectorConfiguration, cancellationToken);
         }
 
         #region Observability

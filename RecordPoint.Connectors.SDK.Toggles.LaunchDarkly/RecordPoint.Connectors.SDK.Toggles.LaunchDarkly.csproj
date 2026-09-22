@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFrameworks>net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_toggles_launchdarkly_doc.md</DocumentationMarkdown>
@@ -16,7 +16,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\RecordPoint.Connectors.SDK\RecordPoint.Connectors.SDK.csproj" />
-		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
+		<PackageReference Include="LaunchDarkly.ServerSdk" Version="8.16.0" />
+		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="10.0.400">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -24,7 +25,5 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RecordPoint.Common.FeatureToggles.LaunchDarkly" Version="1.0.240061" />
-		<PackageReference Include="RecordPoint.Services.Common" Version="2.2.290344" />
 	</ItemGroup>
 </Project>

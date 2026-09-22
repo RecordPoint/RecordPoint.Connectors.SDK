@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
 using System.Text;
+using System.Threading;
 
 namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 {
@@ -17,10 +17,10 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         private const string ExchangeDelayHeader = "x-delay";
 
         private readonly IConnection _rabbitMqConnection;
-        private readonly Dictionary<string, IModel> _rabbitMqSenders = new();
+        private readonly Dictionary<string, IChannel> _rabbitMqSenders = new();
         private readonly IOptions<RabbitMqOptions> _rabbitMqOptions;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly object _rabbitMqClientLock = new();
+        private readonly SemaphoreSlim _rabbitMqSenderLock = new(1, 1);
 
         /// <summary>
         /// 
@@ -41,57 +41,87 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         /// <inheritdoc/>
         public async Task SubmitWorkAsync(WorkRequest workRequest, CancellationToken cancellationToken)
         {
-            await SendMessageAsync(workRequest);
+            await SendMessageAsync(workRequest, cancellationToken);
         }
 
-        private async Task SendMessageAsync(WorkRequest workRequest)
+        private async Task SendMessageAsync(WorkRequest workRequest, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             workRequest.SubmitDateTime = _dateTimeProvider.UtcNow;
             var serializedMessage = JsonConvert.SerializeObject(workRequest);
             var messageBytes = Encoding.UTF8.GetBytes(serializedMessage);
-            var sender = GetRabbitMqSender(workRequest.WorkType);
+            var sender = await GetRabbitMqSenderAsync(workRequest.WorkType, cancellationToken);
 
-            IBasicProperties props = sender.CreateBasicProperties();
-            props.Persistent = true;
+            var props = new BasicProperties
+            {
+                Persistent = true
+            };
 
             if (workRequest.WaitTill.HasValue)
             {
                 var delayMilliSeconds = workRequest.WaitTill.Value.Subtract(_dateTimeProvider.UtcNow).TotalMilliseconds;
                 if (props.Headers == null || props.Headers.Count == 0)
                 {
-                    props.Headers = new Dictionary<string, object>();
+                    props.Headers = new Dictionary<string, object?>();
                 }
-                props.Headers.Add(ExchangeDelayHeader, delayMilliSeconds);
+
+                props.Headers[ExchangeDelayHeader] = Convert.ToInt64(Math.Max(0, delayMilliSeconds));
             }
 
             var dlQueueName = QueueNameHelper.GetDLQueueName(workRequest.WorkType, _rabbitMqOptions.Value.QueuePrefix);
-            sender.BasicPublish(ExchangeName, dlQueueName, props, messageBytes);
-            await Task.CompletedTask;
+            await sender.BasicPublishAsync(ExchangeName, dlQueueName, false, props, messageBytes, cancellationToken);
         }
 
-        private IModel GetRabbitMqSender(string workType)
+        private async Task<IChannel> GetRabbitMqSenderAsync(string workType, CancellationToken cancellationToken)
         {
             var queueName = QueueNameHelper.GetQueueName(workType, _rabbitMqOptions.Value.QueuePrefix);
-            lock (_rabbitMqClientLock)
+            if (_rabbitMqSenders.TryGetValue(queueName, out var existingSender))
             {
-                if (!_rabbitMqSenders.ContainsKey(queueName)) _rabbitMqSenders.Add(queueName, _rabbitMqConnection.CreateModel());
+                return existingSender;
             }
 
-            return _rabbitMqSenders[queueName];
+            await _rabbitMqSenderLock.WaitAsync(cancellationToken);
+            try
+            {
+                if (!_rabbitMqSenders.TryGetValue(queueName, out existingSender))
+                {
+                    existingSender = await _rabbitMqConnection.CreateChannelAsync(cancellationToken: cancellationToken);
+                    _rabbitMqSenders.Add(queueName, existingSender);
+                }
+            }
+            finally
+            {
+                _rabbitMqSenderLock.Release();
+            }
+
+            return existingSender;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
             foreach (var sender in _rabbitMqSenders.Values)
             {
+                if (sender.IsOpen)
+                {
+                    await sender.CloseAsync(cancellationToken: CancellationToken.None);
+                }
                 sender.Dispose();
             }
+
+            if (_rabbitMqConnection.IsOpen)
+            {
+                await _rabbitMqConnection.CloseAsync(cancellationToken: CancellationToken.None);
+            }
+
             _rabbitMqConnection.Dispose();
-            return ValueTask.CompletedTask;
+            _rabbitMqSenderLock.Dispose();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

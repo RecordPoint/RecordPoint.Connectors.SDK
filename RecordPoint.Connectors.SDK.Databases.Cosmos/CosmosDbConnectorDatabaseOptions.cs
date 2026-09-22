@@ -45,6 +45,14 @@
         /// TLS version to use for Cosmos DB connections (e.g., "Tls12", "Tls13", "Tls12,Tls13")
         /// </summary>
         public string? TlsVersion { get; set; }
-    
+
+        /// <summary>
+        /// When true, uses direct Cosmos SDK point reads for single-document lookups
+        /// instead of EF Core queries. This bypasses EF Core query translation and
+        /// reduces channel reads from ~3-5 RU to ~1 RU per call.
+        /// </summary>
+        /// <remarks>Default: false (uses standard EF Core path)</remarks>
+        public bool UseDirectReads { get; set; } = false;
+
     }
 }

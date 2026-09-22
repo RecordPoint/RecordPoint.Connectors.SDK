@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Databases;
 using RecordPoint.Connectors.SDK.Test.Mock.Databases;
 using RecordPoint.Connectors.SDK.Test.Mock.Work;
@@ -30,6 +31,22 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             await databaseProvider.RemoveAsync(CancellationToken.None);
             await base.StopSUTAsync();
         }
+
+        public const string CONNECTOR_CONFIGURATION_ID_1 = "18d41b06-20ec-4e82-aeeb-cf6d47d5c652";
+        public const string CONNECTOR_TYPE_ID_1 = "18d41b06-20ec-4e82-aeeb-cf6d47d5c653";
+        public const string CONNECTOR_DISPLAY_NAME_1 = "Test Connector 1";
+        public const string TENANT_ID_1 = "18d41b06-20ec-4e82-aeeb-cf6d47d5c654";
+        public const string TENANT_DOMAIN_NAME = "TestTenantDomainName";
+
+        public static ConnectorConfigModel CreateConnector1() => new()
+        {
+            Id = CONNECTOR_CONFIGURATION_ID_1,
+            ConnectorTypeId = CONNECTOR_TYPE_ID_1,
+            DisplayName = CONNECTOR_DISPLAY_NAME_1,
+            Status = "Enabled",
+            TenantId = TENANT_ID_1,
+            TenantDomainName = TENANT_DOMAIN_NAME
+        };
     }
 
     /// <summary>
@@ -40,13 +57,24 @@ namespace RecordPoint.Connectors.SDK.Test.Work
 
         private const string TEST_JOB_ID = "234";
 
+        private static WorkRequest CreateWorkRequest()
+        {
+            return new WorkRequest
+            {
+                WorkType = "TestWorkType",
+                WorkId = TEST_JOB_ID,
+                ConnectorConfigId = "TestConnectorId",
+                TenantId = "TestTenantId",
+                TenantDomainName = "TestTenantDomainName"
+            };
+        }
+
         private static ManagedWorkStatusModel CreateTestManagedWorkStatusModel()
         {
             var testManagedWorkStatusModel = new ManagedWorkStatusModel()
             {
                 Configuration = "TestConfiguration",
                 ConfigurationType = "TestConfigurationType",
-                ConnectorId = "TestConnectorId",
                 WorkId = TEST_JOB_ID,
                 WorkType = "TestWorkType",
                 State = "TestState",
@@ -61,13 +89,17 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         {
             await StartSutAsync();
 
+            var connectorConfig = ManagedWorkFactorySut.CreateConnector1();
+
             var workFactory = Services.GetRequiredService<IManagedWorkFactory>();
-            var work = workFactory.CreateWork("TestWorkId", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
+            var work = workFactory.CreateWork(connectorConfig, "TestWorkId1", "TestWorkType", "TestConfigurationType", "TestConfiguration");
 
             Assert.NotNull(work.WorkStatus.WorkId);
-            Assert.Equal("TestWorkId", work.WorkStatus.Id);
+            Assert.Equal("TestWorkId1", work.WorkStatus.Id);
             Assert.Equal("TestWorkType", work.WorkStatus.WorkType);
-            Assert.Equal("TestConnectorId", work.WorkStatus.ConnectorId);
+            Assert.Equal(connectorConfig.Id, work.WorkStatus.ConnectorId);
+            Assert.Equal(connectorConfig.TenantId, work.WorkStatus.TenantId);
+            Assert.Equal(connectorConfig.TenantDomainName, work.WorkStatus.TenantDomainName);
             Assert.Equal("TestConfigurationType", work.WorkStatus.ConfigurationType);
             Assert.Equal("TestConfiguration", work.WorkStatus.Configuration);
         }
@@ -77,13 +109,15 @@ namespace RecordPoint.Connectors.SDK.Test.Work
         {
             await StartSutAsync();
 
+            var connectorConfig = ManagedWorkFactorySut.CreateConnector1();
+
             using var scope1 = Services.CreateScope();
             using var scope2 = Services.CreateScope();
 
             var workFactory1 = scope1.ServiceProvider.GetRequiredService<IManagedWorkFactory>();
             var workFactory2 = scope2.ServiceProvider.GetRequiredService<IManagedWorkFactory>();
-            var work1 = workFactory1.CreateWork("TestWorkId1", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
-            var work2 = workFactory2.CreateWork("TestWorkId2", "TestWorkType", "TestConnectorId", "TestConfigurationType", "TestConfiguration");
+            var work1 = workFactory1.CreateWork(connectorConfig, "TestWorkId1", "TestWorkType", "TestConfigurationType", "TestConfiguration");
+            var work2 = workFactory2.CreateWork(connectorConfig, "TestWorkId2", "TestWorkType", "TestConfigurationType", "TestConfiguration");
             Assert.NotSame(work1, work2);
             Assert.NotSame(work1.WorkStatus.WorkId, work2.WorkStatus.WorkId);
         }
@@ -95,16 +129,20 @@ namespace RecordPoint.Connectors.SDK.Test.Work
             await StartSutAsync();
 
             var workFactory = Services.GetRequiredService<IManagedWorkFactory>();
+            var workRequest = CreateWorkRequest();
             var workMessage = CreateTestManagedWorkStatusModel();
-            var work = workFactory.LoadWork(workMessage);
+            var work = workFactory.LoadWork(workRequest, workMessage);
             Assert.Equal(workMessage.Configuration, work.WorkStatus.Configuration);
             Assert.Equal(workMessage.ConfigurationType, work.WorkStatus.ConfigurationType);
-            Assert.Equal(workMessage.ConnectorId, work.WorkStatus.ConnectorId);
             Assert.Equal(workMessage.WorkId, work.WorkStatus.WorkId);
             Assert.Equal(workMessage.WorkType, work.WorkStatus.WorkType);
             Assert.Equal(workMessage.State, work.WorkStatus.State);
             Assert.Equal(workMessage.StateType, work.WorkStatus.StateType);
             Assert.Equal(workMessage.WorkId, work.WorkStatus.WorkId);
+
+            Assert.Equal(workRequest.ConnectorConfigId, work.WorkStatus.ConnectorId);
+            Assert.Equal(workRequest.TenantId, work.WorkStatus.TenantId);
+            Assert.Equal(workRequest.TenantDomainName, work.WorkStatus.TenantDomainName);
         }
 
     }

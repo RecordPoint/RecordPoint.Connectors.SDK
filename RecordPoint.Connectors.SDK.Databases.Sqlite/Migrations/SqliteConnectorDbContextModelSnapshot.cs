@@ -15,11 +15,20 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
 
             modelBuilder.Entity("RecordPoint.Connectors.SDK.Connectors.ConnectorConfigurationModel", b =>
                 {
                     b.Property<string>("ConnectorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("ChannelDiscoveryEnqueuedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("ChannelDiscoveryExecutedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChannelDiscoveryWorkId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConnectorTypeId")
@@ -31,10 +40,6 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReportLocation")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -51,7 +56,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
                     b.ToTable("Connectors");
                 });
 
-            modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.ChannelModel", b =>
+            modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.AggregationModel", b =>
                 {
                     b.Property<string>("ConnectorId")
                         .HasColumnType("TEXT");
@@ -62,12 +67,42 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MetaData")
+                    b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MetaData")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParentExternalId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Title")
-                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ConnectorId", "ExternalId");
+
+                    b.ToTable("Aggregations");
+                });
+
+            modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.ChannelModel", b =>
+                {
+                    b.Property<string>("ConnectorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContentSynchronisationWorkId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaData")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ConnectorId", "ExternalId");
@@ -92,9 +127,6 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset?>("LastStatusUpdate")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -110,6 +142,12 @@ namespace RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
 
                     b.Property<string>("WorkId")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("WorkInitiatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("WorkRequestDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("WorkType")

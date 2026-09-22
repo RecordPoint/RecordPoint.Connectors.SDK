@@ -123,6 +123,28 @@ namespace RecordPoint.Connectors.SDK.Caching.Test.Semaphore
         }
 
         [Fact]
+        public async Task SetSemaphoreAsync_DoesNotExtendExistingScopedLock()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            await StartSutAsync();
+            var semaphoreLockManager = Services.GetRequiredService<ISemaphoreLockManager>();
+            semaphoreLockManager.ConnectorConfiguration = new();
+
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, 60, cancellationToken);
+            var firstLock = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
+            Assert.NotNull(firstLock);
+
+            await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, WorkTypeContext1, null, 300, cancellationToken);
+            var secondLock = await semaphoreLockManager.GetSemaphoreAsync(WorkTypeContext1, null, cancellationToken);
+            Assert.NotNull(secondLock);
+
+            var diffMs = Math.Abs((secondLock.Value - firstLock.Value).TotalMilliseconds);
+            Assert.True(diffMs < 100,
+                $"Scoped lock should not be extended. First: {firstLock}, Second: {secondLock}, DiffMs: {diffMs}");
+        }
+
+        [Fact]
         public async Task SemaphoreFromDifferentScope_IsIgnored()
         {
             const int lockDuration = 60;

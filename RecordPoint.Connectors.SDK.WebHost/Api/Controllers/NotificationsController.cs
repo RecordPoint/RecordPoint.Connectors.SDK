@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Notifications;
 using RecordPoint.Connectors.SDK.Notifications.Webhook;
 using RecordPoint.Connectors.SDK.Observability;
+using RecordPoint.Connectors.SDK.Work;
 using System.Net;
 
 namespace RecordPoint.Connectors.SDK.WebHost.Controllers
@@ -19,11 +21,11 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
         private readonly ISystemContext _systemContext;
 
         /// <summary>
-        /// Initialises the Controller
+        /// Initializes a new instance of the <see cref="NotificationsController"/> class.
         /// </summary>
-        /// <param name="observabilityScope"></param>
-        /// <param name="serviceProvider"></param>
-        /// <param name="systemContext"></param>
+        /// <param name="observabilityScope">Scope provider for correlating telemetry.</param>
+        /// <param name="serviceProvider">Service provider used to resolve notification operations.</param>
+        /// <param name="systemContext">System context for the current connector instance.</param>
         public NotificationsController(
             IObservabilityScope observabilityScope,
             IServiceProvider serviceProvider,
@@ -36,9 +38,9 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
 
         // GET: Notifications
         /// <summary>
-        /// Endpoint that returns a 200 (OK) response to Records365 ping requests
+        /// Returns a 200 (OK) response to Records365 ping requests.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An OK status response.</returns>
         [HttpGet]
         public IActionResult Ping()
         {
@@ -47,10 +49,10 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
 
         // POST: Notifications
         /// <summary>
-        /// Endpoint for receiving Connector notifications from Records365
+        /// Receives connector notifications from Records365.
         /// </summary>
-        /// <param name="notification"></param>
-        /// <returns></returns>
+        /// <param name="notification">The notification payload posted by Records365.</param>
+        /// <returns>An HTTP response indicating the processing outcome.</returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ConnectorNotificationModel notification)
         {
@@ -58,6 +60,21 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
 
             var webhookOperation = _serviceProvider.GetRequiredService<WebhookOperation>();
             await webhookOperation.RunAsync(notification, CancellationToken.None);
+            
+            if(!webhookOperation.ResultType.Equals(WorkResultType.Complete))
+            {
+                if (webhookOperation.Exception != null) 
+                {
+                    throw webhookOperation.Exception;
+                }
+
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+
+            if (AsyncNotifications.NotificationTypes.Contains(notification.NotificationType))
+            {
+                return Accepted();
+            }
 
             return Ok();
         }

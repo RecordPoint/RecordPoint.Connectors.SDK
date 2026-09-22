@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace RecordPoint.Connectors.SDK.Databases.PostgreSql
 {

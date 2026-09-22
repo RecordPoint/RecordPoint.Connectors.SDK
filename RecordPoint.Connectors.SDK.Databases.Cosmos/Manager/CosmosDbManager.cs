@@ -1,6 +1,7 @@
-﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using RecordPoint.Connectors.SDK.Observability;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
@@ -11,14 +12,9 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
     /// <typeparam name="T"/>
     public class CosmosDbManager<T> : ICosmosDbManager<T> where T : BaseCosmosDbItem
     {
-        /// <summary>
-        /// The telemetry tracker.
-        /// </summary>
         private readonly ITelemetryTracker _telemetryTracker;
-        /// <summary>
-        /// The container.
-        /// </summary>
         private readonly Container? _container;
+        private readonly string _containerId;
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -30,6 +26,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         public CosmosDbManager(CosmosClient cosmosClient, string databaseId, string containerId, ITelemetryTracker telemetryTracker)
         {
             _container = cosmosClient.GetContainer(databaseId, containerId);
+            _containerId = containerId;
             _telemetryTracker = telemetryTracker;
         }
 
@@ -38,10 +35,12 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         {
             try
             {
-                _ = await _container!.UpsertItemAsync(item, new PartitionKey(partitionKey), cancellationToken: cancellationToken);
+                var response = await _container!.UpsertItemAsync(item, new PartitionKey(partitionKey), cancellationToken: cancellationToken);
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, response.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
             }
             catch (CosmosException ex)
             {
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, ex.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
                 _telemetryTracker.TrackException(ex);
                 throw;
             }
@@ -53,10 +52,12 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
             try
             {
                 var response = await _container!.ReadItemAsync<T>(id, new PartitionKey(partitionKey), null, cancellationToken: cancellationToken);
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, response.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
                 return (T)response;
             }
             catch (CosmosException ex)
             {
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, ex.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
                 if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     return null;
@@ -68,22 +69,60 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         /// <inheritdoc/>
         public async Task DeleteAsync(string partitionKey, string id, CancellationToken cancellationToken = default)
         {
-            await _container!.DeleteItemAsync<T>(id, new PartitionKey(partitionKey), cancellationToken: cancellationToken);
+            try
+            {
+                var response = await _container!.DeleteItemAsync<T>(id, new PartitionKey(partitionKey), cancellationToken: cancellationToken);
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, response.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+            }
+            catch (CosmosException ex)
+            {
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, ex.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                throw;
+            }
         }
 
         /// <inheritdoc/>
         public async IAsyncEnumerable<T> QuerySqlAsync(string partitionKey, QueryDefinition query, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
+            double totalRequestCharge = 0;
+
             using var feedIterator = _container!.GetItemQueryIterator<T>(query, null,
                 requestOptions: string.IsNullOrWhiteSpace(partitionKey) ? default : new QueryRequestOptions { PartitionKey = new PartitionKey(partitionKey) });
 
-            while (feedIterator.HasMoreResults)
+            try
             {
-                var items = await feedIterator.ReadNextAsync(cancellationToken);
-
-                foreach (var item in items)
+                while (feedIterator.HasMoreResults)
                 {
-                    yield return item;
+                    FeedResponse<T> items;
+                    try
+                    {
+                        items = await feedIterator.ReadNextAsync(cancellationToken);
+                        totalRequestCharge += items.RequestCharge;
+                    }
+                    catch (CosmosException ex)
+                    {
+                        totalRequestCharge += ex.RequestCharge;
+                        throw;
+                    }
+
+                    foreach (var item in items)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            finally
+            {
+                try
+                {
+                    if (totalRequestCharge > 0)
+                    {
+                        _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, totalRequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                    }
+                }
+                catch
+                {
+                    // Telemetry must never mask the original exception during stack unwinding
                 }
             }
         }
@@ -91,14 +130,43 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         /// <inheritdoc/>
         public async IAsyncEnumerable<T> QueryLinqAsync(IQueryable<T> query)
         {
-            using var feedIterator = GetFeedIterator(query);
-            while (feedIterator.HasMoreResults)
-            {
-                var items = await feedIterator.ReadNextAsync();
+            double totalRequestCharge = 0;
 
-                foreach (var item in items)
+            using var feedIterator = GetFeedIterator(query);
+            try
+            {
+                while (feedIterator.HasMoreResults)
                 {
-                    yield return item;
+                    FeedResponse<T> items;
+                    try
+                    {
+                        items = await feedIterator.ReadNextAsync();
+                        totalRequestCharge += items.RequestCharge;
+                    }
+                    catch (CosmosException ex)
+                    {
+                        totalRequestCharge += ex.RequestCharge;
+                        throw;
+                    }
+
+                    foreach (var item in items)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            finally
+            {
+                try
+                {
+                    if (totalRequestCharge > 0)
+                    {
+                        _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, totalRequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                    }
+                }
+                catch
+                {
+                    // Telemetry must never mask the original exception during stack unwinding
                 }
             }
         }
@@ -110,7 +178,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         }
 
         /// <inheritdoc/>
-        public FeedIterator<T> GetFeedIterator(IQueryable<T> query)
+        // Thin wrapper over the Cosmos LINQ ToFeedIterator() extension, which only functions against a
+        // live Cosmos LINQ provider and therefore cannot be exercised by unit tests. Made virtual so
+        // QueryLinqAsync can be covered via a test double that supplies a mocked FeedIterator.
+        [ExcludeFromCodeCoverage]
+        public virtual FeedIterator<T> GetFeedIterator(IQueryable<T> query)
         {
             return query.ToFeedIterator();
         }
@@ -118,16 +190,34 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos.Manager
         /// <inheritdoc/>
         public async Task<T> ReplaceAsync(string partitionKey, T item)
         {
-            var response = await _container!.ReplaceItemAsync(item, item.Id, new PartitionKey(partitionKey));
-            return response.Resource;
+            try
+            {
+                var response = await _container!.ReplaceItemAsync(item, item.Id, new PartitionKey(partitionKey));
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, response.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                return response.Resource;
+            }
+            catch (CosmosException ex)
+            {
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, ex.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                throw;
+            }
         }
 
         /// <inheritdoc/>
         public async Task<T> UpsertMatchingEtagAsync(string partitionKey, T item)
         {
-            var response = await _container!.UpsertItemAsync(item, new PartitionKey(partitionKey),
-                new ItemRequestOptions { IfMatchEtag = item.ETag });
-            return response.Resource;
+            try
+            {
+                var response = await _container!.UpsertItemAsync(item, new PartitionKey(partitionKey),
+                    new ItemRequestOptions { IfMatchEtag = item.ETag });
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, response.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                return response.Resource;
+            }
+            catch (CosmosException ex)
+            {
+                _telemetryTracker.TrackMetric(CosmosMetricConstants.RequestCharge, ex.RequestCharge, CosmosMetricConstants.ContainerDimension, _containerId);
+                throw;
+            }
         }
     }
 }

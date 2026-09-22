@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
+using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Test;
 using System;
@@ -91,7 +92,7 @@ namespace RecordPoint.Connectors.SDK.Notifications.Test
                 });
 
             SUT.R365Client?.Setup(x => x.IsConfigured()).Returns(true);
-            SUT.R365Client?.Setup(x => x.GetAllPendingNotifications( It.IsAny<CancellationToken>())).ReturnsAsync(listOfNotifications);
+            SUT.R365Client?.Setup(x => x.GetAllPendingNotifications(It.IsAny<CancellationToken>())).ReturnsAsync(listOfNotifications);
 
             _ = pollService.StartAsync(CancellationToken.None);
 

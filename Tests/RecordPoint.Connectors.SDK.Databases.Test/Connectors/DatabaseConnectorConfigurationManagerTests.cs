@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Databases;
 using RecordPoint.Connectors.SDK.Test;
 using RecordPoint.Connectors.SDK.Test.Mock.Databases;
 using RecordPoint.Connectors.SDK.Toggles;
@@ -98,13 +100,88 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
         }
 
         [Fact]
+        public async Task ConnectorConfigurationExists_ReturnsTrue_WhenPresent()
+        {
+            await StartSutAsync();
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+            var connectorId = nameof(ConnectorConfigurationExists_ReturnsTrue_WhenPresent);
+            await connectorManager.SetConnectorConfigurationAsync(
+                CreateConnectorConfigurationModel(connectorId, "Enabled"), CancellationToken.None);
+
+            var exists = await connectorManager.ConnectorConfigurationExistsAsync(connectorId, CancellationToken.None);
+
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task ConnectorConfigurationExists_ReturnsFalse_WhenMissing()
+        {
+            await StartSutAsync();
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+
+            var exists = await connectorManager.ConnectorConfigurationExistsAsync(
+                Guid.NewGuid().ToString(), CancellationToken.None);
+
+            Assert.False(exists);
+        }
+
+        [Fact]
+        public async Task GetConnectorConfiguration_UsesCache_WhenTtlPositive()
+        {
+            SUT.ConnectorOptions = new ConnectorOptions
+            {
+                ConnectorConfigurationCacheTtl = 60
+            };
+            await StartSutAsync();
+
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+            var connectorId = nameof(GetConnectorConfiguration_UsesCache_WhenTtlPositive);
+            var model = CreateConnectorConfigurationModel(connectorId, "Enabled");
+            await connectorManager.SetConnectorConfigurationAsync(model, CancellationToken.None);
+
+            // First read is a cache miss: it loads from the database and populates the cache.
+            var first = await connectorManager.GetConnectorConfigurationAsync(connectorId, CancellationToken.None);
+
+            // Delete the backing row directly via the DbContext, bypassing the manager so the
+            // cache is NOT invalidated. If the second read hit the database it would now return null.
+            var databaseClient = Services.GetRequiredService<IConnectorDatabaseClient>();
+            using (var dbContext = databaseClient.CreateDbContext())
+            {
+                var row = await dbContext.Connectors
+                    .FirstOrDefaultAsync(a => a.ConnectorId == connectorId, CancellationToken.None);
+                Assert.NotNull(row);
+                dbContext.Connectors.Remove(row);
+                await dbContext.SaveChangesAsync(CancellationToken.None);
+            }
+
+            // Confirm the row really is gone from the database.
+            using (var verifyContext = databaseClient.CreateDbContext())
+            {
+                var deleted = await verifyContext.Connectors
+                    .FirstOrDefaultAsync(a => a.ConnectorId == connectorId, CancellationToken.None);
+                Assert.Null(deleted);
+            }
+
+            // Second read must STILL return the original value from the cache, proving the cache
+            // path was taken rather than the (now-empty) database.
+            var second = await connectorManager.GetConnectorConfigurationAsync(connectorId, CancellationToken.None);
+
+            Assert.NotNull(first);
+            Assert.NotNull(second);
+            Assert.Equal(connectorId, first.ConnectorId);
+            Assert.Equal(connectorId, second.ConnectorId);
+            Assert.Equal(first.Data, second.Data);
+            Assert.Equal(model.Status, second.Status);
+        }
+
+        [Fact]
         public async Task DeleteExistingConnectorData_RemovesConnectorData()
         {
             await StartSutAsync();
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
             var connectorDataModel = new ConnectorConfigurationModel
             {
-                ConnectorId = nameof(SetNewConnectorData_ChangesConnectorData),
+                ConnectorId = nameof(DeleteExistingConnectorData_RemovesConnectorData),
                 ConnectorTypeId = "",
                 TenantId = "",
                 DisplayName = "",
@@ -127,8 +204,10 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             await StartSutAsync();
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
             var connectorId = nameof(DeleteMissingConnectorData_DoesNothing);
-            await connectorManager.DeleteConnectorConfigurationAsync(connectorId, CancellationToken.None);
-            Assert.True(true);
+
+            // Deleting a connector that does not exist should complete without throwing.
+            Assert.Null(await Record.ExceptionAsync(
+                () => connectorManager.DeleteConnectorConfigurationAsync(connectorId, CancellationToken.None)));
         }
 
         [Fact]
@@ -226,7 +305,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             var cancellationToken = CancellationToken.None;
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
 
-            var connectorId = nameof(IfConnectorDisabled_ConnectorStatusIsDisabled);
+            var connectorId = nameof(IfConnectorDisabled_DisabledTime_Property_IsPopulated);
             var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
             await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
 
@@ -246,10 +325,10 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             var cancellationToken = CancellationToken.None;
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
 
-            var connectorId = nameof(IfConnectorDisabled_ConnectorStatusIsDisabled);
+            var connectorId = nameof(IfDisabledConnector_IsUpdated_DisabledTime_Property_IsUnchanged);
             var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
             await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
-            
+
             var persistedConnector1 = await connectorManager.GetConnectorAsync(connectorId, cancellationToken);
             var disabledTime1 = persistedConnector1.GetPropertyOrDefault("DisabledTime");
 
@@ -276,7 +355,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             var cancellationToken = CancellationToken.None;
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
 
-            var connectorId = nameof(IfConnectorDisabled_ConnectorStatusIsDisabled);
+            var connectorId = nameof(IfDisabledConnector_IsReenabled_DisabledTime_Property_IsRemoved);
             var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
             await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
 
@@ -308,6 +387,28 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             Assert.Equal(connectorId, connectorStatus.ConnectorId);
             Assert.True(connectorStatus.Enabled);
             Assert.Equal(DatabaseConnectorConfigurationManager.CONNECTOR_ENABLED_REASON, connectorStatus.EnabledReason);
+        }
+
+        [Fact]
+        public async Task IfConnectorToggleDisabled_ConnectorStatusIsFeatureDisabled()
+        {
+            await StartSutAsync();
+
+            var cancellationToken = CancellationToken.None;
+            var connectorId = nameof(IfConnectorToggleDisabled_ConnectorStatusIsFeatureDisabled);
+            var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Enabled");
+            var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
+            await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);
+
+            // The GetConnectorEnabled toggle uses a default of true; force it off.
+            ToggleProvider.Setup(x => x.GetToggleBool(It.IsAny<string>(), It.IsAny<string>(), true)).Returns(false);
+
+            var connectorStatus = await connectorManager.GetConnectorStatusAsync(connectorId, cancellationToken);
+
+            Assert.NotNull(connectorStatus);
+            Assert.Equal(connectorId, connectorStatus.ConnectorId);
+            Assert.False(connectorStatus.Enabled);
+            Assert.Equal(DatabaseConnectorConfigurationManager.CONNECTOR_FEATURE_DISABLED_REASON, connectorStatus.EnabledReason);
         }
 
         #endregion
@@ -466,7 +567,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Connectors
             await StartSutAsync();
 
             var cancellationToken = CancellationToken.None;
-            var connectorId = nameof(IfBinarySubmissionAppsettingFalse_BinarySubmissionIsDisabled);
+            var connectorId = nameof(IfBinarySubmissionAppsettingTrueAndConnectorDisabled_BinarySubmissionIsDisabled);
             var connectorConfigurationModel = CreateConnectorConfigurationModel(connectorId, "Disabled");
             var connectorManager = Services.GetRequiredService<IConnectorConfigurationManager>();
             await connectorManager.SetConnectorConfigurationAsync(connectorConfigurationModel, cancellationToken);

@@ -1,0 +1,10 @@
+<Project>
+  <ItemGroup Condition="$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Test'))">
+	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Test'))">
+	<VSTestCollect>XPlat Code Coverage</VSTestCollect>
+	<VSTestResultsDirectory Condition="'$(AGENT_TEMPDIRECTORY)' != ''">$(AGENT_TEMPDIRECTORY)</VSTestResultsDirectory>
+  </PropertyGroup>
+</Project>

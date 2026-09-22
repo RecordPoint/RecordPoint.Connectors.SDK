@@ -106,6 +106,17 @@ namespace RecordPoint.Connectors.SDK.Caching.Semaphore
 
             lock (_lockObject)
             {
+                // Fix 1: Check if lock already exists with time remaining
+                if (_memoryCache.TryGetValue(semaphoreKey, out DateTimeOffset existingExpiry))
+                {
+                    var remainingTime = existingExpiry - DateTimeOffset.Now;
+                    if (remainingTime.TotalSeconds > 0)
+                    {
+                        // Lock already exists and hasn't expired, don't overwrite it
+                        return;
+                    }
+                }
+
                 var semaphoreExpiry = DateTimeOffset.Now.AddSeconds(duration);
                 var cacheOptions = new MemoryCacheEntryOptions
                 {

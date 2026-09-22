@@ -27,7 +27,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .UseWorkManager()
                 .UseDatabaseConnectorConfigurationManager()
                 .UseMockConnectorDatabase()
-                .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
+                .UseWorkStateManager()
                 .UseInMemorySemaphoreLock()
                 .ConfigureServices(svcs =>
                 {
@@ -101,10 +101,48 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         #endregion
 
+        #region Content
+        public static Aggregation CreateAggregationContent(int index) => new()
+        {
+            ExternalId = $"Aggregation_{index}",
+            Title = $"Aggregation {index}"
+        };
+
+        public static Record CreateRecordContent(int index, int binaryStartIndex = 1, int binaryCount = 1)
+        {
+            var record = new Record
+            {
+                ExternalId = $"Record_{index}",
+                Title = $"Record {index}"
+            };
+
+            for (int i = binaryStartIndex; i < binaryStartIndex + binaryCount; i++)
+            {
+                record.Binaries.Add(new BinaryMetaInfo
+                {
+                    ExternalId = $"Binary_{i}",
+                    Title = $"Binary {i}",
+                    ItemExternalId = $"Record_{index}"
+                });
+            }
+
+            return record;
+        }
+
+        public static AuditEvent CreateAuditEventContent1(int index) => new()
+        {
+            ExternalId = $"Audit_Event_{index}",
+            Description = $"Audit Event {index}"
+        };
+
+        #endregion
+
         #region Channels
 
         public const string CHANNEL_EXTERNAL_ID_1 = "Channel_1";
         public const string CHANNEL_TITLE_1 = "Channel 1";
+        public const string CHANNEL_EXTERNAL_ID_2 = "Channel_2";
+        public const string CHANNEL_TITLE_2 = "Channel 2";
 
         public static ChannelModel CreateChannel1() => new()
         {
@@ -121,6 +159,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public static IManagedWorkStatusManager GetWorkStatusManager(IServiceProvider serviceProvider) => serviceProvider.GetRequiredService<IManagedWorkStatusManager>();
 
+        public static MockWorkQueueClient GetWorkQueueClient(IServiceProvider serviceProvider) => (MockWorkQueueClient)serviceProvider.GetRequiredService<IWorkQueueClient>();
         #endregion
 
         #region Content Manager Callback Action
@@ -173,10 +212,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public static ContentSynchronisationConfiguration CreateSynchronisationConfiguration()
         {
-            var syncConfiguration = new ContentSynchronisationConfiguration()
-            {
-                ConnectorConfigurationId = CONNECTOR_CONFIGURATION_ID_1
-            };
+            var syncConfiguration = new ContentSynchronisationConfiguration();
             return syncConfiguration;
         }
 
@@ -205,10 +241,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public static ContentRegistrationConfiguration CreateRegistrationConfiguration()
         {
-            var syncConfiguration = new ContentRegistrationConfiguration()
-            {
-                ConnectorConfigurationId = CONNECTOR_CONFIGURATION_ID_1
-            };
+            var syncConfiguration = new ContentRegistrationConfiguration();
             return syncConfiguration;
         }
 

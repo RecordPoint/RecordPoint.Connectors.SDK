@@ -141,6 +141,55 @@ namespace RecordPoint.Connectors.SDK.Test.Content
             Assert.False(binaryMetaInfo1.Equals(notBinaryMetaInfo));
         }
 
+        [Fact]
+        public async Task BinaryMetaInfo_CombinedExternalIdAndItemExternalIdExceedsMaxLength_ThrowsArgumentOutOfRangeException()
+        {
+            await StartSutAsync();
+
+            const int maxBinaryExternalIdLength = 974;
+            var binaryMetaInfo = new BinaryMetaInfo
+            {
+                ItemExternalId = new string('i', 100)
+            };
+            var tooLongExternalId = new string('a', maxBinaryExternalIdLength - 100 + 1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => binaryMetaInfo.ExternalId = tooLongExternalId);
+        }
+
+        [Fact]
+        public async Task BinaryMetaInfo_CombinedExternalIdAndItemExternalIdAtMaxLength_DoesNotThrow()
+        {
+            await StartSutAsync();
+
+            const int maxBinaryExternalIdLength = 974;
+            var itemExternalId = new string('i', 100);
+            var externalId = new string('a', maxBinaryExternalIdLength - itemExternalId.Length);
+            var binaryMetaInfo = new BinaryMetaInfo
+            {
+                ItemExternalId = itemExternalId
+            };
+
+            binaryMetaInfo.ExternalId = externalId;
+
+            Assert.Equal(externalId, binaryMetaInfo.ExternalId);
+            Assert.Equal(itemExternalId, binaryMetaInfo.ItemExternalId);
+        }
+
+        [Fact]
+        public async Task BinaryMetaInfo_ItemExternalIdCausesCombinedLengthToExceedMax_ThrowsArgumentOutOfRangeException()
+        {
+            await StartSutAsync();
+
+            const int maxBinaryExternalIdLength = 974;
+            var binaryMetaInfo = new BinaryMetaInfo
+            {
+                ExternalId = new string('a', 500)
+            };
+            var tooLongItemExternalId = new string('i', maxBinaryExternalIdLength - 500 + 1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => binaryMetaInfo.ItemExternalId = tooLongItemExternalId);
+        }
+
         private record NotBinaryMetaInfo
         {
         }

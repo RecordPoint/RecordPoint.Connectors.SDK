@@ -34,13 +34,14 @@ namespace RecordPoint.Connectors.SDK.Caching
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="context">The context.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns><![CDATA[Task<TCacheItemType?>]]></returns>
-        public async Task<TCacheItemType?> GetAsync(string key, CacheActionContext context)
+        public async Task<TCacheItemType?> GetAsync(string key, CacheActionContext context, CancellationToken cancellationToken = (default))
         {
             if (!_memoryCache.TryGetValue(key, out TCacheItemType? cacheItem))
             {
                 var cacheAction = _serviceProvider.GetRequiredService<ICacheAction<TCacheItemType>>();
-                var cacheActionResult = await cacheAction.ExecuteAsync(context);
+                var cacheActionResult = await cacheAction.ExecuteAsync(context, cancellationToken);
                 if (cacheActionResult.CacheItem != null)
                 {
                     if (cacheActionResult.Expires.HasValue)
@@ -57,6 +58,15 @@ namespace RecordPoint.Connectors.SDK.Caching
             }
 
             return cacheItem;
+        }
+
+        /// <summary>
+        /// Removes the cache entry for the specified key.
+        /// </summary>
+        /// <param name="key">The cache key to invalidate.</param>
+        public void Invalidate(string key)
+        {
+            _memoryCache.Remove(key);
         }
     }
 }

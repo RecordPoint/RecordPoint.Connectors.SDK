@@ -29,6 +29,11 @@
         Task SetConnectorConfigurationAsync(ConnectorConfigurationModel connectorData, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Updates the specified connector configuration by applying the provided patch action
+        /// </summary>
+        Task PatchConnectorConfigurationAsync(string connectorId, Action<ConnectorConfigurationModel> patchAction, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Delete connector configuration
         /// </summary>
         /// <param name="connectorId">Id of connector configuration to delete</param>

@@ -5,15 +5,21 @@
 
 - [AzureServiceBusBuilderExtensions](#T-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusBuilderExtensions')
   - [UseASBDeadLetterQueueService(hostBuilder)](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBDeadLetterQueueService-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusBuilderExtensions.UseASBDeadLetterQueueService(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseASBDeadLetterQueueService(hostBuilder,configureOptions)](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBDeadLetterQueueService-Microsoft-Extensions-Hosting-IHostBuilder,System-Action{RecordPoint-Connectors-SDK-Work-DeadLetterControllerOptions}- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusBuilderExtensions.UseASBDeadLetterQueueService(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{RecordPoint.Connectors.SDK.Work.DeadLetterControllerOptions})')
+  - [UseASBWorkClient(hostBuilder,operationTypes)](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBWorkClient-Microsoft-Extensions-Hosting-IHostBuilder,System-Collections-Generic-IList{System-Type}- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusBuilderExtensions.UseASBWorkClient(Microsoft.Extensions.Hosting.IHostBuilder,System.Collections.Generic.IList{System.Type})')
   - [UseASBWorkQueue(hostBuilder,operationTypes)](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBWorkQueue-Microsoft-Extensions-Hosting-IHostBuilder,System-Collections-Generic-IList{System-Type}- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusBuilderExtensions.UseASBWorkQueue(Microsoft.Extensions.Hosting.IHostBuilder,System.Collections.Generic.IList{System.Type})')
 - [AzureServiceBusDeadLetterQueueService](#T-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService')
-  - [#ctor(serviceBusClientFactory,managedWorkStatusManager)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.#ctor(RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.IServiceBusClientFactory,RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager)')
+  - [#ctor(serviceBusClientFactory,managedWorkStatusManager,logger)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager,Microsoft-Extensions-Logging-ILogger{RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService}- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.#ctor(RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.IServiceBusClientFactory,RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager,Microsoft.Extensions.Logging.ILogger{RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService})')
+  - [DrainReceiveBatchSize](#F-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-DrainReceiveBatchSize 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.DrainReceiveBatchSize')
+  - [LockSafetyMargin](#F-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-LockSafetyMargin 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.LockSafetyMargin')
   - [MaxMessages](#F-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-MaxMessages 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.MaxMessages')
+  - [BuildResubmitMessage()](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-BuildResubmitMessage-Azure-Messaging-ServiceBus-ServiceBusReceivedMessage,System-String- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.BuildResubmitMessage(Azure.Messaging.ServiceBus.ServiceBusReceivedMessage,System.String)')
   - [DeleteAllMessagesAsync(queueName)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-DeleteAllMessagesAsync-System-String- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.DeleteAllMessagesAsync(System.String)')
   - [DeleteMessageAsync(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-DeleteMessageAsync-System-String,System-Int64- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.DeleteMessageAsync(System.String,System.Int64)')
-  - [GetAllMessagesAsync(queueName)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-GetAllMessagesAsync-System-String- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.GetAllMessagesAsync(System.String)')
   - [GetMessageAsync(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-GetMessageAsync-System-String,System-Int64- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.GetMessageAsync(System.String,System.Int64)')
+  - [GetMessagesAsync()](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-GetMessagesAsync-System-String,System-Int32- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.GetMessagesAsync(System.String,System.Int32)')
   - [ResubmitMessagesAsync(queueName,sequenceNumbers)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.ResubmitMessagesAsync(System.String,System.Int64[])')
+  - [ResubmitTopMessagesAsync(queueName,maxCount,cancellationToken)](#M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-ResubmitTopMessagesAsync-System-String,System-Int32,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService.ResubmitTopMessagesAsync(System.String,System.Int32,System.Threading.CancellationToken)')
 - [AzureServiceBusOptions](#T-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions')
   - [SECTION_NAME](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions-SECTION_NAME 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions.SECTION_NAME')
   - [KillswitchCheckInterval](#P-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions-KillswitchCheckInterval 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions.KillswitchCheckInterval')
@@ -28,10 +34,9 @@
   - [DisposeAsync()](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkClient-DisposeAsync 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkClient.DisposeAsync')
   - [SubmitWorkAsync()](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkClient-SubmitWorkAsync-RecordPoint-Connectors-SDK-Work-WorkRequest,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkClient.SubmitWorkAsync(RecordPoint.Connectors.SDK.Work.WorkRequest,System.Threading.CancellationToken)')
 - [AzureServiceBusWorkServer](#T-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer')
-  - [#ctor(workQueueClient,serviceProvider,systemContext,workManager,serviceBusClientFactory,serviceBusOptions,observabilityScope,telemetryTracker,dateTimeProvider,toggleProvider,operationTypes,configuration)](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type},Microsoft-Extensions-Configuration-IConfiguration- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer.#ctor(RecordPoint.Connectors.SDK.Work.IWorkQueueClient,System.IServiceProvider,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Work.IQueueableWorkManager,RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.IServiceBusClientFactory,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,System.Collections.Generic.IList{System.Type},Microsoft.Extensions.Configuration.IConfiguration)')
+  - [#ctor(workQueueClient,serviceProvider,systemContext,workManager,serviceBusClientFactory,serviceBusOptions,observabilityScope,telemetryTracker,toggleProvider,operationTypes,configuration)](#M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type},Microsoft-Extensions-Configuration-IConfiguration- 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer.#ctor(RecordPoint.Connectors.SDK.Work.IWorkQueueClient,System.IServiceProvider,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Work.IQueueableWorkManager,RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.IServiceBusClientFactory,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,System.Collections.Generic.IList{System.Type},Microsoft.Extensions.Configuration.IConfiguration)')
   - [DefaultOperationTypes](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-DefaultOperationTypes 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer.DefaultOperationTypes')
   - [_configuration](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_configuration 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer._configuration')
-  - [_dateTimeProvider](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_dateTimeProvider 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer._dateTimeProvider')
   - [_observabilityScope](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_observabilityScope 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer._observabilityScope')
   - [_operationTypes](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_operationTypes 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer._operationTypes')
   - [_processingToken](#F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_processingToken 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusWorkServer._processingToken')
@@ -87,6 +92,42 @@ An IHostBuilder
 | ---- | ---- | ----------- |
 | hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
 
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBDeadLetterQueueService-Microsoft-Extensions-Hosting-IHostBuilder,System-Action{RecordPoint-Connectors-SDK-Work-DeadLetterControllerOptions}-'></a>
+### UseASBDeadLetterQueueService(hostBuilder,configureOptions) `method`
+
+##### Summary
+
+Use ASB dead letter queue service with controller options.
+
+##### Returns
+
+An IHostBuilder
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
+| configureOptions | [System.Action{RecordPoint.Connectors.SDK.Work.DeadLetterControllerOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Action 'System.Action{RecordPoint.Connectors.SDK.Work.DeadLetterControllerOptions}') | Optional controller policy configuration. |
+
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBWorkClient-Microsoft-Extensions-Hosting-IHostBuilder,System-Collections-Generic-IList{System-Type}-'></a>
+### UseASBWorkClient(hostBuilder,operationTypes) `method`
+
+##### Summary
+
+Use ASB work queue.
+
+##### Returns
+
+An IHostBuilder
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
+| operationTypes | [System.Collections.Generic.IList{System.Type}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IList 'System.Collections.Generic.IList{System.Type}') | Optional list of operation types to register for use by AzureServiceBusWorkServer |
+
 <a name='M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusBuilderExtensions-UseASBWorkQueue-Microsoft-Extensions-Hosting-IHostBuilder,System-Collections-Generic-IList{System-Type}-'></a>
 ### UseASBWorkQueue(hostBuilder,operationTypes) `method`
 
@@ -116,8 +157,8 @@ RecordPoint.Connectors.SDK.WebHost.Services
 
 Deadletter queue service class
 
-<a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager-'></a>
-### #ctor(serviceBusClientFactory,managedWorkStatusManager) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager,Microsoft-Extensions-Logging-ILogger{RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService}-'></a>
+### #ctor(serviceBusClientFactory,managedWorkStatusManager,logger) `constructor`
 
 ##### Summary
 
@@ -129,13 +170,47 @@ Constructor
 | ---- | ---- | ----------- |
 | serviceBusClientFactory | [RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.IServiceBusClientFactory](#T-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory 'RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.IServiceBusClientFactory') |  |
 | managedWorkStatusManager | [RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager](#T-RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager 'RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager') |  |
+| logger | [Microsoft.Extensions.Logging.ILogger{RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService}](#T-Microsoft-Extensions-Logging-ILogger{RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService} 'Microsoft.Extensions.Logging.ILogger{RecordPoint.Connectors.SDK.WebHost.Services.AzureServiceBusDeadLetterQueueService}') |  |
+
+<a name='F-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-DrainReceiveBatchSize'></a>
+### DrainReceiveBatchSize `constants`
+
+##### Summary
+
+Number of messages to receive per drain iteration. Kept well below
+MaxMessages so a batch of send+complete round-trips settles comfortably
+inside the queue lock window, limiting the lock-expiry duplicate risk.
+
+<a name='F-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-LockSafetyMargin'></a>
+### LockSafetyMargin `constants`
+
+##### Summary
+
+Safety margin left before a message's lock expires. If a received
+message's lock is within this margin we stop the batch rather than send
+a copy we may not be able to complete.
 
 <a name='F-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-MaxMessages'></a>
 ### MaxMessages `constants`
 
 ##### Summary
 
-Maximum number of messages from the queue
+Maximum number of messages to receive at once from the queue
+
+<a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-BuildResubmitMessage-Azure-Messaging-ServiceBus-ServiceBusReceivedMessage,System-String-'></a>
+### BuildResubmitMessage() `method`
+
+##### Summary
+
+Builds the message to resubmit for a dead-lettered message. When the body
+is a valid WorkRequest the fault count is reset; otherwise (the body is
+null-shaped, fails to parse, or is not an AMQP data body) the original
+message is forwarded verbatim so it is never lost. A single unparseable
+message must not abort the whole resubmit, so the deserialise is guarded.
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-DeleteAllMessagesAsync-System-String-'></a>
 ### DeleteAllMessagesAsync(queueName) `method`
@@ -172,23 +247,6 @@ Delete the message from the deadletter queue
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-GetAllMessagesAsync-System-String-'></a>
-### GetAllMessagesAsync(queueName) `method`
-
-##### Summary
-
-Get all messages based on the queue
-
-##### Returns
-
-
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-GetMessageAsync-System-String,System-Int64-'></a>
 ### GetMessageAsync(queueName,sequenceNumber) `method`
 
@@ -207,6 +265,17 @@ Get message based on the queue and sequenceNumber
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') |  |
 
+<a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-GetMessagesAsync-System-String,System-Int32-'></a>
+### GetMessagesAsync() `method`
+
+##### Summary
+
+Get all messages based on the queue
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]-'></a>
 ### ResubmitMessagesAsync(queueName,sequenceNumbers) `method`
 
@@ -224,6 +293,31 @@ Resubmit to queue based on the queueName and sequenceNumbers
 | ---- | ---- | ----------- |
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumbers | [System.Int64[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64[] 'System.Int64[]') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-WebHost-Services-AzureServiceBusDeadLetterQueueService-ResubmitTopMessagesAsync-System-String,System-Int32,System-Threading-CancellationToken-'></a>
+### ResubmitTopMessagesAsync(queueName,maxCount,cancellationToken) `method`
+
+##### Summary
+
+Drain up to `maxCount` messages from the dead-letter
+sub-queue and resubmit them to the main queue. Uses a single
+PeekLock receiver to stream messages directly off the head of the
+DLQ, avoiding the peek/receive mismatch and cross-call lock
+pollution that limited the previous implementation.
+
+##### Returns
+
+A [DeadLetterResubmitResult](#T-RecordPoint-Connectors-SDK-Work-DeadLetterResubmitResult 'RecordPoint.Connectors.SDK.Work.DeadLetterResubmitResult') with the number of messages resubmitted
+and, when that is 0, whether the dead-letter queue was confirmed empty by a
+lock-independent peek (as opposed to the pass merely making no progress).
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The main queue whose DLQ should be drained. |
+| maxCount | [System.Int32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int32 'System.Int32') | The maximum number of messages to resubmit in this call. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token. |
 
 <a name='T-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions'></a>
 ## AzureServiceBusOptions `type`
@@ -355,8 +449,8 @@ RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
 The azure service bus work server.
 
-<a name='M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type},Microsoft-Extensions-Configuration-IConfiguration-'></a>
-### #ctor(workQueueClient,serviceProvider,systemContext,workManager,serviceBusClientFactory,serviceBusOptions,observabilityScope,telemetryTracker,dateTimeProvider,toggleProvider,operationTypes,configuration) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-IServiceBusClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type},Microsoft-Extensions-Configuration-IConfiguration-'></a>
+### #ctor(workQueueClient,serviceProvider,systemContext,workManager,serviceBusClientFactory,serviceBusOptions,observabilityScope,telemetryTracker,toggleProvider,operationTypes,configuration) `constructor`
 
 ##### Summary
 
@@ -374,7 +468,6 @@ Initializes a new instance of the [AzureServiceBusWorkServer](#T-RecordPoint-Con
 | serviceBusOptions | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus.AzureServiceBusOptions}') | The service bus options. |
 | observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The scope manager. |
 | telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
-| dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
 | toggleProvider | [RecordPoint.Connectors.SDK.Toggles.IToggleProvider](#T-RecordPoint-Connectors-SDK-Toggles-IToggleProvider 'RecordPoint.Connectors.SDK.Toggles.IToggleProvider') | The toggle provider. |
 | operationTypes | [System.Collections.Generic.IList{System.Type}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IList 'System.Collections.Generic.IList{System.Type}') | An optional list of operation types to create service bus processors for |
 | configuration | [Microsoft.Extensions.Configuration.IConfiguration](#T-Microsoft-Extensions-Configuration-IConfiguration 'Microsoft.Extensions.Configuration.IConfiguration') | The configuration. |
@@ -392,13 +485,6 @@ Default list of Operation types to be used if none are provided
 ##### Summary
 
 The configuration.
-
-<a name='F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_dateTimeProvider'></a>
-### _dateTimeProvider `constants`
-
-##### Summary
-
-The date time provider.
 
 <a name='F-RecordPoint-Connectors-SDK-WorkQueue-AzureServiceBus-AzureServiceBusWorkServer-_observabilityScope'></a>
 ### _observabilityScope `constants`

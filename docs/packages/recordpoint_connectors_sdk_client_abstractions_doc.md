@@ -82,7 +82,7 @@
   - [Validate()](#M-RecordPoint-Connectors-SDK-Client-Models-BinarySubmissionInputModel-Validate 'RecordPoint.Connectors.SDK.Client.Models.BinarySubmissionInputModel.Validate')
 - [ConnectorAuditEventModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel.#ctor')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-#ctor-System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel}- 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel.#ctor(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.SubmissionMetaDataModel})')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-#ctor-System-String,System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel}- 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel.#ctor(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.SubmissionMetaDataModel})')
   - [ConnectorId](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-ConnectorId 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel.ConnectorId')
   - [CreatedDate](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-CreatedDate 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel.CreatedDate')
   - [Description](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-Description 'RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel.Description')
@@ -151,9 +151,20 @@
   - [TenantId](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel-TenantId 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel.TenantId')
   - [Timestamp](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel-Timestamp 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel.Timestamp')
   - [Validate()](#M-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel-Validate 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel.Validate')
+- [ConnectorRequestResponseCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.#ctor')
+  - [#ctor(outcome)](#M-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-#ctor-System-Nullable{System-Guid},System-String,System-String,System-String,System-String,System-Collections-Generic-IList{System-String},System-Object- 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.#ctor(System.Nullable{System.Guid},System.String,System.String,System.String,System.String,System.Collections.Generic.IList{System.String},System.Object)')
+  - [ConnectorId](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-ConnectorId 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.ConnectorId')
+  - [CorrelationId](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-CorrelationId 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.CorrelationId')
+  - [Data](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-Data 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.Data')
+  - [Messages](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-Messages 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.Messages')
+  - [Outcome](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-Outcome 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.Outcome')
+  - [RequestType](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-RequestType 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.RequestType')
+  - [ResponseScope](#P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-ResponseScope 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel.ResponseScope')
 - [DirectBinarySubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.#ctor')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-Nullable{System-Int64},System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime}- 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.#ctor(System.String,System.String,System.String,System.String,System.Nullable{System.Int64},System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.DateTime})')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-Nullable{System-Int64},System-String,System-Nullable{System-DateTime},System-Nullable{System-Boolean},System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime}- 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.#ctor(System.String,System.String,System.String,System.String,System.Nullable{System.Int64},System.String,System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.DateTime})')
+  - [BinaryBlobCreated](#P-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-BinaryBlobCreated 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.BinaryBlobCreated')
   - [BinaryExternalId](#P-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-BinaryExternalId 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.BinaryExternalId')
   - [ConnectorId](#P-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-ConnectorId 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.ConnectorId')
   - [CorrelationId](#P-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-CorrelationId 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel.CorrelationId')
@@ -215,6 +226,34 @@
   - [Included](#P-RecordPoint-Connectors-SDK-Client-Models-FiltersModel-Included 'RecordPoint.Connectors.SDK.Client.Models.FiltersModel.Included')
   - [IncludedExpression](#P-RecordPoint-Connectors-SDK-Client-Models-FiltersModel-IncludedExpression 'RecordPoint.Connectors.SDK.Client.Models.FiltersModel.IncludedExpression')
   - [Validate()](#M-RecordPoint-Connectors-SDK-Client-Models-FiltersModel-Validate 'RecordPoint.Connectors.SDK.Client.Models.FiltersModel.Validate')
+- [HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException')
+  - [#ctor()](#M-Microsoft-Rest-HttpOperationException-#ctor 'Microsoft.Rest.HttpOperationException.#ctor')
+  - [#ctor(message)](#M-Microsoft-Rest-HttpOperationException-#ctor-System-String- 'Microsoft.Rest.HttpOperationException.#ctor(System.String)')
+  - [#ctor(message,innerException)](#M-Microsoft-Rest-HttpOperationException-#ctor-System-String,System-Exception- 'Microsoft.Rest.HttpOperationException.#ctor(System.String,System.Exception)')
+  - [Request](#P-Microsoft-Rest-HttpOperationException-Request 'Microsoft.Rest.HttpOperationException.Request')
+  - [Response](#P-Microsoft-Rest-HttpOperationException-Response 'Microsoft.Rest.HttpOperationException.Response')
+- [HttpOperationResponse](#T-Microsoft-Rest-HttpOperationResponse 'Microsoft.Rest.HttpOperationResponse')
+  - [Request](#P-Microsoft-Rest-HttpOperationResponse-Request 'Microsoft.Rest.HttpOperationResponse.Request')
+  - [Response](#P-Microsoft-Rest-HttpOperationResponse-Response 'Microsoft.Rest.HttpOperationResponse.Response')
+  - [Dispose(disposing)](#M-Microsoft-Rest-HttpOperationResponse-Dispose-System-Boolean- 'Microsoft.Rest.HttpOperationResponse.Dispose(System.Boolean)')
+  - [Dispose()](#M-Microsoft-Rest-HttpOperationResponse-Dispose 'Microsoft.Rest.HttpOperationResponse.Dispose')
+- [HttpOperationResponse\`1](#T-Microsoft-Rest-HttpOperationResponse`1 'Microsoft.Rest.HttpOperationResponse`1')
+  - [Body](#P-Microsoft-Rest-HttpOperationResponse`1-Body 'Microsoft.Rest.HttpOperationResponse`1.Body')
+- [HttpRequestMessageWrapper](#T-Microsoft-Rest-HttpRequestMessageWrapper 'Microsoft.Rest.HttpRequestMessageWrapper')
+  - [#ctor(request,content)](#M-Microsoft-Rest-HttpRequestMessageWrapper-#ctor-System-Net-Http-HttpRequestMessage,System-String- 'Microsoft.Rest.HttpRequestMessageWrapper.#ctor(System.Net.Http.HttpRequestMessage,System.String)')
+  - [Content](#P-Microsoft-Rest-HttpRequestMessageWrapper-Content 'Microsoft.Rest.HttpRequestMessageWrapper.Content')
+  - [Method](#P-Microsoft-Rest-HttpRequestMessageWrapper-Method 'Microsoft.Rest.HttpRequestMessageWrapper.Method')
+  - [Request](#P-Microsoft-Rest-HttpRequestMessageWrapper-Request 'Microsoft.Rest.HttpRequestMessageWrapper.Request')
+  - [RequestUri](#P-Microsoft-Rest-HttpRequestMessageWrapper-RequestUri 'Microsoft.Rest.HttpRequestMessageWrapper.RequestUri')
+- [HttpResponseHeadersWrapper](#T-Microsoft-Rest-HttpResponseHeadersWrapper 'Microsoft.Rest.HttpResponseHeadersWrapper')
+  - [#ctor(headers)](#M-Microsoft-Rest-HttpResponseHeadersWrapper-#ctor-System-Net-Http-Headers-HttpResponseHeaders- 'Microsoft.Rest.HttpResponseHeadersWrapper.#ctor(System.Net.Http.Headers.HttpResponseHeaders)')
+  - [TryGetValues(name,values)](#M-Microsoft-Rest-HttpResponseHeadersWrapper-TryGetValues-System-String,System-Collections-Generic-IEnumerable{System-String}@- 'Microsoft.Rest.HttpResponseHeadersWrapper.TryGetValues(System.String,System.Collections.Generic.IEnumerable{System.String}@)')
+- [HttpResponseMessageWrapper](#T-Microsoft-Rest-HttpResponseMessageWrapper 'Microsoft.Rest.HttpResponseMessageWrapper')
+  - [#ctor(response,content)](#M-Microsoft-Rest-HttpResponseMessageWrapper-#ctor-System-Net-Http-HttpResponseMessage,System-String- 'Microsoft.Rest.HttpResponseMessageWrapper.#ctor(System.Net.Http.HttpResponseMessage,System.String)')
+  - [Content](#P-Microsoft-Rest-HttpResponseMessageWrapper-Content 'Microsoft.Rest.HttpResponseMessageWrapper.Content')
+  - [Headers](#P-Microsoft-Rest-HttpResponseMessageWrapper-Headers 'Microsoft.Rest.HttpResponseMessageWrapper.Headers')
+  - [Response](#P-Microsoft-Rest-HttpResponseMessageWrapper-Response 'Microsoft.Rest.HttpResponseMessageWrapper.Response')
+  - [StatusCode](#P-Microsoft-Rest-HttpResponseMessageWrapper-StatusCode 'Microsoft.Rest.HttpResponseMessageWrapper.StatusCode')
 - [ICircuitEventHandler](#T-RecordPoint-Connectors-SDK-Interfaces-ICircuitEventHandler 'RecordPoint.Connectors.SDK.Interfaces.ICircuitEventHandler')
 - [ICircuitProvider](#T-RecordPoint-Connectors-SDK-Providers-ICircuitProvider 'RecordPoint.Connectors.SDK.Providers.ICircuitProvider')
   - [IsCircuitClosed()](#M-RecordPoint-Connectors-SDK-Providers-ICircuitProvider-IsCircuitClosed-System-TimeSpan@- 'RecordPoint.Connectors.SDK.Providers.ICircuitProvider.IsCircuitClosed(System.TimeSpan@)')
@@ -226,29 +265,53 @@
   - [LogMessage(callerType,methodName,message,elapsedTimeTicks)](#M-RecordPoint-Connectors-SDK-Diagnostics-ILog-LogMessage-System-Type,System-String,System-String,System-Nullable{System-Int64}- 'RecordPoint.Connectors.SDK.Diagnostics.ILog.LogMessage(System.Type,System.String,System.String,System.Nullable{System.Int64})')
   - [LogVerbose(callerType,methodName,message,elapsedTimeTicks)](#M-RecordPoint-Connectors-SDK-Diagnostics-ILog-LogVerbose-System-Type,System-String,System-String,System-Nullable{System-Int64}- 'RecordPoint.Connectors.SDK.Diagnostics.ILog.LogVerbose(System.Type,System.String,System.String,System.Nullable{System.Int64})')
   - [LogWarning(callerType,methodName,message,elapsedTimeTicks)](#M-RecordPoint-Connectors-SDK-Diagnostics-ILog-LogWarning-System-Type,System-String,System-String,System-Nullable{System-Int64}- 'RecordPoint.Connectors.SDK.Diagnostics.ILog.LogWarning(System.Type,System.String,System.String,System.Nullable{System.Int64})')
+- [INotificationApiManager](#T-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager 'RecordPoint.Connectors.SDK.Notifications.INotificationApiManager')
+  - [AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationApiManager.AcknowledgeNotification(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Threading.CancellationToken)')
+  - [DisposalCallback(factorySettings,authenticationSettings,callbackNotification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-DisposalCallback-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationApiManager.DisposalCallback(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel,System.Threading.CancellationToken)')
+  - [GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationApiManager.GetAllPendingConnectorNotifications(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,System.String,System.Threading.CancellationToken)')
+  - [GetAllPendingConnectorTypeNotifications(factorySettings,authenticationSettings,connectorTypeId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-GetAllPendingConnectorTypeNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-Guid,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationApiManager.GetAllPendingConnectorTypeNotifications(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,System.Guid,System.Threading.CancellationToken)')
 - [INotificationHandler](#T-RecordPoint-Connectors-SDK-Notifications-INotificationHandler 'RecordPoint.Connectors.SDK.Notifications.INotificationHandler')
   - [HandleNotification(connectorConfigModel,notification,ct)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationHandler-HandleNotification-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationHandler.HandleNotification(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
-- [INotificationPullManager](#T-RecordPoint-Connectors-SDK-Notifications-INotificationPullManager 'RecordPoint.Connectors.SDK.Notifications.INotificationPullManager')
-  - [AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationPullManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationPullManager.AcknowledgeNotification(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Threading.CancellationToken)')
-  - [GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-INotificationPullManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.INotificationPullManager.GetAllPendingConnectorNotifications(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,System.String,System.Threading.CancellationToken)')
 - [IPerformanceEvent](#T-RecordPoint-Connectors-SDK-Diagnostics-IPerformanceEvent 'RecordPoint.Connectors.SDK.Diagnostics.IPerformanceEvent')
   - [Exception(ex)](#M-RecordPoint-Connectors-SDK-Diagnostics-IPerformanceEvent-Exception-System-Exception- 'RecordPoint.Connectors.SDK.Diagnostics.IPerformanceEvent.Exception(System.Exception)')
 - [ISdkAzureBlobCircuitProvider](#T-RecordPoint-Connectors-SDK-Providers-ISdkAzureBlobCircuitProvider 'RecordPoint.Connectors.SDK.Providers.ISdkAzureBlobCircuitProvider')
 - [ISdkAzureBlobRetryProvider](#T-RecordPoint-Connectors-SDK-Providers-ISdkAzureBlobRetryProvider 'RecordPoint.Connectors.SDK.Providers.ISdkAzureBlobRetryProvider')
   - [ExecuteWithRetry(codeToExecute,type,methodName)](#M-RecordPoint-Connectors-SDK-Providers-ISdkAzureBlobRetryProvider-ExecuteWithRetry-System-Func{System-Threading-Tasks-Task},System-Type,System-String- 'RecordPoint.Connectors.SDK.Providers.ISdkAzureBlobRetryProvider.ExecuteWithRetry(System.Func{System.Threading.Tasks.Task},System.Type,System.String)')
+- [IServiceOperations\`1](#T-Microsoft-Rest-IServiceOperations`1 'Microsoft.Rest.IServiceOperations`1')
 - [ISettableCircuitProvider](#T-RecordPoint-Connectors-SDK-Providers-ISettableCircuitProvider 'RecordPoint.Connectors.SDK.Providers.ISettableCircuitProvider')
   - [SetOpenUntil(newTime)](#M-RecordPoint-Connectors-SDK-Providers-ISettableCircuitProvider-SetOpenUntil-System-DateTime- 'RecordPoint.Connectors.SDK.Providers.ISettableCircuitProvider.SetOpenUntil(System.DateTime)')
 - [ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission')
   - [Submit(submitContext)](#M-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission-Submit-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext- 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission.Submit(RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext)')
+- [Iso8601TimeSpanConverter](#T-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter 'Microsoft.Rest.Serialization.Iso8601TimeSpanConverter')
+  - [CanConvert(objectType)](#M-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter-CanConvert-System-Type- 'Microsoft.Rest.Serialization.Iso8601TimeSpanConverter.CanConvert(System.Type)')
+  - [ReadJson(reader,objectType,existingValue,serializer)](#M-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter-ReadJson-Newtonsoft-Json-JsonReader,System-Type,System-Object,Newtonsoft-Json-JsonSerializer- 'Microsoft.Rest.Serialization.Iso8601TimeSpanConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)')
+  - [WriteJson(writer,value,serializer)](#M-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter-WriteJson-Newtonsoft-Json-JsonWriter,System-Object,Newtonsoft-Json-JsonSerializer- 'Microsoft.Rest.Serialization.Iso8601TimeSpanConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)')
 - [ItemAcceptanceModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel 'RecordPoint.Connectors.SDK.Client.Models.ItemAcceptanceModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.ItemAcceptanceModel.#ctor')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel-#ctor-System-String,System-Nullable{System-DateTime},System-String- 'RecordPoint.Connectors.SDK.Client.Models.ItemAcceptanceModel.#ctor(System.String,System.Nullable{System.DateTime},System.String)')
   - [AggregationStatus](#P-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel-AggregationStatus 'RecordPoint.Connectors.SDK.Client.Models.ItemAcceptanceModel.AggregationStatus')
   - [ExternalId](#P-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel-ExternalId 'RecordPoint.Connectors.SDK.Client.Models.ItemAcceptanceModel.ExternalId')
   - [SourceLastModifiedDate](#P-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel-SourceLastModifiedDate 'RecordPoint.Connectors.SDK.Client.Models.ItemAcceptanceModel.SourceLastModifiedDate')
+- [ItemDisposalStatus](#T-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus')
+  - [DestroyFailed](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyFailed 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.DestroyFailed')
+  - [DestroyNotificationFailed](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyNotificationFailed 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.DestroyNotificationFailed')
+  - [DestroyNotificationSent](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyNotificationSent 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.DestroyNotificationSent')
+  - [DestroyPending](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyPending 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.DestroyPending')
+  - [Destroyed](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-Destroyed 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.Destroyed')
+  - [None](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-None 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.None')
+  - [Reviewed](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-Reviewed 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.Reviewed')
+  - [Transferred](#F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-Transferred 'RecordPoint.Connectors.SDK.Notifications.ItemDisposalStatus.Transferred')
+- [ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.#ctor')
+  - [#ctor(disposalStatus)](#M-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-#ctor-System-String,System-String,System-Nullable{System-Guid},System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.#ctor(System.String,System.String,System.Nullable{System.Guid},System.String,System.String)')
+  - [ConnectorConfigId](#P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-ConnectorConfigId 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.ConnectorConfigId')
+  - [CorrelationId](#P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-CorrelationId 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.CorrelationId')
+  - [DisposalStatus](#P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-DisposalStatus 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.DisposalStatus')
+  - [ExternalId](#P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-ExternalId 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.ExternalId')
+  - [StatusMessage](#P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-StatusMessage 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel.StatusMessage')
 - [ItemSubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.#ctor')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel},System-String,System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.#ctor(System.String,System.String,System.String,System.String,System.DateTime,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.SubmissionMetaDataModel},System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.RelationshipDataModel},System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel},System.String,System.String,System.String,System.String)')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel},System-String,System-String,System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.#ctor(System.String,System.String,System.String,System.String,System.DateTime,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.String,System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.SubmissionMetaDataModel},System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.RelationshipDataModel},System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel},System.String,System.String,System.String,System.String,System.String)')
   - [Author](#P-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-Author 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.Author')
   - [BarcodeType](#P-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-BarcodeType 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.BarcodeType')
   - [BarcodeValue](#P-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-BarcodeValue 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.BarcodeValue')
@@ -272,7 +335,7 @@
   - [Validate()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-Validate 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel.Validate')
 - [ItemSubmissionOutputModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel.#ctor')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-Boolean},System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String,System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel.#ctor(System.String,System.String,System.String,System.String,System.DateTime,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel},System.String,System.String,System.String,System.String)')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-Boolean},System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String,System-String,System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel.#ctor(System.String,System.String,System.String,System.String,System.DateTime,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel},System.String,System.String,System.String,System.String,System.String)')
   - [Author](#P-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-Author 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel.Author')
   - [BarcodeType](#P-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-BarcodeType 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel.BarcodeType')
   - [BarcodeValue](#P-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-BarcodeValue 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionOutputModel.BarcodeValue')
@@ -328,6 +391,13 @@
   - [AddOrUpdate(metaDataList,name,type,value)](#M-RecordPoint-Connectors-SDK-Client-MetaDataModelListExtensions-AddOrUpdate-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.MetaDataModelListExtensions.AddOrUpdate(System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel},System.String,System.String,System.String)')
   - [AddOrUpdate(metaDataList,name,value)](#M-RecordPoint-Connectors-SDK-Client-MetaDataModelListExtensions-AddOrUpdate-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String,System-String- 'RecordPoint.Connectors.SDK.Client.MetaDataModelListExtensions.AddOrUpdate(System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel},System.String,System.String)')
   - [GetValueOrDefault(metaDataList,name)](#M-RecordPoint-Connectors-SDK-Client-MetaDataModelListExtensions-GetValueOrDefault-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String- 'RecordPoint.Connectors.SDK.Client.MetaDataModelListExtensions.GetValueOrDefault(System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel},System.String)')
+- [NotificationType](#T-RecordPoint-Connectors-SDK-Client-NotificationType 'RecordPoint.Connectors.SDK.Client.NotificationType')
+  - [ConnectorConfigCreated](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigCreated 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorConfigCreated')
+  - [ConnectorConfigDeleted](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigDeleted 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorConfigDeleted')
+  - [ConnectorConfigUpdated](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigUpdated 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorConfigUpdated')
+  - [ConnectorRequest](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorRequest 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorRequest')
+  - [ItemDestroyed](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ItemDestroyed 'RecordPoint.Connectors.SDK.Client.NotificationType.ItemDestroyed')
+  - [Ping](#F-RecordPoint-Connectors-SDK-Client-NotificationType-Ping 'RecordPoint.Connectors.SDK.Client.NotificationType.Ping')
 - [PerformanceEvent](#T-RecordPoint-Connectors-SDK-Diagnostics-PerformanceEvent 'RecordPoint.Connectors.SDK.Diagnostics.PerformanceEvent')
   - [#ctor(type,method,message,log)](#M-RecordPoint-Connectors-SDK-Diagnostics-PerformanceEvent-#ctor-System-Type,System-String,System-String,RecordPoint-Connectors-SDK-Diagnostics-ILog- 'RecordPoint.Connectors.SDK.Diagnostics.PerformanceEvent.#ctor(System.Type,System.String,System.String,RecordPoint.Connectors.SDK.Diagnostics.ILog)')
   - [Dispose()](#M-RecordPoint-Connectors-SDK-Diagnostics-PerformanceEvent-Dispose-System-Boolean- 'RecordPoint.Connectors.SDK.Diagnostics.PerformanceEvent.Dispose(System.Boolean)')
@@ -340,6 +410,8 @@
   - [NotificationError](#F-RecordPoint-Connectors-SDK-Client-ProcessingResult-NotificationError 'RecordPoint.Connectors.SDK.Client.ProcessingResult.NotificationError')
   - [OK](#F-RecordPoint-Connectors-SDK-Client-ProcessingResult-OK 'RecordPoint.Connectors.SDK.Client.ProcessingResult.OK')
   - [Unknown](#F-RecordPoint-Connectors-SDK-Client-ProcessingResult-Unknown 'RecordPoint.Connectors.SDK.Client.ProcessingResult.Unknown')
+- [ReadOnlyJsonContractResolver](#T-Microsoft-Rest-Serialization-ReadOnlyJsonContractResolver 'Microsoft.Rest.Serialization.ReadOnlyJsonContractResolver')
+  - [CreateProperty(member,memberSerialization)](#M-Microsoft-Rest-Serialization-ReadOnlyJsonContractResolver-CreateProperty-System-Reflection-MemberInfo,Newtonsoft-Json-MemberSerialization- 'Microsoft.Rest.Serialization.ReadOnlyJsonContractResolver.CreateProperty(System.Reflection.MemberInfo,Newtonsoft.Json.MemberSerialization)')
 - [RelationshipDataModel](#T-RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel 'RecordPoint.Connectors.SDK.Client.Models.RelationshipDataModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.RelationshipDataModel.#ctor')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel-#ctor-System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.RelationshipDataModel.#ctor(System.String,System.String)')
@@ -355,10 +427,14 @@
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Exceptions-ResourceNotFoundException-#ctor 'RecordPoint.Connectors.SDK.Exceptions.ResourceNotFoundException.#ctor')
   - [#ctor(message)](#M-RecordPoint-Connectors-SDK-Exceptions-ResourceNotFoundException-#ctor-System-String- 'RecordPoint.Connectors.SDK.Exceptions.ResourceNotFoundException.#ctor(System.String)')
   - [#ctor(message,innerException)](#M-RecordPoint-Connectors-SDK-Exceptions-ResourceNotFoundException-#ctor-System-String,System-Exception- 'RecordPoint.Connectors.SDK.Exceptions.ResourceNotFoundException.#ctor(System.String,System.Exception)')
+- [SafeJsonConvert](#T-Microsoft-Rest-Serialization-SafeJsonConvert 'Microsoft.Rest.Serialization.SafeJsonConvert')
+  - [DeserializeObject\`\`1(value,settings)](#M-Microsoft-Rest-Serialization-SafeJsonConvert-DeserializeObject``1-System-String,Newtonsoft-Json-JsonSerializerSettings- 'Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject``1(System.String,Newtonsoft.Json.JsonSerializerSettings)')
+  - [SerializeObject(value,settings)](#M-Microsoft-Rest-Serialization-SafeJsonConvert-SerializeObject-System-Object,Newtonsoft-Json-JsonSerializerSettings- 'Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(System.Object,Newtonsoft.Json.JsonSerializerSettings)')
 - [SearchTermModel](#T-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-#ctor 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.#ctor')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-#ctor-System-String,System-String,System-String,System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.#ctor(System.String,System.String,System.String,System.String,System.String,System.String)')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-#ctor-System-String,System-String,System-String,System-String,System-String,System-Collections-Generic-IDictionary{System-String,System-Object},System-String- 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.#ctor(System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)')
   - [CategoricalValueType](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-CategoricalValueType 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.CategoricalValueType')
+  - [FieldInfo](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-FieldInfo 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.FieldInfo')
   - [FieldName](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-FieldName 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.FieldName')
   - [FieldType](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-FieldType 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.FieldType')
   - [FieldValue](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-FieldValue 'RecordPoint.Connectors.SDK.Client.Models.SearchTermModel.FieldValue')
@@ -372,6 +448,28 @@
   - [Children](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTreeNodeModel-Children 'RecordPoint.Connectors.SDK.Client.Models.SearchTreeNodeModel.Children')
   - [SearchTerm](#P-RecordPoint-Connectors-SDK-Client-Models-SearchTreeNodeModel-SearchTerm 'RecordPoint.Connectors.SDK.Client.Models.SearchTreeNodeModel.SearchTerm')
   - [Validate()](#M-RecordPoint-Connectors-SDK-Client-Models-SearchTreeNodeModel-Validate 'RecordPoint.Connectors.SDK.Client.Models.SearchTreeNodeModel.Validate')
+- [SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException')
+  - [#ctor(message)](#M-Microsoft-Rest-SerializationException-#ctor-System-String- 'Microsoft.Rest.SerializationException.#ctor(System.String)')
+  - [#ctor(message,content,innerException)](#M-Microsoft-Rest-SerializationException-#ctor-System-String,System-String,System-Exception- 'Microsoft.Rest.SerializationException.#ctor(System.String,System.String,System.Exception)')
+  - [Content](#P-Microsoft-Rest-SerializationException-Content 'Microsoft.Rest.SerializationException.Content')
+- [ServiceClientCredentials](#T-Microsoft-Rest-ServiceClientCredentials 'Microsoft.Rest.ServiceClientCredentials')
+  - [InitializeServiceClient\`\`1(client)](#M-Microsoft-Rest-ServiceClientCredentials-InitializeServiceClient``1-Microsoft-Rest-ServiceClient{``0}- 'Microsoft.Rest.ServiceClientCredentials.InitializeServiceClient``1(Microsoft.Rest.ServiceClient{``0})')
+  - [ProcessHttpRequestAsync(request,cancellationToken)](#M-Microsoft-Rest-ServiceClientCredentials-ProcessHttpRequestAsync-System-Net-Http-HttpRequestMessage,System-Threading-CancellationToken- 'Microsoft.Rest.ServiceClientCredentials.ProcessHttpRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)')
+- [ServiceClientTracing](#T-Microsoft-Rest-ServiceClientTracing 'Microsoft.Rest.ServiceClientTracing')
+  - [IsEnabled](#P-Microsoft-Rest-ServiceClientTracing-IsEnabled 'Microsoft.Rest.ServiceClientTracing.IsEnabled')
+  - [NextInvocationId](#P-Microsoft-Rest-ServiceClientTracing-NextInvocationId 'Microsoft.Rest.ServiceClientTracing.NextInvocationId')
+  - [Enter(invocationId,instance,method,parameters)](#M-Microsoft-Rest-ServiceClientTracing-Enter-System-String,System-Object,System-String,System-Collections-Generic-IDictionary{System-String,System-Object}- 'Microsoft.Rest.ServiceClientTracing.Enter(System.String,System.Object,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})')
+  - [Error(invocationId,exception)](#M-Microsoft-Rest-ServiceClientTracing-Error-System-String,System-Exception- 'Microsoft.Rest.ServiceClientTracing.Error(System.String,System.Exception)')
+  - [Exit(invocationId,result)](#M-Microsoft-Rest-ServiceClientTracing-Exit-System-String,System-Object- 'Microsoft.Rest.ServiceClientTracing.Exit(System.String,System.Object)')
+  - [ReceiveResponse(invocationId,response)](#M-Microsoft-Rest-ServiceClientTracing-ReceiveResponse-System-String,System-Net-Http-HttpResponseMessage- 'Microsoft.Rest.ServiceClientTracing.ReceiveResponse(System.String,System.Net.Http.HttpResponseMessage)')
+  - [SendRequest(invocationId,request)](#M-Microsoft-Rest-ServiceClientTracing-SendRequest-System-String,System-Net-Http-HttpRequestMessage- 'Microsoft.Rest.ServiceClientTracing.SendRequest(System.String,System.Net.Http.HttpRequestMessage)')
+- [ServiceClient\`1](#T-Microsoft-Rest-ServiceClient`1 'Microsoft.Rest.ServiceClient`1')
+  - [#ctor(httpClient,disposeHttpClient)](#M-Microsoft-Rest-ServiceClient`1-#ctor-System-Net-Http-HttpClient,System-Boolean- 'Microsoft.Rest.ServiceClient`1.#ctor(System.Net.Http.HttpClient,System.Boolean)')
+  - [#ctor(handlers)](#M-Microsoft-Rest-ServiceClient`1-#ctor-System-Net-Http-DelegatingHandler[]- 'Microsoft.Rest.ServiceClient`1.#ctor(System.Net.Http.DelegatingHandler[])')
+  - [#ctor(rootHandler,handlers)](#M-Microsoft-Rest-ServiceClient`1-#ctor-System-Net-Http-HttpClientHandler,System-Net-Http-DelegatingHandler[]- 'Microsoft.Rest.ServiceClient`1.#ctor(System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])')
+  - [HttpClient](#P-Microsoft-Rest-ServiceClient`1-HttpClient 'Microsoft.Rest.ServiceClient`1.HttpClient')
+  - [Dispose(disposing)](#M-Microsoft-Rest-ServiceClient`1-Dispose-System-Boolean- 'Microsoft.Rest.ServiceClient`1.Dispose(System.Boolean)')
+  - [Dispose()](#M-Microsoft-Rest-ServiceClient`1-Dispose 'Microsoft.Rest.ServiceClient`1.Dispose')
 - [Status](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult-Status 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitResult.Status')
   - [ConnectorDisabled](#F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult-Status-ConnectorDisabled 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitResult.Status.ConnectorDisabled')
   - [ConnectorNotFound](#F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult-Status-ConnectorNotFound 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitResult.Status.ConnectorNotFound')
@@ -393,6 +491,7 @@
   - [GetValueOrDefault(metaDataList,name)](#M-RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModelExtensions-GetValueOrDefault-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel},System-String- 'RecordPoint.Connectors.SDK.Client.Models.SubmissionMetaDataModelExtensions.GetValueOrDefault(System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.SubmissionMetaDataModel},System.String)')
 - [SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext')
   - [NoExternalIdFound](#F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-NoExternalIdFound 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.NoExternalIdFound')
+  - [NoLocationFound](#F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-NoLocationFound 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.NoLocationFound')
   - [NoTitleFound](#F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-NoTitleFound 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.NoTitleFound')
   - [AggregationFoundDuringItemSubmission](#P-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-AggregationFoundDuringItemSubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.AggregationFoundDuringItemSubmission')
   - [ApiClientFactorySettings](#P-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.ApiClientFactorySettings')
@@ -408,6 +507,7 @@
   - [SubmitResult](#P-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-SubmitResult 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.SubmitResult')
   - [TenantId](#P-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-TenantId 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.TenantId')
   - [GetExternalId()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-GetExternalId 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.GetExternalId')
+  - [GetItemLocation()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-GetItemLocation 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.GetItemLocation')
   - [GetTitle()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-GetTitle 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.GetTitle')
   - [LogPrefix()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-LogPrefix 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext.LogPrefix')
 - [SubmitResult](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitResult')
@@ -418,14 +518,23 @@
   - [WaitUntilTime](#P-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult-WaitUntilTime 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitResult.WaitUntilTime')
 - [TooManyRequestsException](#T-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException 'RecordPoint.Connectors.SDK.Exceptions.TooManyRequestsException')
   - [#ctor(message,time)](#M-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-#ctor-System-String,System-DateTime- 'RecordPoint.Connectors.SDK.Exceptions.TooManyRequestsException.#ctor(System.String,System.DateTime)')
-  - [#ctor(info,context)](#M-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-#ctor-System-Runtime-Serialization-SerializationInfo,System-Runtime-Serialization-StreamingContext- 'RecordPoint.Connectors.SDK.Exceptions.TooManyRequestsException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)')
   - [WaitUntilTime](#P-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-WaitUntilTime 'RecordPoint.Connectors.SDK.Exceptions.TooManyRequestsException.WaitUntilTime')
-  - [GetObjectData(info,context)](#M-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-GetObjectData-System-Runtime-Serialization-SerializationInfo,System-Runtime-Serialization-StreamingContext- 'RecordPoint.Connectors.SDK.Exceptions.TooManyRequestsException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)')
+- [ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException')
+  - [#ctor(message)](#M-Microsoft-Rest-ValidationException-#ctor-System-String- 'Microsoft.Rest.ValidationException.#ctor(System.String)')
+  - [#ctor(message,target)](#M-Microsoft-Rest-ValidationException-#ctor-System-String,System-String- 'Microsoft.Rest.ValidationException.#ctor(System.String,System.String)')
+  - [#ctor(rule,target,details)](#M-Microsoft-Rest-ValidationException-#ctor-Microsoft-Rest-ValidationRules,System-String,System-Object[]- 'Microsoft.Rest.ValidationException.#ctor(Microsoft.Rest.ValidationRules,System.String,System.Object[])')
+  - [Details](#P-Microsoft-Rest-ValidationException-Details 'Microsoft.Rest.ValidationException.Details')
+  - [Rule](#P-Microsoft-Rest-ValidationException-Rule 'Microsoft.Rest.ValidationException.Rule')
+  - [Target](#P-Microsoft-Rest-ValidationException-Target 'Microsoft.Rest.ValidationException.Target')
 - [ValidationHelper](#T-RecordPoint-Connectors-SDK-Helpers-ValidationHelper 'RecordPoint.Connectors.SDK.Helpers.ValidationHelper')
   - [ArgumentNotNull(argumentValue,argumentName)](#M-RecordPoint-Connectors-SDK-Helpers-ValidationHelper-ArgumentNotNull-System-Object,System-String- 'RecordPoint.Connectors.SDK.Helpers.ValidationHelper.ArgumentNotNull(System.Object,System.String)')
   - [ArgumentNotNullOrEmpty(argumentValue,argumentName)](#M-RecordPoint-Connectors-SDK-Helpers-ValidationHelper-ArgumentNotNullOrEmpty-System-String,System-String- 'RecordPoint.Connectors.SDK.Helpers.ValidationHelper.ArgumentNotNullOrEmpty(System.String,System.String)')
   - [ArgumentNotNullOrEmpty(argumentValue,argumentName)](#M-RecordPoint-Connectors-SDK-Helpers-ValidationHelper-ArgumentNotNullOrEmpty-System-Security-SecureString,System-String- 'RecordPoint.Connectors.SDK.Helpers.ValidationHelper.ArgumentNotNullOrEmpty(System.Security.SecureString,System.String)')
   - [ArgumentNotNullOrWhiteSpace(argumentValue,argumentName)](#M-RecordPoint-Connectors-SDK-Helpers-ValidationHelper-ArgumentNotNullOrWhiteSpace-System-String,System-String- 'RecordPoint.Connectors.SDK.Helpers.ValidationHelper.ArgumentNotNullOrWhiteSpace(System.String,System.String)')
+- [ValidationRules](#T-Microsoft-Rest-ValidationRules 'Microsoft.Rest.ValidationRules')
+  - [CannotBeNull](#F-Microsoft-Rest-ValidationRules-CannotBeNull 'Microsoft.Rest.ValidationRules.CannotBeNull')
+  - [MaxLength](#F-Microsoft-Rest-ValidationRules-MaxLength 'Microsoft.Rest.ValidationRules.MaxLength')
+  - [MinLength](#F-Microsoft-Rest-ValidationRules-MinLength 'Microsoft.Rest.ValidationRules.MinLength')
 
 <a name='T-RecordPoint-Connectors-SDK-Client-Models-AggregationSubmissionInputModel'></a>
 ## AggregationSubmissionInputModel `type`
@@ -1063,7 +1172,7 @@ Initializes a new instance of the ConnectorAuditEventModel class.
 
 This constructor has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-#ctor-System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel}-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel-#ctor-System-String,System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel}-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -1709,6 +1818,88 @@ This method has no parameters.
 | ---- | ----------- |
 | [Microsoft.Rest.ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') | Thrown if validation fails |
 
+<a name='T-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel'></a>
+## ConnectorRequestResponseCallbackModel `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Client.Models
+
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Initializes a new instance of the
+ConnectorRequestResponseCallbackModel class.
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-#ctor-System-Nullable{System-Guid},System-String,System-String,System-String,System-String,System-Collections-Generic-IList{System-String},System-Object-'></a>
+### #ctor(outcome) `constructor`
+
+##### Summary
+
+Initializes a new instance of the
+ConnectorRequestResponseCallbackModel class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| outcome | [System.Nullable{System.Guid}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Guid}') | Possible values include: 'Ok', 'Failed' |
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-ConnectorId'></a>
+### ConnectorId `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-CorrelationId'></a>
+### CorrelationId `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-Data'></a>
+### Data `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-Messages'></a>
+### Messages `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-Outcome'></a>
+### Outcome `property`
+
+##### Summary
+
+Gets or sets possible values include: 'Ok', 'Failed'
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-RequestType'></a>
+### RequestType `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-ResponseScope'></a>
+### ResponseScope `property`
+
+##### Summary
+
+
+
 <a name='T-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel'></a>
 ## DirectBinarySubmissionInputModel `type`
 
@@ -1728,7 +1919,7 @@ class.
 
 This constructor has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-Nullable{System-Int64},System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime}-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-Nullable{System-Int64},System-String,System-Nullable{System-DateTime},System-Nullable{System-Boolean},System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime}-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -1739,6 +1930,13 @@ class.
 ##### Parameters
 
 This constructor has no parameters.
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-BinaryBlobCreated'></a>
+### BinaryBlobCreated `property`
+
+##### Summary
+
+
 
 <a name='P-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel-BinaryExternalId'></a>
 ### BinaryExternalId `property`
@@ -2230,6 +2428,290 @@ This method has no parameters.
 | ---- | ----------- |
 | [Microsoft.Rest.ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') | Thrown if validation fails |
 
+<a name='T-Microsoft-Rest-HttpOperationException'></a>
+## HttpOperationException `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Represents failures that occur during HTTP service operations.
+
+<a name='M-Microsoft-Rest-HttpOperationException-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Initializes a new instance of the [HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') class.
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='M-Microsoft-Rest-HttpOperationException-#ctor-System-String-'></a>
+### #ctor(message) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') class with an error message.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The exception message. |
+
+<a name='M-Microsoft-Rest-HttpOperationException-#ctor-System-String,System-Exception-'></a>
+### #ctor(message,innerException) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') class with an error message and inner exception.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The exception message. |
+| innerException | [System.Exception](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Exception 'System.Exception') | The exception that caused the current exception. |
+
+<a name='P-Microsoft-Rest-HttpOperationException-Request'></a>
+### Request `property`
+
+##### Summary
+
+Gets or sets the wrapped request details related to the failure.
+
+<a name='P-Microsoft-Rest-HttpOperationException-Response'></a>
+### Response `property`
+
+##### Summary
+
+Gets or sets the wrapped response details related to the failure.
+
+<a name='T-Microsoft-Rest-HttpOperationResponse'></a>
+## HttpOperationResponse `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Represents the HTTP request and response for a service operation.
+
+<a name='P-Microsoft-Rest-HttpOperationResponse-Request'></a>
+### Request `property`
+
+##### Summary
+
+Gets or sets the HTTP request associated with the operation.
+
+<a name='P-Microsoft-Rest-HttpOperationResponse-Response'></a>
+### Response `property`
+
+##### Summary
+
+Gets or sets the HTTP response associated with the operation.
+
+<a name='M-Microsoft-Rest-HttpOperationResponse-Dispose-System-Boolean-'></a>
+### Dispose(disposing) `method`
+
+##### Summary
+
+Releases resources used by the current operation response.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| disposing | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') |  |
+
+<a name='M-Microsoft-Rest-HttpOperationResponse-Dispose'></a>
+### Dispose() `method`
+
+##### Summary
+
+Releases resources used by the current operation response.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='T-Microsoft-Rest-HttpOperationResponse`1'></a>
+## HttpOperationResponse\`1 `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Represents the HTTP request and response for a service operation, including a typed body.
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | The type of response body. |
+
+<a name='P-Microsoft-Rest-HttpOperationResponse`1-Body'></a>
+### Body `property`
+
+##### Summary
+
+Gets or sets the typed response body.
+
+<a name='T-Microsoft-Rest-HttpRequestMessageWrapper'></a>
+## HttpRequestMessageWrapper `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Wraps an HTTP request and its serialized content.
+
+<a name='M-Microsoft-Rest-HttpRequestMessageWrapper-#ctor-System-Net-Http-HttpRequestMessage,System-String-'></a>
+### #ctor(request,content) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [HttpRequestMessageWrapper](#T-Microsoft-Rest-HttpRequestMessageWrapper 'Microsoft.Rest.HttpRequestMessageWrapper') class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| request | [System.Net.Http.HttpRequestMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpRequestMessage 'System.Net.Http.HttpRequestMessage') | The HTTP request message. |
+| content | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The serialized request content. |
+
+<a name='P-Microsoft-Rest-HttpRequestMessageWrapper-Content'></a>
+### Content `property`
+
+##### Summary
+
+Gets the serialized request content.
+
+<a name='P-Microsoft-Rest-HttpRequestMessageWrapper-Method'></a>
+### Method `property`
+
+##### Summary
+
+Gets the HTTP method of the wrapped request.
+
+<a name='P-Microsoft-Rest-HttpRequestMessageWrapper-Request'></a>
+### Request `property`
+
+##### Summary
+
+Gets the wrapped HTTP request message.
+
+<a name='P-Microsoft-Rest-HttpRequestMessageWrapper-RequestUri'></a>
+### RequestUri `property`
+
+##### Summary
+
+Gets the request URI of the wrapped request.
+
+<a name='T-Microsoft-Rest-HttpResponseHeadersWrapper'></a>
+## HttpResponseHeadersWrapper `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Wraps HTTP response headers and provides convenience helpers.
+
+<a name='M-Microsoft-Rest-HttpResponseHeadersWrapper-#ctor-System-Net-Http-Headers-HttpResponseHeaders-'></a>
+### #ctor(headers) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [HttpResponseHeadersWrapper](#T-Microsoft-Rest-HttpResponseHeadersWrapper 'Microsoft.Rest.HttpResponseHeadersWrapper') class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| headers | [System.Net.Http.Headers.HttpResponseHeaders](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.Headers.HttpResponseHeaders 'System.Net.Http.Headers.HttpResponseHeaders') | The response headers to wrap. |
+
+<a name='M-Microsoft-Rest-HttpResponseHeadersWrapper-TryGetValues-System-String,System-Collections-Generic-IEnumerable{System-String}@-'></a>
+### TryGetValues(name,values) `method`
+
+##### Summary
+
+Attempts to retrieve the values for a specified header name.
+
+##### Returns
+
+`true` if the header exists; otherwise `false`.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The header name. |
+| values | [System.Collections.Generic.IEnumerable{System.String}@](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IEnumerable 'System.Collections.Generic.IEnumerable{System.String}@') | The header values if found; otherwise an empty sequence. |
+
+<a name='T-Microsoft-Rest-HttpResponseMessageWrapper'></a>
+## HttpResponseMessageWrapper `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Wraps an HTTP response and its serialized content.
+
+<a name='M-Microsoft-Rest-HttpResponseMessageWrapper-#ctor-System-Net-Http-HttpResponseMessage,System-String-'></a>
+### #ctor(response,content) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [HttpResponseMessageWrapper](#T-Microsoft-Rest-HttpResponseMessageWrapper 'Microsoft.Rest.HttpResponseMessageWrapper') class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| response | [System.Net.Http.HttpResponseMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpResponseMessage 'System.Net.Http.HttpResponseMessage') | The HTTP response message. |
+| content | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The serialized response content. |
+
+<a name='P-Microsoft-Rest-HttpResponseMessageWrapper-Content'></a>
+### Content `property`
+
+##### Summary
+
+Gets the serialized response content.
+
+<a name='P-Microsoft-Rest-HttpResponseMessageWrapper-Headers'></a>
+### Headers `property`
+
+##### Summary
+
+Gets the wrapped response headers.
+
+<a name='P-Microsoft-Rest-HttpResponseMessageWrapper-Response'></a>
+### Response `property`
+
+##### Summary
+
+Gets the wrapped HTTP response message.
+
+<a name='P-Microsoft-Rest-HttpResponseMessageWrapper-StatusCode'></a>
+### StatusCode `property`
+
+##### Summary
+
+Gets the HTTP status code of the wrapped response.
+
 <a name='T-RecordPoint-Connectors-SDK-Interfaces-ICircuitEventHandler'></a>
 ## ICircuitEventHandler `type`
 
@@ -2384,6 +2866,97 @@ Used to indicate a fault of some sort that will not affect the overall service, 
 | message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Any message to be output. Generally, this should just be enough information to provide some context for the event. |
 | elapsedTimeTicks | [System.Nullable{System.Int64}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int64}') | Optionally, provide the duration which the operation took in ticks. If a duration is not provided, no indication of the duration should occur in the final logging |
 
+<a name='T-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager'></a>
+## INotificationApiManager `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications
+
+##### Summary
+
+Calls the RecordPoint Notification API.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken-'></a>
+### AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken) `method`
+
+##### Summary
+
+Acknowledges a notification as having been processed.
+
+##### Returns
+
+
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
+| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
+| acknowledgement | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-DisposalCallback-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Threading-CancellationToken-'></a>
+### DisposalCallback(factorySettings,authenticationSettings,callbackNotification,cancellationToken) `method`
+
+##### Summary
+
+Notifies RecordPoint of the result of a disposal attempt.
+
+##### Returns
+
+
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
+| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
+| callbackNotification | [RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken-'></a>
+### GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken) `method`
+
+##### Summary
+
+Queries for all connector notifications for a given connector instance that are pending acknowledgement.
+
+##### Returns
+
+
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
+| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
+| connectorConfigId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-GetAllPendingConnectorTypeNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-Guid,System-Threading-CancellationToken-'></a>
+### GetAllPendingConnectorTypeNotifications(factorySettings,authenticationSettings,connectorTypeId,cancellationToken) `method`
+
+##### Summary
+
+Queries for all connector notifications for a given connector type instance that are pending acknowledgement.
+
+##### Returns
+
+
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
+| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
+| connectorTypeId | [System.Guid](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Guid 'System.Guid') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
 <a name='T-RecordPoint-Connectors-SDK-Notifications-INotificationHandler'></a>
 ## INotificationHandler `type`
 
@@ -2418,57 +2991,6 @@ NotificationTask will acknowledge the notification with ProcessingResult.Notific
 | connectorConfigModel | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') |  |
 | notification | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel') |  |
 | ct | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
-
-<a name='T-RecordPoint-Connectors-SDK-Notifications-INotificationPullManager'></a>
-## INotificationPullManager `type`
-
-##### Namespace
-
-RecordPoint.Connectors.SDK.Notifications
-
-##### Summary
-
-
-
-<a name='M-RecordPoint-Connectors-SDK-Notifications-INotificationPullManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken-'></a>
-### AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken) `method`
-
-##### Summary
-
-Acknowledges a notification as having been processed.
-
-##### Returns
-
-
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
-| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
-| acknowledgement | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel') |  |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
-
-<a name='M-RecordPoint-Connectors-SDK-Notifications-INotificationPullManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken-'></a>
-### GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken) `method`
-
-##### Summary
-
-Queries for all connector notifications for a given connector instance that are pending acknowledgement.
-
-##### Returns
-
-
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
-| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
-| connectorConfigId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
 <a name='T-RecordPoint-Connectors-SDK-Diagnostics-IPerformanceEvent'></a>
 ## IPerformanceEvent `type`
@@ -2535,6 +3057,23 @@ RecordPoint.Connectors.SDK.Providers
 | type | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') |  |
 | methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 
+<a name='T-Microsoft-Rest-IServiceOperations`1'></a>
+## IServiceOperations\`1 `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Represents a marker interface for generated service operation groups.
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | The service client type. |
+
 <a name='T-RecordPoint-Connectors-SDK-Providers-ISettableCircuitProvider'></a>
 ## ISettableCircuitProvider `type`
 
@@ -2593,6 +3132,69 @@ influence the submission behaviour.
 | ---- | ---- | ----------- |
 | submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
 
+<a name='T-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter'></a>
+## Iso8601TimeSpanConverter `type`
+
+##### Namespace
+
+Microsoft.Rest.Serialization
+
+##### Summary
+
+Serializes and deserializes [TimeSpan](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.TimeSpan 'System.TimeSpan') values using ISO 8601-compatible formatting.
+
+<a name='M-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter-CanConvert-System-Type-'></a>
+### CanConvert(objectType) `method`
+
+##### Summary
+
+Determines whether the converter can convert the specified type.
+
+##### Returns
+
+`true` if the type is [TimeSpan](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.TimeSpan 'System.TimeSpan') or nullable [TimeSpan](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.TimeSpan 'System.TimeSpan'); otherwise `false`.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| objectType | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The type to check. |
+
+<a name='M-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter-ReadJson-Newtonsoft-Json-JsonReader,System-Type,System-Object,Newtonsoft-Json-JsonSerializer-'></a>
+### ReadJson(reader,objectType,existingValue,serializer) `method`
+
+##### Summary
+
+Reads a [TimeSpan](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.TimeSpan 'System.TimeSpan') value from JSON.
+
+##### Returns
+
+The parsed [TimeSpan](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.TimeSpan 'System.TimeSpan') value.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| reader | [Newtonsoft.Json.JsonReader](#T-Newtonsoft-Json-JsonReader 'Newtonsoft.Json.JsonReader') | The JSON reader. |
+| objectType | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The destination type. |
+| existingValue | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The existing value of the destination object. |
+| serializer | [Newtonsoft.Json.JsonSerializer](#T-Newtonsoft-Json-JsonSerializer 'Newtonsoft.Json.JsonSerializer') | The active serializer. |
+
+<a name='M-Microsoft-Rest-Serialization-Iso8601TimeSpanConverter-WriteJson-Newtonsoft-Json-JsonWriter,System-Object,Newtonsoft-Json-JsonSerializer-'></a>
+### WriteJson(writer,value,serializer) `method`
+
+##### Summary
+
+Writes a [TimeSpan](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.TimeSpan 'System.TimeSpan') value to JSON using constant format.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| writer | [Newtonsoft.Json.JsonWriter](#T-Newtonsoft-Json-JsonWriter 'Newtonsoft.Json.JsonWriter') | The JSON writer. |
+| value | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The value to write. |
+| serializer | [Newtonsoft.Json.JsonSerializer](#T-Newtonsoft-Json-JsonSerializer 'Newtonsoft.Json.JsonSerializer') | The active serializer. |
+
 <a name='T-RecordPoint-Connectors-SDK-Client-Models-ItemAcceptanceModel'></a>
 ## ItemAcceptanceModel `type`
 
@@ -2643,6 +3245,144 @@ This constructor has no parameters.
 
 
 
+<a name='T-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus'></a>
+## ItemDisposalStatus `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications
+
+##### Summary
+
+Describes an item's progress through a disposition action.
+This is a copy of a class from the Eiger codebase.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyFailed'></a>
+### DestroyFailed `constants`
+
+##### Summary
+
+The destroy action failed.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyNotificationFailed'></a>
+### DestroyNotificationFailed `constants`
+
+##### Summary
+
+The notification for a destroy action failed.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyNotificationSent'></a>
+### DestroyNotificationSent `constants`
+
+##### Summary
+
+The notification for a destroy action was sent.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-DestroyPending'></a>
+### DestroyPending `constants`
+
+##### Summary
+
+A destroy action is pending.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-Destroyed'></a>
+### Destroyed `constants`
+
+##### Summary
+
+The item has been destroyed.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-None'></a>
+### None `constants`
+
+##### Summary
+
+No disposal action has been started.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-Reviewed'></a>
+### Reviewed `constants`
+
+##### Summary
+
+The item has been reviewed.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ItemDisposalStatus-Transferred'></a>
+### Transferred `constants`
+
+##### Summary
+
+The item has been transferred.
+
+<a name='T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel'></a>
+## ItemNotificationDisposalCallbackModel `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Client.Models
+
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Initializes a new instance of the
+ItemNotificationDisposalCallbackModel class.
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-#ctor-System-String,System-String,System-Nullable{System-Guid},System-String,System-String-'></a>
+### #ctor(disposalStatus) `constructor`
+
+##### Summary
+
+Initializes a new instance of the
+ItemNotificationDisposalCallbackModel class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| disposalStatus | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Possible values include: 'None', 'DestroyPending', 'Destroyed', 'DestroyFailed', 'DestroyNotificationFailed', 'DestroyNotificationSent', 'Transferred', 'Reviewed' |
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-ConnectorConfigId'></a>
+### ConnectorConfigId `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-CorrelationId'></a>
+### CorrelationId `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-DisposalStatus'></a>
+### DisposalStatus `property`
+
+##### Summary
+
+Gets or sets possible values include: 'None', 'DestroyPending',
+'Destroyed', 'DestroyFailed', 'DestroyNotificationFailed',
+'DestroyNotificationSent', 'Transferred', 'Reviewed'
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-ExternalId'></a>
+### ExternalId `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-StatusMessage'></a>
+### StatusMessage `property`
+
+##### Summary
+
+
+
 <a name='T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel'></a>
 ## ItemSubmissionInputModel `type`
 
@@ -2661,7 +3401,7 @@ Initializes a new instance of the ItemSubmissionInputModel class.
 
 This constructor has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel},System-String,System-String,System-String,System-String-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-SubmissionMetaDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel},System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel},System-String,System-String,System-String,System-String,System-String-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -2847,7 +3587,7 @@ Initializes a new instance of the ItemSubmissionOutputModel class.
 
 This constructor has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-Boolean},System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String,System-String,System-String,System-String-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionOutputModel-#ctor-System-String,System-String,System-String,System-String,System-DateTime,System-String,System-String,System-DateTime,System-String,System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-Boolean},System-String,System-String,System-Nullable{System-DateTime},System-String,System-String,System-String,System-Nullable{System-DateTime},System-String,System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Client-Models-MetaDataModel},System-String,System-String,System-String,System-String,System-String-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -3316,6 +4056,76 @@ A string
 | metaDataList | [System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IList 'System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Client.Models.MetaDataModel}') | The meta data list. |
 | name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name. |
 
+<a name='T-RecordPoint-Connectors-SDK-Client-NotificationType'></a>
+## NotificationType `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Client
+
+##### Summary
+
+Defines constant values that may appear in the ConnectorNotificationModel.NotificationType field.
+Possible values include: 'ItemDestroyed', 'Ping', 'ConnectorConfigCreated', 'ConnectorConfigUpdated', and 'ConnectorConfigDeleted'
+
+<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigCreated'></a>
+### ConnectorConfigCreated `constants`
+
+##### Summary
+
+The ConnectorConfigCreated Notification Type.
+This notification is sent by Records365 vNext when a new instance of the
+connector is created in the platform.
+
+<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigDeleted'></a>
+### ConnectorConfigDeleted `constants`
+
+##### Summary
+
+The ConnectorConfigDeleted Notification Type.
+This notification is sent by Records365 vNext when an instance of the 
+connector is deleted in the platform.
+
+<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigUpdated'></a>
+### ConnectorConfigUpdated `constants`
+
+##### Summary
+
+The ConnectorConfigUpdated Notification Type.
+This notification is sent by Records365 vNext when an existing instance of
+the connector is updated in the platform. Possible updates may include
+configuration changes, or the connector being enabled or disabled by a user.
+
+<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorRequest'></a>
+### ConnectorRequest `constants`
+
+##### Summary
+
+The ConnectorRequest Notification Type.
+This notification is sent by Records365 vNext to ask the connector a question it should
+answer, such as describing its source system or checking a set of credentials.
+The connector returns its answer asynchronously via a correlated callback to the platform,
+not on the response to this notification.
+
+<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ItemDestroyed'></a>
+### ItemDestroyed `constants`
+
+##### Summary
+
+The ItemDestroyed Notification Type. 
+This notification is sent by Records365 vNext when an item is disposed
+in the platform.
+The connector must permanently destroy all metadata, binaries and any other 
+information associated with the item in the content source.
+
+<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-Ping'></a>
+### Ping `constants`
+
+##### Summary
+
+The Ping Notification Type.
+Used for testing purposes only.
+
 <a name='T-RecordPoint-Connectors-SDK-Diagnostics-PerformanceEvent'></a>
 ## PerformanceEvent `type`
 
@@ -3442,6 +4252,35 @@ Indicates that the required processing for the notification completed successful
 ##### Summary
 
 Indicates that the result of processing a notification is unknown.
+
+<a name='T-Microsoft-Rest-Serialization-ReadOnlyJsonContractResolver'></a>
+## ReadOnlyJsonContractResolver `type`
+
+##### Namespace
+
+Microsoft.Rest.Serialization
+
+##### Summary
+
+Allows setting values on read-only properties during JSON deserialization.
+
+<a name='M-Microsoft-Rest-Serialization-ReadOnlyJsonContractResolver-CreateProperty-System-Reflection-MemberInfo,Newtonsoft-Json-MemberSerialization-'></a>
+### CreateProperty(member,memberSerialization) `method`
+
+##### Summary
+
+Creates a JSON property definition and marks it writable for deserialization.
+
+##### Returns
+
+A JSON property configured as writable.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| member | [System.Reflection.MemberInfo](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Reflection.MemberInfo 'System.Reflection.MemberInfo') | The reflected member. |
+| memberSerialization | [Newtonsoft.Json.MemberSerialization](#T-Newtonsoft-Json-MemberSerialization 'Newtonsoft.Json.MemberSerialization') | The member serialization mode. |
 
 <a name='T-RecordPoint-Connectors-SDK-Client-Models-RelationshipDataModel'></a>
 ## RelationshipDataModel `type`
@@ -3599,6 +4438,59 @@ Constructs a new instance of ResourceNotFoundException with an exception message
 | message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | innerException | [System.Exception](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Exception 'System.Exception') |  |
 
+<a name='T-Microsoft-Rest-Serialization-SafeJsonConvert'></a>
+## SafeJsonConvert `type`
+
+##### Namespace
+
+Microsoft.Rest.Serialization
+
+##### Summary
+
+Provides JSON serialization helpers for compatibility with Microsoft.Rest generated clients.
+
+<a name='M-Microsoft-Rest-Serialization-SafeJsonConvert-DeserializeObject``1-System-String,Newtonsoft-Json-JsonSerializerSettings-'></a>
+### DeserializeObject\`\`1(value,settings) `method`
+
+##### Summary
+
+Deserializes a JSON string into a typed object using the specified serializer settings.
+
+##### Returns
+
+The deserialized object.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The JSON payload. |
+| settings | [Newtonsoft.Json.JsonSerializerSettings](#T-Newtonsoft-Json-JsonSerializerSettings 'Newtonsoft.Json.JsonSerializerSettings') | The serializer settings. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | The target type to deserialize to. |
+
+<a name='M-Microsoft-Rest-Serialization-SafeJsonConvert-SerializeObject-System-Object,Newtonsoft-Json-JsonSerializerSettings-'></a>
+### SerializeObject(value,settings) `method`
+
+##### Summary
+
+Serializes an object to JSON using the specified serializer settings.
+
+##### Returns
+
+The serialized JSON string.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The object to serialize. |
+| settings | [Newtonsoft.Json.JsonSerializerSettings](#T-Newtonsoft-Json-JsonSerializerSettings 'Newtonsoft.Json.JsonSerializerSettings') | The serializer settings. |
+
 <a name='T-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel'></a>
 ## SearchTermModel `type`
 
@@ -3617,7 +4509,7 @@ Initializes a new instance of the SearchTermModel class.
 
 This constructor has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-#ctor-System-String,System-String,System-String,System-String,System-String,System-String-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-#ctor-System-String,System-String,System-String,System-String,System-String,System-Collections-Generic-IDictionary{System-String,System-Object},System-String-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -3630,6 +4522,13 @@ This constructor has no parameters.
 
 <a name='P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-CategoricalValueType'></a>
 ### CategoricalValueType `property`
+
+##### Summary
+
+
+
+<a name='P-RecordPoint-Connectors-SDK-Client-Models-SearchTermModel-FieldInfo'></a>
+### FieldInfo `property`
 
 ##### Summary
 
@@ -3753,6 +4652,286 @@ This method has no parameters.
 | Name | Description |
 | ---- | ----------- |
 | [Microsoft.Rest.ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') | Thrown if validation fails |
+
+<a name='T-Microsoft-Rest-SerializationException'></a>
+## SerializationException `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Represents serialization and deserialization failures for service messages.
+
+<a name='M-Microsoft-Rest-SerializationException-#ctor-System-String-'></a>
+### #ctor(message) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') class with an error message.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The exception message. |
+
+<a name='M-Microsoft-Rest-SerializationException-#ctor-System-String,System-String,System-Exception-'></a>
+### #ctor(message,content,innerException) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') class with message content and an inner exception.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The exception message. |
+| content | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The payload content that failed serialization or deserialization. |
+| innerException | [System.Exception](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Exception 'System.Exception') | The exception that caused the current exception. |
+
+<a name='P-Microsoft-Rest-SerializationException-Content'></a>
+### Content `property`
+
+##### Summary
+
+Gets the payload content that failed serialization or deserialization.
+
+<a name='T-Microsoft-Rest-ServiceClientCredentials'></a>
+## ServiceClientCredentials `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Provides credentials behavior for initializing and authorizing service clients.
+
+<a name='M-Microsoft-Rest-ServiceClientCredentials-InitializeServiceClient``1-Microsoft-Rest-ServiceClient{``0}-'></a>
+### InitializeServiceClient\`\`1(client) `method`
+
+##### Summary
+
+Initializes a service client instance with credential-specific behavior.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| client | [Microsoft.Rest.ServiceClient{\`\`0}](#T-Microsoft-Rest-ServiceClient{``0} 'Microsoft.Rest.ServiceClient{``0}') | The service client to initialize. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | The service client type. |
+
+<a name='M-Microsoft-Rest-ServiceClientCredentials-ProcessHttpRequestAsync-System-Net-Http-HttpRequestMessage,System-Threading-CancellationToken-'></a>
+### ProcessHttpRequestAsync(request,cancellationToken) `method`
+
+##### Summary
+
+Applies authentication information to an outgoing HTTP request.
+
+##### Returns
+
+A task that completes when the request has been processed.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| request | [System.Net.Http.HttpRequestMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpRequestMessage 'System.Net.Http.HttpRequestMessage') | The outgoing HTTP request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | A token used to cancel the operation. |
+
+<a name='T-Microsoft-Rest-ServiceClientTracing'></a>
+## ServiceClientTracing `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Provides extension points for service client tracing hooks.
+
+<a name='P-Microsoft-Rest-ServiceClientTracing-IsEnabled'></a>
+### IsEnabled `property`
+
+##### Summary
+
+Gets or sets a value indicating whether service client tracing is enabled.
+
+<a name='P-Microsoft-Rest-ServiceClientTracing-NextInvocationId'></a>
+### NextInvocationId `property`
+
+##### Summary
+
+Gets the next invocation identifier used for tracing.
+
+<a name='M-Microsoft-Rest-ServiceClientTracing-Enter-System-String,System-Object,System-String,System-Collections-Generic-IDictionary{System-String,System-Object}-'></a>
+### Enter(invocationId,instance,method,parameters) `method`
+
+##### Summary
+
+Called when execution enters a traced service operation.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| invocationId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The invocation identifier. |
+| instance | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The target instance. |
+| method | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The method name. |
+| parameters | [System.Collections.Generic.IDictionary{System.String,System.Object}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IDictionary 'System.Collections.Generic.IDictionary{System.String,System.Object}') | The method parameters. |
+
+<a name='M-Microsoft-Rest-ServiceClientTracing-Error-System-String,System-Exception-'></a>
+### Error(invocationId,exception) `method`
+
+##### Summary
+
+Called when a traced operation encounters an error.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| invocationId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The invocation identifier. |
+| exception | [System.Exception](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Exception 'System.Exception') | The exception that was thrown. |
+
+<a name='M-Microsoft-Rest-ServiceClientTracing-Exit-System-String,System-Object-'></a>
+### Exit(invocationId,result) `method`
+
+##### Summary
+
+Called when execution exits a traced service operation.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| invocationId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The invocation identifier. |
+| result | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The operation result. |
+
+<a name='M-Microsoft-Rest-ServiceClientTracing-ReceiveResponse-System-String,System-Net-Http-HttpResponseMessage-'></a>
+### ReceiveResponse(invocationId,response) `method`
+
+##### Summary
+
+Called when a traced operation receives an HTTP response.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| invocationId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The invocation identifier. |
+| response | [System.Net.Http.HttpResponseMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpResponseMessage 'System.Net.Http.HttpResponseMessage') | The incoming HTTP response. |
+
+<a name='M-Microsoft-Rest-ServiceClientTracing-SendRequest-System-String,System-Net-Http-HttpRequestMessage-'></a>
+### SendRequest(invocationId,request) `method`
+
+##### Summary
+
+Called when a traced operation sends an HTTP request.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| invocationId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The invocation identifier. |
+| request | [System.Net.Http.HttpRequestMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpRequestMessage 'System.Net.Http.HttpRequestMessage') | The outgoing HTTP request. |
+
+<a name='T-Microsoft-Rest-ServiceClient`1'></a>
+## ServiceClient\`1 `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Represents a base HTTP service client implementation.
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | The concrete service client type. |
+
+<a name='M-Microsoft-Rest-ServiceClient`1-#ctor-System-Net-Http-HttpClient,System-Boolean-'></a>
+### #ctor(httpClient,disposeHttpClient) `constructor`
+
+##### Summary
+
+Initializes a new service client using an existing [HttpClient](#P-Microsoft-Rest-ServiceClient`1-HttpClient 'Microsoft.Rest.ServiceClient`1.HttpClient') instance.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| httpClient | [System.Net.Http.HttpClient](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClient 'System.Net.Http.HttpClient') | The HTTP client to use for requests. |
+| disposeHttpClient | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | `true` to dispose the HTTP client when this service client is disposed; otherwise `false`. |
+
+<a name='M-Microsoft-Rest-ServiceClient`1-#ctor-System-Net-Http-DelegatingHandler[]-'></a>
+### #ctor(handlers) `constructor`
+
+##### Summary
+
+Initializes a new service client with a default root handler and optional delegating handlers.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| handlers | [System.Net.Http.DelegatingHandler[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.DelegatingHandler[] 'System.Net.Http.DelegatingHandler[]') | The delegating handlers to include in the HTTP pipeline. |
+
+<a name='M-Microsoft-Rest-ServiceClient`1-#ctor-System-Net-Http-HttpClientHandler,System-Net-Http-DelegatingHandler[]-'></a>
+### #ctor(rootHandler,handlers) `constructor`
+
+##### Summary
+
+Initializes a new service client with the specified root handler and optional delegating handlers.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| rootHandler | [System.Net.Http.HttpClientHandler](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClientHandler 'System.Net.Http.HttpClientHandler') | The root HTTP handler for the pipeline. |
+| handlers | [System.Net.Http.DelegatingHandler[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.DelegatingHandler[] 'System.Net.Http.DelegatingHandler[]') | The delegating handlers to include in the HTTP pipeline. |
+
+<a name='P-Microsoft-Rest-ServiceClient`1-HttpClient'></a>
+### HttpClient `property`
+
+##### Summary
+
+Gets the HTTP client used to send requests.
+
+<a name='M-Microsoft-Rest-ServiceClient`1-Dispose-System-Boolean-'></a>
+### Dispose(disposing) `method`
+
+##### Summary
+
+Releases resources used by the current operation response.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| disposing | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') |  |
+
+<a name='M-Microsoft-Rest-ServiceClient`1-Dispose'></a>
+### Dispose() `method`
+
+##### Summary
+
+Releases resources used by the current operation response.
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitResult-Status'></a>
 ## Status `type`
@@ -3970,6 +5149,14 @@ to define more state that is specific to a particular connector or submission ty
 String to be returned if the SubmitContext's LogPrefix method is called and no
 External ID is present on the SubmitContext
 
+<a name='F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-NoLocationFound'></a>
+### NoLocationFound `constants`
+
+##### Summary
+
+String to be returned if the SubmitContext's LogPrefix method is called and
+no Location is present on the SubmitContext
+
 <a name='F-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-NoTitleFound'></a>
 ### NoTitleFound `constants`
 
@@ -4095,6 +5282,22 @@ SubmitContext, but in some cases (e.g. on the BinarySubmitContext) it may be sto
 
 This method has no parameters.
 
+<a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-GetItemLocation'></a>
+### GetItemLocation() `method`
+
+##### Summary
+
+Returns the Location of the object the SubmitContext is related to. Typically this is sourced from the Core metadata on the
+SubmitContext, but in some cases (e.g. on the BinarySubmitContext) it may be stored in a strongly typed field
+
+##### Returns
+
+Location value or a placeholder
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-GetTitle'></a>
 ### GetTitle() `method`
 
@@ -4211,20 +5414,6 @@ RecordPoint.Connectors.SDK.Exceptions
 | message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | time | [System.DateTime](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.DateTime 'System.DateTime') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-#ctor-System-Runtime-Serialization-SerializationInfo,System-Runtime-Serialization-StreamingContext-'></a>
-### #ctor(info,context) `constructor`
-
-##### Summary
-
-Constructs a new instance of TooManyRequestsException from a serialization context.
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| info | [System.Runtime.Serialization.SerializationInfo](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Runtime.Serialization.SerializationInfo 'System.Runtime.Serialization.SerializationInfo') |  |
-| context | [System.Runtime.Serialization.StreamingContext](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Runtime.Serialization.StreamingContext 'System.Runtime.Serialization.StreamingContext') |  |
-
 <a name='P-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-WaitUntilTime'></a>
 ### WaitUntilTime `property`
 
@@ -4232,19 +5421,79 @@ Constructs a new instance of TooManyRequestsException from a serialization conte
 
 
 
-<a name='M-RecordPoint-Connectors-SDK-Exceptions-TooManyRequestsException-GetObjectData-System-Runtime-Serialization-SerializationInfo,System-Runtime-Serialization-StreamingContext-'></a>
-### GetObjectData(info,context) `method`
+<a name='T-Microsoft-Rest-ValidationException'></a>
+## ValidationException `type`
+
+##### Namespace
+
+Microsoft.Rest
 
 ##### Summary
 
+Represents validation failures encountered while preparing service requests.
 
+<a name='M-Microsoft-Rest-ValidationException-#ctor-System-String-'></a>
+### #ctor(message) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') class with an error message.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| info | [System.Runtime.Serialization.SerializationInfo](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Runtime.Serialization.SerializationInfo 'System.Runtime.Serialization.SerializationInfo') |  |
-| context | [System.Runtime.Serialization.StreamingContext](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Runtime.Serialization.StreamingContext 'System.Runtime.Serialization.StreamingContext') |  |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The exception message. |
+
+<a name='M-Microsoft-Rest-ValidationException-#ctor-System-String,System-String-'></a>
+### #ctor(message,target) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') class with an error message and target.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The exception message. |
+| target | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the invalid target. |
+
+<a name='M-Microsoft-Rest-ValidationException-#ctor-Microsoft-Rest-ValidationRules,System-String,System-Object[]-'></a>
+### #ctor(rule,target,details) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') class for a specific validation rule.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| rule | [Microsoft.Rest.ValidationRules](#T-Microsoft-Rest-ValidationRules 'Microsoft.Rest.ValidationRules') | The validation rule that failed. |
+| target | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the invalid target. |
+| details | [System.Object[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object[] 'System.Object[]') | Additional details about the validation failure. |
+
+<a name='P-Microsoft-Rest-ValidationException-Details'></a>
+### Details `property`
+
+##### Summary
+
+Gets additional details about the validation failure.
+
+<a name='P-Microsoft-Rest-ValidationException-Rule'></a>
+### Rule `property`
+
+##### Summary
+
+Gets the validation rule that failed.
+
+<a name='P-Microsoft-Rest-ValidationException-Target'></a>
+### Target `property`
+
+##### Summary
+
+Gets the target associated with the validation failure.
 
 <a name='T-RecordPoint-Connectors-SDK-Helpers-ValidationHelper'></a>
 ## ValidationHelper `type`
@@ -4336,3 +5585,35 @@ Throws an exception if the tested string argument is null or a string that conta
 | Name | Description |
 | ---- | ----------- |
 | [System.ArgumentNullException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentNullException 'System.ArgumentNullException') | The string value is null or contains only whitespace. |
+
+<a name='T-Microsoft-Rest-ValidationRules'></a>
+## ValidationRules `type`
+
+##### Namespace
+
+Microsoft.Rest
+
+##### Summary
+
+Defines validation rules used by service client validation exceptions.
+
+<a name='F-Microsoft-Rest-ValidationRules-CannotBeNull'></a>
+### CannotBeNull `constants`
+
+##### Summary
+
+Indicates that a value must not be null.
+
+<a name='F-Microsoft-Rest-ValidationRules-MaxLength'></a>
+### MaxLength `constants`
+
+##### Summary
+
+Indicates that a value exceeds a maximum length constraint.
+
+<a name='F-Microsoft-Rest-ValidationRules-MinLength'></a>
+### MinLength `constants`
+
+##### Summary
+
+Indicates that a value is shorter than a minimum length constraint.

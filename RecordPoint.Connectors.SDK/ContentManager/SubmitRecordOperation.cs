@@ -126,12 +126,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns></returns>
         protected override Task RequeueAsync(DateTimeOffset waitTill, CancellationToken cancellationToken)
         {
-            return WorkQueueClient.SubmitRecordAsync(new ContentSubmissionConfiguration()
-            {
-                ConnectorConfigurationId = ConnectorConfig.Id,
-                TenantId = ConnectorConfig.TenantId,
-                TenantDomainName = ConnectorConfig.TenantDomainName,
-            }, Parameter, waitTill, cancellationToken);
+            return WorkQueueClient.SubmitRecordAsync(ConnectorConfig, Parameter, waitTill, cancellationToken);
         }
 
         /// <summary>

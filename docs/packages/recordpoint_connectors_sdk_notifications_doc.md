@@ -3,6 +3,16 @@
 
 ## Contents
 
+- [AsyncNotificationOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation')
+  - [#ctor(serviceProvider,notificationManager,systemContext,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.Notifications.INotificationManager,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
+  - [WORK_TYPE](#F-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-WORK_TYPE 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.WORK_TYPE')
+  - [ServiceName](#P-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-ServiceName 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.ServiceName')
+  - [WorkType](#P-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-WorkType 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.WorkType')
+  - [GetCustomKeyDimensions()](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-GetCustomKeyDimensions 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.GetCustomKeyDimensions')
+  - [InnerDispose()](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-InnerDispose 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.InnerDispose')
+  - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation.InnerRunAsync(System.Threading.CancellationToken)')
+- [AsyncNotifications](#T-RecordPoint-Connectors-SDK-Notifications-AsyncNotifications 'RecordPoint.Connectors.SDK.Notifications.AsyncNotifications')
+  - [NotificationTypes](#P-RecordPoint-Connectors-SDK-Notifications-AsyncNotifications-NotificationTypes 'RecordPoint.Connectors.SDK.Notifications.AsyncNotifications.NotificationTypes')
 - [ConnectorConfigBuilderExtensions](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigBuilderExtensions 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorConfigBuilderExtensions')
   - [UseConnectorConfigHandlers(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigBuilderExtensions-UseConnectorConfigHandlers-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorConfigBuilderExtensions.UseConnectorConfigHandlers(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseConnectorSecretHandler\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigBuilderExtensions-UseConnectorSecretHandler``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorConfigBuilderExtensions.UseConnectorSecretHandler``1(Microsoft.Extensions.Hosting.IHostBuilder)')
@@ -27,11 +37,28 @@
   - [_connectorManager](#F-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigUpdatedHandler-_connectorManager 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorConfigUpdatedHandler._connectorManager')
   - [NotificationType](#P-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigUpdatedHandler-NotificationType 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorConfigUpdatedHandler.NotificationType')
   - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigUpdatedHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorConfigUpdatedHandler.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
+- [ConnectorRequestBuilderExtensions](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestBuilderExtensions 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestBuilderExtensions')
+  - [AddConnectorRequestHandler\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestBuilderExtensions-AddConnectorRequestHandler``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestBuilderExtensions.AddConnectorRequestHandler``1(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseConnectorRequestHandlers(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestBuilderExtensions-UseConnectorRequestHandlers-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestBuilderExtensions.UseConnectorRequestHandlers(Microsoft.Extensions.Hosting.IHostBuilder)')
+- [ConnectorRequestCallbackClient](#T-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient 'RecordPoint.Connectors.SDK.Notifications.ConnectorRequestCallbackClient')
+  - [#ctor(apiClientFactory,configurationClient,observabilityScope)](#M-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-#ctor-RecordPoint-Connectors-SDK-Client-IApiClientFactory,RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope- 'RecordPoint.Connectors.SDK.Notifications.ConnectorRequestCallbackClient.#ctor(RecordPoint.Connectors.SDK.Client.IApiClientFactory,RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient,RecordPoint.Connectors.SDK.Observability.IObservabilityScope)')
+  - [MaxRetryAttempts](#F-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-MaxRetryAttempts 'RecordPoint.Connectors.SDK.Notifications.ConnectorRequestCallbackClient.MaxRetryAttempts')
+  - [SendAsync()](#M-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-SendAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,RecordPoint-Connectors-SDK-Requests-ConnectorRequestResponse,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.ConnectorRequestCallbackClient.SendAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel,RecordPoint.Connectors.SDK.Requests.ConnectorRequestResponse,System.Threading.CancellationToken)')
+  - [ToNewtonsoftReadable()](#M-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-ToNewtonsoftReadable-System-Object- 'RecordPoint.Connectors.SDK.Notifications.ConnectorRequestCallbackClient.ToNewtonsoftReadable(System.Object)')
+- [ConnectorRequestHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler')
+  - [#ctor(handlers,callbackClient,secretDecryptor,logger)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-#ctor-System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Requests-IConnectorRequestHandler},RecordPoint-Connectors-SDK-Requests-IConnectorRequestCallbackClient,RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor,Microsoft-Extensions-Logging-ILogger{RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler}- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler.#ctor(System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Requests.IConnectorRequestHandler},RecordPoint.Connectors.SDK.Requests.IConnectorRequestCallbackClient,RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor,Microsoft.Extensions.Logging.ILogger{RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler})')
+  - [CONNECTOR_REQUEST_NOTIFICATION_TYPE](#F-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-CONNECTOR_REQUEST_NOTIFICATION_TYPE 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler.CONNECTOR_REQUEST_NOTIFICATION_TYPE')
+  - [NotificationType](#P-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-NotificationType 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler.NotificationType')
+  - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
+  - [TryDecryptSecrets()](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-TryDecryptSecrets-RecordPoint-Connectors-SDK-Requests-ConnectorRequestEnvelope,RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler.TryDecryptSecrets(RecordPoint.Connectors.SDK.Requests.ConnectorRequestEnvelope,RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel)')
+- [ConnectorSecretDecryptor](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretDecryptor')
+  - [#ctor(configurationClient)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor-#ctor-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretDecryptor.#ctor(RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient)')
+  - [Decrypt()](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor-Decrypt-System-String,System-Byte[],System-Byte[]- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretDecryptor.Decrypt(System.String,System.Byte[],System.Byte[])')
+  - [DecryptInPlace()](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor-DecryptInPlace-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret},RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretDecryptor.DecryptInPlace(System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret},RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel)')
 - [ConnectorSecretHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler')
-  - [#ctor(connectorManager,connectorSecretAction,configurationClient)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-ContentManager-IConnectorSecretAction,RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler.#ctor(RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.ContentManager.IConnectorSecretAction,RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient)')
+  - [#ctor(connectorManager,connectorSecretAction,secretDecryptor)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-ContentManager-IConnectorSecretAction,RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler.#ctor(RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.ContentManager.IConnectorSecretAction,RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor)')
   - [CONNECTOR_SECRET_NOTIFICATION_TYPE](#F-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-CONNECTOR_SECRET_NOTIFICATION_TYPE 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler.CONNECTOR_SECRET_NOTIFICATION_TYPE')
   - [NotificationType](#P-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-NotificationType 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler.NotificationType')
-  - [DecryptSecret(secret,connectorConfig)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-DecryptSecret-RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret,RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler.DecryptSecret(RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret,RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel)')
   - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorSecretHandler.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
 - [ContentRegistrationHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ContentRegistrationHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ContentRegistrationHandler')
   - [#ctor(connectorManager,managedWorkFactory,contentRegistrationRequestAction)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ContentRegistrationHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Work-IManagedWorkFactory,RecordPoint-Connectors-SDK-ContentManager-IContentRegistrationRequestAction- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ContentRegistrationHandler.#ctor(RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Work.IManagedWorkFactory,RecordPoint.Connectors.SDK.ContentManager.IContentRegistrationRequestAction)')
@@ -41,15 +68,15 @@
 - [Extensions](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-Extensions 'RecordPoint.Connectors.SDK.Notifications.Handlers.Extensions')
   - [ContextToList\`\`1(context)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-Extensions-ContextToList``1-System-Object- 'RecordPoint.Connectors.SDK.Notifications.Handlers.Extensions.ContextToList``1(System.Object)')
   - [ContextToObject\`\`1(context)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-Extensions-ContextToObject``1-System-Object- 'RecordPoint.Connectors.SDK.Notifications.Handlers.Extensions.ContextToObject``1(System.Object)')
-- [IR365NotificationClient](#T-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient 'RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient')
-  - [AcknowledgeNotificationAsync(notification,result,message,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient-AcknowledgeNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,RecordPoint-Connectors-SDK-Client-ProcessingResult,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient.AcknowledgeNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,RecordPoint.Connectors.SDK.Client.ProcessingResult,System.String,System.Threading.CancellationToken)')
-  - [GetAllPendingNotifications(cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient-GetAllPendingNotifications-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient.GetAllPendingNotifications(System.Threading.CancellationToken)')
-  - [IsConfigured()](#M-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient-IsConfigured 'RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient.IsConfigured')
+- [IConnectorSecretDecryptor](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor 'RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor')
+  - [DecryptInPlace(secrets,connectorConfig)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor-DecryptInPlace-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret},RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel- 'RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor.DecryptInPlace(System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret},RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel)')
+- [IR365NotificationClient](#T-RecordPoint-Connectors-SDK-Client-IR365NotificationClient 'RecordPoint.Connectors.SDK.Client.IR365NotificationClient')
+  - [AcknowledgeNotificationAsync(notification,result,message,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IR365NotificationClient-AcknowledgeNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,RecordPoint-Connectors-SDK-Client-ProcessingResult,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IR365NotificationClient.AcknowledgeNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,RecordPoint.Connectors.SDK.Client.ProcessingResult,System.String,System.Threading.CancellationToken)')
+  - [GetAllPendingNotifications(cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IR365NotificationClient-GetAllPendingNotifications-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IR365NotificationClient.GetAllPendingNotifications(System.Threading.CancellationToken)')
+  - [IsConfigured()](#M-RecordPoint-Connectors-SDK-Client-IR365NotificationClient-IsConfigured 'RecordPoint.Connectors.SDK.Client.IR365NotificationClient.IsConfigured')
 - [ItemDestroyedHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler')
   - [#ctor(connectorManager,workQueueClient)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler.#ctor(RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Work.IWorkQueueClient)')
   - [ITEM_DESTROYED_NOTIFICATION_TYPE](#F-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-ITEM_DESTROYED_NOTIFICATION_TYPE 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler.ITEM_DESTROYED_NOTIFICATION_TYPE')
-  - [_connectorManager](#F-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-_connectorManager 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler._connectorManager')
-  - [_workQueueClient](#F-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-_workQueueClient 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler._workQueueClient')
   - [NotificationType](#P-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-NotificationType 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler.NotificationType')
   - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
   - [ParseDateTime(dateTime)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-ParseDateTime-System-DateTime- 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler.ParseDateTime(System.DateTime)')
@@ -69,7 +96,10 @@
   - [#ctor()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationPollService-#ctor-RecordPoint-Connectors-SDK-Context-ISystemContext,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Notifications-NotificationsPollerOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,System-IServiceProvider- 'RecordPoint.Connectors.SDK.Notifications.NotificationPollService.#ctor(RecordPoint.Connectors.SDK.Context.ISystemContext,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Notifications.NotificationsPollerOptions},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,System.IServiceProvider)')
   - [ExecuteAsync(stoppingToken)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationPollService-ExecuteAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationPollService.ExecuteAsync(System.Threading.CancellationToken)')
 - [NotificationsBuilderExtensions](#T-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions')
-  - [UseBasePolledNotificationsServices(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseBasePolledNotificationsServices-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UseBasePolledNotificationsServices(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseAsyncNotificationOperation(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseAsyncNotificationOperation-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UseAsyncNotificationOperation(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseNotifications()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseNotifications-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UseNotifications(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseNotifications\`\`1()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseNotifications``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UseNotifications``1(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseNotifications\`\`2()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseNotifications``2-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UseNotifications``2(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UsePolledNotifications(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UsePolledNotifications-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UsePolledNotifications(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UsePolledNotifications\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UsePolledNotifications``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UsePolledNotifications``1(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UsePolledNotifications\`\`2(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UsePolledNotifications``2-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.NotificationsBuilderExtensions.UsePolledNotifications``2(Microsoft.Extensions.Hosting.IHostBuilder)')
@@ -82,7 +112,7 @@
   - [NotificationType](#P-RecordPoint-Connectors-SDK-Notifications-Handlers-PingHandler-NotificationType 'RecordPoint.Connectors.SDK.Notifications.Handlers.PingHandler.NotificationType')
   - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Handlers-PingHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Handlers.PingHandler.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
 - [PollNotificationsOperation](#T-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation')
-  - [#ctor(notificationManager,r365NotificationClient,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-#ctor-RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation.#ctor(RecordPoint.Connectors.SDK.Notifications.INotificationManager,RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
+  - [#ctor(serviceProvider,notificationManager,r365NotificationClient,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Client-IR365NotificationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.Notifications.INotificationManager,RecordPoint.Connectors.SDK.Client.IR365NotificationClient,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
   - [POLL_WORK_TYPE](#F-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-POLL_WORK_TYPE 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation.POLL_WORK_TYPE')
   - [_notificationManager](#F-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-_notificationManager 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation._notificationManager')
   - [_r365NotificationClient](#F-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-_r365NotificationClient 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation._r365NotificationClient')
@@ -91,28 +121,165 @@
   - [GetCustomResultMeasures()](#M-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-GetCustomResultMeasures 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation.GetCustomResultMeasures')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.PollNotificationsOperation.InnerRunAsync(System.Threading.CancellationToken)')
 - [PullNotificationManager](#T-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager 'RecordPoint.Connectors.SDK.Notifications.PullNotificationManager')
-  - [#ctor(r365NotificationClient,notificationStrategies,observabilityScope,telemetryTracker)](#M-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager-#ctor-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient,System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Notifications-INotificationStrategy},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker- 'RecordPoint.Connectors.SDK.Notifications.PullNotificationManager.#ctor(RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient,System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Notifications.INotificationStrategy},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker)')
+  - [#ctor(r365NotificationClient,notificationStrategies,observabilityScope,telemetryTracker)](#M-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager-#ctor-RecordPoint-Connectors-SDK-Client-IR365NotificationClient,System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Notifications-INotificationStrategy},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker- 'RecordPoint.Connectors.SDK.Notifications.PullNotificationManager.#ctor(RecordPoint.Connectors.SDK.Client.IR365NotificationClient,System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Notifications.INotificationStrategy},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker)')
   - [_r365NotificationClient](#F-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager-_r365NotificationClient 'RecordPoint.Connectors.SDK.Notifications.PullNotificationManager._r365NotificationClient')
   - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.PullNotificationManager.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
 - [PushNotificationManager](#T-RecordPoint-Connectors-SDK-Notifications-PushNotificationManager 'RecordPoint.Connectors.SDK.Notifications.PushNotificationManager')
   - [#ctor(notificationStrategies,observabilityScope,telemetryTracker)](#M-RecordPoint-Connectors-SDK-Notifications-PushNotificationManager-#ctor-System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Notifications-INotificationStrategy},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker- 'RecordPoint.Connectors.SDK.Notifications.PushNotificationManager.#ctor(System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Notifications.INotificationStrategy},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker)')
   - [HandleNotificationAsync(notification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-PushNotificationManager-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.PushNotificationManager.HandleNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,System.Threading.CancellationToken)')
 - [R365NotificationClient](#T-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-#ctor-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker- 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient.#ctor(RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker)')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-#ctor-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Notifications-NotificationsPollerOptions},RecordPoint-Connectors-SDK-Notifications-INotificationApiManager- 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient.#ctor(RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Notifications.NotificationsPollerOptions},RecordPoint.Connectors.SDK.Notifications.INotificationApiManager)')
   - [AcknowledgeNotificationAsync(notification,result,message,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-AcknowledgeNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,RecordPoint-Connectors-SDK-Client-ProcessingResult,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient.AcknowledgeNotificationAsync(RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel,RecordPoint.Connectors.SDK.Client.ProcessingResult,System.String,System.Threading.CancellationToken)')
   - [GetAllPendingNotifications(cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-GetAllPendingNotifications-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient.GetAllPendingNotifications(System.Threading.CancellationToken)')
   - [IsConfigured()](#M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-IsConfigured 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient.IsConfigured')
   - [LoadConfiguration()](#M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-LoadConfiguration-System-String- 'RecordPoint.Connectors.SDK.Notifications.R365NotificationClient.LoadConfiguration(System.String)')
-- [WebhookBuilderExtensions](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookBuilderExtensions 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookBuilderExtensions')
-  - [UseWebhookNotifications(hostBuilder)](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookBuilderExtensions-UseWebhookNotifications-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookBuilderExtensions.UseWebhookNotifications(Microsoft.Extensions.Hosting.IHostBuilder)')
 - [WebhookOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation')
-  - [#ctor(notificationManager,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-#ctor-RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.#ctor(RecordPoint.Connectors.SDK.Notifications.INotificationManager,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
+  - [#ctor(serviceProvider,notificationManager,workQueueClient,observabilityScope,telemetryTracker,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.Notifications.INotificationManager,RecordPoint.Connectors.SDK.Work.IWorkQueueClient,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
   - [WEBHOOK_WORK_TYPE](#F-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-WEBHOOK_WORK_TYPE 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.WEBHOOK_WORK_TYPE')
-  - [_notificationManager](#F-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-_notificationManager 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation._notificationManager')
   - [ConnectorNotification](#P-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-ConnectorNotification 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.ConnectorNotification')
   - [WorkType](#P-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-WorkType 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.WorkType')
   - [GetCustomKeyDimensions()](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-GetCustomKeyDimensions 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.GetCustomKeyDimensions')
   - [InnerRunAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-InnerRunAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation.InnerRunAsync(System.Threading.CancellationToken)')
+
+<a name='T-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation'></a>
+## AsyncNotificationOperation `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications.Webhook
+
+##### Summary
+
+Queueable work operation that replays notification handling outside of the webhook request path.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| serviceProvider | [T:RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation](#T-T-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation 'T:RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation') | The service provider. |
+
+##### Remarks
+
+Initializes a new instance of the [AsyncNotificationOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation') class.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
+### #ctor(serviceProvider,notificationManager,systemContext,observabilityScope,telemetryTracker,dateTimeProvider) `constructor`
+
+##### Summary
+
+Queueable work operation that replays notification handling outside of the webhook request path.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') | The service provider. |
+| notificationManager | [RecordPoint.Connectors.SDK.Notifications.INotificationManager](#T-RecordPoint-Connectors-SDK-Notifications-INotificationManager 'RecordPoint.Connectors.SDK.Notifications.INotificationManager') | The notification manager. |
+| systemContext | [RecordPoint.Connectors.SDK.Context.ISystemContext](#T-RecordPoint-Connectors-SDK-Context-ISystemContext 'RecordPoint.Connectors.SDK.Context.ISystemContext') | The system context. |
+| observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The scope manager. |
+| telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
+| dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
+
+##### Remarks
+
+Initializes a new instance of the [AsyncNotificationOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.AsyncNotificationOperation') class.
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-WORK_TYPE'></a>
+### WORK_TYPE `constants`
+
+##### Summary
+
+Async notifications work type.
+
+<a name='P-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-ServiceName'></a>
+### ServiceName `property`
+
+##### Summary
+
+Gets the service name.
+
+<a name='P-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-WorkType'></a>
+### WorkType `property`
+
+##### Summary
+
+Gets the work type.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-GetCustomKeyDimensions'></a>
+### GetCustomKeyDimensions() `method`
+
+##### Summary
+
+Get custom key dimensions.
+
+##### Returns
+
+A Dimensions
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-InnerDispose'></a>
+### InnerDispose() `method`
+
+##### Summary
+
+Dispose invocation results
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-AsyncNotificationOperation-InnerRunAsync-System-Threading-CancellationToken-'></a>
+### InnerRunAsync(cancellationToken) `method`
+
+##### Summary
+
+Processes a notification that was previously accepted by the webhook and dispatched to the
+async notifications queue. This executes the normal notification handling pipeline after the
+original HTTP request has already completed.
+
+##### Returns
+
+A Task
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') |  |
+
+<a name='T-RecordPoint-Connectors-SDK-Notifications-AsyncNotifications'></a>
+## AsyncNotifications `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications
+
+##### Summary
+
+Configuration for notification types that should be routed to the async notifications queue.
+By default, all notification types are processed synchronously in the webhook request path.
+Add a notification type to this list only after the connector has registered
+`UseAsyncNotificationOperation()` and the underlying work queue for
+`AsyncNotificationOperation.WORK_TYPE` is available in the deployment environment.
+
+<a name='P-RecordPoint-Connectors-SDK-Notifications-AsyncNotifications-NotificationTypes'></a>
+### NotificationTypes `property`
+
+##### Summary
+
+List of notification types that should be processed asynchronously.
+For Azure Service Bus, the queue name is derived from the work type using the standard SDK rule:
+`{QueuePrefix}-async-notifications` when `AzureServiceBusSettings:QueuePrefix` is configured,
+otherwise `async-notifications`. The queue name is lower-case with spaces replaced by hyphens.
 
 <a name='T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorConfigBuilderExtensions'></a>
 ## ConnectorConfigBuilderExtensions `type`
@@ -406,6 +573,248 @@ Task<NotificationOutcome>
 | notification | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel') | The notification. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
+<a name='T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestBuilderExtensions'></a>
+## ConnectorRequestBuilderExtensions `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications.Handlers
+
+##### Summary
+
+Host builder extensions for answering connector requests.
+
+##### Remarks
+
+Registered as an INotificationStrategy, so webhook and polled both pick it up.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestBuilderExtensions-AddConnectorRequestHandler``1-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### AddConnectorRequestHandler\`\`1(hostBuilder) `method`
+
+##### Summary
+
+Registers one request handler. Call once per request type answered.
+
+##### Returns
+
+Updated host builder.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | Host builder to configure. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| THandler | The handler to register. |
+
+##### Remarks
+
+Also enables connector requests. Two for one type is allowed; the last wins.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestBuilderExtensions-UseConnectorRequestHandlers-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseConnectorRequestHandlers(hostBuilder) `method`
+
+##### Summary
+
+Enables connector requests. Add handlers with AddConnectorRequestHandler.
+
+##### Returns
+
+Updated host builder.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | Host builder to configure. |
+
+##### Remarks
+
+Safe to call twice: two entries for one notification type would break dispatch.
+
+<a name='T-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient'></a>
+## ConnectorRequestCallbackClient `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications
+
+##### Summary
+
+Returns a connector's answer by posting it to the Connector API, authenticated as the connector.
+
+##### Remarks
+
+Shaped like NotificationApiManager.DisposalCallback: the caller supplies auth and retry.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-#ctor-RecordPoint-Connectors-SDK-Client-IApiClientFactory,RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope-'></a>
+### #ctor(apiClientFactory,configurationClient,observabilityScope) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| apiClientFactory | [RecordPoint.Connectors.SDK.Client.IApiClientFactory](#T-RecordPoint-Connectors-SDK-Client-IApiClientFactory 'RecordPoint.Connectors.SDK.Client.IApiClientFactory') | Supplies the API client and the authentication provider. |
+| configurationClient | [RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient](#T-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient 'RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient') | Supplies the Connector API address and credentials. |
+| observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | Wraps the call for telemetry, as the other clients do. |
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-MaxRetryAttempts'></a>
+### MaxRetryAttempts `constants`
+
+##### Summary
+
+Attempts before an answer is given up on, matching the other API clients.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-SendAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel,RecordPoint-Connectors-SDK-Requests-ConnectorRequestResponse,System-Threading-CancellationToken-'></a>
+### SendAsync() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-ConnectorRequestCallbackClient-ToNewtonsoftReadable-System-Object-'></a>
+### ToNewtonsoftReadable() `method`
+
+##### Summary
+
+Puts an answer's data into a form the generated client can serialise.
+
+##### Parameters
+
+This method has no parameters.
+
+##### Remarks
+
+Newtonsoft renders a JsonElement as an empty object, so a relayed payload is re-read.
+
+<a name='T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler'></a>
+## ConnectorRequestHandler `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications.Handlers
+
+##### Summary
+
+Reads a ConnectorRequest notification, dispatches it, and returns the answer to the platform.
+
+##### Remarks
+
+One notification type for every request type, so a new one needs no transport change.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-#ctor-System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Requests-IConnectorRequestHandler},RecordPoint-Connectors-SDK-Requests-IConnectorRequestCallbackClient,RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor,Microsoft-Extensions-Logging-ILogger{RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler}-'></a>
+### #ctor(handlers,callbackClient,secretDecryptor,logger) `constructor`
+
+##### Summary
+
+Handles the connector request notification.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| handlers | [System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Requests.IConnectorRequestHandler}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IEnumerable 'System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Requests.IConnectorRequestHandler}') | The request handlers this connector registered, one per request type. |
+| callbackClient | [RecordPoint.Connectors.SDK.Requests.IConnectorRequestCallbackClient](#T-RecordPoint-Connectors-SDK-Requests-IConnectorRequestCallbackClient 'RecordPoint.Connectors.SDK.Requests.IConnectorRequestCallbackClient') | Returns the answer to the platform. |
+| secretDecryptor | [RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor 'RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor') | Decrypts the request's secrets before a handler sees them. |
+| logger | [Microsoft.Extensions.Logging.ILogger{RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler}](#T-Microsoft-Extensions-Logging-ILogger{RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler} 'Microsoft.Extensions.Logging.ILogger{RecordPoint.Connectors.SDK.Notifications.Handlers.ConnectorRequestHandler}') | Logger. |
+
+<a name='F-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-CONNECTOR_REQUEST_NOTIFICATION_TYPE'></a>
+### CONNECTOR_REQUEST_NOTIFICATION_TYPE `constants`
+
+##### Summary
+
+Connector Request Notification Type
+
+<a name='P-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-NotificationType'></a>
+### NotificationType `property`
+
+##### Summary
+
+Connector Request Notification Type
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken-'></a>
+### HandleNotificationAsync(notification,cancellationToken) `method`
+
+##### Summary
+
+Answers the request carried on the notification.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| notification | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel') | The notification, carrying the request envelope as its context. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token. |
+
+##### Remarks
+
+OK whenever an answer was sent, even a failed one. Neither causes redelivery.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorRequestHandler-TryDecryptSecrets-RecordPoint-Connectors-SDK-Requests-ConnectorRequestEnvelope,RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel-'></a>
+### TryDecryptSecrets() `method`
+
+##### Summary
+
+Turns the request's secrets into values a handler can use.
+
+##### Returns
+
+False when they could not be read, so the request is answered as failed.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor'></a>
+## ConnectorSecretDecryptor `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications.Handlers
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor-#ctor-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient-'></a>
+### #ctor(configurationClient) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| configurationClient | [RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient](#T-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient 'RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient') | Supplies the client id and secret the key derives from. |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor-Decrypt-System-String,System-Byte[],System-Byte[]-'></a>
+### Decrypt() `method`
+
+##### Parameters
+
+This method has no parameters.
+
+##### Remarks
+
+One decryptor per secret: CBC carries state, so a reused one returns rubbish.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretDecryptor-DecryptInPlace-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret},RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel-'></a>
+### DecryptInPlace() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler'></a>
 ## ConnectorSecretHandler `type`
 
@@ -417,8 +826,8 @@ RecordPoint.Connectors.SDK.Notifications.Handlers
 
 Handler for a connector secret notification
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-ContentManager-IConnectorSecretAction,RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient-'></a>
-### #ctor(connectorManager,connectorSecretAction,configurationClient) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-ContentManager-IConnectorSecretAction,RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor-'></a>
+### #ctor(connectorManager,connectorSecretAction,secretDecryptor) `constructor`
 
 ##### Summary
 
@@ -430,7 +839,7 @@ Handler for a connector secret notification
 | ---- | ---- | ----------- |
 | connectorManager | [RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager](#T-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager 'RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager') |  |
 | connectorSecretAction | [RecordPoint.Connectors.SDK.ContentManager.IConnectorSecretAction](#T-RecordPoint-Connectors-SDK-ContentManager-IConnectorSecretAction 'RecordPoint.Connectors.SDK.ContentManager.IConnectorSecretAction') |  |
-| configurationClient | [RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient](#T-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient 'RecordPoint.Connectors.SDK.Configuration.IR365ConfigurationClient') |  |
+| secretDecryptor | [RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor 'RecordPoint.Connectors.SDK.Notifications.Handlers.IConnectorSecretDecryptor') |  |
 
 <a name='F-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-CONNECTOR_SECRET_NOTIFICATION_TYPE'></a>
 ### CONNECTOR_SECRET_NOTIFICATION_TYPE `constants`
@@ -445,31 +854,6 @@ Connector Secret Notification Type
 ##### Summary
 
 Connector Secret Notification Type
-
-<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-DecryptSecret-RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret,RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel-'></a>
-### DecryptSecret(secret,connectorConfig) `method`
-
-##### Summary
-
-Decrypt secret from notification using ClientSecret as Key and ClientId as IV for AES algorithm.
-Expects secret to be a Base64String for easy translation to byte array.
-
-##### Returns
-
-decrypted secret value.
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| secret | [RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret](#T-RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret 'RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret') | Base64string to decrypt. |
-| connectorConfig | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') | Connector Config the notification belongs to. |
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [RecordPoint.Connectors.SDK.RequiredValueNullException](#T-RecordPoint-Connectors-SDK-RequiredValueNullException 'RecordPoint.Connectors.SDK.RequiredValueNullException') |  |
 
 <a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ConnectorSecretHandler-HandleNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,System-Threading-CancellationToken-'></a>
 ### HandleNotificationAsync(notification,cancellationToken) `method`
@@ -616,18 +1000,43 @@ Returns a deserialized object from the context of a notification.
 | ---- | ----------- |
 | [System.ArgumentException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentException 'System.ArgumentException') |  |
 
-<a name='T-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient'></a>
+<a name='T-RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor'></a>
+## IConnectorSecretDecryptor `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Notifications.Handlers
+
+##### Summary
+
+Decrypts platform secrets, whether they arrive on a notification or a request.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-IConnectorSecretDecryptor-DecryptInPlace-System-Collections-Generic-IList{RecordPoint-Connectors-SDK-Abstractions-Content-ConnectorSecret},RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel-'></a>
+### DecryptInPlace(secrets,connectorConfig) `method`
+
+##### Summary
+
+Replaces each secret's value with its decrypted form, in place.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| secrets | [System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IList 'System.Collections.Generic.IList{RecordPoint.Connectors.SDK.Abstractions.Content.ConnectorSecret}') | The secrets to decrypt. Null or empty is a no-op. |
+| connectorConfig | [RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorConfigModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorConfigModel') | The configuration whose credentials supply the key. |
+
+<a name='T-RecordPoint-Connectors-SDK-Client-IR365NotificationClient'></a>
 ## IR365NotificationClient `type`
 
 ##### Namespace
 
-RecordPoint.Connectors.SDK.Notifications
+RecordPoint.Connectors.SDK.Client
 
 ##### Summary
 
-Provides access to R365
+Provides access to R365's Notification APIs.
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient-AcknowledgeNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,RecordPoint-Connectors-SDK-Client-ProcessingResult,System-String,System-Threading-CancellationToken-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-IR365NotificationClient-AcknowledgeNotificationAsync-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel,RecordPoint-Connectors-SDK-Client-ProcessingResult,System-String,System-Threading-CancellationToken-'></a>
 ### AcknowledgeNotificationAsync(notification,result,message,cancellationToken) `method`
 
 ##### Summary
@@ -647,7 +1056,7 @@ Acknowledges a Notification from R365
 | message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient-GetAllPendingNotifications-System-Threading-CancellationToken-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-IR365NotificationClient-GetAllPendingNotifications-System-Threading-CancellationToken-'></a>
 ### GetAllPendingNotifications(cancellationToken) `method`
 
 ##### Summary
@@ -656,7 +1065,7 @@ Get Pending Notifications. Only supported for On-prem version. Cloud versions sh
 
 ##### Returns
 
-
+Returns all the pull notifications for a configured connector types for a tenant
 
 ##### Parameters
 
@@ -664,7 +1073,7 @@ Get Pending Notifications. Only supported for On-prem version. Cloud versions sh
 | ---- | ---- | ----------- |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient-IsConfigured'></a>
+<a name='M-RecordPoint-Connectors-SDK-Client-IR365NotificationClient-IsConfigured'></a>
 ### IsConfigured() `method`
 
 ##### Summary
@@ -694,12 +1103,22 @@ RecordPoint.Connectors.SDK.Notifications.Handlers
 
 The item destroyed handler.
 
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| connectorManager | [T:RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler](#T-T-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler 'T:RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler') | The connector manager. |
+
+##### Remarks
+
+Initializes a new instance of the [ItemDestroyedHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler') class.
+
 <a name='M-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-#ctor-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient-'></a>
 ### #ctor(connectorManager,workQueueClient) `constructor`
 
 ##### Summary
 
-Initializes a new instance of the [ItemDestroyedHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler') class.
+The item destroyed handler.
 
 ##### Parameters
 
@@ -708,26 +1127,16 @@ Initializes a new instance of the [ItemDestroyedHandler](#T-RecordPoint-Connecto
 | connectorManager | [RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager](#T-RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager 'RecordPoint.Connectors.SDK.Connectors.IConnectorConfigurationManager') | The connector manager. |
 | workQueueClient | [RecordPoint.Connectors.SDK.Work.IWorkQueueClient](#T-RecordPoint-Connectors-SDK-Work-IWorkQueueClient 'RecordPoint.Connectors.SDK.Work.IWorkQueueClient') | The work queue client. |
 
+##### Remarks
+
+Initializes a new instance of the [ItemDestroyedHandler](#T-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler 'RecordPoint.Connectors.SDK.Notifications.Handlers.ItemDestroyedHandler') class.
+
 <a name='F-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-ITEM_DESTROYED_NOTIFICATION_TYPE'></a>
 ### ITEM_DESTROYED_NOTIFICATION_TYPE `constants`
 
 ##### Summary
 
 The ITEM DESTROYED NOTIFICATION TYPE.
-
-<a name='F-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-_connectorManager'></a>
-### _connectorManager `constants`
-
-##### Summary
-
-The connector manager.
-
-<a name='F-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-_workQueueClient'></a>
-### _workQueueClient `constants`
-
-##### Summary
-
-Work queue client.
 
 <a name='P-RecordPoint-Connectors-SDK-Notifications-Handlers-ItemDestroyedHandler-NotificationType'></a>
 ### NotificationType `property`
@@ -978,22 +1387,61 @@ RecordPoint.Connectors.SDK.Notifications
 
 Notifications host builder extensions
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseBasePolledNotificationsServices-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
-### UseBasePolledNotificationsServices(hostBuilder) `method`
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseAsyncNotificationOperation-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseAsyncNotificationOperation(hostBuilder) `method`
 
 ##### Summary
 
-Configure the base services for Polled Notifications
+Use asynchronous notification processing operation.
 
 ##### Returns
 
-
+An IHostBuilder
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') |  |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseNotifications-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseNotifications() `method`
+
+##### Summary
+
+Registers the notifications components for the Connector.
+An environment variable 'UsePolledNotifications' can be set with a value of 'true' to enable Poll based notifications
+Otherwise the Webhook based notifications will be registered.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseNotifications``1-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseNotifications\`\`1() `method`
+
+##### Summary
+
+Registers the notifications components for the Connector.
+An environment variable 'UsePolledNotifications' can be set with a value of 'true' to enable Poll based notifications
+Otherwise the Webhook based notifications will be registered.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UseNotifications``2-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseNotifications\`\`2() `method`
+
+##### Summary
+
+Registers the notifications components for the Connector.
+An environment variable 'UsePolledNotifications' can be set with a value of 'true' to enable Poll based notifications
+Otherwise the Webhook based notifications will be registered.
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationsBuilderExtensions-UsePolledNotifications-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
 ### UsePolledNotifications(hostBuilder) `method`
@@ -1162,10 +1610,10 @@ RecordPoint.Connectors.SDK.Notifications
 
 ##### Summary
 
-The poll notifications operation.
+The poll (pull) notifications operation.
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-#ctor-RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
-### #ctor(notificationManager,r365NotificationClient,observabilityScope,telemetryTracker,dateTimeProvider) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-Notifications-PollNotificationsOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Client-IR365NotificationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
+### #ctor(serviceProvider,notificationManager,r365NotificationClient,observabilityScope,telemetryTracker,dateTimeProvider) `constructor`
 
 ##### Summary
 
@@ -1175,8 +1623,9 @@ Initializes a new instance of the [PollNotificationsOperation](#T-RecordPoint-Co
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') | The service provider. |
 | notificationManager | [RecordPoint.Connectors.SDK.Notifications.INotificationManager](#T-RecordPoint-Connectors-SDK-Notifications-INotificationManager 'RecordPoint.Connectors.SDK.Notifications.INotificationManager') | The notification manager. |
-| r365NotificationClient | [RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient](#T-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient 'RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient') | The r365 notification client. |
+| r365NotificationClient | [RecordPoint.Connectors.SDK.Client.IR365NotificationClient](#T-RecordPoint-Connectors-SDK-Client-IR365NotificationClient 'RecordPoint.Connectors.SDK.Client.IR365NotificationClient') | The r365 notification client. |
 | observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The scope manager. |
 | telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
 | dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
@@ -1259,7 +1708,7 @@ RecordPoint.Connectors.SDK.Notifications
 
 Notifications manager that switches on the WorkType and kicks off the correct work item
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager-#ctor-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient,System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Notifications-INotificationStrategy},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Notifications-PullNotificationManager-#ctor-RecordPoint-Connectors-SDK-Client-IR365NotificationClient,System-Collections-Generic-IEnumerable{RecordPoint-Connectors-SDK-Notifications-INotificationStrategy},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker-'></a>
 ### #ctor(r365NotificationClient,notificationStrategies,observabilityScope,telemetryTracker) `constructor`
 
 ##### Summary
@@ -1270,7 +1719,7 @@ Notifications manager that switches on the WorkType and kicks off the correct wo
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| r365NotificationClient | [RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient](#T-RecordPoint-Connectors-SDK-Notifications-IR365NotificationClient 'RecordPoint.Connectors.SDK.Notifications.IR365NotificationClient') |  |
+| r365NotificationClient | [RecordPoint.Connectors.SDK.Client.IR365NotificationClient](#T-RecordPoint-Connectors-SDK-Client-IR365NotificationClient 'RecordPoint.Connectors.SDK.Client.IR365NotificationClient') |  |
 | notificationStrategies | [System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Notifications.INotificationStrategy}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IEnumerable 'System.Collections.Generic.IEnumerable{RecordPoint.Connectors.SDK.Notifications.INotificationStrategy}') |  |
 | observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') |  |
 | telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') |  |
@@ -1353,9 +1802,9 @@ RecordPoint.Connectors.SDK.Notifications
 
 ##### Summary
 
-R365 Standard Client
+R365 standard Notifications client.
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-#ctor-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Connectors-IConnectorConfigurationManager,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Notifications-R365NotificationClient-#ctor-RecordPoint-Connectors-SDK-Configuration-IR365ConfigurationClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Notifications-NotificationsPollerOptions},RecordPoint-Connectors-SDK-Notifications-INotificationApiManager-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -1391,7 +1840,7 @@ This constructor has no parameters.
 
 ##### Summary
 
-Returns all the pull notifications for a tenant
+Returns all the pull notifications for a configured connector types for a tenant
 
 ##### Returns
 
@@ -1429,34 +1878,6 @@ Ensure configuration is loaded
 
 This method has no parameters.
 
-<a name='T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookBuilderExtensions'></a>
-## WebhookBuilderExtensions `type`
-
-##### Namespace
-
-RecordPoint.Connectors.SDK.Notifications.Webhook
-
-##### Summary
-
-The webhook builder extensions.
-
-<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookBuilderExtensions-UseWebhookNotifications-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
-### UseWebhookNotifications(hostBuilder) `method`
-
-##### Summary
-
-Use webhook notifications.
-
-##### Returns
-
-An IHostBuilder
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
-
 <a name='T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation'></a>
 ## WebhookOperation `type`
 
@@ -1468,21 +1889,37 @@ RecordPoint.Connectors.SDK.Notifications.Webhook
 
 The webhook operation.
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-#ctor-RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
-### #ctor(notificationManager,observabilityScope,telemetryTracker,dateTimeProvider) `constructor`
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| serviceProvider | [T:RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation](#T-T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation 'T:RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation') | The service provider. |
+
+##### Remarks
+
+Initializes a new instance of the [WebhookOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation') class.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Notifications-INotificationManager,RecordPoint-Connectors-SDK-Work-IWorkQueueClient,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
+### #ctor(serviceProvider,notificationManager,workQueueClient,observabilityScope,telemetryTracker,dateTimeProvider) `constructor`
 
 ##### Summary
 
-Initializes a new instance of the [WebhookOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation') class.
+The webhook operation.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') | The service provider. |
 | notificationManager | [RecordPoint.Connectors.SDK.Notifications.INotificationManager](#T-RecordPoint-Connectors-SDK-Notifications-INotificationManager 'RecordPoint.Connectors.SDK.Notifications.INotificationManager') | The notification manager. |
+| workQueueClient | [RecordPoint.Connectors.SDK.Work.IWorkQueueClient](#T-RecordPoint-Connectors-SDK-Work-IWorkQueueClient 'RecordPoint.Connectors.SDK.Work.IWorkQueueClient') | The work queue client. |
 | observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The scope manager. |
 | telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
 | dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
+
+##### Remarks
+
+Initializes a new instance of the [WebhookOperation](#T-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation 'RecordPoint.Connectors.SDK.Notifications.Webhook.WebhookOperation') class.
 
 <a name='F-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-WEBHOOK_WORK_TYPE'></a>
 ### WEBHOOK_WORK_TYPE `constants`
@@ -1490,13 +1927,6 @@ Initializes a new instance of the [WebhookOperation](#T-RecordPoint-Connectors-S
 ##### Summary
 
 The WEBHOOK WORK TYPE.
-
-<a name='F-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-_notificationManager'></a>
-### _notificationManager `constants`
-
-##### Summary
-
-The notification manager.
 
 <a name='P-RecordPoint-Connectors-SDK-Notifications-Webhook-WebhookOperation-ConnectorNotification'></a>
 ### ConnectorNotification `property`

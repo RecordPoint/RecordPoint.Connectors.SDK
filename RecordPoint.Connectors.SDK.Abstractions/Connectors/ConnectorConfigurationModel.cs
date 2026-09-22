@@ -39,8 +39,18 @@ namespace RecordPoint.Connectors.SDK.Connectors
         public string Data { get; set; } = string.Empty;
 
         /// <summary>
-        /// The location that generated reports are uploaded
+        /// The Id of the Channel Discovery Work Item
         /// </summary>
-        public string ReportLocation { get; set; } = string.Empty;
+        public string? ChannelDiscoveryWorkId { get; set; } = null;
+
+        /// <summary>
+        /// The time when Channel Discovery was last enqueued for this connector
+        /// </summary>
+        public DateTimeOffset? ChannelDiscoveryEnqueuedDate { get; set; } = null;
+
+        /// <summary>
+        /// The time when Channel Discovery was last executed for this connector
+        /// </summary>
+        public DateTimeOffset? ChannelDiscoveryExecutedDate { get; set; } = null;
     }
 }

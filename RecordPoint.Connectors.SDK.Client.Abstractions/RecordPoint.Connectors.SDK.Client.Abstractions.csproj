@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -16,9 +16,11 @@
 		<Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.24.0" />
-		<PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
-		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
+		<PackageReference Include="Azure.Core" Version="1.61.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.29.1" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.87.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="10.0.400">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using Moq;
 using RecordPoint.Connectors.SDK.Health;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace RecordPoint.Connectors.SDK.Test.Health
         public async Task CheckIsReadyAsync_NoHealthCheckResult_ShouldBeNotReady()
         {
             var isReady = await _sut.CheckIsReadyAsync();
-            isReady.Should().BeFalse();
+            Assert.False(isReady);
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace RecordPoint.Connectors.SDK.Test.Health
 
             var isReady = await _sut.CheckIsReadyAsync();
 
-            isReady.Should().BeTrue();
+            Assert.True(isReady);
         }
     }
 }

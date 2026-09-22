@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RecordPoint.Connectors.SDK.Context;
 
@@ -128,10 +129,10 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         public virtual string GetConnectionString() => $"Server = {GetSqlServer()};Integrated Security=true; AttachDBFilename = {GetDatabasePath()}";
 
         /// <summary>
-        /// 
+        /// Creates or attaches the LocalDB database and applies pending migrations.
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        [ExcludeFromCodeCoverage(Justification = "Requires a live SQL Server LocalDB instance; not exercisable offline in CI.")]
         public async Task PrepareAsync(CancellationToken cancellationToken)
         {
             // Make sure the data directory exists
@@ -147,6 +148,7 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         /// Database cleanup
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
+        [ExcludeFromCodeCoverage(Justification = "Delegates to DetachAsync which requires a live SQL Server LocalDB instance; not exercisable offline in CI.")]
         public Task CleanupAsync(CancellationToken cancellationToken)
         {
             return DetachAsync(cancellationToken);
@@ -163,10 +165,9 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         }
 
         /// <summary>
-        /// 
+        /// Deletes the LocalDB database file from disk.
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="cancellationToken">Cancellation token.</param>
         public Task RemoveAsync(CancellationToken cancellationToken)
         {
             File.Delete(GetDatabasePath());
@@ -174,9 +175,9 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         }
 
         /// <summary>
-        /// 
+        /// Creates a configured <see cref="DbContextOptionsBuilder{TContext}"/> for the LocalDB database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A configured options builder.</returns>
         public virtual DbContextOptionsBuilder<TDbContext> GetContextOptionsBuilder()
         {
             var builder = new DbContextOptionsBuilder<TDbContext>()
@@ -219,9 +220,9 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         public abstract TDbContext CreateDbContext();
 
         /// <summary>
-        /// Get the external system name
+        /// Gets the external system name for this database provider.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The external system name.</returns>
         public virtual string GetExternalSystemName()
         {
             return LOCALDB_SYSTEM_NAME;
@@ -232,6 +233,7 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
 
+        [ExcludeFromCodeCoverage(Justification = "Opens a real SQL Server LocalDB connection; not exercisable offline in CI.")]
         public async Task AttachAsync(CancellationToken cancellationToken)
         {
             var dataFileExists = File.Exists(GetDatabasePath());
@@ -256,6 +258,7 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         /// Detach the database from the local db server
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
+        [ExcludeFromCodeCoverage(Justification = "Opens a real SQL Server LocalDB connection; not exercisable offline in CI.")]
         public async Task DetachAsync(CancellationToken cancellationToken)
         {
             using var connection = new SqlConnection(GetSqlServerConnectionString());
@@ -272,12 +275,12 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb
         }
 
         /// <summary>
-        /// 
+        /// Loads an embedded SQL script and applies placeholder replacements.
         /// </summary>
-        /// <param name="scriptName"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        /// <exception cref="RequiredValueNullException"></exception>
+        /// <param name="scriptName">The embedded script file name suffix to locate.</param>
+        /// <param name="parameters">Key/value replacements for script placeholders.</param>
+        /// <returns>The SQL script with placeholders resolved.</returns>
+        /// <exception cref="RequiredValueNullException">Thrown when the embedded script stream cannot be loaded.</exception>
         public string GetSqlDatabaseScript(string scriptName, Dictionary<string, string> parameters)
         {
             var scriptAssembly = typeof(LocalDbDatabaseProvider<TDbContext>).Assembly;

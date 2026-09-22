@@ -246,5 +246,72 @@ namespace RecordPoint.Connectors.SDK.Databases.Test.Content
             using var dbContext = databaseProvider.CreateDbContext();
             Assert.Equal(0, dbContext.Aggregations.Count());
         }
+
+        [Fact]
+        public async Task DatabaseAggregationManager_CanGet_AggregationsForConnector()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            await StartSutAsync();
+            var aggregationManager = Services.GetRequiredService<IAggregationManager>();
+
+            var connectorId = Guid.NewGuid().ToString();
+            await aggregationManager.UpsertAggregationAsync(CreateAggregationModel(connectorId), cancellationToken);
+            await aggregationManager.UpsertAggregationAsync(CreateAggregationModel(connectorId), cancellationToken);
+            await aggregationManager.UpsertAggregationAsync(CreateAggregationModel(), cancellationToken);
+
+            var aggregations = await aggregationManager.GetAggregationsAsync(connectorId, cancellationToken);
+
+            Assert.Equal(2, aggregations.Count);
+            Assert.All(aggregations, a => Assert.Equal(connectorId, a.ConnectorId));
+        }
+
+        [Fact]
+        public async Task DatabaseAggregationManager_CanGet_AggregationsByPredicate()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            await StartSutAsync();
+            var aggregationManager = Services.GetRequiredService<IAggregationManager>();
+
+            var target = CreateAggregationModel();
+            await aggregationManager.UpsertAggregationAsync(target, cancellationToken);
+            await aggregationManager.UpsertAggregationAsync(CreateAggregationModel(), cancellationToken);
+
+            var aggregations = await aggregationManager.GetAggregationsAsync(
+                a => a.ExternalId == target.ExternalId, cancellationToken);
+
+            Assert.Single(aggregations);
+            Assert.Equal(target.ExternalId, aggregations[0].ExternalId);
+        }
+
+        [Fact]
+        public async Task DatabaseAggregationManager_CanRemove_AggregationsByModels()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            await StartSutAsync();
+            var aggregationManager = Services.GetRequiredService<IAggregationManager>();
+            var databaseProvider = Services.GetRequiredService<IConnectorDatabaseProvider>();
+
+            var connector1 = Guid.NewGuid().ToString();
+            var connector2 = Guid.NewGuid().ToString();
+            var toRemove = new List<AggregationModel>
+            {
+                CreateAggregationModel(connector1),
+                CreateAggregationModel(connector1),
+                CreateAggregationModel(connector2)
+            };
+            var toKeep = CreateAggregationModel(connector1);
+
+            await aggregationManager.UpsertAggregationsAsync(toRemove, cancellationToken);
+            await aggregationManager.UpsertAggregationAsync(toKeep, cancellationToken);
+
+            await aggregationManager.RemoveAggregationsAsync(toRemove, cancellationToken);
+
+            using var dbContext = databaseProvider.CreateDbContext();
+            Assert.Equal(1, dbContext.Aggregations.Count());
+            Assert.Equal(toKeep.ExternalId, dbContext.Aggregations.Single().ExternalId);
+        }
     }
 }

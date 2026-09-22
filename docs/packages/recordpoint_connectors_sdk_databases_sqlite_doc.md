@@ -3,6 +3,14 @@
 
 ## Contents
 
+- [AddChannelDiscoveryWorkId](#T-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.AddChannelDiscoveryWorkId')
+  - [BuildTargetModel()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder- 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.AddChannelDiscoveryWorkId.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)')
+  - [Down()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.AddChannelDiscoveryWorkId.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
+  - [Up()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.AddChannelDiscoveryWorkId.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
+- [ConnectorConfigUpdate](#T-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.ConnectorConfigUpdate')
+  - [BuildTargetModel()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder- 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.ConnectorConfigUpdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)')
+  - [Down()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.ConnectorConfigUpdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
+  - [Up()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations.ConnectorConfigUpdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
 - [DesignTimeDbContextFactory](#T-RecordPoint-Connectors-SDK-Databases-Sqlite-DesignTimeDbContextFactory 'RecordPoint.Connectors.SDK.Databases.Sqlite.DesignTimeDbContextFactory')
   - [CreateDbContext(args)](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-DesignTimeDbContextFactory-CreateDbContext-System-String[]- 'RecordPoint.Connectors.SDK.Databases.Sqlite.DesignTimeDbContextFactory.CreateDbContext(System.String[])')
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-DesignTimeDbContextFactory-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.Sqlite.DesignTimeDbContextFactory.GetContextOptionsBuilder')
@@ -44,6 +52,94 @@
   - [ReadyAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-SqliteDatabaseProvider`1-ReadyAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Sqlite.SqliteDatabaseProvider`1.ReadyAsync(System.Threading.CancellationToken)')
   - [RemoveAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-SqliteDatabaseProvider`1-RemoveAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Sqlite.SqliteDatabaseProvider`1.RemoveAsync(System.Threading.CancellationToken)')
   - [SetReady(exception)](#M-RecordPoint-Connectors-SDK-Databases-Sqlite-SqliteDatabaseProvider`1-SetReady-System-Exception- 'RecordPoint.Connectors.SDK.Databases.Sqlite.SqliteDatabaseProvider`1.SetReady(System.Exception)')
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId'></a>
+## AddChannelDiscoveryWorkId `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder-'></a>
+### BuildTargetModel() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Down() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-AddChannelDiscoveryWorkId-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Up() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate'></a>
+## ConnectorConfigUpdate `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.Sqlite.Migrations
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder-'></a>
+### BuildTargetModel() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Down() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Sqlite-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Up() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-Databases-Sqlite-DesignTimeDbContextFactory'></a>
 ## DesignTimeDbContextFactory `type`

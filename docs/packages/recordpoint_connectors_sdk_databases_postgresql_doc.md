@@ -3,6 +3,10 @@
 
 ## Contents
 
+- [ConnectorConfigUpdate](#T-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate 'RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations.ConnectorConfigUpdate')
+  - [BuildTargetModel()](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations.ConnectorConfigUpdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)')
+  - [Down()](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations.ConnectorConfigUpdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
+  - [Up()](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations.ConnectorConfigUpdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
 - [DesignTimeDbContextFactory](#T-RecordPoint-Connectors-SDK-Databases-PostgreSql-DesignTimeDbContextFactory 'RecordPoint.Connectors.SDK.Databases.PostgreSql.DesignTimeDbContextFactory')
   - [CreateDbContext(args)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-DesignTimeDbContextFactory-CreateDbContext-System-String[]- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.DesignTimeDbContextFactory.CreateDbContext(System.String[])')
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-DesignTimeDbContextFactory-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.PostgreSql.DesignTimeDbContextFactory.GetContextOptionsBuilder')
@@ -41,11 +45,55 @@
   - [SQL_CREATE_SCHEMA_SCRIPT](#F-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-SQL_CREATE_SCHEMA_SCRIPT 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.SQL_CREATE_SCHEMA_SCRIPT')
   - [_connectionFactory](#F-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-_connectionFactory 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1._connectionFactory')
   - [CheckDatabaseExists(cancellationToken)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-CheckDatabaseExists-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.CheckDatabaseExists(System.Threading.CancellationToken)')
-  - [CreateSchema(schemaName,connection)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-CreateSchema-System-String,System-Data-SqlClient-SqlConnection- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.CreateSchema(System.String,System.Data.SqlClient.SqlConnection)')
+  - [CreateSchema(schemaName,connection)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-CreateSchema-System-String,Microsoft-Data-SqlClient-SqlConnection- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.CreateSchema(System.String,Microsoft.Data.SqlClient.SqlConnection)')
   - [GetAdminContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-GetAdminContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.GetAdminContextOptionsBuilder')
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.GetContextOptionsBuilder')
   - [GetSqlDatabaseScript(scriptName,parameters)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-GetSqlDatabaseScript-System-String,System-Collections-Generic-Dictionary{System-String,System-String}- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.GetSqlDatabaseScript(System.String,System.Collections.Generic.Dictionary{System.String,System.String})')
-  - [RunScript(scriptName,paramName,paramValue,connection)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-RunScript-System-String,System-String,System-String,System-Data-SqlClient-SqlConnection- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.RunScript(System.String,System.String,System.String,System.Data.SqlClient.SqlConnection)')
+  - [RunScript(scriptName,paramName,paramValue,connection)](#M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-RunScript-System-String,System-String,System-String,Microsoft-Data-SqlClient-SqlConnection- 'RecordPoint.Connectors.SDK.Databases.PostgreSql.PostgreSqlDbProvider`1.RunScript(System.String,System.String,System.String,Microsoft.Data.SqlClient.SqlConnection)')
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate'></a>
+## ConnectorConfigUpdate `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder-'></a>
+### BuildTargetModel() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Down() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Up() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-Databases-PostgreSql-DesignTimeDbContextFactory'></a>
 ## DesignTimeDbContextFactory `type`
@@ -516,7 +564,7 @@ Check database exists.
 | ---- | ----------- |
 | [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-CreateSchema-System-String,System-Data-SqlClient-SqlConnection-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-CreateSchema-System-String,Microsoft-Data-SqlClient-SqlConnection-'></a>
 ### CreateSchema(schemaName,connection) `method`
 
 ##### Summary
@@ -528,7 +576,7 @@ Creates the schema.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | schemaName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The schema name. |
-| connection | [System.Data.SqlClient.SqlConnection](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Data.SqlClient.SqlConnection 'System.Data.SqlClient.SqlConnection') | The connection. |
+| connection | [Microsoft.Data.SqlClient.SqlConnection](#T-Microsoft-Data-SqlClient-SqlConnection 'Microsoft.Data.SqlClient.SqlConnection') | The connection. |
 
 <a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-GetAdminContextOptionsBuilder'></a>
 ### GetAdminContextOptionsBuilder() `method`
@@ -584,7 +632,7 @@ A string
 | ---- | ----------- |
 | [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-RunScript-System-String,System-String,System-String,System-Data-SqlClient-SqlConnection-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Databases-PostgreSql-PostgreSqlDbProvider`1-RunScript-System-String,System-String,System-String,Microsoft-Data-SqlClient-SqlConnection-'></a>
 ### RunScript(scriptName,paramName,paramValue,connection) `method`
 
 ##### Summary
@@ -598,4 +646,4 @@ Run the script.
 | scriptName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The script name. |
 | paramName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The param name. |
 | paramValue | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The param value. |
-| connection | [System.Data.SqlClient.SqlConnection](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Data.SqlClient.SqlConnection 'System.Data.SqlClient.SqlConnection') | The connection. |
+| connection | [Microsoft.Data.SqlClient.SqlConnection](#T-Microsoft-Data-SqlClient-SqlConnection 'Microsoft.Data.SqlClient.SqlConnection') | The connection. |

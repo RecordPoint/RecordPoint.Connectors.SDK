@@ -7,13 +7,11 @@
   - [#ctor(next)](#M-RecordPoint-Connectors-SDK-SubmitPipeline-AggregationUnspecifiedFieldValuePipelineElement-#ctor-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission- 'RecordPoint.Connectors.SDK.SubmitPipeline.AggregationUnspecifiedFieldValuePipelineElement.#ctor(RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission)')
   - [GetRequiredStringFields()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-AggregationUnspecifiedFieldValuePipelineElement-GetRequiredStringFields 'RecordPoint.Connectors.SDK.SubmitPipeline.AggregationUnspecifiedFieldValuePipelineElement.GetRequiredStringFields')
 - [ApiClient](#T-RecordPoint-Connectors-SDK-Client-ApiClient 'RecordPoint.Connectors.SDK.Client.ApiClient')
-  - [#ctor(httpClient,disposeHttpClient)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Net-Http-HttpClient,System-Boolean- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Net.Http.HttpClient,System.Boolean)')
   - [#ctor(handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Net.Http.DelegatingHandler[])')
   - [#ctor(rootHandler,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Net-Http-HttpClientHandler,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])')
   - [#ctor(baseUri,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Uri,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Uri,System.Net.Http.DelegatingHandler[])')
   - [#ctor(baseUri,rootHandler,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Uri,System-Net-Http-HttpClientHandler,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Uri,System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])')
   - [#ctor(credentials,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-Microsoft-Rest-ServiceClientCredentials,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(Microsoft.Rest.ServiceClientCredentials,System.Net.Http.DelegatingHandler[])')
-  - [#ctor(credentials,httpClient,disposeHttpClient)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-Microsoft-Rest-ServiceClientCredentials,System-Net-Http-HttpClient,System-Boolean- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(Microsoft.Rest.ServiceClientCredentials,System.Net.Http.HttpClient,System.Boolean)')
   - [#ctor(credentials,rootHandler,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-Microsoft-Rest-ServiceClientCredentials,System-Net-Http-HttpClientHandler,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(Microsoft.Rest.ServiceClientCredentials,System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])')
   - [#ctor(baseUri,credentials,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Uri,Microsoft-Rest-ServiceClientCredentials,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Uri,Microsoft.Rest.ServiceClientCredentials,System.Net.Http.DelegatingHandler[])')
   - [#ctor(baseUri,credentials,rootHandler,handlers)](#M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Uri,Microsoft-Rest-ServiceClientCredentials,System-Net-Http-HttpClientHandler,System-Net-Http-DelegatingHandler[]- 'RecordPoint.Connectors.SDK.Client.ApiClient.#ctor(System.Uri,Microsoft.Rest.ServiceClientCredentials,System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])')
@@ -102,8 +100,9 @@
   - [ApiConnectorConfigurationsidWithHttpMessagesAsync(id,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiConnectorConfigurationsidWithHttpMessagesAsync-System-Guid,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiConnectorConfigurationsidWithHttpMessagesAsync(System.Guid,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiItemsMultiTenantedfieldNamefieldValueWithHttpMessagesAsync(fieldName,fieldValue,connectorId,pageSize,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiItemsMultiTenantedfieldNamefieldValueWithHttpMessagesAsync-System-String,System-String,System-Nullable{System-Guid},System-Nullable{System-Int32},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiItemsMultiTenantedfieldNamefieldValueWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Guid},System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiItemsfieldNamefieldValueWithHttpMessagesAsync(fieldName,fieldValue,pagesize,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiItemsfieldNamefieldValueWithHttpMessagesAsync-System-String,System-String,System-Nullable{System-Int32},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiItemsfieldNamefieldValueWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
-  - [ApiNotificationsWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiNotificationsWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
-  - [ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiNotificationsconnectorIdWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(connectorTypeId,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync-System-Guid,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(System.Guid,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiNotificationsWithHttpMessagesAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GET.ApiNotificationsconnectorIdWithHttpMessagesAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
 - [GETExtensions](#T-RecordPoint-Connectors-SDK-Client-GETExtensions 'RecordPoint.Connectors.SDK.Client.GETExtensions')
   - [ApiAggregationsMultiTenantedfieldNamefieldValue(operations,fieldName,fieldValue,connectorId,pageSize,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiAggregationsMultiTenantedfieldNamefieldValue-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Nullable{System-Guid},System-Nullable{System-Int32},System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiAggregationsMultiTenantedfieldNamefieldValue(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Nullable{System.Guid},System.Nullable{System.Int32},System.String)')
   - [ApiAggregationsMultiTenantedfieldNamefieldValueAsync(operations,fieldName,fieldValue,connectorId,pageSize,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiAggregationsMultiTenantedfieldNamefieldValueAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Nullable{System-Guid},System-Nullable{System-Int32},System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiAggregationsMultiTenantedfieldNamefieldValueAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Nullable{System.Guid},System.Nullable{System.Int32},System.String,System.Threading.CancellationToken)')
@@ -119,10 +118,12 @@
   - [ApiItemsMultiTenantedfieldNamefieldValueAsync(operations,fieldName,fieldValue,connectorId,pageSize,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiItemsMultiTenantedfieldNamefieldValueAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Nullable{System-Guid},System-Nullable{System-Int32},System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiItemsMultiTenantedfieldNamefieldValueAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Nullable{System.Guid},System.Nullable{System.Int32},System.String,System.Threading.CancellationToken)')
   - [ApiItemsfieldNamefieldValue(operations,fieldName,fieldValue,pagesize,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiItemsfieldNamefieldValue-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Nullable{System-Int32},System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiItemsfieldNamefieldValue(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Nullable{System.Int32},System.String)')
   - [ApiItemsfieldNamefieldValueAsync(operations,fieldName,fieldValue,pagesize,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiItemsfieldNamefieldValueAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Nullable{System-Int32},System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiItemsfieldNamefieldValueAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Nullable{System.Int32},System.String,System.Threading.CancellationToken)')
-  - [ApiNotifications(operations,connectorId,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotifications-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotifications(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String)')
-  - [ApiNotificationsAsync(operations,connectorId,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Threading.CancellationToken)')
-  - [ApiNotificationsconnectorId(operations,connectorId,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorId-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsconnectorId(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String)')
-  - [ApiNotificationsconnectorIdAsync(operations,connectorId,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorIdAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsconnectorIdAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.String,System.Threading.CancellationToken)')
+  - [ApiNotifications(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotifications-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotifications(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String)')
+  - [ApiNotificationsAsync(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.Threading.CancellationToken)')
+  - [ApiNotificationsConnectorTypesconnectorTypeIdNotifications(operations,connectorTypeId,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsConnectorTypesconnectorTypeIdNotifications-RecordPoint-Connectors-SDK-Client-IGET,System-Guid,System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsConnectorTypesconnectorTypeIdNotifications(RecordPoint.Connectors.SDK.Client.IGET,System.Guid,System.String)')
+  - [ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync(operations,connectorTypeId,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync-RecordPoint-Connectors-SDK-Client-IGET,System-Guid,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync(RecordPoint.Connectors.SDK.Client.IGET,System.Guid,System.String,System.Threading.CancellationToken)')
+  - [ApiNotificationsconnectorId(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorId-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsconnectorId(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String)')
+  - [ApiNotificationsconnectorIdAsync(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorIdAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.GETExtensions.ApiNotificationsconnectorIdAsync(RecordPoint.Connectors.SDK.Client.IGET,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.Threading.CancellationToken)')
 - [HTTPRequestHelper](#T-RecordPoint-Connectors-SDK-Helpers-HTTPRequestHelper 'RecordPoint.Connectors.SDK.Helpers.HTTPRequestHelper')
   - [_knownRetriableWebExceptionStatuses](#F-RecordPoint-Connectors-SDK-Helpers-HTTPRequestHelper-_knownRetriableWebExceptionStatuses 'RecordPoint.Connectors.SDK.Helpers.HTTPRequestHelper._knownRetriableWebExceptionStatuses')
   - [GetHttpRequestHeaders(authProvider,settings)](#M-RecordPoint-Connectors-SDK-Helpers-HTTPRequestHelper-GetHttpRequestHeaders-RecordPoint-Connectors-SDK-Client-IAuthenticationProvider,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings- 'RecordPoint.Connectors.SDK.Helpers.HTTPRequestHelper.GetHttpRequestHeaders(RecordPoint.Connectors.SDK.Client.IAuthenticationProvider,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings)')
@@ -148,6 +149,7 @@
   - [ApiClientFactory](#P-RecordPoint-Connectors-SDK-SubmitPipeline-HttpSubmitPipelineElementBase-ApiClientFactory 'RecordPoint.Connectors.SDK.SubmitPipeline.HttpSubmitPipelineElementBase.ApiClientFactory')
   - [GetRetryPolicy()](#M-RecordPoint-Connectors-SDK-SubmitPipeline-HttpSubmitPipelineElementBase-GetRetryPolicy-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,System-String- 'RecordPoint.Connectors.SDK.SubmitPipeline.HttpSubmitPipelineElementBase.GetRetryPolicy(RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext,System.String)')
   - [HandleSubmitResponse\`\`1(submitContext,result,itemTypeName)](#M-RecordPoint-Connectors-SDK-SubmitPipeline-HttpSubmitPipelineElementBase-HandleSubmitResponse``1-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,Microsoft-Rest-HttpOperationResponse{``0},System-String- 'RecordPoint.Connectors.SDK.SubmitPipeline.HttpSubmitPipelineElementBase.HandleSubmitResponse``1(RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext,Microsoft.Rest.HttpOperationResponse{``0},System.String)')
+  - [TryHandleKnownHttpOperationException(submitContext,ex,itemTypeName,shouldContinueSubmitPipeline)](#M-RecordPoint-Connectors-SDK-SubmitPipeline-HttpSubmitPipelineElementBase-TryHandleKnownHttpOperationException-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,Microsoft-Rest-HttpOperationException,System-String,System-Boolean@- 'RecordPoint.Connectors.SDK.SubmitPipeline.HttpSubmitPipelineElementBase.TryHandleKnownHttpOperationException(RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext,Microsoft.Rest.HttpOperationException,System.String,System.Boolean@)')
 - [IApiClient](#T-RecordPoint-Connectors-SDK-Client-IApiClient 'RecordPoint.Connectors.SDK.Client.IApiClient')
   - [BaseUri](#P-RecordPoint-Connectors-SDK-Client-IApiClient-BaseUri 'RecordPoint.Connectors.SDK.Client.IApiClient.BaseUri')
   - [Credentials](#P-RecordPoint-Connectors-SDK-Client-IApiClient-Credentials 'RecordPoint.Connectors.SDK.Client.IApiClient.Credentials')
@@ -170,14 +172,18 @@
   - [ApiConnectorConfigurationsidWithHttpMessagesAsync(id,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiConnectorConfigurationsidWithHttpMessagesAsync-System-Guid,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiConnectorConfigurationsidWithHttpMessagesAsync(System.Guid,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiItemsMultiTenantedfieldNamefieldValueWithHttpMessagesAsync(fieldName,fieldValue,connectorId,pageSize,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiItemsMultiTenantedfieldNamefieldValueWithHttpMessagesAsync-System-String,System-String,System-Nullable{System-Guid},System-Nullable{System-Int32},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiItemsMultiTenantedfieldNamefieldValueWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Guid},System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiItemsfieldNamefieldValueWithHttpMessagesAsync(fieldName,fieldValue,pagesize,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiItemsfieldNamefieldValueWithHttpMessagesAsync-System-String,System-String,System-Nullable{System-Int32},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiItemsfieldNamefieldValueWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
-  - [ApiNotificationsWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiNotificationsWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
-  - [ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiNotificationsconnectorIdWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(connectorTypeId,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync-System-Guid,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(System.Guid,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiNotificationsWithHttpMessagesAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IGET.ApiNotificationsconnectorIdWithHttpMessagesAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
 - [IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST')
   - [ApiAggregationsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiAggregationsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-AggregationSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiAggregationsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.AggregationSubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiBinariesGetSASTokenWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiBinariesGetSASTokenWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiBinariesGetSASTokenWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiBinariesWithHttpMessagesAsync(connectorId,itemExternalId,binaryExternalId,fileName,location,correlationId,isOldVersion,skipEnrichment,itemSourceLastModifiedDate,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiBinariesWithHttpMessagesAsync-System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiBinariesWithHttpMessagesAsync(System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiItemsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiItemsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiItemsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsDisposalCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiNotificationsDisposalCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiNotificationsDisposalCallbackWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiNotificationsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPOST-ApiNotificationsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPOST.ApiNotificationsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
 - [IPUT](#T-RecordPoint-Connectors-SDK-Client-IPUT 'RecordPoint.Connectors.SDK.Client.IPUT')
   - [ApiAuditEventsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-IPUT-ApiAuditEventsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorAuditEventModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.IPUT.ApiAuditEventsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorAuditEventModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
@@ -196,24 +202,25 @@
 - [NotSpecifiedCredentials](#T-RecordPoint-Connectors-SDK-Client-NotSpecifiedCredentials 'RecordPoint.Connectors.SDK.Client.NotSpecifiedCredentials')
   - [InnerProcessHttpRequestAsync(request,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-NotSpecifiedCredentials-InnerProcessHttpRequestAsync-System-Net-Http-HttpRequestMessage,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.NotSpecifiedCredentials.InnerProcessHttpRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)')
   - [ProcessHttpRequestAsync(request,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-NotSpecifiedCredentials-ProcessHttpRequestAsync-System-Net-Http-HttpRequestMessage,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.NotSpecifiedCredentials.ProcessHttpRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)')
-- [NotificationPullManager](#T-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager 'RecordPoint.Connectors.SDK.Notifications.NotificationPullManager')
-  - [#ctor()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager-#ctor 'RecordPoint.Connectors.SDK.Notifications.NotificationPullManager.#ctor')
-  - [AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationPullManager.AcknowledgeNotification(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Threading.CancellationToken)')
-  - [GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationPullManager.GetAllPendingConnectorNotifications(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,System.String,System.Threading.CancellationToken)')
-- [NotificationType](#T-RecordPoint-Connectors-SDK-Client-NotificationType 'RecordPoint.Connectors.SDK.Client.NotificationType')
-  - [ConnectorConfigCreated](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigCreated 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorConfigCreated')
-  - [ConnectorConfigDeleted](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigDeleted 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorConfigDeleted')
-  - [ConnectorConfigUpdated](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigUpdated 'RecordPoint.Connectors.SDK.Client.NotificationType.ConnectorConfigUpdated')
-  - [ItemDestroyed](#F-RecordPoint-Connectors-SDK-Client-NotificationType-ItemDestroyed 'RecordPoint.Connectors.SDK.Client.NotificationType.ItemDestroyed')
-  - [Ping](#F-RecordPoint-Connectors-SDK-Client-NotificationType-Ping 'RecordPoint.Connectors.SDK.Client.NotificationType.Ping')
+- [NotificationApiManager](#T-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager')
+  - [#ctor()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-#ctor 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.#ctor')
+  - [#ctor(apiClientFactory)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-#ctor-RecordPoint-Connectors-SDK-Client-IApiClientFactory- 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.#ctor(RecordPoint.Connectors.SDK.Client.IApiClientFactory)')
+  - [AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.AcknowledgeNotification(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Threading.CancellationToken)')
+  - [DisposalCallback(factorySettings,authenticationSettings,callbackNotification,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-DisposalCallback-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.DisposalCallback(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel,System.Threading.CancellationToken)')
+  - [FromAutoRestObject\`\`1()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-FromAutoRestObject``1-System-Object- 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.FromAutoRestObject``1(System.Object)')
+  - [GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken)](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.GetAllPendingConnectorNotifications(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,System.String,System.Threading.CancellationToken)')
+  - [GetAllPendingConnectorTypeNotifications()](#M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-GetAllPendingConnectorTypeNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-Guid,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Notifications.NotificationApiManager.GetAllPendingConnectorTypeNotifications(RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings,RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings,System.Guid,System.Threading.CancellationToken)')
 - [POST](#T-RecordPoint-Connectors-SDK-Client-POST 'RecordPoint.Connectors.SDK.Client.POST')
   - [#ctor(client)](#M-RecordPoint-Connectors-SDK-Client-POST-#ctor-RecordPoint-Connectors-SDK-Client-ApiClient- 'RecordPoint.Connectors.SDK.Client.POST.#ctor(RecordPoint.Connectors.SDK.Client.ApiClient)')
   - [Client](#P-RecordPoint-Connectors-SDK-Client-POST-Client 'RecordPoint.Connectors.SDK.Client.POST.Client')
   - [ApiAggregationsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiAggregationsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-AggregationSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiAggregationsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.AggregationSubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiBinariesGetSASTokenWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiBinariesGetSASTokenWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiBinariesWithHttpMessagesAsync(connectorId,itemExternalId,binaryExternalId,fileName,location,correlationId,isOldVersion,skipEnrichment,itemSourceLastModifiedDate,acceptLanguage,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiBinariesWithHttpMessagesAsync-System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiBinariesWithHttpMessagesAsync(System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiItemsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiItemsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiItemsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
+  - [ApiNotificationsDisposalCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiNotificationsDisposalCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiNotificationsDisposalCallbackWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
   - [ApiNotificationsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POST-ApiNotificationsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POST.ApiNotificationsWithHttpMessagesAsync(System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)')
 - [POSTExtensions](#T-RecordPoint-Connectors-SDK-Client-POSTExtensions 'RecordPoint.Connectors.SDK.Client.POSTExtensions')
   - [ApiAggregations(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiAggregations-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-AggregationSubmissionInputModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiAggregations(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.AggregationSubmissionInputModel)')
@@ -224,10 +231,16 @@
   - [ApiBinariesGetSASTokenAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesGetSASTokenAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiBinariesGetSASTokenAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel,System.Threading.CancellationToken)')
   - [ApiBinariesNotifyBinarySubmission(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesNotifyBinarySubmission-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiBinariesNotifyBinarySubmission(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel)')
   - [ApiBinariesNotifyBinarySubmissionAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesNotifyBinarySubmissionAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiBinariesNotifyBinarySubmissionAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel,System.Threading.CancellationToken)')
+  - [ApiBinariesNotifyItemBinarySubmission(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesNotifyItemBinarySubmission-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiBinariesNotifyItemBinarySubmission(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel)')
+  - [ApiBinariesNotifyItemBinarySubmissionAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesNotifyItemBinarySubmissionAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiBinariesNotifyItemBinarySubmissionAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel,System.Threading.CancellationToken)')
   - [ApiItems(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiItems-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiItems(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel)')
   - [ApiItemsAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiItemsAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiItemsAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel,System.Threading.CancellationToken)')
   - [ApiNotifications(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotifications-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiNotifications(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel)')
   - [ApiNotificationsAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiNotificationsAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel,System.Threading.CancellationToken)')
+  - [ApiNotificationsConnectorRequestCallback(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsConnectorRequestCallback-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiNotificationsConnectorRequestCallback(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel)')
+  - [ApiNotificationsConnectorRequestCallbackAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsConnectorRequestCallbackAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiNotificationsConnectorRequestCallbackAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel,System.Threading.CancellationToken)')
+  - [ApiNotificationsDisposalCallback(operations,acceptLanguage,body)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsDisposalCallback-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiNotificationsDisposalCallback(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel)')
+  - [ApiNotificationsDisposalCallbackAsync(operations,acceptLanguage,body,cancellationToken)](#M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsDisposalCallbackAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Client.POSTExtensions.ApiNotificationsDisposalCallbackAsync(RecordPoint.Connectors.SDK.Client.IPOST,System.String,RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel,System.Threading.CancellationToken)')
 - [PUT](#T-RecordPoint-Connectors-SDK-Client-PUT 'RecordPoint.Connectors.SDK.Client.PUT')
   - [#ctor(client)](#M-RecordPoint-Connectors-SDK-Client-PUT-#ctor-RecordPoint-Connectors-SDK-Client-ApiClient- 'RecordPoint.Connectors.SDK.Client.PUT.#ctor(RecordPoint.Connectors.SDK.Client.ApiClient)')
   - [Client](#P-RecordPoint-Connectors-SDK-Client-PUT-Client 'RecordPoint.Connectors.SDK.Client.PUT.Client')
@@ -312,20 +325,6 @@ with an additional parameter for the Stream.
 
 This should be revisited as/when we upgrade to OpenAPI/Swagger 3.0.
 
-<a name='M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Net-Http-HttpClient,System-Boolean-'></a>
-### #ctor(httpClient,disposeHttpClient) `constructor`
-
-##### Summary
-
-Initializes a new instance of the ApiClient class.
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| httpClient | [System.Net.Http.HttpClient](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClient 'System.Net.Http.HttpClient') | HttpClient to be used |
-| disposeHttpClient | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | True: will dispose the provided httpClient on calling ApiClient.Dispose(). False: will not dispose provided httpClient |
-
 <a name='M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-System-Net-Http-DelegatingHandler[]-'></a>
 ### #ctor(handlers) `constructor`
 
@@ -407,27 +406,6 @@ Initializes a new instance of the ApiClient class.
 | ---- | ---- | ----------- |
 | credentials | [Microsoft.Rest.ServiceClientCredentials](#T-Microsoft-Rest-ServiceClientCredentials 'Microsoft.Rest.ServiceClientCredentials') | Required. Subscription credentials which uniquely identify client subscription. |
 | handlers | [System.Net.Http.DelegatingHandler[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.DelegatingHandler[] 'System.Net.Http.DelegatingHandler[]') | Optional. The delegating handlers to add to the http client pipeline. |
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [System.ArgumentNullException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentNullException 'System.ArgumentNullException') | Thrown when a required parameter is null |
-
-<a name='M-RecordPoint-Connectors-SDK-Client-ApiClient-#ctor-Microsoft-Rest-ServiceClientCredentials,System-Net-Http-HttpClient,System-Boolean-'></a>
-### #ctor(credentials,httpClient,disposeHttpClient) `constructor`
-
-##### Summary
-
-Initializes a new instance of the ApiClient class.
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| credentials | [Microsoft.Rest.ServiceClientCredentials](#T-Microsoft-Rest-ServiceClientCredentials 'Microsoft.Rest.ServiceClientCredentials') | Required. Subscription credentials which uniquely identify client subscription. |
-| httpClient | [System.Net.Http.HttpClient](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClient 'System.Net.Http.HttpClient') | HttpClient to be used |
-| disposeHttpClient | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | True: will dispose the provided httpClient on calling ApiClient.Dispose(). False: will not dispose provided httpClient |
 
 ##### Exceptions
 
@@ -1579,19 +1557,21 @@ Gets a collection of items that match a single metadata field value.
 | [Microsoft.Rest.ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') | Thrown when a required parameter is null |
 | [System.ArgumentNullException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentNullException 'System.ArgumentNullException') | Thrown when a required parameter is null |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
-### ApiNotificationsWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync-System-Guid,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(connectorTypeId,acceptLanguage,customHeaders,cancellationToken) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
-acknowledgement by the connector.
+acknowledgement by the connector type id
+This endpoint is useful when system needs to poll notifications without
+knowing specific connector config ids
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID for multi tenanted connections |
+| connectorTypeId | [System.Guid](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Guid 'System.Guid') | Connector Type Id |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | Headers that will be added to request. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
@@ -1603,19 +1583,69 @@ acknowledgement by the connector.
 | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
-### ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
 acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and source
+properties are selected.
+However, when pageSize is greater than default, the API will only return
+the default core and source properties to prevent the response payload from
+being too large.
+The Default core, source properties of Destroyed Messages are: ExternalId,
+UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The query information |
+| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID for multi tenanted connections |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select (for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select(for eg: "ExternalId, SourceModifiedDate". Optional |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | Headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+| [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-GET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Gets a collection of notifications that are awaiting processing and
+acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and source
+properties are selected.
+However, when pageSize is greater than default, the API will only return
+the default core and source properties to prevent the response payload from
+being too large.
+The Default core, source properties of Destroyed Messages are: ExternalId,
+UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select, for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select, for eg: "ExternalId, SourceModifiedDate". Optional |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | Headers that will be added to request. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
@@ -1879,13 +1909,22 @@ Gets a collection of items that match a single metadata field value.
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotifications-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String-'></a>
-### ApiNotifications(operations,connectorId,acceptLanguage) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotifications-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String-'></a>
+### ApiNotifications(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
 acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and source
+properties are selected.
+However, when pageSize is greater than default, the API will only return
+the default core and source properties to prevent the response payload from
+being too large.
+The Default core, source properties of Destroyed Messages are: ExternalId,
+UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
 
 ##### Parameters
 
@@ -1893,15 +1932,28 @@ acknowledgement by the connector.
 | ---- | ---- | ----------- |
 | operations | [RecordPoint.Connectors.SDK.Client.IGET](#T-RecordPoint-Connectors-SDK-Client-IGET 'RecordPoint.Connectors.SDK.Client.IGET') | The operations group for this extension method. |
 | connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID for multi tenanted connections |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select (for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select(for eg: "ExternalId, SourceModifiedDate". Optional |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Threading-CancellationToken-'></a>
-### ApiNotificationsAsync(operations,connectorId,acceptLanguage,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Threading-CancellationToken-'></a>
+### ApiNotificationsAsync(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,cancellationToken) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
 acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and source
+properties are selected.
+However, when pageSize is greater than default, the API will only return
+the default core and source properties to prevent the response payload from
+being too large.
+The Default core, source properties of Destroyed Messages are: ExternalId,
+UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
 
 ##### Parameters
 
@@ -1909,39 +1961,106 @@ acknowledgement by the connector.
 | ---- | ---- | ----------- |
 | operations | [RecordPoint.Connectors.SDK.Client.IGET](#T-RecordPoint-Connectors-SDK-Client-IGET 'RecordPoint.Connectors.SDK.Client.IGET') | The operations group for this extension method. |
 | connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID for multi tenanted connections |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select (for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select(for eg: "ExternalId, SourceModifiedDate". Optional |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorId-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String-'></a>
-### ApiNotificationsconnectorId(operations,connectorId,acceptLanguage) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsConnectorTypesconnectorTypeIdNotifications-RecordPoint-Connectors-SDK-Client-IGET,System-Guid,System-String-'></a>
+### ApiNotificationsConnectorTypesconnectorTypeIdNotifications(operations,connectorTypeId,acceptLanguage) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
-acknowledgement by the connector.
+acknowledgement by the connector type id
+This endpoint is useful when system needs to poll notifications without
+knowing specific connector config ids
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | operations | [RecordPoint.Connectors.SDK.Client.IGET](#T-RecordPoint-Connectors-SDK-Client-IGET 'RecordPoint.Connectors.SDK.Client.IGET') | The operations group for this extension method. |
-| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The query information |
+| connectorTypeId | [System.Guid](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Guid 'System.Guid') | Connector Type Id |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorIdAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-String,System-Threading-CancellationToken-'></a>
-### ApiNotificationsconnectorIdAsync(operations,connectorId,acceptLanguage,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync-RecordPoint-Connectors-SDK-Client-IGET,System-Guid,System-String,System-Threading-CancellationToken-'></a>
+### ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync(operations,connectorTypeId,acceptLanguage,cancellationToken) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
-acknowledgement by the connector.
+acknowledgement by the connector type id
+This endpoint is useful when system needs to poll notifications without
+knowing specific connector config ids
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | operations | [RecordPoint.Connectors.SDK.Client.IGET](#T-RecordPoint-Connectors-SDK-Client-IGET 'RecordPoint.Connectors.SDK.Client.IGET') | The operations group for this extension method. |
-| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The query information |
+| connectorTypeId | [System.Guid](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Guid 'System.Guid') | Connector Type Id |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorId-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String-'></a>
+### ApiNotificationsconnectorId(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage) `method`
+
+##### Summary
+
+Gets a collection of notifications that are awaiting processing and
+acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and source
+properties are selected.
+However, when pageSize is greater than default, the API will only return
+the default core and source properties to prevent the response payload from
+being too large.
+The Default core, source properties of Destroyed Messages are: ExternalId,
+UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IGET](#T-RecordPoint-Connectors-SDK-Client-IGET 'RecordPoint.Connectors.SDK.Client.IGET') | The operations group for this extension method. |
+| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select, for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select, for eg: "ExternalId, SourceModifiedDate". Optional |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-GETExtensions-ApiNotificationsconnectorIdAsync-RecordPoint-Connectors-SDK-Client-IGET,System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Threading-CancellationToken-'></a>
+### ApiNotificationsconnectorIdAsync(operations,connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,cancellationToken) `method`
+
+##### Summary
+
+Gets a collection of notifications that are awaiting processing and
+acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and source
+properties are selected.
+However, when pageSize is greater than default, the API will only return
+the default core and source properties to prevent the response payload from
+being too large.
+The Default core, source properties of Destroyed Messages are: ExternalId,
+UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IGET](#T-RecordPoint-Connectors-SDK-Client-IGET 'RecordPoint.Connectors.SDK.Client.IGET') | The operations group for this extension method. |
+| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select, for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select, for eg: "ExternalId, SourceModifiedDate". Optional |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
@@ -2296,6 +2415,26 @@ True if the submit pipeline should continue as a result of successful submission
 | ---- | ----------- |
 | T |  |
 
+<a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-HttpSubmitPipelineElementBase-TryHandleKnownHttpOperationException-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,Microsoft-Rest-HttpOperationException,System-String,System-Boolean@-'></a>
+### TryHandleKnownHttpOperationException(submitContext,ex,itemTypeName,shouldContinueSubmitPipeline) `method`
+
+##### Summary
+
+Attempts to classify a thrown [HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') as a known submission outcome.
+
+##### Returns
+
+`true` if the exception was recognized and handled; otherwise, `false`.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The submission context for the current operation. |
+| ex | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | The exception thrown by the API client. |
+| itemTypeName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The submitted item type name used in log and result messages. |
+| shouldContinueSubmitPipeline | [System.Boolean@](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean@ 'System.Boolean@') | Whether the submission pipeline should continue after handling the exception. |
+
 <a name='T-RecordPoint-Connectors-SDK-Client-IApiClient'></a>
 ## IApiClient `type`
 
@@ -2305,7 +2444,8 @@ RecordPoint.Connectors.SDK.Client
 
 ##### Summary
 
-This is the Records365 vNext Connector API Home
+RecordPoint Connector API provides the ability to configure and control
+the connectors in RecordPoint.
 
 <a name='P-RecordPoint-Connectors-SDK-Client-IApiClient-BaseUri'></a>
 ### BaseUri `property`
@@ -2644,19 +2784,21 @@ value.
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
 | [Microsoft.Rest.ValidationException](#T-Microsoft-Rest-ValidationException 'Microsoft.Rest.ValidationException') | Thrown when a required parameter is null |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
-### ApiNotificationsWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync-System-Guid,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(connectorTypeId,acceptLanguage,customHeaders,cancellationToken) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
-acknowledgement by the connector.
+acknowledgement by the connector type id
+This endpoint is useful when system needs to poll notifications
+without knowing specific connector config ids
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID for multi tenanted connections |
+| connectorTypeId | [System.Guid](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Guid 'System.Guid') | Connector Type Id |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | The headers that will be added to request. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
@@ -2668,19 +2810,69 @@ acknowledgement by the connector.
 | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
 
-<a name='M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
-### ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,acceptLanguage,customHeaders,cancellationToken) `method`
+<a name='M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken) `method`
 
 ##### Summary
 
 Gets a collection of notifications that are awaiting processing and
 acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and
+source properties are selected.
+However, when pageSize is greater than default, the API will only
+return the default core and source properties to prevent the
+response payload from being too large.
+The Default core, source properties of Destroyed Messages are:
+ExternalId, UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The query information |
+| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID for multi tenanted connections |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select (for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select(for eg: "ExternalId, SourceModifiedDate". Optional |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | The headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+| [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-IGET-ApiNotificationsconnectorIdWithHttpMessagesAsync-System-String,System-Nullable{System-Boolean},System-Nullable{System-Int32},System-String,System-String,System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId,receiveAll,pageSize,selectCoreProperties,selectSourceProperties,acceptLanguage,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Gets a collection of notifications that are awaiting processing and
+acknowledgement by the connector.
+By default, the pageSize of messages are 100 and all the core and
+source properties are selected.
+However, when pageSize is greater than default, the API will only
+return the default core and source properties to prevent the
+response payload from being too large.
+The Default core, source properties of Destroyed Messages are:
+ExternalId, UniqueExternalId, Location.
+If callers need more properties, they can specify them in
+selectCoreProperties and selectSourceProperties parameters.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| connectorId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Connector ID |
+| receiveAll | [System.Nullable{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Boolean}') | When true, retrieves both active and deferred messages. Default is false. |
+| pageSize | [System.Nullable{System.Int32}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Int32}') | The maximum number of notifications to return. Default is 100. |
+| selectCoreProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of core properties to select, for eg: "UniqueExternalId,Location". Optional |
+| selectSourceProperties | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | List of source properties to select, for eg: "ExternalId, SourceModifiedDate". Optional |
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | The headers that will be added to request. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
@@ -2774,6 +2966,29 @@ Notifies Records365 that a new Binary has been uploaded
 | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
 
+<a name='M-RecordPoint-Connectors-SDK-Client-IPOST-ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Notifies Records365 that a new Binary has been uploaded.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel') | The binary metadata information. |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | The headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+| [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
+
 <a name='M-RecordPoint-Connectors-SDK-Client-IPOST-ApiBinariesWithHttpMessagesAsync-System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
 ### ApiBinariesWithHttpMessagesAsync(connectorId,itemExternalId,binaryExternalId,fileName,location,correlationId,isOldVersion,skipEnrichment,itemSourceLastModifiedDate,acceptLanguage,customHeaders,cancellationToken) `method`
 
@@ -2829,6 +3044,57 @@ All records are to be submitted to this endpoint.
 | ---- | ----------- |
 | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-IPOST-ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Receives a connector's answer to a request it was sent and stores
+it for the Management API
+to serve to the UI.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel') | The answer from the connector. |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | The headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-IPOST-ApiNotificationsDisposalCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsDisposalCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Receives notification of completed disposal from connector.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel') |  |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | The headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+
+##### Remarks
+
+Only for asynchronous callback connectors. Most connectors use an
+AdminItemController endpoint.
 
 <a name='M-RecordPoint-Connectors-SDK-Client-IPOST-ApiNotificationsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
 ### ApiNotificationsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
@@ -3122,8 +3388,8 @@ A Task
 | ---- | ----------- |
 | [System.ArgumentNullException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentNullException 'System.ArgumentNullException') |  |
 
-<a name='T-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager'></a>
-## NotificationPullManager `type`
+<a name='T-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager'></a>
+## NotificationApiManager `type`
 
 ##### Namespace
 
@@ -3132,20 +3398,34 @@ RecordPoint.Connectors.SDK.Notifications
 ##### Summary
 
 Manages pulling and acknowledging of connector notification messages.
-Note this class only applies to connector types that use the "pull" notification method.
+Note this class mainly applies to connector types that use the "pull" notification method.
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager-#ctor'></a>
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-#ctor'></a>
 ### #ctor() `constructor`
 
 ##### Summary
 
-Creates a new NotificationPullManager.
+Creates a new NotificationApiManager.
 
 ##### Parameters
 
 This constructor has no parameters.
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-#ctor-RecordPoint-Connectors-SDK-Client-IApiClientFactory-'></a>
+### #ctor(apiClientFactory) `constructor`
+
+##### Summary
+
+Creates a new NotificationApiManager with a supplied [IApiClientFactory](#T-RecordPoint-Connectors-SDK-Client-IApiClientFactory 'RecordPoint.Connectors.SDK.Client.IApiClientFactory').
+Intended for testing so that the underlying API client can be substituted.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| apiClientFactory | [RecordPoint.Connectors.SDK.Client.IApiClientFactory](#T-RecordPoint-Connectors-SDK-Client-IApiClientFactory 'RecordPoint.Connectors.SDK.Client.IApiClientFactory') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-AcknowledgeNotification-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Threading-CancellationToken-'></a>
 ### AcknowledgeNotification(factorySettings,authenticationSettings,acknowledgement,cancellationToken) `method`
 
 ##### Summary
@@ -3165,7 +3445,38 @@ Acknowledges a notification as having been processed.
 | acknowledgement | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel') |  |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationPullManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken-'></a>
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-DisposalCallback-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Threading-CancellationToken-'></a>
+### DisposalCallback(factorySettings,authenticationSettings,callbackNotification,cancellationToken) `method`
+
+##### Summary
+
+Acknowledges a notification as having been processed.
+
+##### Returns
+
+
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| factorySettings | [RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings](#T-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings 'RecordPoint.Connectors.SDK.Client.ApiClientFactorySettings') |  |
+| authenticationSettings | [RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings](#T-RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings 'RecordPoint.Connectors.SDK.Client.AuthenticationHelperSettings') |  |
+| callbackNotification | [RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-FromAutoRestObject``1-System-Object-'></a>
+### FromAutoRestObject\`\`1() `method`
+
+##### Summary
+
+Convert the result from AutoRest into the expected type.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-GetAllPendingConnectorNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-String,System-Threading-CancellationToken-'></a>
 ### GetAllPendingConnectorNotifications(factorySettings,authenticationSettings,connectorConfigId,cancellationToken) `method`
 
 ##### Summary
@@ -3185,64 +3496,16 @@ Queries for all connector notifications for a given connector instance that are 
 | connectorConfigId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
-<a name='T-RecordPoint-Connectors-SDK-Client-NotificationType'></a>
-## NotificationType `type`
-
-##### Namespace
-
-RecordPoint.Connectors.SDK.Client
+<a name='M-RecordPoint-Connectors-SDK-Notifications-NotificationApiManager-GetAllPendingConnectorTypeNotifications-RecordPoint-Connectors-SDK-Client-ApiClientFactorySettings,RecordPoint-Connectors-SDK-Client-AuthenticationHelperSettings,System-Guid,System-Threading-CancellationToken-'></a>
+### GetAllPendingConnectorTypeNotifications() `method`
 
 ##### Summary
 
-Defines constant values that may appear in the ConnectorNotificationModel.NotificationType field.
-Possible values include: 'ItemDestroyed', 'Ping', 'ConnectorConfigCreated', 'ConnectorConfigUpdated', and 'ConnectorConfigDeleted'
+*Inherit from parent.*
 
-<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigCreated'></a>
-### ConnectorConfigCreated `constants`
+##### Parameters
 
-##### Summary
-
-The ConnectorConfigCreated Notification Type.
-This notification is sent by Records365 vNext when a new instance of the
-connector is created in the platform.
-
-<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigDeleted'></a>
-### ConnectorConfigDeleted `constants`
-
-##### Summary
-
-The ConnectorConfigDeleted Notification Type.
-This notification is sent by Records365 vNext when an instance of the 
-connector is deleted in the platform.
-
-<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ConnectorConfigUpdated'></a>
-### ConnectorConfigUpdated `constants`
-
-##### Summary
-
-The ConnectorConfigUpdated Notification Type.
-This notification is sent by Records365 vNext when an existing instance of
-the connector is updated in the platform. Possible updates may include
-configuration changes, or the connector being enabled or disabled by a user.
-
-<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-ItemDestroyed'></a>
-### ItemDestroyed `constants`
-
-##### Summary
-
-The ItemDestroyed Notification Type. 
-This notification is sent by Records365 vNext when an item is disposed
-in the platform.
-The connector must permanently destroy all metadata, binaries and ay other 
-information associated with the item in the content source.
-
-<a name='F-RecordPoint-Connectors-SDK-Client-NotificationType-Ping'></a>
-### Ping `constants`
-
-##### Summary
-
-The Ping Notification Type.
-Used for testing purposes only.
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-Client-POST'></a>
 ## POST `type`
@@ -3351,6 +3614,29 @@ Notifies Records365 that a new Binary has been uploaded
 | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
 
+<a name='M-RecordPoint-Connectors-SDK-Client-POST-ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Notifies Records365 that a new Binary has been uploaded.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel') | The binary metadata information. |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | Headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+| [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
+
 <a name='M-RecordPoint-Connectors-SDK-Client-POST-ApiBinariesWithHttpMessagesAsync-System-String,System-String,System-String,System-String,System-String,System-String,System-Nullable{System-Boolean},System-Nullable{System-Boolean},System-Nullable{System-DateTime},System-String,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
 ### ApiBinariesWithHttpMessagesAsync(connectorId,itemExternalId,binaryExternalId,fileName,location,correlationId,isOldVersion,skipEnrichment,itemSourceLastModifiedDate,acceptLanguage,customHeaders,cancellationToken) `method`
 
@@ -3407,6 +3693,57 @@ All records are to be submitted to this endpoint.
 | ---- | ----------- |
 | [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
 | [Microsoft.Rest.SerializationException](#T-Microsoft-Rest-SerializationException 'Microsoft.Rest.SerializationException') | Thrown when unable to deserialize the response |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POST-ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Receives a connector's answer to a request it was sent and stores it for
+the Management API
+to serve to the UI.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel') | The answer from the connector. |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | Headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POST-ApiNotificationsDisposalCallbackWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
+### ApiNotificationsDisposalCallbackWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
+
+##### Summary
+
+Receives notification of completed disposal from connector.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel') |  |
+| customHeaders | [System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}') | Headers that will be added to request. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [Microsoft.Rest.HttpOperationException](#T-Microsoft-Rest-HttpOperationException 'Microsoft.Rest.HttpOperationException') | Thrown when the operation returned an invalid status code |
+
+##### Remarks
+
+Only for asynchronous callback connectors. Most connectors use an
+AdminItemController endpoint.
 
 <a name='M-RecordPoint-Connectors-SDK-Client-POST-ApiNotificationsWithHttpMessagesAsync-System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel,System-Collections-Generic-Dictionary{System-String,System-Collections-Generic-List{System-String}},System-Threading-CancellationToken-'></a>
 ### ApiNotificationsWithHttpMessagesAsync(acceptLanguage,body,customHeaders,cancellationToken) `method`
@@ -3584,6 +3921,37 @@ Notifies Records365 that a new Binary has been uploaded
 | body | [RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-DirectBinarySubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.DirectBinarySubmissionInputModel') | The binary metadata information |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
 
+<a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesNotifyItemBinarySubmission-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-'></a>
+### ApiBinariesNotifyItemBinarySubmission(operations,acceptLanguage,body) `method`
+
+##### Summary
+
+Notifies Records365 that a new Binary has been uploaded.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST') | The operations group for this extension method. |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel') | The binary metadata information. |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiBinariesNotifyItemBinarySubmissionAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel,System-Threading-CancellationToken-'></a>
+### ApiBinariesNotifyItemBinarySubmissionAsync(operations,acceptLanguage,body,cancellationToken) `method`
+
+##### Summary
+
+Notifies Records365 that a new Binary has been uploaded.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST') | The operations group for this extension method. |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel 'RecordPoint.Connectors.SDK.Client.Models.ItemSubmissionInputModel') | The binary metadata information. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
 <a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiItems-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemSubmissionInputModel-'></a>
 ### ApiItems(operations,acceptLanguage,body) `method`
 
@@ -3647,6 +4015,82 @@ Acknowledges a notification as having been processed by the connector.
 | acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | body | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationAcknowledgeModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationAcknowledgeModel') | The acknowledgement information. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsConnectorRequestCallback-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel-'></a>
+### ApiNotificationsConnectorRequestCallback(operations,acceptLanguage,body) `method`
+
+##### Summary
+
+Receives a connector's answer to a request it was sent and stores it for
+the Management API
+to serve to the UI.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST') | The operations group for this extension method. |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel') | The answer from the connector. |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsConnectorRequestCallbackAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel,System-Threading-CancellationToken-'></a>
+### ApiNotificationsConnectorRequestCallbackAsync(operations,acceptLanguage,body,cancellationToken) `method`
+
+##### Summary
+
+Receives a connector's answer to a request it was sent and stores it for
+the Management API
+to serve to the UI.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST') | The operations group for this extension method. |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorRequestResponseCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorRequestResponseCallbackModel') | The answer from the connector. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsDisposalCallback-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel-'></a>
+### ApiNotificationsDisposalCallback(operations,acceptLanguage,body) `method`
+
+##### Summary
+
+Receives notification of completed disposal from connector.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST') | The operations group for this extension method. |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel') |  |
+
+##### Remarks
+
+Only for asynchronous callback connectors. Most connectors use an
+AdminItemController endpoint.
+
+<a name='M-RecordPoint-Connectors-SDK-Client-POSTExtensions-ApiNotificationsDisposalCallbackAsync-RecordPoint-Connectors-SDK-Client-IPOST,System-String,RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel,System-Threading-CancellationToken-'></a>
+### ApiNotificationsDisposalCallbackAsync(operations,acceptLanguage,body,cancellationToken) `method`
+
+##### Summary
+
+Receives notification of completed disposal from connector.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| operations | [RecordPoint.Connectors.SDK.Client.IPOST](#T-RecordPoint-Connectors-SDK-Client-IPOST 'RecordPoint.Connectors.SDK.Client.IPOST') | The operations group for this extension method. |
+| acceptLanguage | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| body | [RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel](#T-RecordPoint-Connectors-SDK-Client-Models-ItemNotificationDisposalCallbackModel 'RecordPoint.Connectors.SDK.Client.Models.ItemNotificationDisposalCallbackModel') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token. |
+
+##### Remarks
+
+Only for asynchronous callback connectors. Most connectors use an
+AdminItemController endpoint.
 
 <a name='T-RecordPoint-Connectors-SDK-Client-PUT'></a>
 ## PUT `type`
@@ -3769,31 +4213,31 @@ and the aggregation branch is used. Other values use the item branch.
 
 ##### Summary
 
-Constructs a new PipelineSelectorPipelineElement.
+Constructs a new pipeline selector element.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| submitRecord | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') |  |
-| submitAggregation | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') |  |
+| submitRecord | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') | Pipeline branch used for item submissions. |
+| submitAggregation | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') | Pipeline branch used for aggregation submissions. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-PipelineSelectorPipelineElement-Submit-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-'></a>
 ### Submit(submitContext) `method`
 
 ##### Summary
 
-
+Routes the submission to the item or aggregation pipeline branch.
 
 ##### Returns
 
-
+A task that completes when the selected pipeline branch finishes.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
+| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
 
 <a name='T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase'></a>
 ## SubmitPipelineElementBase `type`
@@ -3811,21 +4255,20 @@ Base class for submit pipeline elements.
 
 ##### Summary
 
-Constructs a new SubmitPipelineElementBase with an optional next submit
-pipeline element.
+Constructs a new submit pipeline element.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| next | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') |  |
+| next | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') | The next pipeline element to invoke. |
 
 <a name='P-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-Log'></a>
 ### Log `property`
 
 ##### Summary
 
-A log.
+Logger used by pipeline elements.
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-InvokeNext-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-'></a>
 ### InvokeNext(submitContext) `method`
@@ -3836,91 +4279,89 @@ Invokes the next element in the submission pipeline, if one exists.
 
 ##### Returns
 
-
+A task that completes when the next element finishes.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
+| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-LogMessage-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,System-String,System-String-'></a>
 ### LogMessage(context,methodName,message) `method`
 
 ##### Summary
 
-Logs a message, providing information from the SubmitContext.
+Logs an informational message using the current submission context.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| context | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
-| methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| context | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
+| methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The calling method name. |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The message to write. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-LogVerbose-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,System-String,System-String-'></a>
 ### LogVerbose(context,methodName,message) `method`
 
 ##### Summary
 
-Logs a verbose message, providing information from the SubmitContext.
+Logs a verbose message using the current submission context.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| context | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
-| methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| context | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
+| methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The calling method name. |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The message to write. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-LogWarning-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,System-String,System-String-'></a>
 ### LogWarning(context,methodName,message) `method`
 
 ##### Summary
 
-Logs a warning message, providing information from the SubmitContext.
+Logs a warning message using the current submission context.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| context | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
-| methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| context | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
+| methodName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The calling method name. |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The message to write. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-SkipNext-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext,System-String-'></a>
 ### SkipNext(submitContext,reason) `method`
 
 ##### Summary
 
-Indicates that this pipeline element is terminating the pipeline.
-Note this method only performs the appropriate logging and sets the SubmitContext.SubmitResult to Skipped.
-The calling method still needs to be careful to return early or otherwise skip the rest of the pipeline.
+Marks the submission as skipped and records the skip reason.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
-| reason | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
+| reason | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The reason the submission pipeline is being skipped. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitPipelineElementBase-Submit-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext-'></a>
 ### Submit(submitContext) `method`
 
 ##### Summary
 
-Implement in a derived class to provide custom submit pipeline functionality.
+Implements submit behavior for the pipeline element.
 
 ##### Returns
 
-
+A task that completes when submission processing finishes.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
+| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |
 
 <a name='T-RecordPoint-Connectors-SDK-SubmitPipeline-UnspecifiedFieldValuePipelineElementBase'></a>
 ## UnspecifiedFieldValuePipelineElementBase `type`
@@ -3941,27 +4382,24 @@ Doesn't substitute for ConnectorId, ExternalId or ParentExternalId.
 
 ##### Summary
 
-Constructs a new UnspecifiedFieldValuePipelineElementBase with an optional next submit
-pipeline element.
+Constructs a new unspecified-field pipeline element.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| next | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') |  |
+| next | [RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission](#T-RecordPoint-Connectors-SDK-SubmitPipeline-ISubmission 'RecordPoint.Connectors.SDK.SubmitPipeline.ISubmission') | The next pipeline element to invoke. |
 
 <a name='M-RecordPoint-Connectors-SDK-SubmitPipeline-UnspecifiedFieldValuePipelineElementBase-GetRequiredStringFields'></a>
 ### GetRequiredStringFields() `method`
 
 ##### Summary
 
-Implement in a derived class to specify the names of any string fields that are required.
-The pipeline element will substitute any blank or missing values with "Unspecified" for these
-fields.
+Gets the required string fields that should be defaulted when missing.
 
 ##### Returns
 
-
+The required field names.
 
 ##### Parameters
 
@@ -3972,15 +4410,14 @@ This method has no parameters.
 
 ##### Summary
 
-Checks core metadata for any required fields that are blank or missing
-and provides the value "Unspecified" for those fields.
+Replaces missing required metadata values with `Unspecified`.
 
 ##### Returns
 
-
+A task that completes when submission processing finishes.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') |  |
+| submitContext | [RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext](#T-RecordPoint-Connectors-SDK-SubmitPipeline-SubmitContext 'RecordPoint.Connectors.SDK.SubmitPipeline.SubmitContext') | The current submission context. |

@@ -1,6 +1,4 @@
-﻿using RecordPoint.Connectors.SDK.Abstractions.Content;
-
-namespace RecordPoint.Connectors.SDK.Content
+﻿namespace RecordPoint.Connectors.SDK.Content
 {
     /// <summary>
     /// Represents meta information about a binary
@@ -8,9 +6,48 @@ namespace RecordPoint.Connectors.SDK.Content
     public sealed class BinaryMetaInfo : ContentItem, IEquatable<BinaryMetaInfo>
     {
         /// <summary>
+        /// The maximum length of a Item External Id + Binary External Id is limited to 974 characters due to Azure Blob Storage filename limitations.
+        /// The Full binary storage path is based on {ConnectorId}.{ItemExternalId}\{ExternalId}{.cracked.txt}
+        /// ConnectorId is a GUID (36 characters) plus the separater (.) and ItemExternalId, followed by the path separator (\)
+        /// We also need to account for the cracked document suffix (.cracked.txt) which is 12 characters long, resulting in a total of 50 characters that are not usable.
+        /// Resulting in a maximum available length of 974 characters for both the ItemExternalId and the Binary External Id.
+        /// </summary>
+        private const int MaxBinaryExternalIdLength = 974;
+
+        private string? externalId = string.Empty;
+        private string? itemExternalId = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the external identifier associated with this entity.
+        /// </summary>
+        /// <remarks>
+        /// This overrides the property from the ContentItem base to provide maximum length validation</remarks>
+        public new string? ExternalId { 
+            get => externalId; 
+            set {
+                ValidateBinaryStorageFilenameLength(ItemExternalId, value);
+                externalId = value;
+            }
+        }
+
+        /// <summary>
         /// External ID of the record this binary is associated with
         /// </summary>
-        public string ItemExternalId { get; set; } = string.Empty;
+        public string? ItemExternalId { 
+            get => itemExternalId;
+            set
+            {
+                ValidateBinaryStorageFilenameLength(value, ExternalId);
+                itemExternalId = value;
+            }
+        }
+
+        private static void ValidateBinaryStorageFilenameLength(string? itemExternalId, string? externalId)
+        {
+            var combinedLength = (itemExternalId?.Length ?? 0) + (externalId?.Length ?? 0);
+            if (combinedLength > MaxBinaryExternalIdLength)
+                throw new ArgumentOutOfRangeException($"ItemExternalId + ExternalId cannot exceed {MaxBinaryExternalIdLength} characters in length.");
+        }
 
         /// <summary>
         /// String that uniquely identifies how the content token is formatted.

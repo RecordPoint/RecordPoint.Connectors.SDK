@@ -36,22 +36,6 @@
         public bool CleanUpChannels { get; set; } = true;
 
         /// <summary>
-        /// Automatically remove Completed Managed Work
-        /// </summary>
-        /// <remarks>
-        /// Defaults to true
-        /// </remarks>
-        public bool RemoveCompletedWork { get; set; } = true;
-
-        /// <summary>
-        /// Automatically remove Abandoned Managed Work
-        /// </summary>
-        /// <remarks>
-        /// Defaults to true
-        /// </remarks>
-        public bool RemoveAbandonedWork { get; set; } = true;
-
-        /// <summary>
         /// The max age for a Completed Managed Work Status before it is removed
         /// </summary>
         /// <remarks>
@@ -79,6 +63,14 @@
         /// Defaults to -1 which means disabled connectors will not have their work abandoned
         /// </remarks>
         public int MaxDisabledConnectorAge { get; set; } = -1;
+
+        /// <summary>
+        /// Enables the managed work statuses migration process to run at service start up.
+        /// </summary>
+        /// <remarks>
+        /// This only really needs to run once, but can be left enabled without any real impact other than a delayed startup time for the service.
+        /// </remarks>
+        public bool PerformManagedWorkMigration { get; set; } = true;
     }
 
 
@@ -190,6 +182,22 @@
         /// Submits the record and binaries together within a single unit of work
         /// </summary>
         public bool SubmitRecordAndBinariesSynchronously { get; set; } = false;
+    }
+
+    /// <summary>
+    /// Configuration settings for Record Disposal
+    /// </summary>
+    public class RecordDisposalOptions
+    {
+        /// <summary>
+        /// Name for the configuration section
+        /// </summary>
+        public const string SECTION_NAME = "ContentManager:RecordDisposal";
+
+        /// <summary>
+        /// Sends a callback to RecordPoint after disposal is complete.
+        /// </summary>
+        public bool SendDisposalCallback { get; set; } = false;
     }
 
 }

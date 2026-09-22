@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 {
@@ -25,9 +26,15 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
         }
 
         /// <summary>
-        /// Creates an instance of a RabbitMqClient
+        /// Creates or reuses an open RabbitMQ connection.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        /// Excluded from code coverage: this is a thin wrapper over
+        /// ConnectionFactory.CreateConnection() which requires a live RabbitMQ broker and
+        /// cannot be exercised without an integration environment.
+        /// </remarks>
+        /// <returns>An open RabbitMQ connection.</returns>
+        [ExcludeFromCodeCoverage]
         public IConnection CreateRabbitMqConnection()
         {
             if (_rabbitMqConnection != null && _rabbitMqConnection.IsOpen)
@@ -43,7 +50,7 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
                     Password = _rabbitMqOptions.Value.HostPassword
                 };
 
-                _rabbitMqConnection = connectionFactory.CreateConnection();
+                _rabbitMqConnection = connectionFactory.CreateConnectionAsync().GetAwaiter().GetResult();
                 return _rabbitMqConnection;
             }
         }

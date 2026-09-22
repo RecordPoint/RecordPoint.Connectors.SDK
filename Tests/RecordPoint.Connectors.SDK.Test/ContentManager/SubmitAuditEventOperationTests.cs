@@ -18,7 +18,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var connector = ContentManagerSutBase.CreateConnector1();
             var workMessage = SUT.CreateSubmitAuditEventManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitAuditEventOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitAuditEventRequest(workMessage), cancellationToken);
@@ -40,7 +39,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitAuditEventManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitAuditEventOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitAuditEventRequest(workMessage), cancellationToken);
@@ -61,7 +59,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitAuditEventManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitAuditEventOperation>();
             try

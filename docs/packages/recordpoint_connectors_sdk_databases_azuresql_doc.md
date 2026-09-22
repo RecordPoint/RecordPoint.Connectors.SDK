@@ -37,6 +37,10 @@
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-AzureSqlDbProvider`1-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.AzureSql.AzureSqlDbProvider`1.GetContextOptionsBuilder')
   - [GetSqlDatabaseScript(scriptName,parameters)](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-AzureSqlDbProvider`1-GetSqlDatabaseScript-System-String,System-Collections-Generic-Dictionary{System-String,System-String}- 'RecordPoint.Connectors.SDK.Databases.AzureSql.AzureSqlDbProvider`1.GetSqlDatabaseScript(System.String,System.Collections.Generic.Dictionary{System.String,System.String})')
   - [RunScript(scriptName,paramName,paramValue,connection)](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-AzureSqlDbProvider`1-RunScript-System-String,System-String,System-String,Microsoft-Data-SqlClient-SqlConnection- 'RecordPoint.Connectors.SDK.Databases.AzureSql.AzureSqlDbProvider`1.RunScript(System.String,System.String,System.String,Microsoft.Data.SqlClient.SqlConnection)')
+- [ConnectorConfigUpdate](#T-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate 'RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations.ConnectorConfigUpdate')
+  - [BuildTargetModel()](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder- 'RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations.ConnectorConfigUpdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)')
+  - [Down()](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations.ConnectorConfigUpdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
+  - [Up()](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations.ConnectorConfigUpdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
 - [DesignTimeDbContextFactory](#T-RecordPoint-Connectors-SDK-Databases-AzureSql-DesignTimeDbContextFactory 'RecordPoint.Connectors.SDK.Databases.AzureSql.DesignTimeDbContextFactory')
   - [CreateDbContext(args)](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-DesignTimeDbContextFactory-CreateDbContext-System-String[]- 'RecordPoint.Connectors.SDK.Databases.AzureSql.DesignTimeDbContextFactory.CreateDbContext(System.String[])')
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-AzureSql-DesignTimeDbContextFactory-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.AzureSql.DesignTimeDbContextFactory.GetContextOptionsBuilder')
@@ -469,6 +473,50 @@ Run the script.
 | paramName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The param name. |
 | paramValue | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The param value. |
 | connection | [Microsoft.Data.SqlClient.SqlConnection](#T-Microsoft-Data-SqlClient-SqlConnection 'Microsoft.Data.SqlClient.SqlConnection') | The connection. |
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate'></a>
+## ConnectorConfigUpdate `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder-'></a>
+### BuildTargetModel() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Down() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-AzureSql-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Up() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-Databases-AzureSql-DesignTimeDbContextFactory'></a>
 ## DesignTimeDbContextFactory `type`

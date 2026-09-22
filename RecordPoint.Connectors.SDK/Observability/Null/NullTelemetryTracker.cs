@@ -32,6 +32,14 @@ namespace RecordPoint.Connectors.SDK.Observability.Null
         }
 
         /// <summary>
+        /// Track a Metric
+        /// </summary>
+        public void TrackMetric(string name, double value, string? dimensionName = null, string? dimensionValue = null)
+        {
+            // Does nothing on purpose
+        }
+
+        /// <summary>
         /// Track a Trace Message
         /// </summary>
         public void TrackTrace(string message, SeverityLevel severityLevel, Dimensions dimensions = null)
