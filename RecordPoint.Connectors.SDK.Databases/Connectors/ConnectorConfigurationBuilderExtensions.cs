@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RecordPoint.Connectors.SDK.Caching;
+using RecordPoint.Connectors.SDK.Client.Models;
 
 namespace RecordPoint.Connectors.SDK.Connectors
 {
@@ -16,6 +18,7 @@ namespace RecordPoint.Connectors.SDK.Connectors
         public static IHostBuilder UseDatabaseConnectorConfigurationManager(this IHostBuilder hostBuilder)
         {
             hostBuilder
+                .UseInMemoryCache<ConnectorConfigurationCacheAction, ConnectorConfigurationModel>()
                 .ConfigureServices((hostContext, services) =>
                 {
                     var configuration = hostContext.Configuration;

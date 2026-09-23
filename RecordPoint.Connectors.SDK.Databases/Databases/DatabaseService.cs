@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
@@ -13,43 +14,20 @@ namespace RecordPoint.Connectors.SDK.Databases
     /// This service can be used by some database providers that require preperation prior to use.
     /// e.g. The service can be used to attach a localDb database to the hosting service, or performing EF migrations.
     /// </summary>
-    public class DatabaseService<TDbContext, TDbProvider> : BackgroundService
+    /// <remarks>
+    /// Instantiates a new Database Service
+    /// </remarks>
+    public class DatabaseService<TDbContext, TDbProvider>(
+        IServiceProvider serviceProvider,
+        ISystemContext systemContext,
+        TDbProvider databaseProvider,
+        IObservabilityScope observabilityScope,
+        ITelemetryTracker telemetryTracker,
+        IDateTimeProvider dateTimeProvider,
+        IHostApplicationLifetime applicationLifetime) : BackgroundService
         where TDbContext : DbContext
         where TDbProvider : IDatabaseProvider<TDbContext>
     {
-
-        private readonly ISystemContext _systemContext;
-        private readonly TDbProvider _databaseProvider;
-        private readonly IObservabilityScope _observabilityScope;
-        private readonly ITelemetryTracker _telemetryTracker;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IHostApplicationLifetime _applicationLifetime;
-
-        /// <summary>
-        /// Instantiates a new Database Service
-        /// </summary>
-        /// <param name="systemContext"></param>
-        /// <param name="databaseProvider"></param>
-        /// <param name="observabilityScope"></param>
-        /// <param name="telemetryTracker"></param>
-        /// <param name="dateTimeProvider"></param>
-        /// <param name="applicationLifetime"></param>
-        public DatabaseService(
-            ISystemContext systemContext,
-            TDbProvider databaseProvider,
-            IObservabilityScope observabilityScope,
-            ITelemetryTracker telemetryTracker,
-            IDateTimeProvider dateTimeProvider,
-            IHostApplicationLifetime applicationLifetime)
-        {
-            _systemContext = systemContext;
-            _databaseProvider = databaseProvider;
-            _observabilityScope = observabilityScope;
-            _telemetryTracker = telemetryTracker;
-            _dateTimeProvider = dateTimeProvider;
-
-            _applicationLifetime = applicationLifetime;
-        }
 
 
         /// <summary>
@@ -59,15 +37,15 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// <returns></returns>
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            _applicationLifetime.ApplicationStopped.Register(OnShutdown);
+            applicationLifetime.ApplicationStopped.Register(OnShutdown);
 
-            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
+            using var systemScope = observabilityScope.BeginSystemScope(systemContext);
 
             var prepareOutcome = await PrepareDatabaseAsync(cancellationToken);
             if (prepareOutcome != WorkResultType.Complete)
                 return;
 
-            _databaseProvider.SetReady(null);
+            databaseProvider.SetReady(null);
         }
 
         /// <summary>
@@ -78,10 +56,10 @@ namespace RecordPoint.Connectors.SDK.Databases
         private async Task<WorkResultType> PrepareDatabaseAsync(CancellationToken cancellationToken)
         {
             // Work items already log so no need to repeat it
-            var prepareDatabaseOperation = new PrepareDatabaseOperation<TDbContext, TDbProvider>(_databaseProvider, _observabilityScope, _telemetryTracker, _dateTimeProvider);
+            var prepareDatabaseOperation = new PrepareDatabaseOperation<TDbContext, TDbProvider>(serviceProvider, databaseProvider, observabilityScope, telemetryTracker, dateTimeProvider);
             await prepareDatabaseOperation.RunAsync(null, cancellationToken);
             if (prepareDatabaseOperation.Exception != null)
-                _databaseProvider.SetReady(prepareDatabaseOperation.Exception);
+                databaseProvider.SetReady(prepareDatabaseOperation.Exception);
             return prepareDatabaseOperation.ResultType;
         }
 
@@ -94,25 +72,25 @@ namespace RecordPoint.Connectors.SDK.Databases
 
         private void OnShutdown()
         {
-            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
+            using var systemScope = observabilityScope.BeginSystemScope(systemContext);
 
             var startupDimensions = new Dimensions()
             {
                 [StandardDimensions.EVENT_TYPE] = EventType.Shutdown.ToString()
             };
-            using var cleanupScope = _observabilityScope.BeginScope(startupDimensions);
-            _telemetryTracker.TrackTrace($"Cleaning up Database Service", SeverityLevel.Information, startupDimensions);
+            using var cleanupScope = observabilityScope.BeginScope(startupDimensions);
+            telemetryTracker.TrackTrace($"Cleaning up Database Service", SeverityLevel.Information, startupDimensions);
 
             try
             {
                 var dimensions = new Dimensions();
-                _observabilityScope.InvokeAsync(dimensions, () =>
-                    _databaseProvider.CleanupAsync(CancellationToken.None)
+                observabilityScope.InvokeAsync(dimensions, () =>
+                    databaseProvider.CleanupAsync(CancellationToken.None)
                 ).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
-                _telemetryTracker.TrackException(ex);
+                telemetryTracker.TrackException(ex);
             }
         }
 

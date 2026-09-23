@@ -10,7 +10,8 @@
         /// 
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<CacheActionResult<TCacheItemType>> ExecuteAsync(CacheActionContext context);
+        Task<CacheActionResult<TCacheItemType>> ExecuteAsync(CacheActionContext context, CancellationToken cancellationToken = (default));
     }
 }

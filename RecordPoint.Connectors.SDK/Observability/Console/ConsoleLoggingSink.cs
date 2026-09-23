@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 
 namespace RecordPoint.Connectors.SDK.Observability.Console;
 
@@ -39,6 +40,25 @@ public class ConsoleLoggingSink(IOptions<ConsoleLoggingOptions> consoleLoggingOp
         WriteMeasures(measures);
 
         System.Console.ResetColor();
+    }
+
+    /// <summary>
+    /// Logs a metric to the console
+    /// </summary>
+    public void TrackMetric(string name, double value, Dimensions? dimensions = null)
+    {
+        if (!consoleLoggingOptions.Value.WriteMeasures)
+        {
+            return;
+        }
+
+        System.Console.ResetColor();
+        var dimensionSuffix = "";
+        if (dimensions != null && dimensions.Count > 0)
+        {
+            dimensionSuffix = " [" + string.Join(", ", dimensions.Select(d => $"{d.Key}={d.Value}")) + "]";
+        }
+        System.Console.WriteLine($"{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff zzz} METR: {name} = {value:F2}{dimensionSuffix}");
     }
 
     /// <summary>

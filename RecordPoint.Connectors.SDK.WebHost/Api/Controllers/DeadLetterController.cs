@@ -1,58 +1,78 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
+using RecordPoint.Connectors.SDK.Context;
+using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.WebHost.Controllers
 {
     /// <summary>
-    /// DeadLetterController
+    /// API controller for viewing and replaying dead-letter queue messages.
     /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class DeadLetterController : ControllerBase
     {
         private readonly IDeadLetterQueueService _deadLetterQueueService;
+        private readonly IObservabilityScope _observabilityScope;
+        private readonly ISystemContext _systemContext;
+        private readonly ITelemetryTracker _telemetryTracker;
+        private readonly DeadLetterControllerOptions _options;
 
         /// <summary>
-        /// Constractor for DI
+        /// Constructor for DI
         /// </summary>
-        /// <param name="deadLetterQueueService"></param>
-        public DeadLetterController(IDeadLetterQueueService deadLetterQueueService)
+        /// <param name="deadLetterQueueService">The dead-letter queue service.</param>
+        /// <param name="observabilityScope">The observability scope manager.</param>
+        /// <param name="systemContext">The system context.</param>
+        /// <param name="telemetryTracker">The telemetry tracker.</param>
+        /// <param name="options">The dead-letter controller options.</param>
+        public DeadLetterController(
+            IDeadLetterQueueService deadLetterQueueService,
+            IObservabilityScope observabilityScope,
+            ISystemContext systemContext,
+            ITelemetryTracker telemetryTracker,
+            IOptions<DeadLetterControllerOptions> options)
         {
             _deadLetterQueueService = deadLetterQueueService;
+            _observabilityScope = observabilityScope;
+            _systemContext = systemContext;
+            _telemetryTracker = telemetryTracker;
+            _options = options.Value;
         }
 
         /// <summary>
-        /// Get all Dead Letter messages by Queue 
+        /// Gets all dead-letter messages for a queue.
         /// </summary>
-        /// <param name="queueName"></param>        
-        /// <returns></returns>
+        /// <param name="queueName">The queue name to read dead-letter messages from.</param>
+        /// <returns>A response containing the matching dead-letter messages.</returns>
         [HttpGet("GetAllMessages")]
         public async Task<IActionResult> Get([BindRequired] string queueName)
         {
-            if (string.IsNullOrEmpty(queueName))
+            if (!TryValidateQueueName(queueName, out var badRequest))
             {
-                return BadRequest("Queue Name is required");
+                return badRequest;
             }
 
-            var deadlLetterList = await _deadLetterQueueService.GetAllMessagesAsync(queueName);
+            var deadLetterList = await _deadLetterQueueService.GetMessagesAsync(queueName);
 
-            return Ok(deadlLetterList);
+            return Ok(deadLetterList);
         }
 
 
         /// <summary>
-        /// Get Dead Letter message by Sequence number 
+        /// Gets a dead-letter message by sequence number.
         /// </summary>
-        /// <param name="queueName"></param>
-        /// <param name="sequenceNumber"></param>
-        /// <returns></returns>
+        /// <param name="queueName">The queue name to read from.</param>
+        /// <param name="sequenceNumber">The sequence number of the dead-letter message.</param>
+        /// <returns>A response containing the requested dead-letter message.</returns>
         [HttpGet]
         public async Task<IActionResult> Get([BindRequired] string queueName, [BindRequired] long sequenceNumber)
         {
-            if (string.IsNullOrEmpty(queueName))
+            if (!TryValidateQueueName(queueName, out var badRequest))
             {
-                return BadRequest("Queue Name is required");
+                return badRequest;
             }
 
             if (sequenceNumber <= 0)
@@ -66,17 +86,17 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
         }
 
         /// <summary>
-        /// Post the messages based on the sequence number to requeue
+        /// Requeues selected dead-letter messages by sequence number.
         /// </summary>
-        /// <param name="queueName"></param>
-        /// <param name="sequenceNumbers"></param>
-        /// <returns></returns>
+        /// <param name="queueName">The queue name to requeue messages into.</param>
+        /// <param name="sequenceNumbers">The sequence numbers to requeue.</param>
+        /// <returns>An HTTP response indicating the replay result.</returns>
         [HttpPost]
         public async Task<IActionResult> Post([BindRequired] string queueName, [BindRequired] long[] sequenceNumbers)
         {
-            if (string.IsNullOrEmpty(queueName))
+            if (!TryValidateQueueName(queueName, out var badRequest))
             {
-                return BadRequest("Queue Name is required");
+                return badRequest;
             }
 
             if (!sequenceNumbers.Any())
@@ -89,54 +109,101 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
         }
 
         /// <summary>
-        /// Requeue all the dead letter messages for a given queue name and batch size
+        /// Requeues up to <paramref name="maxCount"/> dead-letter messages for a queue.
         /// </summary>
-        /// <param name="queueName"></param>
-        /// <param name="batchSize"></param>
-        /// <returns></returns>
+        /// <param name="queueName">The queue name to requeue messages into.</param>
+        /// <param name="maxCount">The maximum number of messages to replay.</param>
+        /// <param name="cancellationToken">A token to cancel the operation.</param>
+        /// <returns>An HTTP response indicating the replay result.</returns>
         [HttpPost("PostAllMessages")]
-        public async Task<IActionResult> Post([BindRequired] string queueName, [BindRequired] int batchSize = 1000)
+        public async Task<IActionResult> Post([BindRequired] string queueName, [BindRequired] int maxCount = 1000, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(queueName))
+            using var systemScope = _observabilityScope.BeginSystemScope(_systemContext);
+
+            if (!TryValidateQueueName(queueName, out var badRequest))
             {
-                return BadRequest("Queue Name is required");
+                return badRequest;
             }
 
-            if (batchSize > 1000)
+            if (maxCount > _options.MaxReplayBatchSize || maxCount <= 0)
             {
-                return BadRequest("Batch size is too big");
+                return BadRequest($"Batch size [{maxCount}] is too big (>{_options.MaxReplayBatchSize}) or invalid");
             }
 
-            var deadLetterList = await _deadLetterQueueService.GetAllMessagesAsync(queueName);
+            var startedAtUtc = DateTime.UtcNow;
+            string reason = "Completed";
+            var resubmittedCount = 0;
 
-            if (!deadLetterList.Any())
+            try
             {
-                return Ok("No dead letters found");
+                var result = await _deadLetterQueueService.ResubmitTopMessagesAsync(queueName, maxCount, cancellationToken);
+                resubmittedCount = result.Resubmitted;
+
+                if (result.Resubmitted == 0)
+                {
+                    if (result.QueueConfirmedEmpty)
+                    {
+                        reason = "NoMessages";
+                        return Ok("No dead letters found");
+                    }
+
+                    // The DLQ is not confirmed empty - this pass simply made no progress
+                    // (e.g. the head messages were momentarily locked, or every send failed).
+                    // Return a non-terminal success so a looping caller keeps draining rather
+                    // than false-stopping on an unverified "empty".
+                    reason = "NoProgress";
+                    return Ok();
+                }
+
+                return Ok();
             }
-
-            var sequenceNumbers = deadLetterList.Select(dlm => long.Parse(dlm.SequenceNumber)).ToArray();
-
-            // limit size of batch
-            batchSize = batchSize > 0 ? batchSize : 1000;
-            var count = sequenceNumbers.Length <= batchSize ? sequenceNumbers.Length : batchSize;
-            var cappedSequenceNumbers = sequenceNumbers.Take(count).ToArray();
-
-            await _deadLetterQueueService.ResubmitMessagesAsync(queueName, cappedSequenceNumbers);
-            return Ok();
+            catch (OperationCanceledException)
+            {
+                reason = "Cancelled";
+                throw;
+            }
+            catch (Exception ex)
+            {
+                reason = "Exception";
+                _telemetryTracker.TrackException(ex);
+                throw;
+            }
+            finally
+            {
+                var durationMs = (DateTime.UtcNow - startedAtUtc).TotalMilliseconds;
+                _telemetryTracker.TrackEvent(
+                    "DLQ.ResubmitBatch",
+                    new Dimensions
+                    {
+                        ["QueueName"] = queueName,
+                        ["Reason"] = reason
+                    },
+                    new Measures
+                    {
+                        ["Requested"] = maxCount,
+                        ["Resubmitted"] = resubmittedCount,
+                        ["DurationMs"] = durationMs
+                    });
+            }
         }
 
         /// <summary>
-        /// Delete the message from the queue based on the sequence number
+        /// Deletes a dead-letter message by sequence number.
         /// </summary>
-        /// <param name="queueName"></param>
-        /// <param name="sequenceNumber"></param>
-        /// <returns></returns>
+        /// <param name="queueName">The queue name that contains the message.</param>
+        /// <param name="sequenceNumber">The sequence number of the message to delete.</param>
+        /// <returns>An HTTP response indicating the delete result.</returns>
         [HttpDelete]
         public async Task<IActionResult> Delete([BindRequired] string queueName, [BindRequired] long sequenceNumber)
         {
-            if (string.IsNullOrEmpty(queueName))
+            if (!_options.EnableDeleteOperations)
             {
-                return BadRequest("Queue Name is required");
+                return NotFound();
+            }
+
+            if (!TryValidateQueueName(queueName, out var badRequest))
+            {
+                return badRequest;
             }
 
             if (sequenceNumber <= 0)
@@ -150,24 +217,43 @@ namespace RecordPoint.Connectors.SDK.WebHost.Controllers
         }
 
         /// <summary>
-        /// Delete the all messages from the queue
+        /// Deletes all dead-letter messages from a queue.
         /// </summary>
-        /// <param name="queueName"></param>
-        /// <returns></returns>
+        /// <param name="queueName">The queue name to clear.</param>
+        /// <returns>An HTTP response indicating the delete result.</returns>
         [HttpDelete("DeleteAll")]
         public async Task<IActionResult> DeleteAll([BindRequired] string queueName)
         {
-            if (string.IsNullOrEmpty(queueName))
+            if (!_options.EnableDeleteOperations)
             {
-                return BadRequest("Queue Name is required");
+                return NotFound();
             }
-            else
+
+            if (!TryValidateQueueName(queueName, out var badRequest))
             {
-                await _deadLetterQueueService.DeleteAllMessagesAsync(queueName);
-                return Ok();
+                return badRequest;
             }
+
+            await _deadLetterQueueService.DeleteAllMessagesAsync(queueName);
+            return Ok();
         }
 
+        private bool TryValidateQueueName(string? queueName, out BadRequestObjectResult badRequest)
+        {
+            if (string.IsNullOrEmpty(queueName))
+            {
+                badRequest = BadRequest("Queue Name is required");
+                return false;
+            }
 
+            if (_options.AllowedQueueNames.Count > 0 && !_options.AllowedQueueNames.Contains(queueName))
+            {
+                badRequest = BadRequest($"Queue Name is not allowed. Supported queues: {string.Join(", ", _options.AllowedQueueNames)}");
+                return false;
+            }
+
+            badRequest = null!;
+            return true;
+        }
     }
 }

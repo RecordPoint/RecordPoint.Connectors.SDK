@@ -22,6 +22,20 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         public int? NextDelay { get; set; } = null;
 
         /// <summary>
+        /// Overrides the maximum backoff delay applied to this result, in seconds.
+        /// </summary>
+        /// <remarks>
+        /// When null, QueueableWorkBase.DEFAULT_MAX_BACKOFF_DELAY_SECONDS (one hour) applies.
+        /// Set this only when the content source is genuinely slow to respond and a long wait is expected —
+        /// for example a disposal that completes weeks later — not to work around throttling, where the
+        /// default hour is the right ceiling. The value is clamped to
+        /// QueueableWorkBase.ABSOLUTE_MAX_BACKOFF_DELAY_SECONDS.
+        /// Because a BackOff also holds a semaphore lock for this long, raise it only for locks that are
+        /// scoped narrowly enough that other work is not held up.
+        /// </remarks>
+        public int? MaxNextDelay { get; set; } = null;
+
+        /// <summary>
         /// Observability Dimensions
         /// </summary>
         public Dimensions Dimensions { get; set; } = [];

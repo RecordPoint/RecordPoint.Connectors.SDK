@@ -93,6 +93,8 @@ namespace RecordPoint.Connectors.SDK.Content
         {
             await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 using var dbContext = _databaseClient.CreateDbContext();
 
                 var existingAggregation = await dbContext.Aggregations
@@ -124,6 +126,8 @@ namespace RecordPoint.Connectors.SDK.Content
                 var connectorIdGroups = aggregations.GroupBy(a => a.ConnectorId, a => a);
                 foreach (var aggregationsGroupedByConnectorId in connectorIdGroups)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var externalIds = aggregationsGroupedByConnectorId.Select(a => a.ExternalId);
                     var existingAggregations = await dbContext.Aggregations
                         .Where(a => a.ConnectorId == aggregationsGroupedByConnectorId.Key && externalIds.Contains(a.ExternalId))
@@ -166,6 +170,8 @@ namespace RecordPoint.Connectors.SDK.Content
                 var hasUpdates = false;
                 foreach (var aggregation in updateAggregations)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var existingAggregation = existingAggregations.First(a => a.ExternalId == aggregation.ExternalId);
                     if (!aggregation.Equals(existingAggregation))
                     {
@@ -184,6 +190,8 @@ namespace RecordPoint.Connectors.SDK.Content
         {
             await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
              {
+                 cancellationToken.ThrowIfCancellationRequested();
+
                  using var dbContext = _databaseClient.CreateDbContext();
                  var aggregation = await dbContext.Aggregations
                      .FirstOrDefaultAsync(a => a.ConnectorId == connectorId && a.ExternalId == externalId, cancellationToken);
@@ -200,6 +208,8 @@ namespace RecordPoint.Connectors.SDK.Content
         {
             await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 using var dbContext = _databaseClient.CreateDbContext();
                 var aggregations = await dbContext.Aggregations
                     .Where(a => a.ConnectorId == connectorId && externalIds.Contains(a.ExternalId))
@@ -224,6 +234,8 @@ namespace RecordPoint.Connectors.SDK.Content
 
                 foreach (var aggregationGroup in groupedAggregations)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var externalIds = aggregationGroup.Aggregations.Select(a => a.ExternalId);
                     var aggregations = await dbContext.Aggregations
                         .Where(a => a.ConnectorId == aggregationGroup.ConnectorId && externalIds.Contains(a.ExternalId))

@@ -35,6 +35,12 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         public List<Channel> NewChannelRegistrations { get; set; } = new();
 
         /// <summary>
+        /// Renamed Channel Registrations
+        /// The Channel Discovery operation will invoke new Content Registrations for renamed Channels returned in this list.
+        /// </summary>
+        public List<Channel> RenamedChannelRegistrations { get; set; } = new();
+
+        /// <summary>
         /// Audit Events
         /// </summary>
         public List<AuditEvent> AuditEvents { get; set; } = new List<AuditEvent>();

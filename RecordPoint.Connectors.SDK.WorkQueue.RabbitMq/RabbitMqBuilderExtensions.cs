@@ -27,6 +27,25 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
             return hostBuilder;
         }
+
+        /// <summary>
+        /// Use rabbit mq work queue.
+        /// </summary>
+        /// <param name="hostBuilder">The host builder.</param>
+        /// <returns>An IHostBuilder</returns>
+        public static IHostBuilder UseRabbitMqWorkClient(this IHostBuilder hostBuilder)
+        {
+            hostBuilder.ConfigureServices((hostContext, services) =>
+            {
+                var configuration = hostContext.Configuration;
+                services.Configure<RabbitMqOptions>(configuration.GetSection(RabbitMqOptions.SECTION_NAME));
+                services.AddSingleton<IRabbitMqClientFactory, RabbitMqClientFactory>();
+                services.AddSingleton<IWorkQueueClient, RabbitMqWorkClient>();
+            });
+
+            return hostBuilder;
+        }
+
         /// <summary>
         /// Use rabbit mq dead letter queue service.
         /// </summary>

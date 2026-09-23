@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Moq;
+using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
@@ -20,7 +22,9 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .UseMockConnectorDatabase()
                 .UseDatabaseChannelManager()
                 .UseMockR365Client()
-                .ConfigureServices(svcs => svcs.AddTransient<RecordDisposalOperation>());
+                .ConfigureServices(svcs => svcs
+                    .AddSingleton(new Mock<IR365NotificationClient>().Object)
+                    .AddTransient<RecordDisposalOperation>());
         }
 
         #region Record Disposal Work Request
@@ -47,18 +51,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             SubmitDateTime = RecordDisposalSubmitTime1,
             Body = workMessage.Serialize()
         };
-
-        public async Task SetWorkRunning(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .AddWorkStatusAsync(workMessage, CancellationToken.None);
-        }
-
-        public async Task SetWorkContinue(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .SetWorkContinueAsync(workMessage.WorkId, workMessage.WorkId, string.Empty, CancellationToken.None);
-        }
         #endregion
 
     }

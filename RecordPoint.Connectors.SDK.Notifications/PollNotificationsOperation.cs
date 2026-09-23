@@ -1,4 +1,5 @@
-﻿using RecordPoint.Connectors.SDK.Observability;
+﻿using RecordPoint.Connectors.SDK.Client;
+using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
 
@@ -6,7 +7,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
 {
 
     /// <summary>
-    /// The poll notifications operation.
+    /// The poll (pull) notifications operation.
     /// </summary>
     public class PollNotificationsOperation : WorkBase<object>
     {
@@ -27,18 +28,20 @@ namespace RecordPoint.Connectors.SDK.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="PollNotificationsOperation"/> class.
         /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <param name="notificationManager">The notification manager.</param>
         /// <param name="r365NotificationClient">The r365 notification client.</param>
         /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
         public PollNotificationsOperation(
+            IServiceProvider serviceProvider,
             INotificationManager notificationManager,
             IR365NotificationClient r365NotificationClient,
             IObservabilityScope observabilityScope,
             ITelemetryTracker telemetryTracker,
             IDateTimeProvider dateTimeProvider)
-            : base(observabilityScope, telemetryTracker, dateTimeProvider)
+            : base(serviceProvider, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _notificationManager = notificationManager;
             _r365NotificationClient = r365NotificationClient;

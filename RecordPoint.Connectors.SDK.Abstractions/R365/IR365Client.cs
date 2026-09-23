@@ -57,5 +57,13 @@ namespace RecordPoint.Connectors.SDK.R365
         /// <returns>Submit result</returns>
         public Task<SubmitResult> SubmitBinary(ConnectorConfigModel connectorConfig, BinaryMetaInfo binaryMetaInfo, Stream binaryStream, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Sends a disposal callback notification to R365
+        /// </summary>
+        /// <param name="callbackNotification"></param>
+        /// <param name="connectorConfig"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task DisposalCallback(ItemNotificationDisposalCallbackModel callbackNotification, ConnectorConfigModel connectorConfig, CancellationToken cancellationToken);
     }
 }

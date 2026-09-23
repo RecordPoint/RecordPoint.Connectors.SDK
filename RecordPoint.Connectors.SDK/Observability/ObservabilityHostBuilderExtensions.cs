@@ -17,7 +17,10 @@ public static class ObservabilityHostBuilderExtensions
     {
         return hostBuilder.ConfigureServices((hostContext, services) =>
         {
+            var loggingOptionsSection = hostContext.Configuration.GetSection(LoggingOptions.SECTION_NAME);
+
             services
+                .Configure<LoggingOptions>(loggingOptionsSection)
                 .AddSingleton<IObservabilityScope, ObservabilityScope>()
                 .AddSingleton<ITelemetryTracker, TelemetryTracker>();
         });

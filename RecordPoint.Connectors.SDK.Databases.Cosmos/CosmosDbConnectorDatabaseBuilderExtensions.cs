@@ -1,8 +1,10 @@
 ﻿using System.Security.Authentication;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Configuration;
+using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Manager;
 using RecordPoint.Connectors.SDK.Observability;
@@ -37,6 +39,15 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
                     })
                     .AddSingleton<IConnectorDatabaseClient, ConnectorDatabaseClient>()
                     .Configure<CosmosDbConnectorDatabaseOptions>(configuration.GetSection(CosmosDbConnectorDatabaseOptions.SECTION_NAME));
+
+                var cosmosOptions = configuration
+                    .GetSection(CosmosDbConnectorDatabaseOptions.SECTION_NAME)
+                    .Get<CosmosDbConnectorDatabaseOptions>();
+
+                if (cosmosOptions is { UseDirectReads: true })
+                {
+                    services.AddSingleton<IDirectChannelAccess, CosmosDirectChannelAccess>();
+                }
             });
         }
 

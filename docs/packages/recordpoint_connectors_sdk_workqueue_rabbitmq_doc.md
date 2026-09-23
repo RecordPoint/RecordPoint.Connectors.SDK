@@ -11,17 +11,19 @@
   - [GetQueueName(workType,queuePrefix)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-QueueNameHelper-GetQueueName-System-String,System-String- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.QueueNameHelper.GetQueueName(System.String,System.String)')
 - [RabbitMqBuilderExtensions](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqBuilderExtensions 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqBuilderExtensions')
   - [UseRabbitMqDeadLetterQueueService(hostBuilder)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqBuilderExtensions-UseRabbitMqDeadLetterQueueService-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqBuilderExtensions.UseRabbitMqDeadLetterQueueService(Microsoft.Extensions.Hosting.IHostBuilder)')
+  - [UseRabbitMqWorkClient(hostBuilder)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqBuilderExtensions-UseRabbitMqWorkClient-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqBuilderExtensions.UseRabbitMqWorkClient(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseRabbitMqWorkQueue(hostBuilder)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqBuilderExtensions-UseRabbitMqWorkQueue-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqBuilderExtensions.UseRabbitMqWorkQueue(Microsoft.Extensions.Hosting.IHostBuilder)')
 - [RabbitMqClientFactory](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqClientFactory 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqClientFactory')
   - [#ctor()](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqClientFactory-#ctor-Microsoft-Extensions-Configuration-IConfiguration,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions}- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqClientFactory.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions})')
   - [CreateRabbitMqConnection()](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqClientFactory-CreateRabbitMqConnection 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqClientFactory.CreateRabbitMqConnection')
 - [RabbitMqDeadLetterQueueService](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService')
-  - [#ctor(rabbitMqClientFactory,managedWorkStatusManager,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.#ctor(RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.IRabbitMqClientFactory,RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
+  - [#ctor(rabbitMqClientFactory,dateTimeProvider)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.#ctor(RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.IRabbitMqClientFactory,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider)')
   - [DeleteAllMessagesAsync(queueName)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-DeleteAllMessagesAsync-System-String- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.DeleteAllMessagesAsync(System.String)')
   - [DeleteMessageAsync(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-DeleteMessageAsync-System-String,System-Int64- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.DeleteMessageAsync(System.String,System.Int64)')
-  - [GetAllMessagesAsync(queueName)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetAllMessagesAsync-System-String- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.GetAllMessagesAsync(System.String)')
   - [GetMessageAsync(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetMessageAsync-System-String,System-Int64- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.GetMessageAsync(System.String,System.Int64)')
+  - [GetMessagesAsync()](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetMessagesAsync-System-String,System-Int32- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.GetMessagesAsync(System.String,System.Int32)')
   - [ResubmitMessagesAsync(queueName,sequenceNumbers)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.ResubmitMessagesAsync(System.String,System.Int64[])')
+  - [ResubmitTopMessagesAsync(queueName,maxCount,cancellationToken)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-ResubmitTopMessagesAsync-System-String,System-Int32,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.ResubmitTopMessagesAsync(System.String,System.Int32,System.Threading.CancellationToken)')
 - [RabbitMqOptions](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions')
   - [SECTION_NAME](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions-SECTION_NAME 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions.SECTION_NAME')
   - [HostName](#P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions-HostName 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions.HostName')
@@ -32,6 +34,7 @@
   - [QueuePrefix](#P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions-QueuePrefix 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions.QueuePrefix')
   - [ServiceShutdownDelay](#P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions-ServiceShutdownDelay 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions.ServiceShutdownDelay')
 - [RabbitMqProcessModel](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqProcessModel 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqProcessModel')
+  - [ConsumerTag](#P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqProcessModel-ConsumerTag 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqProcessModel.ConsumerTag')
   - [RabbitMqEventingBasicConsumer](#P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqProcessModel-RabbitMqEventingBasicConsumer 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqProcessModel.RabbitMqEventingBasicConsumer')
   - [RabbitMqModel](#P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqProcessModel-RabbitMqModel 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqProcessModel.RabbitMqModel')
 - [RabbitMqReceivedMessageExtensions](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqReceivedMessageExtensions 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqReceivedMessageExtensions')
@@ -42,13 +45,12 @@
   - [DisposeAsync()](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkClient-DisposeAsync 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkClient.DisposeAsync')
   - [SubmitWorkAsync()](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkClient-SubmitWorkAsync-RecordPoint-Connectors-SDK-Work-WorkRequest,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkClient.SubmitWorkAsync(RecordPoint.Connectors.SDK.Work.WorkRequest,System.Threading.CancellationToken)')
 - [RabbitMqWorkServer](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer')
-  - [#ctor(workQueueClient,serviceProvider,systemContext,workManager,rabbitMqClientFactory,rabbitMqOptions,observabilityScope,telemetryTracker,dateTimeProvider,toggleProvider,operationTypes)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type}- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.#ctor(RecordPoint.Connectors.SDK.Work.IWorkQueueClient,System.IServiceProvider,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Work.IQueueableWorkManager,RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.IRabbitMqClientFactory,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Providers.IDateTimeProvider,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,System.Collections.Generic.IList{System.Type})')
+  - [#ctor(workQueueClient,serviceProvider,systemContext,workManager,rabbitMqClientFactory,rabbitMqOptions,observabilityScope,telemetryTracker,toggleProvider,operationTypes)](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type}- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.#ctor(RecordPoint.Connectors.SDK.Work.IWorkQueueClient,System.IServiceProvider,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Work.IQueueableWorkManager,RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.IRabbitMqClientFactory,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions},RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,System.Collections.Generic.IList{System.Type})')
   - [DeadletterExchange](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-DeadletterExchange 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.DeadletterExchange')
   - [DeadletterExchangeType](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-DeadletterExchangeType 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.DeadletterExchangeType')
   - [DefaultOperationTypes](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-DefaultOperationTypes 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.DefaultOperationTypes')
   - [ExchangeName](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-ExchangeName 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.ExchangeName')
   - [ExchangeType](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-ExchangeType 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer.ExchangeType')
-  - [_dateTimeProvider](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-_dateTimeProvider 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer._dateTimeProvider')
   - [_observabilityScope](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-_observabilityScope 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer._observabilityScope')
   - [_operationTypes](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-_operationTypes 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer._operationTypes')
   - [_processingToken](#F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-_processingToken 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqWorkServer._processingToken')
@@ -174,6 +176,23 @@ An IHostBuilder
 | ---- | ---- | ----------- |
 | hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
 
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqBuilderExtensions-UseRabbitMqWorkClient-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
+### UseRabbitMqWorkClient(hostBuilder) `method`
+
+##### Summary
+
+Use rabbit mq work queue.
+
+##### Returns
+
+An IHostBuilder
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder. |
+
 <a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqBuilderExtensions-UseRabbitMqWorkQueue-Microsoft-Extensions-Hosting-IHostBuilder-'></a>
 ### UseRabbitMqWorkQueue(hostBuilder) `method`
 
@@ -218,15 +237,21 @@ This constructor has no parameters.
 
 ##### Summary
 
-Creates an instance of a RabbitMqClient
+Creates or reuses an open RabbitMQ connection.
 
 ##### Returns
 
-
+An open RabbitMQ connection.
 
 ##### Parameters
 
 This method has no parameters.
+
+##### Remarks
+
+Excluded from code coverage: this is a thin wrapper over
+ConnectionFactory.CreateConnection() which requires a live RabbitMQ broker and
+cannot be exercised without an integration environment.
 
 <a name='T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService'></a>
 ## RabbitMqDeadLetterQueueService `type`
@@ -239,8 +264,8 @@ RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
 Deadletter queue service class
 
-<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
-### #ctor(rabbitMqClientFactory,managedWorkStatusManager,dateTimeProvider) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-#ctor-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider-'></a>
+### #ctor(rabbitMqClientFactory,dateTimeProvider) `constructor`
 
 ##### Summary
 
@@ -251,7 +276,6 @@ Constructor
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | rabbitMqClientFactory | [RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.IRabbitMqClientFactory](#T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.IRabbitMqClientFactory') |  |
-| managedWorkStatusManager | [RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager](#T-RecordPoint-Connectors-SDK-Work-IManagedWorkStatusManager 'RecordPoint.Connectors.SDK.Work.IManagedWorkStatusManager') |  |
 | dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') |  |
 
 <a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-DeleteAllMessagesAsync-System-String-'></a>
@@ -285,23 +309,6 @@ Delete a specific message from the dead-letter queue
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') |  |
 
-<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetAllMessagesAsync-System-String-'></a>
-### GetAllMessagesAsync(queueName) `method`
-
-##### Summary
-
-Get all messages based on the queue
-
-##### Returns
-
-
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-
 <a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetMessageAsync-System-String,System-Int64-'></a>
 ### GetMessageAsync(queueName,sequenceNumber) `method`
 
@@ -320,6 +327,17 @@ Get message based on the queue and sequenceNumber
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') |  |
 
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetMessagesAsync-System-String,System-Int32-'></a>
+### GetMessagesAsync() `method`
+
+##### Summary
+
+Get all messages based on the queue
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]-'></a>
 ### ResubmitMessagesAsync(queueName,sequenceNumbers) `method`
 
@@ -337,6 +355,36 @@ Resubmit to queue based on the queueName and sequenceNumbers
 | ---- | ---- | ----------- |
 | queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | sequenceNumbers | [System.Int64[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64[] 'System.Int64[]') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-ResubmitTopMessagesAsync-System-String,System-Int32,System-Threading-CancellationToken-'></a>
+### ResubmitTopMessagesAsync(queueName,maxCount,cancellationToken) `method`
+
+##### Summary
+
+Drain up to `maxCount` messages from the dead-letter
+queue and resubmit them. For RabbitMQ this is a thin wrapper around
+[GetMessagesAsync](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetMessagesAsync-System-String,System-Int32- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.GetMessagesAsync(System.String,System.Int32)') + [ResubmitMessagesAsync](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.ResubmitMessagesAsync(System.String,System.Int64[])');
+the peek/receive mismatch that motivated the Service Bus version of
+this method does not apply here.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| maxCount | [System.Int32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int32 'System.Int32') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+##### Remarks
+
+Caveat: the returned count is the number of dead-letters found by
+[GetMessagesAsync](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-GetMessagesAsync-System-String,System-Int32- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.GetMessagesAsync(System.String,System.Int32)'), not a settled-success count.
+[ResubmitMessagesAsync](#M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqDeadLetterQueueService-ResubmitMessagesAsync-System-String,System-Int64[]- 'RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqDeadLetterQueueService.ResubmitMessagesAsync(System.String,System.Int64[])') may republish fewer if the two BasicGet
+passes desynchronise (delivery tags are channel-scoped, so concurrent DLQ
+activity between the passes can cause a mismatch). This differs from the
+Service Bus implementation, which returns the count actually resubmitted.
+RabbitMQ is not the production replay path; tightening this to a true
+settled count (single-pass fetch+ack+republish) is tracked separately.
 
 <a name='T-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions'></a>
 ## RabbitMqOptions `type`
@@ -420,6 +468,13 @@ RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 ##### Summary
 
 The rabbit mq process model.
+
+<a name='P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqProcessModel-ConsumerTag'></a>
+### ConsumerTag `property`
+
+##### Summary
+
+Gets or sets the consumer tag.
 
 <a name='P-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqProcessModel-RabbitMqEventingBasicConsumer'></a>
 ### RabbitMqEventingBasicConsumer `property`
@@ -527,8 +582,8 @@ RecordPoint.Connectors.SDK.WorkQueue.RabbitMq
 
 The rabbit mq work server.
 
-<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Providers-IDateTimeProvider,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type}-'></a>
-### #ctor(workQueueClient,serviceProvider,systemContext,workManager,rabbitMqClientFactory,rabbitMqOptions,observabilityScope,telemetryTracker,dateTimeProvider,toggleProvider,operationTypes) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-#ctor-RecordPoint-Connectors-SDK-Work-IWorkQueueClient,System-IServiceProvider,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Work-IQueueableWorkManager,RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-IRabbitMqClientFactory,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions},RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-Collections-Generic-IList{System-Type}-'></a>
+### #ctor(workQueueClient,serviceProvider,systemContext,workManager,rabbitMqClientFactory,rabbitMqOptions,observabilityScope,telemetryTracker,toggleProvider,operationTypes) `constructor`
 
 ##### Summary
 
@@ -546,7 +601,6 @@ Initializes a new instance of the [RabbitMqWorkServer](#T-RecordPoint-Connectors
 | rabbitMqOptions | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.RabbitMqOptions}') | The rabbit mq options. |
 | observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The scope manager. |
 | telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
-| dateTimeProvider | [RecordPoint.Connectors.SDK.Providers.IDateTimeProvider](#T-RecordPoint-Connectors-SDK-Providers-IDateTimeProvider 'RecordPoint.Connectors.SDK.Providers.IDateTimeProvider') | The date time provider. |
 | toggleProvider | [RecordPoint.Connectors.SDK.Toggles.IToggleProvider](#T-RecordPoint-Connectors-SDK-Toggles-IToggleProvider 'RecordPoint.Connectors.SDK.Toggles.IToggleProvider') | The toggle provider. |
 | operationTypes | [System.Collections.Generic.IList{System.Type}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IList 'System.Collections.Generic.IList{System.Type}') | An optional list of operation types to create RabbitMq consumers for |
 
@@ -584,13 +638,6 @@ The exchange name.
 ##### Summary
 
 The exchange type.
-
-<a name='F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-_dateTimeProvider'></a>
-### _dateTimeProvider `constants`
-
-##### Summary
-
-The date time provider.
 
 <a name='F-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-_observabilityScope'></a>
 ### _observabilityScope `constants`
@@ -709,17 +756,17 @@ This method has no parameters.
 
 ##### Summary
 
-
+Stops all RabbitMQ consumers and closes open RabbitMQ resources.
 
 ##### Returns
 
-
+A task that completes when shutdown finishes.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token for shutdown operations. |
 
 <a name='M-RecordPoint-Connectors-SDK-WorkQueue-RabbitMq-RabbitMqWorkServer-ValidateOperationTypes-System-Collections-Generic-IList{System-Type}-'></a>
 ### ValidateOperationTypes(types) `method`

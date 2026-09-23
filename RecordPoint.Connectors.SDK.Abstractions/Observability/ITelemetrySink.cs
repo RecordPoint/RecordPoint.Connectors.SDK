@@ -28,4 +28,16 @@ public interface ITelemetrySink
     /// <param name="dimensions">Dimensions to include with the exception</param>
     /// <param name="measures">Measures to include with the exception</param>
     void TrackException(Exception exception, Dimensions? dimensions = null, Measures? measures = null);
+
+    /// <summary>
+    /// Tracks a pre-aggregated metric value with optional dimensions.
+    /// Unlike TrackEvent, metrics are aggregated locally before transmission,
+    /// making them suitable for high-frequency tracking (e.g., per-request costs).
+    /// Standard dimensions (System, Service) are added automatically by the tracker
+    /// before reaching the sink — callers should not include them.
+    /// </summary>
+    /// <param name="name">The metric name (e.g., "Cosmos.RequestCharge")</param>
+    /// <param name="value">The numeric value to record</param>
+    /// <param name="dimensions">Optional dimensions to partition the metric</param>
+    void TrackMetric(string name, double value, Dimensions? dimensions = null) { }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using RecordPoint.Connectors.SDK.Caching;
 using RecordPoint.Connectors.SDK.Client.Models;
-using RecordPoint.Connectors.SDK.Content;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Databases;
 using RecordPoint.Connectors.SDK.Observability;
@@ -106,6 +106,10 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// The toggle provider.
         /// </summary>
         private readonly IToggleProvider _toggleProvider;
+        /// <summary>
+        /// The connector configuration cache.
+        /// </summary>
+        private readonly ICache<ConnectorConfigurationModel> _connectorConfigurationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseConnectorConfigurationManager"/> class.
@@ -115,23 +119,30 @@ namespace RecordPoint.Connectors.SDK.Connectors
         /// <param name="connectorOptions">The connector options.</param>
         /// <param name="systemContext">The system context.</param>
         /// <param name="toggleProvider">The toggle provider.</param>
+        /// <param name="connectorConfigurationCache">The connector configuration cache.</param>
         public DatabaseConnectorConfigurationManager(
             IConnectorDatabaseClient databaseClient,
             IObservabilityScope observabilityScope,
             IOptions<ConnectorOptions> connectorOptions,
             ISystemContext systemContext,
-            IToggleProvider toggleProvider)
+            IToggleProvider toggleProvider,
+            ICache<ConnectorConfigurationModel> connectorConfigurationCache)
         {
             _databaseClient = databaseClient;
             _observabilityScope = observabilityScope;
             _connectorOptions = connectorOptions;
             _systemContext = systemContext;
             _toggleProvider = toggleProvider;
+            _connectorConfigurationCache = connectorConfigurationCache;
         }
 
         /// <summary>
         /// Connectors configuration exists asynchronously.
         /// </summary>
+        /// <remarks>
+        /// Performs a service-side check to ensure the retrieved connector configuration matches the specified connector id
+        /// as it has been observed results being incorrectly returned when the requested connector id is empty
+        /// </remarks>
         /// <param name="connectorId">The connector id.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns><![CDATA[Task<bool>]]></returns>
@@ -143,22 +154,39 @@ namespace RecordPoint.Connectors.SDK.Connectors
                 return (await dbContext.Connectors
                     .Where(a => a.ConnectorId == connectorId)
                     .ToListAsync(cancellationToken))
-                    .Any();
+                    .Any(a => a.ConnectorId.Equals(connectorId, StringComparison.InvariantCultureIgnoreCase));
             });
         }
 
         /// <summary>
         /// Get connector configuration asynchronously.
         /// </summary>
+        /// <remarks>
+        /// Performs a service-side check to ensure the retrieved connector configuration matches the specified connector id
+        /// as it has been observed results being incorrectly returned when the requested connector id is empty
+        /// </remarks>
         /// <param name="connectorId">The connector id.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns><![CDATA[Task<ConnectorConfigurationModel>]]></returns>
         public async Task<ConnectorConfigurationModel> GetConnectorConfigurationAsync(string connectorId, CancellationToken cancellationToken)
         {
+            if (_connectorOptions.Value.ConnectorConfigurationCacheTtl > 0)
+            {
+                var context = new CacheActionContext
+                {
+                    Properties = new Dictionary<string, object> { [CONNECTOR_ID_DIMENSION] = connectorId }
+                };
+                return await _connectorConfigurationCache.GetAsync(connectorId, context, cancellationToken);
+            }
+
             return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
                 using var dbContext = _databaseClient.CreateDbContext();
-                return await dbContext.Connectors.FirstOrDefaultAsync(a => a.ConnectorId == connectorId, cancellationToken);
+                var connectorConfiguration = await dbContext.Connectors.FirstOrDefaultAsync(a => a.ConnectorId == connectorId, cancellationToken);
+                if (connectorConfiguration == null) return null;
+                return connectorConfiguration.ConnectorId.Equals(connectorId, StringComparison.InvariantCultureIgnoreCase)
+                    ? connectorConfiguration
+                    : null;
             });
         }
 
@@ -172,6 +200,8 @@ namespace RecordPoint.Connectors.SDK.Connectors
         {
             await _observabilityScope.Invoke(GetDimensions(connectorData.ConnectorId), async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 using var dbContext = _databaseClient.CreateDbContext();
 
                 var existing = await dbContext.Connectors
@@ -203,11 +233,35 @@ namespace RecordPoint.Connectors.SDK.Connectors
 
                 existing.Data = connectorData.Data;
                 existing.DisplayName = connectorData.DisplayName;
-                existing.ReportLocation = connectorData.ReportLocation;
                 existing.Status = connectorData.Status;
 
                 await dbContext.SaveChangesAsync(cancellationToken);
             });
+
+            _connectorConfigurationCache.Invalidate(connectorData.ConnectorId);
+        }
+
+        /// <summary>
+        /// Updates the specified connector configuration by applying the provided patch action
+        /// </summary>
+        public async Task PatchConnectorConfigurationAsync(string connectorId, Action<ConnectorConfigurationModel> patchAction, CancellationToken cancellationToken) 
+        {
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using var dbContext = _databaseClient.CreateDbContext();
+
+                var existing = await dbContext.Connectors
+                    .FirstOrDefaultAsync(a => a.ConnectorId == connectorId, cancellationToken)
+                    ?? throw new ConnectorDatabaseException($"Connector configuration with id '{connectorId}' not found");
+
+                patchAction.Invoke(existing);
+
+                await dbContext.SaveChangesAsync(cancellationToken);
+            });
+
+            _connectorConfigurationCache.Invalidate(connectorId);
         }
 
         /// <summary>
@@ -220,6 +274,8 @@ namespace RecordPoint.Connectors.SDK.Connectors
         {
             await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested(); 
+                
                 using var dbContext = _databaseClient.CreateDbContext();
 
                 var existing = await dbContext.Connectors.FirstOrDefaultAsync(a => a.ConnectorId == connectorId, cancellationToken);
@@ -229,6 +285,8 @@ namespace RecordPoint.Connectors.SDK.Connectors
                     await dbContext.SaveChangesAsync(cancellationToken);
                 }
             });
+
+            _connectorConfigurationCache.Invalidate(connectorId);
         }
 
         /// <summary>

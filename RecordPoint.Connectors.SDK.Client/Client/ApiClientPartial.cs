@@ -20,6 +20,12 @@ namespace RecordPoint.Connectors.SDK.Client
     /// </summary>
     public partial class ApiClient
     {
+        /// <summary>Sends payloads compact: indenting inflates a request 2-4x against the platform's 2MB body caps.</summary>
+        partial void CustomInitialize()
+        {
+            SerializationSettings.Formatting = Formatting.None;
+        }
+
         /// <summary>
         /// Submits a binary to be archived and protected by Records365 vNext.
         /// </summary>

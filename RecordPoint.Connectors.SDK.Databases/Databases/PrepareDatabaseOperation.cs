@@ -29,12 +29,13 @@ namespace RecordPoint.Connectors.SDK.Databases
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <param name="databaseProvider">The database provider.</param>
         /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="telemetryTracker">The telemetry tracker.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
-        public PrepareDatabaseOperation(TDbProvider databaseProvider, IObservabilityScope observabilityScope, ITelemetryTracker telemetryTracker, IDateTimeProvider dateTimeProvider)
-            : base(observabilityScope, telemetryTracker, dateTimeProvider)
+        public PrepareDatabaseOperation(IServiceProvider serviceProvider, TDbProvider databaseProvider, IObservabilityScope observabilityScope, ITelemetryTracker telemetryTracker, IDateTimeProvider dateTimeProvider)
+            : base(serviceProvider, observabilityScope, telemetryTracker, dateTimeProvider)
         {
             _databaseProvider = databaseProvider;
         }

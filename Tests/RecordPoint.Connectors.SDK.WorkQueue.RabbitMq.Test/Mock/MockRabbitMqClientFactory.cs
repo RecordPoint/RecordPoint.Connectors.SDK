@@ -9,30 +9,22 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test.Mock
     public class MockRabbitMqClientFactory : IRabbitMqClientFactory
     {
         private readonly IConnection _rabbitMqConnection;
-        private readonly Mock<IConnectionFactory> _connectionFactoryMock;
         private readonly Mock<IConnection> _rabbitMqConnectionMock;
-        private readonly Mock<IModel> _rabbitMqModelMock;
-        private readonly Mock<IBasicProperties> _rabbitMqBasicPropertiesMock;
+        private readonly Mock<IChannel> _rabbitMqChannelMock;
 
-        public Mock<IConnectionFactory> ConnectionFactoryMock => _connectionFactoryMock;
         public Mock<IConnection> RabbitMqConnectionMock => _rabbitMqConnectionMock;
-        public Mock<IModel> RabbitMqModelMock => _rabbitMqModelMock;
-        public Mock<IBasicProperties> RabbitMqBasicPropertiesMock => _rabbitMqBasicPropertiesMock;
+        public Mock<IChannel> RabbitMqChannelMock => _rabbitMqChannelMock;
 
         /// <summary>
         /// Constructor for the Factory
         /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="rabbitMqOptions"></param>
         public MockRabbitMqClientFactory()
         {
-            _connectionFactoryMock = new Mock<IConnectionFactory>();
             _rabbitMqConnectionMock = new Mock<IConnection>();
-            _rabbitMqModelMock = new Mock<IModel>();
-            _rabbitMqBasicPropertiesMock = new Mock<IBasicProperties>();
-            _connectionFactoryMock.Setup(m => m.CreateConnection()).Returns(_rabbitMqConnectionMock.Object);
-            _rabbitMqConnectionMock.Setup(a => a.CreateModel()).Returns(_rabbitMqModelMock.Object);
-            _rabbitMqModelMock.Setup(a => a.CreateBasicProperties()).Returns(_rabbitMqBasicPropertiesMock.Object);
+            _rabbitMqChannelMock = new Mock<IChannel>();
+            _rabbitMqConnectionMock
+                .Setup(a => a.CreateChannelAsync(It.IsAny<CreateChannelOptions?>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_rabbitMqChannelMock.Object);
             _rabbitMqConnection = _rabbitMqConnectionMock.Object;
         }
 

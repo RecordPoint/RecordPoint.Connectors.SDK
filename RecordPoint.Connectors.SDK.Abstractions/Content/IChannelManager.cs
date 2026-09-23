@@ -49,6 +49,15 @@ namespace RecordPoint.Connectors.SDK.Content
         Task<List<ChannelModel>> GetChannelsAsync(string? connectorId, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Streams lightweight channel classification data for the specified connector.
+        /// </summary>
+        /// <param name="connectorId">The connector configuration for which the channels belong</param>
+        /// <param name="pageSize">Preferred page size for providers that support paged reads</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Async stream of lightweight channel projections</returns>
+        IAsyncEnumerable<ChannelClassificationModel> GetChannelClassificationsAsync(string connectorId, int pageSize, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Adds a Channel to Storage or updates the existing Channel
         /// </summary>
         /// <param name="channel">Channel to add</param>
@@ -63,6 +72,17 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
         Task UpsertChannelsAsync(List<ChannelModel> channels, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Applies the specified patch action to the matching Channel and persists the change.
+        /// No-op when the Channel does not exist.
+        /// </summary>
+        /// <param name="connectorId">The Connector Configuration for which the Channel belongs</param>
+        /// <param name="externalId">External Id of the Channel</param>
+        /// <param name="patchAction">Action that mutates the Channel prior to persistence</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Task</returns>
+        Task PatchChannelAsync(string connectorId, string externalId, Action<ChannelModel> patchAction, CancellationToken cancellationToken);
 
         /// <summary>
         /// Removes a Channel from Storage

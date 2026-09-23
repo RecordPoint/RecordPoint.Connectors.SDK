@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Work;
 
 namespace RecordPoint.Connectors.SDK.Test.Mock.Work
@@ -18,8 +19,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
         {
             return services
                 .AddSingleton<MockWorkQueueClient>()
-                .AddSingleton<IWorkQueueClient>(svcs => svcs.GetRequiredService<MockWorkQueueClient>())
-                .AddHostedService<MockWorkQueueService>();
+                .AddSingleton<IWorkQueueClient>(svcs => svcs.GetRequiredService<MockWorkQueueClient>());
         }
 
     }

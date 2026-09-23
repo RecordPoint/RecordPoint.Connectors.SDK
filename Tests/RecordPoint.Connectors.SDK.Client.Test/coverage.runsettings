@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Coverage settings for RecordPoint.Connectors.SDK.Client.Test.
+
+  Purpose: exclude the AutoRest-generated client code (everything under the
+  AutoRestGenerated folder, e.g. ApiClient.cs) from code-coverage measurement
+  by file, rather than with a type level ExcludeFromCodeCoverage attribute.
+
+  A type level attribute on the ApiClient partial type would also exclude the
+  hand-written ApiClientPartial.cs (binary-submission logic), because it shares
+  the same partial type. Excluding by file keeps the hand-written partial measured
+  while still excluding the generated code.
+
+  Honoured automatically when collecting XPlat Code Coverage because the test
+  project sets RunSettingsFilePath to point at this file.
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <ExcludeByFile>**/AutoRestGenerated/*.cs,**/AutoRestGenerated/**/*.cs</ExcludeByFile>
+          <Format>cobertura</Format>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

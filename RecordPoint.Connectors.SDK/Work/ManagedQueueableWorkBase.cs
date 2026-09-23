@@ -90,6 +90,12 @@ namespace RecordPoint.Connectors.SDK.Work
         protected abstract TConfiguration DeserializeConfiguration(string configurationType, string configurationText);
 
         /// <summary>
+        /// Override that serialized the configuration
+        /// </summary>
+        /// <returns>ConfigurationType, Configuration text tuple</returns>
+        protected abstract (string, string) SerializeConfiguration(TConfiguration configuration);
+
+        /// <summary>
         /// Override that deserializes the state from the job
         /// </summary>
         /// <param name="stateType">String that describes how the state is structured. Mainly required for supporting upgrade scenarios</param>
@@ -121,19 +127,13 @@ namespace RecordPoint.Connectors.SDK.Work
             WorkRequest = workRequest;
             Id = workRequest.WorkId;
             SubmitDateTime = workRequest.SubmitDateTime;
-            MustFinishDateTime = workRequest.MustFinishDateTime;
 
             var workStatus = ManagedWorkStatusModel.Deserialize(workRequest.Body);
-            WorkManager = _managedWorkFactory.LoadWork(workStatus);
+            WorkManager = _managedWorkFactory.LoadWork(workRequest, workStatus);
             Configuration = DeserializeConfiguration(WorkManager.WorkStatus.ConfigurationType, WorkManager.WorkStatus.Configuration);
             State = DeserializeState(WorkManager.WorkStatus.StateType, WorkManager.WorkStatus.State);
 
-            var workOutcome = await WorkManager.CheckAsync(cancellationToken);
-            if (workOutcome != null)
-            {
-                SetOutcome(workOutcome);
-                return;
-            }
+            TelemetryTracker.TrackTrace($"Running Work Request [Id: {workStatus.Id}, WorkId: {workRequest.WorkId}]", SeverityLevel.Verbose);
 
             using var workScope = BeginObservabilityScope();
             try
@@ -168,6 +168,7 @@ namespace RecordPoint.Connectors.SDK.Work
             if (connectorConfiguration == null)
             {
                 // If connector not found assume its been deleted
+                TelemetryTracker.TrackTrace("Abandoning work due to missing connector", SeverityLevel.Verbose);
                 await AbandonedAsync("Connector not found", cancellationToken);
                 return false;
             }
@@ -181,6 +182,7 @@ namespace RecordPoint.Connectors.SDK.Work
             if (connectorConfiguration.IsDisabledConnectorExpired(maxDisabledConnectorAge))
             {
                 //Connector has been disabled for too long, abandon the work
+                TelemetryTracker.TrackTrace("Abandoning work due to disabled connector", SeverityLevel.Verbose);
                 await AbandonedAsync("Connector disabled", cancellationToken);
             }
             else
@@ -193,6 +195,7 @@ namespace RecordPoint.Connectors.SDK.Work
 
                 state.LastBackOffDelaySeconds = backOffSeconds;
 
+                TelemetryTracker.TrackTrace("Deferring work due to disabled connector", SeverityLevel.Verbose);
                 await ContinueAsync("Connector disabled", State, DateTimeProvider.UtcNow.AddSeconds(backOffSeconds), cancellationToken);
             }
 
@@ -224,8 +227,9 @@ namespace RecordPoint.Connectors.SDK.Work
         protected async virtual Task ContinueAsync(string reason, TState state, DateTimeOffset waitTill, CancellationToken cancellationToken)
         {
             EnsureIncomplete();
+            (var configurationType, var configuration) = SerializeConfiguration(Configuration);
             (var stateType, var stateText) = SerializeState(state);
-            SetOutcome(await WorkManager.ContinueAsync(stateType, stateText, waitTill, cancellationToken));
+            SetOutcome(await WorkManager.ContinueAsync(configurationType, configuration, stateType, stateText, waitTill, cancellationToken));
             ResultReason = reason;
             State = state;
         }
@@ -324,7 +328,8 @@ namespace RecordPoint.Connectors.SDK.Work
             [StandardDimensions.SERVICE] = ServiceName,
             [StandardDimensions.SYSTEM] = SystemContext.GetConnectorName(),
             [StandardDimensions.WORK] = WorkType,
-            [StandardDimensions.WORK_ID] = Id
+            [StandardDimensions.WORK_ID] = Id,
+            [StandardDimensions.WORK_INITIATED_DATE] = WorkManager?.WorkStatus?.WorkInitiatedDate?.ToString("O") ?? string.Empty
         };
         #endregion
 

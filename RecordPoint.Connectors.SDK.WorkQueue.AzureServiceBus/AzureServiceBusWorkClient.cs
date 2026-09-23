@@ -42,6 +42,8 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.AzureServiceBus
 
         private async Task SendMessageAsync(WorkRequest workRequest, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             workRequest.SubmitDateTime = _dateTimeProvider.UtcNow;
             var serializedMessage = JsonConvert.SerializeObject(workRequest);
             var messageBytes = Encoding.UTF8.GetBytes(serializedMessage);

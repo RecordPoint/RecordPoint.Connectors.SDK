@@ -33,7 +33,6 @@ public static class CosmosSemaphoreLockBuilderExtensions
                     x.InitialiseCosmosStorage<SemaphoreLockCosmosDbItem>(cosmosDbConnectorDatabaseOptions!, azureAuthenticationOptions!, cosmosDbConnectorDatabaseOptions!.DatabaseName, SemaphoreLockCosmosDbItem.COSMOS_DB_CONTAINER_NAME))
                 .AddSingleton<ISemaphoreLockManager, CosmosSemaphoreLockManager>();
             });
-
     }
 
     /// <summary>

@@ -91,10 +91,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 shouldContinue = await HandleSubmitResponse(submitContext, result, "Aggregation").ConfigureAwait(false);
             }
             catch (HttpOperationException ex)
-                when (ex.Response?.StatusCode == System.Net.HttpStatusCode.Conflict)
             {
-                // submitted item already exists!  Nothing to do but continue with the submission pipeline
-                LogVerbose(submitContext, nameof(Submit), $"Submission returned {ex.Response.StatusCode} : Aggregation already submitted.");
+                if (!TryHandleKnownHttpOperationException(submitContext, ex, "Aggregation", out shouldContinue))
+                {
+                    throw;
+                }
             }
 
             if (shouldContinue)

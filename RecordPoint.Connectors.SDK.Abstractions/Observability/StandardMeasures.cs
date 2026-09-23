@@ -48,5 +48,10 @@
         /// </summary>
         public const string BINARY_COUNT = "BinaryCount";
 
+        /// <summary>
+        /// The number of seconds the operation will wait before re-queuing itself.
+        /// </summary>
+        public const string BACK_OFF_SECONDS = "BackOffSeconds";
+
     }
 }

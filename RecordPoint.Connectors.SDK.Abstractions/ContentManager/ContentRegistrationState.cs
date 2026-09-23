@@ -24,7 +24,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <summary>
         /// Latest version of the synchronisation state type
         /// </summary>
-        public static string LatestStateType => nameof(ContentRegistrationState);
+        public static string StateType => nameof(ContentRegistrationState);
 
         /// <summary>
         /// 

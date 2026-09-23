@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Client.Models;
+using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Content;
-using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Work;
@@ -13,293 +13,247 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RecordPoint.Connectors.SDK.ContentManager
+namespace RecordPoint.Connectors.SDK.ContentManager;
+
+/// <summary>
+/// The content manager operation.
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="ContentManagerOperation"/> class.
+/// </remarks>
+public class ContentManagerOperation(
+    IContentManagerActionProvider contentManagerActionProvider,
+    IConnectorConfigurationManager connectorConfigManager,
+    IChannelManager channelManager,
+    IManagedWorkStatusManager managedWorkStatusManager,
+    IManagedWorkFactory managedWorkFactory,
+    IOptions<ContentManagerOptions> options,
+    IObservabilityScope observabilityScope, 
+    ITelemetryTracker telemetryTracker, 
+    IDateTimeProvider dateTimeProvider,
+    IServiceProvider serviceProvider) : PeriodicWorkBase(observabilityScope, telemetryTracker, dateTimeProvider)
 {
     /// <summary>
-    /// The content manager operation.
+    /// WORK TYPE.
     /// </summary>
-    public class ContentManagerOperation : ManagedQueueableWorkBase<ContentManagerConfiguration, ContentManagerState>
+    public const string WORK_TYPE = "Content Manager";
+
+    /// <summary>
+    /// The CONTENT SOURCE INTEGRATION COMPLETED.
+    /// </summary>
+    public const string CONTENT_SOURCE_INTEGRATION_COMPLETED = "Content Manager Completed";
+
+    /// <summary>
+    /// Maximum number of aggregation models per removal batch to stay within
+    /// the Cosmos DB 524,288-character query size limit.
+    /// </summary>
+    private const int CLEANUP_BATCH_SIZE = 100;
+
+    /// <inheritdoc />
+    public override int ServiceIntervalInSeconds => options.Value.DelaySeconds;
+
+    /// <inheritdoc />
+    public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
+
+    /// <inheritdoc />
+    public override string WorkType => WORK_TYPE;
+
+    private List<ConnectorConfigurationModel> _connectorConfigurations = [];
+    private List<ConnectorConfigModel> _connectorConfigModels = [];
+    private int _channelDiscoveryOperationsStarted = 0;
+
+    /// <summary>
+    /// Performs migration of ChannelDiscovery work previously scheduled by the Content Manager
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    protected override async Task InnerStartAsync(CancellationToken cancellationToken)
     {
-        /// <summary>
-        /// WORK TYPE.
-        /// </summary>
-        public const string WORK_TYPE = "Content Manager";
-        /// <summary>
-        /// The CONTENT SOURCE INTEGRATION COMPLETED.
-        /// </summary>
-        public const string CONTENT_SOURCE_INTEGRATION_COMPLETED = "Content Manager Completed";
+        if (!options.Value.PerformManagedWorkMigration) return;
 
-        /// <summary>
-        /// The content manager action provider.
-        /// </summary>
-        private readonly IContentManagerActionProvider _contentManagerActionProvider;
-        /// <summary>
-        /// The connector configuration manager.
-        /// </summary>
-        private readonly IConnectorConfigurationManager _connectorConfigurationManager;
-        /// <summary>
-        /// The channel manager.
-        /// </summary>
-        private readonly IChannelManager _channelManager;
-        /// <summary>
-        /// The managed work factory.
-        /// </summary>
-        private readonly IManagedWorkFactory _managedWorkFactory;
-        /// <summary>
-        /// The managed work status manager.
-        /// </summary>
-        private readonly IManagedWorkStatusManager _managedWorkStatusManager;
-        /// <summary>
-        /// The options.
-        /// </summary>
-        private readonly IOptions<ContentManagerOptions> _options;
+        //Get All the known Connector Configurations
+        var connectorConfigurations = await connectorConfigManager.GetAllConnectorConfigurationsAsync(cancellationToken);
 
-        /// <summary>
-        /// The connector configurations.
-        /// </summary>
-        private List<ConnectorConfigModel> _connectorConfigurations;
+        //Get all running Channel Discovery Work from the obsolete managedworkstatuses
+        var channelDiscoveryWorkStatuses = await managedWorkStatusManager
+            .GetWorkStatusesAsync(a => a.WorkType == ChannelDiscoveryOperation.WORK_TYPE && a.Status == ManagedWorkStatuses.Running, cancellationToken);
 
-        /// <summary>
-        /// Gets the service name.
-        /// </summary>
-        public override string ServiceName => ContentManagerObservabilityExtensions.SERVICE_NAME;
-
-        /// <summary>
-        /// Gets the work type.
-        /// </summary>
-        public override string WorkType => WORK_TYPE;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ContentManagerOperation"/> class.
-        /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="contentManagerActionProvider">The content manager action provider.</param>
-        /// <param name="connectorConfigManager">The connector config manager.</param>
-        /// <param name="channelManager">The channel manager.</param>
-        /// <param name="managedWorkStatusManager">The managed work status manager.</param>
-        /// <param name="managedWorkFactory">The managed work factory.</param>
-        /// <param name="systemContext">The system context.</param>
-        /// <param name="options">The options.</param>
-        /// <param name="observabilityScope">The scope manager.</param>
-        /// <param name="telemetryTracker">The telemetry tracker.</param>
-        /// <param name="dateTimeProvider">The date time provider.</param>
-        public ContentManagerOperation(
-            IServiceProvider serviceProvider,
-            IContentManagerActionProvider contentManagerActionProvider,
-            IConnectorConfigurationManager connectorConfigManager,
-            IChannelManager channelManager,
-            IManagedWorkStatusManager managedWorkStatusManager,
-            IManagedWorkFactory managedWorkFactory,
-            ISystemContext systemContext,
-            IOptions<ContentManagerOptions> options,
-            IObservabilityScope observabilityScope,
-            ITelemetryTracker telemetryTracker,
-            IDateTimeProvider dateTimeProvider)
-            : base(serviceProvider, managedWorkFactory, systemContext, observabilityScope, telemetryTracker, dateTimeProvider)
+        //Set an Enqueued Date for all configurations that have known running channel discovery work
+        //This will prevent duplicated Channel Discovery work from being invoked
+        foreach (var connectorConfiguration in connectorConfigurations.Where(a => !a.ChannelDiscoveryEnqueuedDate.HasValue))
         {
-            _contentManagerActionProvider = contentManagerActionProvider;
-            _connectorConfigurationManager = connectorConfigManager;
-            _channelManager = channelManager;
-            _managedWorkStatusManager = managedWorkStatusManager;
-            _managedWorkFactory = managedWorkFactory;
-            _options = options;
+            var channelDiscoveryWorkStatus = channelDiscoveryWorkStatuses.FirstOrDefault(a => a.ConnectorId == connectorConfiguration.ConnectorId);
+            if (channelDiscoveryWorkStatus == null) continue;
+
+            connectorConfiguration.ChannelDiscoveryEnqueuedDate = DateTime.SpecifyKind(dateTimeProvider.UtcNow, DateTimeKind.Utc);
+            await connectorConfigManager.SetConnectorConfigurationAsync(connectorConfiguration, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Inner the run asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task</returns>
+    protected async override Task InnerRunAsync(CancellationToken cancellationToken)
+    {
+        _channelDiscoveryOperationsStarted = 0;
+
+        _connectorConfigurations = await connectorConfigManager.GetAllConnectorConfigurationsAsync(cancellationToken);
+        _connectorConfigModels = [.. _connectorConfigurations.Select(a => a.ConvertToConnectorConfig())];
+
+        await CreateChannelDiscoveryOperationsAsync(cancellationToken);
+
+        if (options.Value.CleanUpAggregations)
+        {
+            await CleanupAggregationsAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Inner the run asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
-        protected async override Task InnerRunAsync(CancellationToken cancellationToken)
+        if (options.Value.CleanUpChannels)
         {
-            _connectorConfigurations = await _connectorConfigurationManager.ListConnectorsAsync(cancellationToken);
+            await CleanupChannelsAsync(cancellationToken);
+        }
 
-            await CreateChannelDiscoveryOperationsAsync(cancellationToken);
+        Complete("Content Manager completed normally");
+    }
 
-            if (_options.Value.RemoveCompletedWork)
+    #region Channel Discovery
+    /// <summary>
+    /// Creates channel discovery operations asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task</returns>
+    private async Task CreateChannelDiscoveryOperationsAsync(CancellationToken cancellationToken)
+    {
+        //Get Configurations that have not yet had Channel Discovery Enqueued AND do not already own a Channel Discovery WorkId.
+        //The ChannelDiscoveryWorkId acts as an ownership token: once it is set, no further Channel Discovery work may be created
+        //for the connector until the existing work clears it.
+        var newConnectorConfigurations = _connectorConfigurations
+            .Where(a => !a.ChannelDiscoveryEnqueuedDate.HasValue && string.IsNullOrEmpty(a.ChannelDiscoveryWorkId))
+            .ToList();
+
+        //Get the Ids of the "new" configurations and find the matching ConnectorConfigModels
+        var newConnectorConfigurationIds = newConnectorConfigurations.Select(a => a.ConnectorId);
+        var newConnectorConfigModels = _connectorConfigModels.Where(model => newConnectorConfigurationIds.Contains(model.Id)).ToList();
+
+        //Start a Channel Discovery operation for each new configuration and mark the configuration as having had Channel Discovery Enqueued
+        foreach (var connectorId in newConnectorConfigurations.Select(connector => connector.ConnectorId))
+        {
+            //Re-check the ChannelDiscoveryWorkId immediately before creating the work to guard against another Content Manager instance
+            //having claimed ownership between when _connectorConfigurations was loaded and now.
+            var currentConfiguration = await connectorConfigManager.GetConnectorConfigurationAsync(connectorId, cancellationToken);
+            if (!string.IsNullOrEmpty(currentConfiguration?.ChannelDiscoveryWorkId))
             {
-                await CleanupWorkAsync(ManagedWorkStatuses.Complete, _options.Value.MaxCompletedWorkAge, cancellationToken);
+                telemetryTracker.TrackTrace(
+                    $"Skipping Channel Discovery creation for connector [{connectorId}] - ChannelDiscoveryWorkId already set to [{currentConfiguration.ChannelDiscoveryWorkId}]",
+                    SeverityLevel.Verbose);
+                continue;
             }
 
-            if (_options.Value.RemoveAbandonedWork)
+            //Start the Channel Discovery operation with a 15 second delay to prevent a race condition when updating the enqueued date on the connector configuration.
+            //The Channel discovery operation will update the ChannelDiscoveryExecutedDate on each execution which could result in the enqueued date not being correctly set
+            //if the read & writes are occurring simulatenously between the Content Manager service and the Channel Discovery service
+            var connectorConfigModel = _connectorConfigModels.Find(a => a.Id == connectorId);
+            using var channelDiscoveryOperation = managedWorkFactory.CreateChannelDiscoveryOperation(connectorConfigModel);
+
+            await channelDiscoveryOperation.StartAsync(cancellationToken, DateTimeOffset.Now.AddSeconds(15));
+
+            //Update the Connector Configuration to mark that Channel Discovery has been Enqueued and to record the owning WorkId
+            await connectorConfigManager.PatchConnectorConfigurationAsync(connectorId, connector =>
             {
-                await CleanupWorkAsync(ManagedWorkStatuses.Abandoned, _options.Value.MaxAbandonedWorkAge, cancellationToken);
-            }
+                connector.ChannelDiscoveryWorkId = channelDiscoveryOperation.WorkStatus.WorkId;
+                connector.ChannelDiscoveryEnqueuedDate = DateTime.SpecifyKind(dateTimeProvider.UtcNow, DateTimeKind.Utc);
+            }, cancellationToken);
 
-            if (_options.Value.CleanUpAggregations)
-            {
-                await CleanupAggregationsAsync(cancellationToken);
-            }
-
-            if (_options.Value.CleanUpChannels)
-            {
-                await CleanupChannelsAsync(cancellationToken);
-            }
-
-            var finalState = new ContentManagerState
-            {
-                ChannelDiscoveryOperationsStarted = State.ChannelDiscoveryOperationsStarted,
-                ContentSynchronisationOperationsStarted = State.ContentSynchronisationOperationsStarted
-            };
-            var nextRunTime = DateTimeProvider.UtcNow.AddSeconds(_options.Value.DelaySeconds);
-            await ContinueAsync("Content Manager completed normally", finalState, nextRunTime, cancellationToken);
+            _channelDiscoveryOperationsStarted++;
         }
 
-        #region Channel Discovery
-        /// <summary>
-        /// Creates channel discovery operations asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
-        private async Task CreateChannelDiscoveryOperationsAsync(CancellationToken cancellationToken)
+        //Invoke the Content Manager Callback Action if we have found any new configurations
+        await InvokeContentManagerCallbackAsync(newConnectorConfigModels, cancellationToken);
+    }
+
+    #endregion
+
+    #region Cleanup Aggregations
+    /// <summary>
+    /// Removes dangling aggregations asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task</returns>
+    private async Task CleanupAggregationsAsync(CancellationToken cancellationToken)
+    {
+        //Some connectors may not have registered the Aggregation Manager as they use a custom implementation
+        var aggregationManager = serviceProvider.GetService<IAggregationManager>();
+        if (aggregationManager == null)
+            return;
+
+        //Get all Enabled Configurations and Configurations that have been Disabled for less than the Max Disabled Age
+        var validConnectorConfigurations = _connectorConfigModels.Where(configuration => !configuration.IsDisabledConnectorExpired(options.Value.MaxDisabledConnectorAge));
+
+        var validConnectorConfigurationIds = validConnectorConfigurations.Select(a => a.Id);
+        var obsoleteAggregations = await aggregationManager.GetAggregationsAsync(a => !validConnectorConfigurationIds.Contains(a.ConnectorId), cancellationToken);
+
+        // Batch removals to avoid an unbounded IN (...) clause exceeding
+        // Cosmos DB's 524,288-character query limit (error SC3020).
+        foreach (var batch in obsoleteAggregations.Chunk(CLEANUP_BATCH_SIZE))
         {
-            var newConnectorConfigurations = await GetNewEnabledConnectorConfigurationsAsync(cancellationToken);
-            foreach (var connectorConfiguration in newConnectorConfigurations)
-            {
-                using var channelDiscoveryOperation = _managedWorkFactory.CreateChannelDiscoveryOperation(connectorConfiguration);
-                await channelDiscoveryOperation.StartAsync(cancellationToken);
-                State.ChannelDiscoveryOperationsStarted++;
-            }
-
-            await InvokeContentManagerCallbackAsync(newConnectorConfigurations, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            await aggregationManager.RemoveAggregationsAsync(batch, cancellationToken);
         }
+    }
+    #endregion
 
-        /// <summary>
-        /// Determines Connector Configurations that do not have Channel Discovery work running.
-        /// </summary>
-        /// <returns><![CDATA[List<ConnectorConfigModel>]]></returns>
-        private async Task<List<ConnectorConfigModel>> GetNewEnabledConnectorConfigurationsAsync(CancellationToken cancellationToken)
+    #region Cleanup Channels
+    /// <summary>
+    /// Removes dangling channels asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task</returns>
+    private async Task CleanupChannelsAsync(CancellationToken cancellationToken)
+    {
+        //Get all Enabled Configurations and Configurations that have been Disabled for less than the Max Disabled Age
+        var validConnectorConfigurations = _connectorConfigModels.Where(configuration => !configuration.IsDisabledConnectorExpired(options.Value.MaxDisabledConnectorAge));
+
+        var validConnectorConfigurationIds = validConnectorConfigurations.Select(a => a.Id);
+        var obsoleteChannels = await channelManager.GetChannelsAsync(a => !validConnectorConfigurationIds.Contains(a.ConnectorId), cancellationToken);
+
+        // Batch removals to avoid an unbounded IN (...) clause exceeding
+        // Cosmos DB's 524,288-character query size limit (error SC3020).
+        foreach (var batch in obsoleteChannels.Chunk(CLEANUP_BATCH_SIZE))
         {
-            var channelDiscoveryWorkStatuses = await _managedWorkStatusManager
-                .GetWorkStatusesAsync(a => 
-                    a.WorkType == ChannelDiscoveryOperation.WORK_TYPE && a.Status == ManagedWorkStatuses.Running,
-                    cancellationToken);
-
-            var runningIds = channelDiscoveryWorkStatuses
-                .Select(a => a.ConnectorId);
-
-            var requiredIds = _connectorConfigurations.Select(c => c.Id).ToHashSet();
-            requiredIds.ExceptWith(runningIds);
-
-            return _connectorConfigurations.Where(c => requiredIds.Contains(c.Id) && c.IsEnabled()).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
+            await channelManager.RemoveChannelsAsync(batch, cancellationToken);
         }
-        #endregion
+    }
+    #endregion
 
-        #region Cleanup Completed Work
-        /// <summary>
-        /// Cleanup the work asynchronously.
-        /// </summary>
-        /// <param name="status">The status.</param>
-        /// <param name="maxWorkAge">The max work age.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
-        private async Task CleanupWorkAsync(ManagedWorkStatuses status, int maxWorkAge, CancellationToken cancellationToken)
-        {
-            //Get Work with the specified status and a LastStatusUpdate greater than the Max Age
-            var cleanupDate = DateTimeOffset.Now.AddMinutes(maxWorkAge);
-            var managedWorkItems = await _managedWorkStatusManager
-                .GetWorkStatusesAsync(a => a.Status == status && cleanupDate >= a.LastStatusUpdate, cancellationToken);
+    /// <summary>
+    /// Get custom result measures.
+    /// </summary>
+    /// <returns>A Measures</returns>
+    protected override Measures GetCustomResultMeasures()
+    {
+        var measures = base.GetCustomResultMeasures();
+        measures[ContentManagerObservabilityExtensions.CONNECTOR_COUNT] = _connectorConfigurations?.Count ?? 0;
+        measures[ContentManagerObservabilityExtensions.CHANNEL_DISCOVERY_OPERATIONS_STARTED_COUNT] = _channelDiscoveryOperationsStarted;
+        return measures;
+    }
 
-            var managedWorkItemIds = managedWorkItems.Select(a => a.Id).ToArray();
-            await _managedWorkStatusManager.RemoveWorkStatusesAsync(managedWorkItemIds, cancellationToken);
-        }
-        #endregion
+    private async Task InvokeContentManagerCallbackAsync(List<ConnectorConfigModel> connectorConfigurations, CancellationToken cancellationToken)
+    {
+        //Do not invoke if we have not found any new configurations
+        if (connectorConfigurations.Count == 0)
+            return;
 
-        #region Cleanup Aggregations
-        /// <summary>
-        /// Removes dangling aggregations asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
-        private async Task CleanupAggregationsAsync(CancellationToken cancellationToken)
-        {
-            //Some connectors may not have registered the Aggregation Manager as they use a custom implementation
-            var aggregationManager = _serviceProvider.GetService<IAggregationManager>();
-            if (aggregationManager == null)
-                return;
+        using var scope = serviceProvider.CreateScope();
+        var contentManagerCallbackAction = contentManagerActionProvider.CreateContentManagerCallbackAction(scope);
 
-            //Get all Enabled Configurations and Configurations that have been Disabled for less than the Max Disabled Age
-            var validConnectorConfigurations = _connectorConfigurations.Where(configuration => !configuration.IsDisabledConnectorExpired(_options.Value.MaxDisabledConnectorAge));
+        //If no callback action has been registered, just bail out now
+        if (contentManagerCallbackAction == null)
+            return;
 
-            var validConnectorConfigurationIds = validConnectorConfigurations.Select(a => a.Id);
-            var obsoleteAggregations = await aggregationManager.GetAggregationsAsync(a => !validConnectorConfigurationIds.Contains(a.ConnectorId), cancellationToken);
-            
-            await aggregationManager.RemoveAggregationsAsync(obsoleteAggregations, cancellationToken);
-        }
-        #endregion
-
-        #region Cleanup Channels
-        /// <summary>
-        /// Removes dangling channels asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
-        private async Task CleanupChannelsAsync(CancellationToken cancellationToken)
-        {
-            //Get all Enabled Configurations and Configurations that have been Disabled for less than the Max Disabled Age
-            var validConnectorConfigurations = _connectorConfigurations.Where(configuration => !configuration.IsDisabledConnectorExpired(_options.Value.MaxDisabledConnectorAge));
-
-            var validConnectorConfigurationIds = validConnectorConfigurations.Select(a => a.Id);
-            var obsoleteChannels = await _channelManager.GetChannelsAsync(a => !validConnectorConfigurationIds.Contains(a.ConnectorId), cancellationToken);
-
-            await _channelManager.RemoveChannelsAsync(obsoleteChannels, cancellationToken);
-        }
-        #endregion
-
-        #region State Serialization
-        /// <summary>
-        /// Deserialize the configuration.
-        /// </summary>
-        /// <param name="configurationType">The configuration type.</param>
-        /// <param name="configurationText">The configuration text.</param>
-        /// <returns>A ContentManagerConfiguration</returns>
-        protected override ContentManagerConfiguration DeserializeConfiguration(string configurationType, string configurationText) => ContentManagerConfiguration.Deserialize(configurationType, configurationText);
-
-        /// <summary>
-        /// Deserialize the state.
-        /// </summary>
-        /// <param name="stateType">The state type.</param>
-        /// <param name="stateText">The state text.</param>
-        /// <returns>A ContentManagerState</returns>
-        protected override ContentManagerState DeserializeState(string stateType, string stateText) => ContentManagerState.Deserialize(stateType, stateText);
-
-        /// <summary>
-        /// Serialize the state.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        /// <returns>A (string, string)</returns>
-        protected override (string, string) SerializeState(ContentManagerState state) => (ContentManagerState.LatestStateType, state.Serialize());
-        #endregion
-
-        /// <summary>
-        /// Get custom result measures.
-        /// </summary>
-        /// <returns>A Measures</returns>
-        protected override Measures GetCustomResultMeasures()
-        {
-            var measures = base.GetCustomResultMeasures();
-            measures[ContentManagerObservabilityExtensions.CONNECTOR_COUNT] = _connectorConfigurations?.Count ?? 0;
-            measures[ContentManagerObservabilityExtensions.CHANNEL_DISCOVERY_OPERATIONS_STARTED_COUNT] = State.ChannelDiscoveryOperationsStarted;
-            measures[ContentManagerObservabilityExtensions.CONTENT_SYNCHRONISATION_OPERATIONS_STARTED_COUNT] = State.ContentSynchronisationOperationsStarted;
-            return measures;
-        }
-
-        private async Task InvokeContentManagerCallbackAsync(List<ConnectorConfigModel> connectorConfigurations, CancellationToken cancellationToken)
-        {
-            //Do not invoke if we have not found any new configurations
-            if (connectorConfigurations.Count == 0)
-                return;
-
-            using var scope = _serviceProvider.CreateScope();
-            var contentManagerCallbackAction = _contentManagerActionProvider.CreateContentManagerCallbackAction(scope);
-
-            //If no callback action has been registered, just bail out now
-            if (contentManagerCallbackAction == null)
-                return;
-
-            await contentManagerCallbackAction
-                .ExecuteAsync(connectorConfigurations, cancellationToken)
-                .ConfigureAwait(false);
-        }
+        await contentManagerCallbackAction
+            .ExecuteAsync(connectorConfigurations, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

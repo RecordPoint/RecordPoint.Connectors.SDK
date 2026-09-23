@@ -17,6 +17,33 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.R365
         public BlockingCollection<SubmitResult> AggregationSubmitResults { get; private set; }
         public BlockingCollection<SubmitResult> AuditEventSubmitResults { get; private set; }
 
+        /// <summary>
+        /// When set, overrides the result returned by SubmitRecord. May return null to
+        /// simulate a missing submit result.
+        /// </summary>
+        public Func<SubmitResult> RecordSubmitResultFactory { get; set; }
+
+        /// <summary>
+        /// When set, overrides the result returned by SubmitBinary.
+        /// </summary>
+        public Func<SubmitResult> BinarySubmitResultFactory { get; set; }
+
+        /// <summary>
+        /// When set, overrides the result returned by SubmitAggregation.
+        /// </summary>
+        public Func<SubmitResult> AggregationSubmitResultFactory { get; set; }
+
+        /// <summary>
+        /// When set, overrides the result returned by SubmitAuditEvent. May return null to
+        /// simulate a missing submit result.
+        /// </summary>
+        public Func<SubmitResult> AuditEventSubmitResultFactory { get; set; }
+
+        /// <summary>
+        /// Records disposal callbacks that were invoked, so tests can inspect them.
+        /// </summary>
+        public BlockingCollection<ItemNotificationDisposalCallbackModel> DisposalCallbacks { get; private set; } = new();
+
 
         public MockR365Client(IDateTimeProvider dateTimeProvider)
         {
@@ -44,50 +71,76 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.R365
 
         public Task<SubmitResult> SubmitAggregation(ConnectorConfigModel connectorConfig, Aggregation aggregation, CancellationToken cancellationToken)
         {
-            var result = new SubmitResult
+            var result = AggregationSubmitResultFactory != null
+                ? AggregationSubmitResultFactory()
+                : new SubmitResult
+                {
+                    WaitUntilTime = _dateTimeProvider.UtcNow,
+                    SubmitStatus = aggregation != null ? SubmitResult.Status.OK : SubmitResult.Status.Skipped
+                };
+            if (result != null)
             {
-                WaitUntilTime = _dateTimeProvider.UtcNow,
-                SubmitStatus = aggregation != null ? SubmitResult.Status.OK : SubmitResult.Status.Skipped
-            };
-            AggregationSubmitResults.Add(result, cancellationToken);
+                AggregationSubmitResults.Add(result, cancellationToken);
+            }
 
             return Task.FromResult(result);
         }
 
         public Task<SubmitResult> SubmitBinary(ConnectorConfigModel connectorConfig, BinaryMetaInfo binaryMetaInfo, Stream binaryStream, CancellationToken cancellationToken)
         {
-            var result = new SubmitResult
+            var result = BinarySubmitResultFactory != null
+                ? BinarySubmitResultFactory()
+                : new SubmitResult
+                {
+                    WaitUntilTime = _dateTimeProvider.UtcNow,
+                    SubmitStatus = SubmitResult.Status.OK
+                };
+            if (result != null)
             {
-                WaitUntilTime = _dateTimeProvider.UtcNow,
-                SubmitStatus = SubmitResult.Status.OK
-            };
-            BinarySubmitResults.Add(result, cancellationToken);
+                BinarySubmitResults.Add(result, cancellationToken);
+            }
 
             return Task.FromResult(result);
         }
 
         public Task<SubmitResult> SubmitRecord(ConnectorConfigModel connectorConfig, Record record, CancellationToken cancellationToken)
         {
-            var result = new SubmitResult
+            var result = RecordSubmitResultFactory != null
+                ? RecordSubmitResultFactory()
+                : new SubmitResult
+                {
+                    WaitUntilTime = _dateTimeProvider.UtcNow,
+                    SubmitStatus = record != null ? SubmitResult.Status.OK : SubmitResult.Status.Skipped
+                };
+            if (result != null)
             {
-                WaitUntilTime = _dateTimeProvider.UtcNow,
-                SubmitStatus = record != null ? SubmitResult.Status.OK : SubmitResult.Status.Skipped
-            };
-            RecordSubmitResults.Add(result, cancellationToken);
+                RecordSubmitResults.Add(result, cancellationToken);
+            }
 
             return Task.FromResult(result);
         }
 
         public Task<SubmitResult> SubmitAuditEvent(ConnectorConfigModel connectorConfig, AuditEvent auditEvent, CancellationToken cancellationToken)
         {
-            var result = new SubmitResult
+            var result = AuditEventSubmitResultFactory != null
+                ? AuditEventSubmitResultFactory()
+                : new SubmitResult
+                {
+                    WaitUntilTime = _dateTimeProvider.UtcNow,
+                    SubmitStatus = auditEvent != null ? SubmitResult.Status.OK : SubmitResult.Status.Skipped
+                };
+            if (result != null)
             {
-                WaitUntilTime = _dateTimeProvider.UtcNow,
-                SubmitStatus = auditEvent != null ? SubmitResult.Status.OK : SubmitResult.Status.Skipped
-            };
-            RecordSubmitResults.Add(result, cancellationToken);
+                AuditEventSubmitResults.Add(result, cancellationToken);
+            }
 
             return Task.FromResult(result);
+        }
+
+        public Task DisposalCallback(ItemNotificationDisposalCallbackModel callbackNotification, ConnectorConfigModel connectorConfig, CancellationToken cancellationToken)
+        {
+            DisposalCallbacks.Add(callbackNotification, cancellationToken);
+            return Task.CompletedTask;
         }
     }
 }

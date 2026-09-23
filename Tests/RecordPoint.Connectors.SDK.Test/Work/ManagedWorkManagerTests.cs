@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Connectors;
+using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.Test.Mock.Databases;
 using RecordPoint.Connectors.SDK.Test.Mock.Work;
 using RecordPoint.Connectors.SDK.Work;
@@ -15,7 +16,6 @@ public class ManagedWorkManagerSut : CommonSutBase
     protected override IHostBuilder CreateSutBuilder()
         => base.CreateSutBuilder()
             .UseWorkManager()
-            .UseWorkStateManager<DatabaseManagedWorkStatusManager>()
             .UseMockConnectorDatabase()
             .ConfigureServices(svcs =>
                 svcs.AddMockWorkQueue()
@@ -30,9 +30,9 @@ public class ManagedWorkManagerTests : CommonTestBase<ManagedWorkManagerSut>
     {
         await StartSutAsync();
 
-        var managedWorkStatusManager = Services.GetRequiredService<IManagedWorkStatusManager>();
         var workQueueClient = Services.GetRequiredService<IWorkQueueClient>();
-        var workManager = new ManagedWorkManager(managedWorkStatusManager, workQueueClient);
+        var dateTimeProvider = Services.GetRequiredService<IDateTimeProvider>();
+        var workManager = new ManagedWorkManager(workQueueClient, dateTimeProvider);
 
         var work = await workManager.FaultyAsync("BadWorkId", new Exception("BadWorkId"), CancellationToken.None, 5);
         Assert.Equal(WorkResultType.DeadLetter, work.ResultType);
@@ -46,9 +46,9 @@ public class ManagedWorkManagerTests : CommonTestBase<ManagedWorkManagerSut>
     {
         await StartSutAsync();
 
-        var managedWorkStatusManager = Services.GetRequiredService<IManagedWorkStatusManager>();
         var workQueueClient = Services.GetRequiredService<IWorkQueueClient>();
-        var workManager = new ManagedWorkManager(managedWorkStatusManager, workQueueClient);
+        var dateTimeProvider = Services.GetRequiredService<IDateTimeProvider>();
+        var workManager = new ManagedWorkManager(workQueueClient, dateTimeProvider);
 
         workManager.WorkStatus.RetryOnFailure = true;
         workManager.WorkStatus.MaxRetries = -1;

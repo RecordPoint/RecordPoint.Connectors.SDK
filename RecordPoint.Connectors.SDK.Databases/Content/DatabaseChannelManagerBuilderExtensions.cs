@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using RecordPoint.Connectors.SDK.Caching;
+using RecordPoint.Connectors.SDK.Databases.Caching;
 
 namespace RecordPoint.Connectors.SDK.Content
 {
@@ -15,10 +18,14 @@ namespace RecordPoint.Connectors.SDK.Content
         /// <returns>An IHostBuilder</returns>
         public static IHostBuilder UseDatabaseChannelManager(this IHostBuilder hostBuilder)
         {
+            hostBuilder.UseInMemoryCache<ChannelExistsCacheAction, bool>();
+
             return hostBuilder.ConfigureServices((hostContext, services) =>
             {
-                services
-                    .AddSingleton<IChannelManager, DatabaseChannelManager>();
+                // TryAdd so that if the Cosmos layer already registered CosmosDirectChannelAccess,
+                // this no-op default doesn't overwrite it regardless of registration order.
+                services.TryAddSingleton<IDirectChannelAccess, NullDirectChannelAccess>();
+                services.AddSingleton<IChannelManager, DatabaseChannelManager>();
             });
         }
     }

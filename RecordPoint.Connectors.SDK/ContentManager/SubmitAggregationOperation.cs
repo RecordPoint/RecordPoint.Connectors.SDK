@@ -131,12 +131,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
         /// <returns></returns>
         protected override Task RequeueAsync(DateTimeOffset waitTill, CancellationToken cancellationToken)
         {
-            return WorkQueueClient.SubmitAggregationAsync(new ContentSynchronisationConfiguration()
-            {
-                ConnectorConfigurationId = ConnectorConfig.Id,
-                TenantId = ConnectorConfig.TenantId,
-                TenantDomainName = ConnectorConfig.TenantDomainName,
-            }, Aggregation, waitTill, cancellationToken);
+            return WorkQueueClient.SubmitAggregationAsync(ConnectorConfig, Aggregation, waitTill, cancellationToken);
         }
 
         /// <summary>

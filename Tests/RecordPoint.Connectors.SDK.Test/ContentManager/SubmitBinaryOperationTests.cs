@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using RecordPoint.Connectors.SDK.Caching.Semaphore;
@@ -48,7 +48,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new BinaryRetrievalResult
                 {
-                    ResultType = BinaryRetrievalResultType.ZeroBinary,
+                    ResultType = BinaryRetrievalResultType.Abandoned,
                     Reason = "File opened normally, skipping binary submission due to zero byte binary"
                 });
 
@@ -58,7 +58,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var connector = ContentManagerSutBase.CreateConnector1();
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -79,7 +78,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new BinaryRetrievalResult
                 {
-                    ResultType = BinaryRetrievalResultType.ZeroBinary,
+                    ResultType = BinaryRetrievalResultType.Abandoned,
                     Reason = "File opened normally, skipping binary submission due to zero byte binary"
                 });
 
@@ -100,7 +99,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -121,7 +119,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new BinaryRetrievalResult
                 {
-                    ResultType = BinaryRetrievalResultType.ZeroBinary,
+                    ResultType = BinaryRetrievalResultType.Abandoned,
                     Reason = "File opened normally, skipping binary submission due to zero byte binary"
                 });
 
@@ -142,7 +140,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -175,7 +172,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -198,7 +194,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new BinaryRetrievalResult
                 {
-                    ResultType = BinaryRetrievalResultType.Deleted
+                    ResultType = BinaryRetrievalResultType.Abandoned
                 });
 
             SUT.SelectBinaryRetrievalActionMock(binaryRetrievalActionMock);
@@ -209,7 +205,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -217,8 +212,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
-            Assert.Equal(WorkResultType.Complete, workResult.ResultType);
-            Assert.Equal("Binary skipped as expected", submitBinaryItem.ResultReason);
+            Assert.Equal(WorkResultType.Abandoned, workResult.ResultType);
+            Assert.Equal(string.Empty, submitBinaryItem.ResultReason);
         }
 
         [Fact]
@@ -232,7 +227,7 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .Setup(lm => lm.ExecuteAsync(It.IsAny<ConnectorConfigModel>(), It.IsAny<BinaryMetaInfo>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new BinaryRetrievalResult
                 {
-                    ResultType = BinaryRetrievalResultType.ZeroBinary,
+                    ResultType = BinaryRetrievalResultType.Abandoned,
                     Reason = "File opened normally, skipping binary submission due to zero byte binary"
                 });
 
@@ -244,7 +239,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -252,8 +246,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             var workResult = submitBinaryItem.GetWorkResult();
 
             // Assert
-            Assert.Equal(WorkResultType.Complete, workResult.ResultType);
-            Assert.Contains("Binary skipped as expected", workResult.Reason);
+            Assert.Equal(WorkResultType.Abandoned, workResult.ResultType);
+            Assert.Contains("zero byte binary", workResult.Reason);
         }
 
         [Fact]
@@ -277,12 +271,10 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, SubmitBinaryOperation.WORK_TYPE, null, 10, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var priorWorkItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
 
-            await SUT.SetWorkContinue(workMessage);
             var afterWorkItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
 
@@ -312,7 +304,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, SubmitBinaryOperation.WORK_TYPE, null, 10, cancellationToken);
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var priorWorkItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);
@@ -345,7 +336,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
             var workMessage = SUT.CreateSubmitBinaryManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var priorWorkItem = Services.GetRequiredService<SubmitBinaryOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateSubmitBinaryRequest(workMessage), cancellationToken);

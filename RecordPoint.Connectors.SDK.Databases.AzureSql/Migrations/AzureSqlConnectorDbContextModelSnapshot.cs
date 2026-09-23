@@ -17,15 +17,21 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("RecordPoint.Connectors.SDK.Connectors.ConnectorConfigurationModel", b =>
                 {
                     b.Property<string>("ConnectorId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("ChannelDiscoveryEnqueuedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("ChannelDiscoveryExecutedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("ConnectorTypeId")
                         .IsRequired()
@@ -36,10 +42,6 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReportLocation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -56,6 +58,35 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
                     b.ToTable("Connectors");
                 });
 
+            modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.AggregationModel", b =>
+                {
+                    b.Property<string>("ConnectorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MetaData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParentExternalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ConnectorId", "ExternalId");
+
+                    b.ToTable("Aggregations");
+                });
+
             modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.ChannelModel", b =>
                 {
                     b.Property<string>("ConnectorId")
@@ -68,11 +99,9 @@ namespace RecordPoint.Connectors.SDK.Databases.AzureSql.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MetaData")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ConnectorId", "ExternalId");

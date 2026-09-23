@@ -56,7 +56,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
             var connector = ContentManagerSutBase.CreateConnector1();
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
@@ -89,7 +88,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
@@ -121,7 +119,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
@@ -155,7 +152,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             await submitBinaryItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
@@ -191,7 +187,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await SUT.GetConnectorManager().SetConnectorAsync(connector, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var submitBinaryItem = Services.GetRequiredService<RecordDisposalOperation>();
             try
@@ -227,12 +222,10 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, null, 10, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var priorWorkItem = Services.GetRequiredService<RecordDisposalOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
 
-            await SUT.SetWorkContinue(workMessage);
             var afterWorkItem = Services.GetRequiredService<RecordDisposalOperation>();
             await afterWorkItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
 
@@ -262,7 +255,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             await semaphoreLockManager.SetSemaphoreAsync(SemaphoreLockType.Scoped, RecordDisposalOperation.WORK_TYPE, null, 10, cancellationToken);
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var priorWorkItem = Services.GetRequiredService<RecordDisposalOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);
@@ -294,7 +286,6 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
             SUT.SemaphoreLockScopedKeyAction.Key = "KEY_456";
 
             var workMessage = SUT.CreateRecordDisposalManagedWorkStatusModel(connector);
-            await SUT.SetWorkRunning(workMessage);
 
             var priorWorkItem = Services.GetRequiredService<RecordDisposalOperation>();
             await priorWorkItem.RunWorkRequestAsync(SUT.CreateRecordDisposalRequest(workMessage), cancellationToken);

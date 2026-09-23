@@ -8,6 +8,18 @@ namespace RecordPoint.Connectors.SDK.Work
     /// </summary>
     public static class ManagedWorkBuilderExtensions
     {
+
+        /// <summary>
+        /// Add the standard database backed job component
+        /// </summary>
+        /// <param name="services">Services to extend</param>
+        /// <returns>Updated services</returns>
+        public static IServiceCollection AddWorkFactory(this IServiceCollection services)
+        {
+            return services
+                .AddScoped<IManagedWorkFactory, ManagedWorkFactory>();
+        }
+
         /// <summary>
         /// Add the standard database backed job component
         /// </summary>
@@ -16,12 +28,10 @@ namespace RecordPoint.Connectors.SDK.Work
         public static IServiceCollection AddWorkStateManagement<TManagedWorkStatusManager>(this IServiceCollection services)
             where TManagedWorkStatusManager : class, IManagedWorkStatusManager
         {
-            services
+            return services
                 .AddScoped<IManagedWorkStatusManager, TManagedWorkStatusManager>()
-                .AddScoped<IManagedWorkFactory, ManagedWorkFactory>();
-            return services;
+                .AddWorkFactory();
         }
-
 
         /// <summary>
         /// Use the Managed Work Status Manager
@@ -33,6 +43,18 @@ namespace RecordPoint.Connectors.SDK.Work
             return hostBuilder.ConfigureServices(services =>
             {
                 services.AddWorkStateManagement<TManagedWorkStatusManager>();
+            });
+        }
+
+        /// <summary>
+        /// Use the Managed Work Status Manager
+        /// </summary>
+        /// <param name="hostBuilder">Host builder to target</param>
+        public static IHostBuilder UseWorkStateManager(this IHostBuilder hostBuilder)
+        {
+            return hostBuilder.ConfigureServices(services =>
+            {
+                services.AddWorkFactory();
             });
         }
     }

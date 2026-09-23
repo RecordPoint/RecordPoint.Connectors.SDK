@@ -3,6 +3,10 @@
 
 ## Contents
 
+- [ConnectorConfigUpdate](#T-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate 'RecordPoint.Connectors.SDK.Databases.LocalDb.Migrations.ConnectorConfigUpdate')
+  - [BuildTargetModel()](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder- 'RecordPoint.Connectors.SDK.Databases.LocalDb.Migrations.ConnectorConfigUpdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)')
+  - [Down()](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.LocalDb.Migrations.ConnectorConfigUpdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
+  - [Up()](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder- 'RecordPoint.Connectors.SDK.Databases.LocalDb.Migrations.ConnectorConfigUpdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)')
 - [DesignTimeDbContextFactory](#T-RecordPoint-Connectors-SDK-Databases-LocalDb-DesignTimeDbContextFactory 'RecordPoint.Connectors.SDK.Databases.LocalDb.DesignTimeDbContextFactory')
   - [CreateDbContext(args)](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-DesignTimeDbContextFactory-CreateDbContext-System-String[]- 'RecordPoint.Connectors.SDK.Databases.LocalDb.DesignTimeDbContextFactory.CreateDbContext(System.String[])')
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-DesignTimeDbContextFactory-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.LocalDb.DesignTimeDbContextFactory.GetContextOptionsBuilder')
@@ -60,6 +64,50 @@
   - [ReadyAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-LocalDbDatabaseProvider`1-ReadyAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.LocalDb.LocalDbDatabaseProvider`1.ReadyAsync(System.Threading.CancellationToken)')
   - [RemoveAsync(cancellationToken)](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-LocalDbDatabaseProvider`1-RemoveAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.LocalDb.LocalDbDatabaseProvider`1.RemoveAsync(System.Threading.CancellationToken)')
   - [SetReady(exception)](#M-RecordPoint-Connectors-SDK-Databases-LocalDb-LocalDbDatabaseProvider`1-SetReady-System-Exception- 'RecordPoint.Connectors.SDK.Databases.LocalDb.LocalDbDatabaseProvider`1.SetReady(System.Exception)')
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate'></a>
+## ConnectorConfigUpdate `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.LocalDb.Migrations
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate-BuildTargetModel-Microsoft-EntityFrameworkCore-ModelBuilder-'></a>
+### BuildTargetModel() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate-Down-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Down() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-LocalDb-Migrations-ConnectorConfigUpdate-Up-Microsoft-EntityFrameworkCore-Migrations-MigrationBuilder-'></a>
+### Up() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-RecordPoint-Connectors-SDK-Databases-LocalDb-DesignTimeDbContextFactory'></a>
 ## DesignTimeDbContextFactory `type`
@@ -522,11 +570,11 @@ This method has no parameters.
 
 ##### Summary
 
-
+Creates a configured [DbContextOptionsBuilder\`1](#T-Microsoft-EntityFrameworkCore-DbContextOptionsBuilder`1 'Microsoft.EntityFrameworkCore.DbContextOptionsBuilder`1') for the LocalDB database.
 
 ##### Returns
 
-
+A configured options builder.
 
 ##### Parameters
 
@@ -648,11 +696,11 @@ This method has no parameters.
 
 ##### Summary
 
-Get the external system name
+Gets the external system name for this database provider.
 
 ##### Returns
 
-
+The external system name.
 
 ##### Parameters
 
@@ -663,24 +711,24 @@ This method has no parameters.
 
 ##### Summary
 
-
+Loads an embedded SQL script and applies placeholder replacements.
 
 ##### Returns
 
-
+The SQL script with placeholders resolved.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| scriptName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| parameters | [System.Collections.Generic.Dictionary{System.String,System.String}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.String}') |  |
+| scriptName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The embedded script file name suffix to locate. |
+| parameters | [System.Collections.Generic.Dictionary{System.String,System.String}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,System.String}') | Key/value replacements for script placeholders. |
 
 ##### Exceptions
 
 | Name | Description |
 | ---- | ----------- |
-| [RecordPoint.Connectors.SDK.RequiredValueNullException](#T-RecordPoint-Connectors-SDK-RequiredValueNullException 'RecordPoint.Connectors.SDK.RequiredValueNullException') |  |
+| [RecordPoint.Connectors.SDK.RequiredValueNullException](#T-RecordPoint-Connectors-SDK-RequiredValueNullException 'RecordPoint.Connectors.SDK.RequiredValueNullException') | Thrown when the embedded script stream cannot be loaded. |
 
 <a name='M-RecordPoint-Connectors-SDK-Databases-LocalDb-LocalDbDatabaseProvider`1-GetSqlServer'></a>
 ### GetSqlServer() `method`
@@ -709,17 +757,13 @@ This method has no parameters.
 
 ##### Summary
 
-
-
-##### Returns
-
-
+Creates or attaches the LocalDB database and applies pending migrations.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token. |
 
 <a name='M-RecordPoint-Connectors-SDK-Databases-LocalDb-LocalDbDatabaseProvider`1-ReadyAsync-System-Threading-CancellationToken-'></a>
 ### ReadyAsync(cancellationToken) `method`
@@ -743,17 +787,13 @@ Readiness Task
 
 ##### Summary
 
-
-
-##### Returns
-
-
+Deletes the LocalDB database file from disk.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | Cancellation token. |
 
 <a name='M-RecordPoint-Connectors-SDK-Databases-LocalDb-LocalDbDatabaseProvider`1-SetReady-System-Exception-'></a>
 ### SetReady(exception) `method`

@@ -11,30 +11,26 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
     public abstract class UnspecifiedFieldValuePipelineElementBase : SubmitPipelineElementBase
     {
         /// <summary>
-        /// Constructs a new UnspecifiedFieldValuePipelineElementBase with an optional next submit
-        /// pipeline element.
+        /// Constructs a new unspecified-field pipeline element.
         /// </summary>
-        /// <param name="next"></param>
+        /// <param name="next">The next pipeline element to invoke.</param>
         protected UnspecifiedFieldValuePipelineElementBase(ISubmission next) : base(next)
         {
         }
 
         /// <summary>
-        /// Implement in a derived class to specify the names of any string fields that are required.
-        /// The pipeline element will substitute any blank or missing values with "Unspecified" for these
-        /// fields.
+        /// Gets the required string fields that should be defaulted when missing.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The required field names.</returns>
         protected abstract IEnumerable<string> GetRequiredStringFields();
 
         private static readonly string UnspecifiedFieldValue = "Unspecified";
 
         /// <summary>
-        /// Checks core metadata for any required fields that are blank or missing
-        /// and provides the value "Unspecified" for those fields.
+        /// Replaces missing required metadata values with <c>Unspecified</c>.
         /// </summary>
-        /// <param name="submitContext"></param>
-        /// <returns></returns>
+        /// <param name="submitContext">The current submission context.</param>
+        /// <returns>A task that completes when submission processing finishes.</returns>
         public override async Task Submit(SubmitContext submitContext)
         {
             var requiredFields = GetRequiredStringFields();
@@ -44,7 +40,9 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 var metaData = submitContext.CoreMetaData.FirstOrDefault(x => x.Name == requiredField);
                 if (metaData != null)
                 {
-                    if (string.IsNullOrEmpty(metaData.Value))
+                    // The Connector API's [Required] validation trims strings, so a
+                    // whitespace-only value is rejected the same as an empty one
+                    if (string.IsNullOrWhiteSpace(metaData.Value))
                     {
                         metaData.Value = UnspecifiedFieldValue;
                         LogVerbose(submitContext, nameof(Submit), $"setting required field [{metaData.Name}] to [{UnspecifiedFieldValue}]");

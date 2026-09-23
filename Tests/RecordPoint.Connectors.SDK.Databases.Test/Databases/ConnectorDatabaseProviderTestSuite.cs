@@ -158,10 +158,9 @@ namespace RecordPoint.Connectors.SDK.Test.ConnectorDatabase
                 var databaseProvider = _services.GetRequiredService<IConnectorDatabaseProvider>();
                 await databaseProvider.PrepareAsync(CancellationToken.None);
                 using var dbContext = databaseProvider.CreateDbContext();
-                // Querying without error passes the test
-                dbContext.Connectors.FirstOrDefault();
 
-                Assert.True(true);
+                // Querying the mapped table should not throw.
+                Assert.Null(Record.Exception(() => dbContext.Connectors.FirstOrDefault()));
             }
             finally
             {
@@ -179,10 +178,9 @@ namespace RecordPoint.Connectors.SDK.Test.ConnectorDatabase
                 var databaseProvider = _services.GetRequiredService<IConnectorDatabaseProvider>();
                 await databaseProvider.PrepareAsync(CancellationToken.None);
                 using var dbContext = databaseProvider.CreateDbContext();
-                // Querying without error passes the test
-                dbContext.Channels.FirstOrDefault();
 
-                Assert.True(true);
+                // Querying the mapped table should not throw.
+                Assert.Null(Record.Exception(() => dbContext.Channels.FirstOrDefault()));
             }
             finally
             {
@@ -200,10 +198,9 @@ namespace RecordPoint.Connectors.SDK.Test.ConnectorDatabase
                 var databaseProvider = _services.GetRequiredService<IConnectorDatabaseProvider>();
                 await databaseProvider.PrepareAsync(CancellationToken.None);
                 using var dbContext = databaseProvider.CreateDbContext();
-                // Querying without error passes the test
-                dbContext.ManagedWorkStatuses.FirstOrDefault();
 
-                Assert.True(true);
+                // Querying the mapped table should not throw.
+                Assert.Null(Record.Exception(() => dbContext.ManagedWorkStatuses.FirstOrDefault()));
             }
             finally
             {

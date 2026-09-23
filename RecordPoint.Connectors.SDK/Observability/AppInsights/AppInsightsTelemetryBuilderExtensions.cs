@@ -19,15 +19,10 @@ public static class AppInsightsTelemetryBuilderExtensions
             .ConfigureServices((hostContext, services) =>
             {
                 var appInsightsOptionsSection = hostContext.Configuration.GetSection(ApplicationInsightOptions.OPTION_NAME);
-                var appInsightsOptions = appInsightsOptionsSection.Get<ApplicationInsightOptions>() ?? new();
-
                 services
                     .Configure<ApplicationInsightOptions>(appInsightsOptionsSection)
                     .AddSingleton<ITelemetryClientFactory, TelemetryClientFactory>()
                     .AddSingleton<ITelemetrySink, ApplicationInsightsTelemetrySink>();
-
-                if (appInsightsOptions.IncludeKubernetesEnricher)
-                    services.AddApplicationInsightsKubernetesEnricher();
             });
     }
 }

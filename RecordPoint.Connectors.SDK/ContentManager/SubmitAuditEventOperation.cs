@@ -239,12 +239,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
 
         private Task RequeueAsync(DateTimeOffset waitTill, CancellationToken cancellationToken)
         {
-            return _workQueueClient.SubmitAuditEventAsync(new ContentSubmissionConfiguration
-            {
-                ConnectorConfigurationId = _connectorConfiguration.Id,
-                TenantId = _connectorConfiguration.TenantId,
-                TenantDomainName = _connectorConfiguration.TenantDomainName,
-            }, Parameter, waitTill, cancellationToken);
+            return _workQueueClient.SubmitAuditEventAsync(_connectorConfiguration, Parameter, waitTill, cancellationToken);
         }
 
         private async Task InvokeSubmissionCallbackAsync(IServiceScope scope, SubmissionActionType submissionActionType, CancellationToken cancellationToken)

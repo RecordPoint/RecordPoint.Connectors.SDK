@@ -2,6 +2,7 @@
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Content;
+using RecordPoint.Connectors.SDK.Notifications;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Secrets;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
@@ -33,22 +34,26 @@ namespace RecordPoint.Connectors.SDK.R365
         /// </summary>
         private readonly IR365Pipelines _r365Pipelines;
 
+        private readonly INotificationApiManager _notificationApiManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="R365Client"/> class.
         /// </summary>
         /// <param name="r365ConfigurationClient">The r365 configuration client.</param>
         /// <param name="observabilityScope">The scope manager.</param>
         /// <param name="r365Pipelines">The r365 pipelines.</param>
+        /// <param name="notificationApiManager"></param>
         public R365Client(
             IR365ConfigurationClient r365ConfigurationClient,
             IObservabilityScope observabilityScope,
-            IR365Pipelines r365Pipelines)
+            IR365Pipelines r365Pipelines,
+            INotificationApiManager notificationApiManager)
         {
             _r365ConfigurationClient = r365ConfigurationClient;
             _observabilityScope = observabilityScope;
             _r365Pipelines = r365Pipelines;
+            _notificationApiManager = notificationApiManager;
         }
-
         /// <summary>
         /// Get the dimensions.
         /// </summary>
@@ -203,7 +208,9 @@ namespace RecordPoint.Connectors.SDK.R365
                 new(Fields.ContentVersion, type: nameof(String), value: record.ContentVersion),
                 new(Fields.Location, type: nameof(String), value: record.Location),
                 new(Fields.MediaType, type: nameof(String), value: "Electronic"),
-                new(Fields.MimeType, type: nameof(String), value: record.MimeType)
+                new(Fields.MimeType, type: nameof(String), value: record.MimeType),
+                new(Fields.BarcodeType, type: nameof(String), value: record.MetaDataItems?.FirstOrDefault(m => m.Name == Fields.BarcodeType)?.Value ?? ""),
+                new(Fields.BarcodeValue, type: nameof(String), value: record.MetaDataItems?.FirstOrDefault(m => m.Name == Fields.BarcodeValue)?.Value ?? "")
             };
 
             var sourceMetaData = new List<SubmissionMetaDataModel>();
@@ -232,7 +239,7 @@ namespace RecordPoint.Connectors.SDK.R365
                 var binariesSubmitted = record.Binaries
                     .Select(a => new DirectBinarySubmissionInputModel
                     {
-                        BinaryExternalId = a.ItemExternalId,
+                        BinaryExternalId = a.ExternalId,
                         ConnectorId = connectorConfig.Id,
                         CorrelationId = submitContext.CorrelationId.ToString(),
                         FileHash = a.FileHash,
@@ -240,7 +247,8 @@ namespace RecordPoint.Connectors.SDK.R365
                         FileSize = a.FileSize,
                         ItemExternalId = a.ItemExternalId,
                         MimeType = a.MimeType,
-                        SourceLastModifiedDate = a.SourceLastModifiedDate.DateTime
+                        SourceLastModifiedDate = a.SourceLastModifiedDate.DateTime,
+                        BinaryBlobCreated = a.BinarySubmissionStatus == BinarySubmissionStatus.Submitted
                     })
                     .ToList();
 
@@ -336,7 +344,9 @@ namespace RecordPoint.Connectors.SDK.R365
                 new(Fields.SourceCreatedDate, type: nameof(DateTimeOffset), value: aggregation.SourceCreatedDate.ToString("o")),
                 new(Fields.SourceLastModifiedBy, type: nameof(String), value: aggregation.SourceLastModifiedBy),
                 new(Fields.SourceLastModifiedDate, type: nameof(DateTimeOffset), value: aggregation.SourceLastModifiedDate.ToString("o")),
-                new(Fields.Location, type: nameof(String), value: aggregation.Location)
+                new(Fields.Location, type: nameof(String), value: aggregation.Location),
+                new(Fields.BarcodeType, type: nameof(String), value: aggregation.MetaDataItems?.FirstOrDefault(m => m.Name == Fields.BarcodeType)?.Value ?? ""),
+                new(Fields.BarcodeValue, type: nameof(String), value: aggregation.MetaDataItems?.FirstOrDefault(m => m.Name == Fields.BarcodeValue)?.Value ?? "")
             };
 
             var sourceMetaData = new List<SubmissionMetaDataModel>();
@@ -363,5 +373,21 @@ namespace RecordPoint.Connectors.SDK.R365
             return submitContext;
         }
 
+        /// <summary>
+        /// Sends a disposal callback notification to R365
+        /// </summary>
+        public async Task DisposalCallback(ItemNotificationDisposalCallbackModel callbackNotification, ConnectorConfigModel connectorConfig, CancellationToken cancellationToken)
+        {
+            await _observabilityScope.InvokeAsync(
+                GetDimensions(), async () =>
+                {
+                    var r365Configuration = LoadConfiguration(connectorConfig.ConnectorTypeConfigurationId);
+                    await _notificationApiManager.DisposalCallback(
+                        GetApiClientFactorySettings(r365Configuration),
+                        GetAuthenticationHelperSettings(r365Configuration, connectorConfig.TenantDomainName),
+                        callbackNotification,
+                        cancellationToken).ConfigureAwait(false);
+                }).ConfigureAwait(false);
+        }
     }
 }

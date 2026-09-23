@@ -1,4 +1,5 @@
 ﻿using Microsoft.Rest;
+using Newtonsoft.Json;
 using Polly.Retry;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
@@ -72,7 +73,7 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                     break;
                 case System.Net.HttpStatusCode.Forbidden:
                     shouldContinueSubmitPipeline = false;
-                    var forbiddenReason = $"Submission returned {result.Response.StatusCode} : {itemTypeName} NOT submitted because the connector was not found.";
+                    var forbiddenReason = await BuildForbiddenReasonAsync(result.Response, itemTypeName).ConfigureAwait(false);
                     LogWarning(submitContext, nameof(HandleSubmitResponse), forbiddenReason);
                     submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorNotFound;
                     submitContext.SubmitResult.Reason = forbiddenReason;
@@ -115,6 +116,97 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
             LogVerbose(submitContext, nameof(HandleSuccessfulRequest), reason);
             submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.OK;
             submitContext.SubmitResult.Reason = reason;
+        }
+
+        private static async Task<string> BuildForbiddenReasonAsync(HttpResponseMessage response, string itemTypeName)
+        {
+            var responseContent = string.Empty;
+            if (response?.Content != null)
+            {
+                try
+                {
+                    responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                catch
+                {
+                    responseContent = string.Empty;
+                }
+            }
+
+            return BuildForbiddenReason(response?.StatusCode.ToString() ?? "<No Status Code>", itemTypeName, responseContent);
+        }
+
+        private static string BuildForbiddenReason(string statusCode, string itemTypeName, string responseContent)
+        {
+            var forbiddenReason = $"Submission returned {statusCode} : {itemTypeName} NOT submitted because the connector request was forbidden.";
+            var errorDetail = TryExtractForbiddenErrorDetail(responseContent);
+
+            return string.IsNullOrWhiteSpace(errorDetail)
+                ? forbiddenReason
+                : $"{forbiddenReason} Error Detail: {errorDetail}";
+        }
+
+        private static string TryExtractForbiddenErrorDetail(string responseContent)
+        {
+            if (string.IsNullOrWhiteSpace(responseContent))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                var errorResponse = JsonConvert.DeserializeObject<ErrorResponseModel>(responseContent);
+                var messages = new List<string>();
+
+                if (!string.IsNullOrWhiteSpace(errorResponse?.Error?.Message))
+                {
+                    messages.Add(errorResponse.Error.Message);
+                }
+
+                if (errorResponse?.Error?.InnerError?.Any() == true)
+                {
+                    messages.AddRange(errorResponse.Error.InnerError
+                        .Select(x => x?.Message)
+                        .Where(x => !string.IsNullOrWhiteSpace(x)));
+                }
+
+                return string.Join(" | ", messages.Distinct());
+            }
+            catch
+            {
+                return responseContent;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to classify a thrown <see cref="HttpOperationException"/> as a known submission outcome.
+        /// </summary>
+        /// <param name="submitContext">The submission context for the current operation.</param>
+        /// <param name="ex">The exception thrown by the API client.</param>
+        /// <param name="itemTypeName">The submitted item type name used in log and result messages.</param>
+        /// <param name="shouldContinueSubmitPipeline">Whether the submission pipeline should continue after handling the exception.</param>
+        /// <returns><c>true</c> if the exception was recognized and handled; otherwise, <c>false</c>.</returns>
+        protected bool TryHandleKnownHttpOperationException(SubmitContext submitContext, HttpOperationException ex, string itemTypeName, out bool shouldContinueSubmitPipeline)
+        {
+            shouldContinueSubmitPipeline = true;
+
+            if (ex.Response?.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                LogVerbose(submitContext, nameof(TryHandleKnownHttpOperationException), $"Submission returned {ex.Response.StatusCode} : {itemTypeName} already submitted.");
+                return true;
+            }
+
+            if (ex.Response?.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                shouldContinueSubmitPipeline = false;
+                var forbiddenReason = BuildForbiddenReason(ex.Response.StatusCode.ToString(), itemTypeName, ex.Response.Content);
+                LogWarning(submitContext, nameof(TryHandleKnownHttpOperationException), forbiddenReason);
+                submitContext.SubmitResult.SubmitStatus = SubmitResult.Status.ConnectorNotFound;
+                submitContext.SubmitResult.Reason = forbiddenReason;
+                return true;
+            }
+
+            return false;
         }
 
         private async Task HandleBadRequestAsync<T>(SubmitContext submitContext, HttpOperationResponse<T> result, string itemTypeName)

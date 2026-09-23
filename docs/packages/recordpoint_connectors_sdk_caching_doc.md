@@ -11,14 +11,16 @@
 - [CacheBuilderExtensions](#T-RecordPoint-Connectors-SDK-Caching-CacheBuilderExtensions 'RecordPoint.Connectors.SDK.Caching.CacheBuilderExtensions')
   - [UseInMemoryCache\`\`2(hostBuilder)](#M-RecordPoint-Connectors-SDK-Caching-CacheBuilderExtensions-UseInMemoryCache``2-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Caching.CacheBuilderExtensions.UseInMemoryCache``2(Microsoft.Extensions.Hosting.IHostBuilder)')
 - [ICacheAction\`1](#T-RecordPoint-Connectors-SDK-Caching-ICacheAction`1 'RecordPoint.Connectors.SDK.Caching.ICacheAction`1')
-  - [ExecuteAsync(context)](#M-RecordPoint-Connectors-SDK-Caching-ICacheAction`1-ExecuteAsync-RecordPoint-Connectors-SDK-Caching-CacheActionContext- 'RecordPoint.Connectors.SDK.Caching.ICacheAction`1.ExecuteAsync(RecordPoint.Connectors.SDK.Caching.CacheActionContext)')
+  - [ExecuteAsync(context,cancellationToken)](#M-RecordPoint-Connectors-SDK-Caching-ICacheAction`1-ExecuteAsync-RecordPoint-Connectors-SDK-Caching-CacheActionContext,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Caching.ICacheAction`1.ExecuteAsync(RecordPoint.Connectors.SDK.Caching.CacheActionContext,System.Threading.CancellationToken)')
 - [ICache\`1](#T-RecordPoint-Connectors-SDK-Caching-ICache`1 'RecordPoint.Connectors.SDK.Caching.ICache`1')
-  - [GetAsync(key,context)](#M-RecordPoint-Connectors-SDK-Caching-ICache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext- 'RecordPoint.Connectors.SDK.Caching.ICache`1.GetAsync(System.String,RecordPoint.Connectors.SDK.Caching.CacheActionContext)')
+  - [GetAsync(key,context,cancellationToken)](#M-RecordPoint-Connectors-SDK-Caching-ICache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Caching.ICache`1.GetAsync(System.String,RecordPoint.Connectors.SDK.Caching.CacheActionContext,System.Threading.CancellationToken)')
+  - [Invalidate(key)](#M-RecordPoint-Connectors-SDK-Caching-ICache`1-Invalidate-System-String- 'RecordPoint.Connectors.SDK.Caching.ICache`1.Invalidate(System.String)')
 - [InMemoryCache\`1](#T-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1')
   - [#ctor(serviceProvider,memoryCache)](#M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-#ctor-System-IServiceProvider,Microsoft-Extensions-Caching-Memory-IMemoryCache- 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1.#ctor(System.IServiceProvider,Microsoft.Extensions.Caching.Memory.IMemoryCache)')
   - [_memoryCache](#F-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-_memoryCache 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1._memoryCache')
   - [_serviceProvider](#F-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-_serviceProvider 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1._serviceProvider')
-  - [GetAsync(key,context)](#M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext- 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1.GetAsync(System.String,RecordPoint.Connectors.SDK.Caching.CacheActionContext)')
+  - [GetAsync(key,context,cancellationToken)](#M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1.GetAsync(System.String,RecordPoint.Connectors.SDK.Caching.CacheActionContext,System.Threading.CancellationToken)')
+  - [Invalidate(key)](#M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-Invalidate-System-String- 'RecordPoint.Connectors.SDK.Caching.InMemoryCache`1.Invalidate(System.String)')
 - [InMemorySemaphoreLockBuilderExtensions](#T-RecordPoint-Connectors-SDK-Caching-Semaphore-InMemorySemaphoreLockBuilderExtensions 'RecordPoint.Connectors.SDK.Caching.Semaphore.InMemorySemaphoreLockBuilderExtensions')
   - [UseInMemorySemaphoreLock(hostBuilder)](#M-RecordPoint-Connectors-SDK-Caching-Semaphore-InMemorySemaphoreLockBuilderExtensions-UseInMemorySemaphoreLock-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Caching.Semaphore.InMemorySemaphoreLockBuilderExtensions.UseInMemorySemaphoreLock(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseInMemorySemaphoreLock\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-Caching-Semaphore-InMemorySemaphoreLockBuilderExtensions-UseInMemorySemaphoreLock``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Caching.Semaphore.InMemorySemaphoreLockBuilderExtensions.UseInMemorySemaphoreLock``1(Microsoft.Extensions.Hosting.IHostBuilder)')
@@ -136,8 +138,8 @@ RecordPoint.Connectors.SDK.Caching
 | ---- | ----------- |
 | TCacheItemType |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Caching-ICacheAction`1-ExecuteAsync-RecordPoint-Connectors-SDK-Caching-CacheActionContext-'></a>
-### ExecuteAsync(context) `method`
+<a name='M-RecordPoint-Connectors-SDK-Caching-ICacheAction`1-ExecuteAsync-RecordPoint-Connectors-SDK-Caching-CacheActionContext,System-Threading-CancellationToken-'></a>
+### ExecuteAsync(context,cancellationToken) `method`
 
 ##### Summary
 
@@ -152,6 +154,7 @@ RecordPoint.Connectors.SDK.Caching
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | context | [RecordPoint.Connectors.SDK.Caching.CacheActionContext](#T-RecordPoint-Connectors-SDK-Caching-CacheActionContext 'RecordPoint.Connectors.SDK.Caching.CacheActionContext') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
 
 <a name='T-RecordPoint-Connectors-SDK-Caching-ICache`1'></a>
 ## ICache\`1 `type`
@@ -170,8 +173,8 @@ RecordPoint.Connectors.SDK.Caching
 | ---- | ----------- |
 | TCacheItemType |  |
 
-<a name='M-RecordPoint-Connectors-SDK-Caching-ICache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext-'></a>
-### GetAsync(key,context) `method`
+<a name='M-RecordPoint-Connectors-SDK-Caching-ICache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext,System-Threading-CancellationToken-'></a>
+### GetAsync(key,context,cancellationToken) `method`
 
 ##### Summary
 
@@ -187,6 +190,20 @@ RecordPoint.Connectors.SDK.Caching
 | ---- | ---- | ----------- |
 | key | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
 | context | [RecordPoint.Connectors.SDK.Caching.CacheActionContext](#T-RecordPoint-Connectors-SDK-Caching-CacheActionContext 'RecordPoint.Connectors.SDK.Caching.CacheActionContext') |  |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Caching-ICache`1-Invalidate-System-String-'></a>
+### Invalidate(key) `method`
+
+##### Summary
+
+Removes the cache entry for the specified key.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| key | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The cache key to invalidate. |
 
 <a name='T-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1'></a>
 ## InMemoryCache\`1 `type`
@@ -233,8 +250,8 @@ The memory cache.
 
 The service provider.
 
-<a name='M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext-'></a>
-### GetAsync(key,context) `method`
+<a name='M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-GetAsync-System-String,RecordPoint-Connectors-SDK-Caching-CacheActionContext,System-Threading-CancellationToken-'></a>
+### GetAsync(key,context,cancellationToken) `method`
 
 ##### Summary
 
@@ -250,6 +267,20 @@ Task<TCacheItemType?>
 | ---- | ---- | ----------- |
 | key | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The key. |
 | context | [RecordPoint.Connectors.SDK.Caching.CacheActionContext](#T-RecordPoint-Connectors-SDK-Caching-CacheActionContext 'RecordPoint.Connectors.SDK.Caching.CacheActionContext') | The context. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Caching-InMemoryCache`1-Invalidate-System-String-'></a>
+### Invalidate(key) `method`
+
+##### Summary
+
+Removes the cache entry for the specified key.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| key | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The cache key to invalidate. |
 
 <a name='T-RecordPoint-Connectors-SDK-Caching-Semaphore-InMemorySemaphoreLockBuilderExtensions'></a>
 ## InMemorySemaphoreLockBuilderExtensions `type`

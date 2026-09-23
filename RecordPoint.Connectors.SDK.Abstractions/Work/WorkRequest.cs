@@ -11,7 +11,7 @@
         public string WorkType { get; set; } = string.Empty;
 
         /// <summary>
-        /// Unique Work ID that identifies the unit of work
+        /// Unique ID that identifies a single invocation of the unit of work
         /// </summary>
         public string WorkId { get; set; } = string.Empty;
 
@@ -39,11 +39,6 @@
         /// Time the request was submitted
         /// </summary>
         public DateTimeOffset SubmitDateTime { get; set; }
-
-        /// <summary>
-        /// Time we must finish work by
-        /// </summary>
-        public DateTimeOffset MustFinishDateTime { get; set; }
 
         /// <summary>
         /// Optional time to wait to submit the work

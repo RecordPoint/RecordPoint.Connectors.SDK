@@ -1,10 +1,12 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RecordPoint.Connectors.SDK.Configuration;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers;
+using RecordPoint.Connectors.SDK.Databases.Cosmos.Telemetry;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Toggles;
 
@@ -14,7 +16,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
     /// The cosmos db database provider.
     /// </summary>
     /// <typeparam name="TDbContext"/>
-    public abstract class CosmosDbDatabaseProvider<TDbContext> : CommonSqlDbProvider<TDbContext>, IDatabaseProvider<TDbContext>
+    public abstract class CosmosDbDatabaseProvider<TDbContext> : CommonSqlDbProvider<TDbContext>, IDatabaseProvider<TDbContext>, IDisposable
         where TDbContext : DbContext
     {
         /// <summary>
@@ -29,6 +31,11 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         /// The toggle provider.
         /// </summary>
         private readonly IToggleProvider _toggleProvider;
+        /// <summary>
+        /// Logger factory that captures Cosmos RU charges from EF Core operations.
+        /// </summary>
+        private readonly ILoggerFactory _ruLoggerFactory;
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -48,6 +55,12 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
             _configuration = configuration;
             _options = options;
             _toggleProvider = toggleProvider;
+            _ruLoggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddProvider(new CosmosRuTelemetryLoggerProvider(telemetryTracker));
+                builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
+                builder.SetMinimumLevel(LogLevel.Warning);
+            });
         }
 
         /// <summary>
@@ -88,6 +101,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
             if (!string.IsNullOrEmpty(connectionString))
             {
                 return new DbContextOptionsBuilder<TDbContext>()
+                    .UseLoggerFactory(_ruLoggerFactory)
                     .UseCosmos(connectionString, GetDatabaseName(), options =>
                     {
                         options.ConnectionMode(connectionString.Contains(cosmosDedicatedGatewaySignifier) || _options.Value.UseGateWayConnectionMode
@@ -103,6 +117,7 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
 
                 var accountEndpoint = CosmosEndpointHelper.BuildCosmosAccountEndpoint(_toggleProvider, _options.Value.CosmosDbAccountName);
                 return new DbContextOptionsBuilder<TDbContext>()
+                    .UseLoggerFactory(_ruLoggerFactory)
                     .UseCosmos(accountEndpoint, credential, GetDatabaseName(), options =>
                     {
                         options.ConnectionMode(accountEndpoint.Contains(cosmosDedicatedGatewaySignifier) || _options.Value.UseGateWayConnectionMode
@@ -140,6 +155,32 @@ namespace RecordPoint.Connectors.SDK.Databases.Cosmos
         /// </summary>
         /// <returns></returns>
         public new bool Exists() => true;
+
+        /// <summary>
+        /// Disposes the logger factory created for RU telemetry capture.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases managed resources when called from <see cref="Dispose()"/>.
+        /// Override in subclasses to dispose additional resources.
+        /// </summary>
+        /// <param name="disposing">True when called from Dispose(); false from finalizer.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _ruLoggerFactory?.Dispose();
+                }
+                _disposed = true;
+            }
+        }
 
     }
 }

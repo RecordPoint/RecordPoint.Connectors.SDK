@@ -4,13 +4,13 @@
 ## Contents
 
 - [DeadLetterController](#T-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController')
-  - [#ctor(deadLetterQueueService)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-#ctor-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.#ctor(RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService)')
+  - [#ctor(deadLetterQueueService,observabilityScope,systemContext,telemetryTracker,options)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-#ctor-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Work-DeadLetterControllerOptions}- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.#ctor(RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService,RecordPoint.Connectors.SDK.Observability.IObservabilityScope,RecordPoint.Connectors.SDK.Context.ISystemContext,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Work.DeadLetterControllerOptions})')
   - [Delete(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Delete-System-String,System-Int64- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.Delete(System.String,System.Int64)')
   - [DeleteAll(queueName)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-DeleteAll-System-String- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.DeleteAll(System.String)')
   - [Get(queueName)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Get-System-String- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.Get(System.String)')
   - [Get(queueName,sequenceNumber)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Get-System-String,System-Int64- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.Get(System.String,System.Int64)')
   - [Post(queueName,sequenceNumbers)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Post-System-String,System-Int64[]- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.Post(System.String,System.Int64[])')
-  - [Post(queueName,batchSize)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Post-System-String,System-Int32- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.Post(System.String,System.Int32)')
+  - [Post(queueName,maxCount,cancellationToken)](#M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Post-System-String,System-Int32,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.WebHost.Controllers.DeadLetterController.Post(System.String,System.Int32,System.Threading.CancellationToken)')
 - [HealthController](#T-RecordPoint-Connectors-SDK-WebHost-Api-Controllers-HealthController 'RecordPoint.Connectors.SDK.WebHost.Api.Controllers.HealthController')
   - [#ctor(serviceProvider,healthCheckManager)](#M-RecordPoint-Connectors-SDK-WebHost-Api-Controllers-HealthController-#ctor-System-IServiceProvider,RecordPoint-Connectors-SDK-Health-IHealthCheckManager- 'RecordPoint.Connectors.SDK.WebHost.Api.Controllers.HealthController.#ctor(System.IServiceProvider,RecordPoint.Connectors.SDK.Health.IHealthCheckManager)')
   - [Get()](#M-RecordPoint-Connectors-SDK-WebHost-Api-Controllers-HealthController-Get 'RecordPoint.Connectors.SDK.WebHost.Api.Controllers.HealthController.Get')
@@ -58,126 +58,131 @@ RecordPoint.Connectors.SDK.WebHost.Controllers
 
 ##### Summary
 
-DeadLetterController
+API controller for viewing and replaying dead-letter queue messages.
 
-<a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-#ctor-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService-'></a>
-### #ctor(deadLetterQueueService) `constructor`
+<a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-#ctor-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService,RecordPoint-Connectors-SDK-Observability-IObservabilityScope,RecordPoint-Connectors-SDK-Context-ISystemContext,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Work-DeadLetterControllerOptions}-'></a>
+### #ctor(deadLetterQueueService,observabilityScope,systemContext,telemetryTracker,options) `constructor`
 
 ##### Summary
 
-Constractor for DI
+Constructor for DI
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| deadLetterQueueService | [RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService](#T-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService 'RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService') |  |
+| deadLetterQueueService | [RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService](#T-RecordPoint-Connectors-SDK-Work-IDeadLetterQueueService 'RecordPoint.Connectors.SDK.Work.IDeadLetterQueueService') | The dead-letter queue service. |
+| observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | The observability scope manager. |
+| systemContext | [RecordPoint.Connectors.SDK.Context.ISystemContext](#T-RecordPoint-Connectors-SDK-Context-ISystemContext 'RecordPoint.Connectors.SDK.Context.ISystemContext') | The system context. |
+| telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
+| options | [Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Work.DeadLetterControllerOptions}](#T-Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Work-DeadLetterControllerOptions} 'Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Work.DeadLetterControllerOptions}') | The dead-letter controller options. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Delete-System-String,System-Int64-'></a>
 ### Delete(queueName,sequenceNumber) `method`
 
 ##### Summary
 
-Delete the message from the queue based on the sequence number
+Deletes a dead-letter message by sequence number.
 
 ##### Returns
 
-
+An HTTP response indicating the delete result.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') |  |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The queue name that contains the message. |
+| sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') | The sequence number of the message to delete. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-DeleteAll-System-String-'></a>
 ### DeleteAll(queueName) `method`
 
 ##### Summary
 
-Delete the all messages from the queue
+Deletes all dead-letter messages from a queue.
 
 ##### Returns
 
-
+An HTTP response indicating the delete result.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The queue name to clear. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Get-System-String-'></a>
 ### Get(queueName) `method`
 
 ##### Summary
 
-Get all Dead Letter messages by Queue
+Gets all dead-letter messages for a queue.
 
 ##### Returns
 
-
+A response containing the matching dead-letter messages.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The queue name to read dead-letter messages from. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Get-System-String,System-Int64-'></a>
 ### Get(queueName,sequenceNumber) `method`
 
 ##### Summary
 
-Get Dead Letter message by Sequence number
+Gets a dead-letter message by sequence number.
 
 ##### Returns
 
-
+A response containing the requested dead-letter message.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') |  |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The queue name to read from. |
+| sequenceNumber | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') | The sequence number of the dead-letter message. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Post-System-String,System-Int64[]-'></a>
 ### Post(queueName,sequenceNumbers) `method`
 
 ##### Summary
 
-Post the messages based on the sequence number to requeue
+Requeues selected dead-letter messages by sequence number.
 
 ##### Returns
 
-
+An HTTP response indicating the replay result.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| sequenceNumbers | [System.Int64[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64[] 'System.Int64[]') |  |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The queue name to requeue messages into. |
+| sequenceNumbers | [System.Int64[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64[] 'System.Int64[]') | The sequence numbers to requeue. |
 
-<a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Post-System-String,System-Int32-'></a>
-### Post(queueName,batchSize) `method`
+<a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-DeadLetterController-Post-System-String,System-Int32,System-Threading-CancellationToken-'></a>
+### Post(queueName,maxCount,cancellationToken) `method`
 
 ##### Summary
 
-Requeue all the dead letter messages for a given queue name and batch size
+Requeues up to `maxCount` dead-letter messages for a queue.
 
 ##### Returns
 
-
+An HTTP response indicating the replay result.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
-| batchSize | [System.Int32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int32 'System.Int32') |  |
+| queueName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The queue name to requeue messages into. |
+| maxCount | [System.Int32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int32 'System.Int32') | The maximum number of messages to replay. |
+| cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | A token to cancel the operation. |
 
 <a name='T-RecordPoint-Connectors-SDK-WebHost-Api-Controllers-HealthController'></a>
 ## HealthController `type`
@@ -195,25 +200,25 @@ The Health Check controller
 
 ##### Summary
 
-Constructor
+Initializes a new instance of the [HealthController](#T-RecordPoint-Connectors-SDK-WebHost-Api-Controllers-HealthController 'RecordPoint.Connectors.SDK.WebHost.Api.Controllers.HealthController') class.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') |  |
-| healthCheckManager | [RecordPoint.Connectors.SDK.Health.IHealthCheckManager](#T-RecordPoint-Connectors-SDK-Health-IHealthCheckManager 'RecordPoint.Connectors.SDK.Health.IHealthCheckManager') |  |
+| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') | Service provider used to resolve health check actions. |
+| healthCheckManager | [RecordPoint.Connectors.SDK.Health.IHealthCheckManager](#T-RecordPoint-Connectors-SDK-Health-IHealthCheckManager 'RecordPoint.Connectors.SDK.Health.IHealthCheckManager') | Manager that tracks the current health state. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Api-Controllers-HealthController-Get'></a>
 ### Get() `method`
 
 ##### Summary
 
-Get the health check result
+Gets the current health check result snapshot.
 
 ##### Returns
 
-
+The current [HealthCheckResult](#T-RecordPoint-Connectors-SDK-Health-HealthCheckResult 'RecordPoint.Connectors.SDK.Health.HealthCheckResult').
 
 ##### Parameters
 
@@ -265,26 +270,26 @@ Notifications Controller for receiving webhook requests from Records365
 
 ##### Summary
 
-Initialises the Controller
+Initializes a new instance of the [NotificationsController](#T-RecordPoint-Connectors-SDK-WebHost-Controllers-NotificationsController 'RecordPoint.Connectors.SDK.WebHost.Controllers.NotificationsController') class.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') |  |
-| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') |  |
-| systemContext | [RecordPoint.Connectors.SDK.Context.ISystemContext](#T-RecordPoint-Connectors-SDK-Context-ISystemContext 'RecordPoint.Connectors.SDK.Context.ISystemContext') |  |
+| observabilityScope | [RecordPoint.Connectors.SDK.Observability.IObservabilityScope](#T-RecordPoint-Connectors-SDK-Observability-IObservabilityScope 'RecordPoint.Connectors.SDK.Observability.IObservabilityScope') | Scope provider for correlating telemetry. |
+| serviceProvider | [System.IServiceProvider](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IServiceProvider 'System.IServiceProvider') | Service provider used to resolve notification operations. |
+| systemContext | [RecordPoint.Connectors.SDK.Context.ISystemContext](#T-RecordPoint-Connectors-SDK-Context-ISystemContext 'RecordPoint.Connectors.SDK.Context.ISystemContext') | System context for the current connector instance. |
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-NotificationsController-Ping'></a>
 ### Ping() `method`
 
 ##### Summary
 
-Endpoint that returns a 200 (OK) response to Records365 ping requests
+Returns a 200 (OK) response to Records365 ping requests.
 
 ##### Returns
 
-
+An OK status response.
 
 ##### Parameters
 
@@ -295,17 +300,17 @@ This method has no parameters.
 
 ##### Summary
 
-Endpoint for receiving Connector notifications from Records365
+Receives connector notifications from Records365.
 
 ##### Returns
 
-
+An HTTP response indicating the processing outcome.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| notification | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel') |  |
+| notification | [RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel](#T-RecordPoint-Connectors-SDK-Client-Models-ConnectorNotificationModel 'RecordPoint.Connectors.SDK.Client.Models.ConnectorNotificationModel') | The notification payload posted by Records365. |
 
 <a name='T-RecordPoint-Connectors-SDK-WebHost-MiddleWare-RemoteRequestsHttpFilterExtension'></a>
 ## RemoteRequestsHttpFilterExtension `type`
@@ -407,20 +412,20 @@ RecordPoint.Connectors.SDK.WebHost.Controllers
 
 ##### Summary
 
-
+API controller for exposing connector status details.
 
 <a name='M-RecordPoint-Connectors-SDK-WebHost-Controllers-StatusController-#ctor-RecordPoint-Connectors-SDK-Status-IStatusManager-'></a>
 ### #ctor(statusManager) `constructor`
 
 ##### Summary
 
-
+Initializes a new instance of the [StatusController](#T-RecordPoint-Connectors-SDK-WebHost-Controllers-StatusController 'RecordPoint.Connectors.SDK.WebHost.Controllers.StatusController') class.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| statusManager | [RecordPoint.Connectors.SDK.Status.IStatusManager](#T-RecordPoint-Connectors-SDK-Status-IStatusManager 'RecordPoint.Connectors.SDK.Status.IStatusManager') |  |
+| statusManager | [RecordPoint.Connectors.SDK.Status.IStatusManager](#T-RecordPoint-Connectors-SDK-Status-IStatusManager 'RecordPoint.Connectors.SDK.Status.IStatusManager') | The status manager used to retrieve status entries. |
 
 <a name='F-RecordPoint-Connectors-SDK-WebHost-Controllers-StatusController-_statusManager'></a>
 ### _statusManager `constants`
@@ -545,18 +550,18 @@ Default value for the API Urls
 
 ##### Summary
 
-
+Configures and enables the SDK web host with configured or default URLs.
 
 ##### Returns
 
-
+The configured host builder.
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') |  |
-| configuration | [Microsoft.Extensions.Configuration.IConfigurationRoot](#T-Microsoft-Extensions-Configuration-IConfigurationRoot 'Microsoft.Extensions.Configuration.IConfigurationRoot') |  |
+| hostBuilder | [Microsoft.Extensions.Hosting.IHostBuilder](#T-Microsoft-Extensions-Hosting-IHostBuilder 'Microsoft.Extensions.Hosting.IHostBuilder') | The host builder to configure. |
+| configuration | [Microsoft.Extensions.Configuration.IConfigurationRoot](#T-Microsoft-Extensions-Configuration-IConfigurationRoot 'Microsoft.Extensions.Configuration.IConfigurationRoot') | The application configuration root. |
 
 <a name='T-RecordPoint-Connectors-SDK-WebHost-WebHostOptions'></a>
 ## WebHostOptions `type`

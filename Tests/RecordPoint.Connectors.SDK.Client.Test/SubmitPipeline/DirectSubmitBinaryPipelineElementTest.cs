@@ -146,6 +146,43 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         }
 
         [Fact]
+        public async Task HandlesForbiddenAsConnectorNotFound()
+        {
+            var submitContext = GetSubmitContext();
+
+            _mockClient.Setup(x => x.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
+                It.IsAny<string>(),
+                It.IsAny<DirectBinarySubmissionInputModel>(),
+                It.IsAny<Dictionary<string, List<string>>>(),
+                It.IsAny<CancellationToken>()
+            )).ThrowsAsync(CreateHttpOperationException(HttpStatusCode.Forbidden));
+
+            await _pipelineElement.Submit(submitContext);
+
+            VerifyNotSubmitted();
+
+            Assert.Equal(SubmitResult.Status.ConnectorNotFound, submitContext.SubmitResult.SubmitStatus);
+            Assert.Equal("Submission returned Forbidden : Binary NOT submitted because the connector request was forbidden.", submitContext.SubmitResult.Reason);
+        }
+
+        [Fact]
+        public async Task RethrowsUnknownHttpOperationException()
+        {
+            var submitContext = GetSubmitContext();
+
+            _mockClient.Setup(x => x.POST.ApiBinariesGetSASTokenWithHttpMessagesAsync(
+                It.IsAny<string>(),
+                It.IsAny<DirectBinarySubmissionInputModel>(),
+                It.IsAny<Dictionary<string, List<string>>>(),
+                It.IsAny<CancellationToken>()
+            )).ThrowsAsync(CreateHttpOperationException(HttpStatusCode.InternalServerError));
+
+            await Assert.ThrowsAsync<HttpOperationException>(() => _pipelineElement.Submit(submitContext));
+
+            VerifyNotSubmitted();
+        }
+
+        [Fact]
         public async Task ReturnsTooManyRequestsIf429ErrorIsReceived()
         {
             var submitContext = GetSubmitContext();
@@ -379,6 +416,14 @@ namespace RecordPoint.Connectors.SDK.Test.SubmitPipeline
         private static RequestFailedException Throw503Exception()
         {
             return new RequestFailedException(503, "503 test", new Exception("503 test Inner"));
+        }
+
+        private static HttpOperationException CreateHttpOperationException(HttpStatusCode statusCode)
+        {
+            return new HttpOperationException($"Operation returned an invalid status code '{statusCode}'")
+            {
+                Response = new HttpResponseMessageWrapper(new HttpResponseMessage(statusCode), string.Empty)
+            };
         }
 
         private static CircuitBreakerOptions GetCircuitBreakerOptions()

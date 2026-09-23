@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-using RecordPoint.Connectors.SDK.Client;
-using System.Net;
+﻿using RecordPoint.Connectors.SDK.Client;
 using System.Security;
 using Xunit;
 
@@ -22,9 +20,23 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             var result = sutApiClientFactory.CreateApiClient(apiClientFactorySettings);
             // Assert
-            result.Should().NotBeNull();
-            ServicePointManager.SecurityProtocol.Should().Be(SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13);
-            result.BaseUri.Should().Be(new Uri(DummyEndPointUrl), "Base URL is incorrect");
+            Assert.NotNull(result);
+            Assert.Equal(new Uri(DummyEndPointUrl), result.BaseUri);
+        }
+
+        [Fact]
+        public void CreateApiClient_SendsPayloadsCompact()
+        {
+            // Indented payloads inflate two to four times against the platform's 2MB request caps.
+            var sutApiClientFactory = new ApiClientFactory();
+            var apiClientFactorySettings = new ApiClientFactorySettings()
+            {
+                ConnectorApiUrl = DummyEndPointUrl
+            };
+
+            var result = sutApiClientFactory.CreateApiClient(apiClientFactorySettings);
+
+            Assert.Equal(Newtonsoft.Json.Formatting.None, ((ApiClient)result).SerializationSettings.Formatting);
         }
 
         [Fact]
@@ -50,12 +62,14 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             var results = tasks.Select(t => t.GetAwaiter().GetResult()).ToList();
 
             // Assert
-            results.Count.Should().Be(parallelTaskCount);
+            Assert.Equal(parallelTaskCount, results.Count);
             var firstResult = results.First();
-            firstResult.BaseUri.Should().Be(new Uri(DummyEndPointUrl), "Base URL is incorrect");
-            ServicePointManager.SecurityProtocol.Should().Be(SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13);
+            Assert.Equal(new Uri(DummyEndPointUrl), firstResult.BaseUri);
             // Make sure that it's a singleton object
-            results.ForEach(result => result.Should().BeSameAs(firstResult));
+            foreach (var result in results)
+            {
+                Assert.Same(firstResult, result);
+            }
         }
 
         [Fact]
@@ -67,8 +81,8 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             var result = sutApiClientFactory.CreateAuthenticationProvider(settings);
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<ConfidentialClientAuthenticationProvider>();
+            Assert.NotNull(result);
+            Assert.IsType<ConfidentialClientAuthenticationProvider>(result);
         }
 
         [Fact]
@@ -81,7 +95,7 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             var authProvider1 = sutApiClientFactory.CreateAuthenticationProvider(settings1);
             var authProvider2 = sutApiClientFactory.CreateAuthenticationProvider(settings2);
-            authProvider1.Should().NotBe(authProvider2);
+            Assert.NotEqual(authProvider1, authProvider2);
         }
 
         private static SecureString MakeSecureString(string inputString)

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.ContentManager;
 using RecordPoint.Connectors.SDK.Diagnostics;
+using RecordPoint.Connectors.SDK.Notifications;
 using RecordPoint.Connectors.SDK.Providers;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
 using System;
@@ -46,6 +47,7 @@ namespace RecordPoint.Connectors.SDK.R365
                 .AddR365ClientComponents()
                 .AddSingleton<ILog, SDKLogAdapter>()
                 .AddSingleton<IR365Client, R365Client>()
+                .AddSingleton<INotificationApiManager, NotificationApiManager>()
                 .AddSingleton(provider => CreatePipelines(provider, submitRecordAndBinariesSynchronously));
             return services;
         }
@@ -115,8 +117,13 @@ namespace RecordPoint.Connectors.SDK.R365
 
             httpSubmitItemPipelineElement.ApiClientFactory = provider.GetService<IApiClientFactory>();
 
-            // Start submission with Filter then HttpSubmitItem
-            var filterSubmission = new FilterPipelineElement(httpSubmitItemPipelineElement)
+            var unspecifiedFieldValuePipelineElement = new ItemUnspecifiedFieldValuePipelineElement(httpSubmitItemPipelineElement)
+            {
+                Log = provider.GetService<ILog>()
+            };
+
+            // Start submission with Filter, then substitute unspecified required fields, then HttpSubmitItem
+            var filterSubmission = new FilterPipelineElement(unspecifiedFieldValuePipelineElement)
             {
                 Log = provider.GetService<ILog>()
             };
@@ -136,12 +143,17 @@ namespace RecordPoint.Connectors.SDK.R365
             };
         }
 
-        private static HttpSubmitAggregationPipelineElement CreateAggregationPipeline(this IServiceProvider provider)
+        private static AggregationUnspecifiedFieldValuePipelineElement CreateAggregationPipeline(this IServiceProvider provider)
         {
-            return new HttpSubmitAggregationPipelineElement(null)
+            var httpSubmitAggregationPipelineElement = new HttpSubmitAggregationPipelineElement(null)
             {
                 ApiClientFactory = provider.GetService<IApiClientFactory>(),
                 Log = provider.GetRequiredService<ILog>()
+            };
+
+            return new AggregationUnspecifiedFieldValuePipelineElement(httpSubmitAggregationPipelineElement)
+            {
+                Log = provider.GetService<ILog>()
             };
         }
 

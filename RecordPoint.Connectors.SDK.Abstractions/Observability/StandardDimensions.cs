@@ -95,5 +95,15 @@
         /// </summary>
         public const string TENANT_DOMAIN_NAME = "TenantDomainName";
 
+        /// <summary>
+        /// Whether this is the first execution of the work (no prior state/cursor).
+        /// </summary>
+        public const string IS_FIRST_EXECUTION = "IsFirstExecution";
+
+        /// <summary>
+        /// The date/time the work was first initiated (first added to the queue).
+        /// </summary>
+        public const string WORK_INITIATED_DATE = "WorkInitiatedDate";
+
     }
 }

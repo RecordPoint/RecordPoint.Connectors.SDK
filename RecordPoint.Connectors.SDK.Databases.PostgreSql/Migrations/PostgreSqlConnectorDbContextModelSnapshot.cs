@@ -17,7 +17,7 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -26,6 +26,12 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
                 {
                     b.Property<string>("ConnectorId")
                         .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("ChannelDiscoveryEnqueuedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ChannelDiscoveryExecutedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ConnectorTypeId")
                         .IsRequired()
@@ -36,10 +42,6 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ReportLocation")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -56,6 +58,35 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
                     b.ToTable("Connectors");
                 });
 
+            modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.AggregationModel", b =>
+                {
+                    b.Property<string>("ConnectorId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MetaData")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ParentExternalId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("ConnectorId", "ExternalId");
+
+                    b.ToTable("Aggregations");
+                });
+
             modelBuilder.Entity("RecordPoint.Connectors.SDK.Content.ChannelModel", b =>
                 {
                     b.Property<string>("ConnectorId")
@@ -68,11 +99,9 @@ namespace RecordPoint.Connectors.SDK.Databases.PostgreSql.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MetaData")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ConnectorId", "ExternalId");

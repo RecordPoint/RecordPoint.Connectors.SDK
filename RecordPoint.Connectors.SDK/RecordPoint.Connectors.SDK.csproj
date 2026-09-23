@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationMarkdown>$(SolutionDir)\docs\packages\recordpoint_connectors_sdk_doc.md</DocumentationMarkdown>
@@ -23,18 +23,22 @@
     <Content Include="..\assets\Rex.png" Link="Rex.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lightrun" Version="1.62.0" PrivateAssets="analyzers;build" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="7.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="8.0.16" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="8.0.16" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.16" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
     <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.23.0" />
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.11" />
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="10.0.400">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Polly" Version="8.5.2" />
+    <PackageReference Include="Polly" Version="8.7.0" />
     <PackageReference Include="RecordPoint.Code.Documentation" Version="1.0.208304">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,5 +48,8 @@
     <ProjectReference Include="..\RecordPoint.Connectors.SDK.Abstractions\RecordPoint.Connectors.SDK.Abstractions.csproj" />
     <ProjectReference Include="..\RecordPoint.Connectors.SDK.Caching\RecordPoint.Connectors.SDK.Caching.csproj" />
     <ProjectReference Include="..\RecordPoint.Connectors.SDK.Client\RecordPoint.Connectors.SDK.Client.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hosting\" />
   </ItemGroup>
 </Project>

@@ -11,10 +11,10 @@
         private readonly ISubmission _submitAggregation = null;
 
         /// <summary>
-        /// Constructs a new PipelineSelectorPipelineElement.
+        /// Constructs a new pipeline selector element.
         /// </summary>
-        /// <param name="submitRecord"></param>
-        /// <param name="submitAggregation"></param>
+        /// <param name="submitRecord">Pipeline branch used for item submissions.</param>
+        /// <param name="submitAggregation">Pipeline branch used for aggregation submissions.</param>
         public PipelineSelectorPipelineElement(ISubmission submitRecord, ISubmission submitAggregation)
             : base(submitRecord)
         {
@@ -22,10 +22,10 @@
         }
 
         /// <summary>
-        /// 
+        /// Routes the submission to the item or aggregation pipeline branch.
         /// </summary>
-        /// <param name="submitContext"></param>
-        /// <returns></returns>
+        /// <param name="submitContext">The current submission context.</param>
+        /// <returns>A task that completes when the selected pipeline branch finishes.</returns>
         public override async Task Submit(SubmitContext submitContext)
         {
             var rawItemType = submitContext.CoreMetaData?.Where(x => x.Name == Fields.ItemTypeId)?.FirstOrDefault()?.Value;

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using RecordPoint.Connectors.SDK.Client;
+﻿using RecordPoint.Connectors.SDK.Client;
 using Xunit;
 
 namespace RecordPoint.Connectors.SDK.Test.Client
@@ -16,8 +15,8 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             HttpHeaderExtension.AddAuthorizationHeader(headers, tokenType, token);
             // Assert
-            headers.TryGetValue(HttpHeaderExtension.AuthorizationHeaderName, out List<string> headerValue).Should().BeTrue();
-            headerValue.FirstOrDefault().Should().Be("Bearer MyToken1");
+            Assert.True(headers.TryGetValue(HttpHeaderExtension.AuthorizationHeaderName, out List<string> headerValue));
+            Assert.Equal("Bearer MyToken1", headerValue.FirstOrDefault());
         }
 
         [Fact]
@@ -30,8 +29,8 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             HttpHeaderExtension.AddAuthorizationHeader(headers, tokenType, newToken);
             // Assert
-            headers.TryGetValue(HttpHeaderExtension.AuthorizationHeaderName, out List<string> headerValue).Should().BeTrue();
-            headerValue.FirstOrDefault().Should().Be("Bearer MyToken2");
+            Assert.True(headers.TryGetValue(HttpHeaderExtension.AuthorizationHeaderName, out List<string> headerValue));
+            Assert.Equal("Bearer MyToken2", headerValue.FirstOrDefault());
         }
 
         [Fact]
@@ -47,11 +46,11 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             HttpHeaderExtension.AddAuthorizationHeader(headers, tokenType, token);
             // Assert
-            headers.Count.Should().Be(3);
-            headers.TryGetValue(HttpHeaderExtension.AuthorizationHeaderName, out List<string> authorizationHeaderValue).Should().BeTrue();
-            authorizationHeaderValue.FirstOrDefault().Should().Be("Bearer MyToken2");
-            headers["IrrelevantHeader1"].FirstOrDefault().Should().Be("Val1");
-            headers["IrrelevantHeader2"].FirstOrDefault().Should().Be("Val2");
+            Assert.Equal(3, headers.Count);
+            Assert.True(headers.TryGetValue(HttpHeaderExtension.AuthorizationHeaderName, out List<string> authorizationHeaderValue));
+            Assert.Equal("Bearer MyToken2", authorizationHeaderValue.FirstOrDefault());
+            Assert.Equal("Val1", headers["IrrelevantHeader1"].FirstOrDefault());
+            Assert.Equal("Val2", headers["IrrelevantHeader2"].FirstOrDefault());
         }
 
         [Fact]
@@ -64,7 +63,8 @@ namespace RecordPoint.Connectors.SDK.Test.Client
             // Act
             Action action = () => HttpHeaderExtension.AddAuthorizationHeader(headers, tokenType, token);
             // Assert
-            action.Should().ThrowExactly<ArgumentNullException>().Which.Message.Contains("headers");
+            var ex = Assert.Throws<ArgumentNullException>(action);
+            Assert.Contains("headers", ex.Message);
         }
     }
 }

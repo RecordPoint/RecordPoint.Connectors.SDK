@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RecordPoint.Connectors.SDK.Caching;
 using RecordPoint.Connectors.SDK.Databases;
 using RecordPoint.Connectors.SDK.Observability;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace RecordPoint.Connectors.SDK.Content
 {
@@ -17,29 +19,41 @@ namespace RecordPoint.Connectors.SDK.Content
 
         private readonly IConnectorDatabaseClient _databaseClient;
         private readonly IObservabilityScope _observabilityScope;
+        private readonly ICache<bool> _channelExistsCache;
+        private readonly IDirectChannelAccess _directChannelAccess;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="databaseClient"></param>
         /// <param name="observabilityScope"></param>
-        public DatabaseChannelManager(IConnectorDatabaseClient databaseClient, IObservabilityScope observabilityScope)
+        /// <param name="channelExistsCache"></param>
+        /// <param name="directChannelAccess"></param>
+        public DatabaseChannelManager(IConnectorDatabaseClient databaseClient, 
+            IObservabilityScope observabilityScope,
+            ICache<bool> channelExistsCache,
+            IDirectChannelAccess directChannelAccess)
         {
             _databaseClient = databaseClient;
             _observabilityScope = observabilityScope;
+            _channelExistsCache = channelExistsCache;
+            _directChannelAccess = directChannelAccess;
         }
 
         /// <inheritdoc/>
         public async Task<bool> ChannelExistsAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
-            return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
+            string cacheKey = $"{connectorId}:{externalId}";
+            var context = new CacheActionContext
             {
-                using var dbContext = _databaseClient.CreateDbContext();
-                return (await dbContext.Channels
-                        .Where(a => a.ConnectorId == connectorId && a.ExternalId == externalId)
-                        .ToListAsync(cancellationToken))
-                        .Any();
-            });
+                Properties = new Dictionary<string, object>
+                {
+                    { "ConnectorId", connectorId },
+                    { "ExternalId", externalId }
+                }
+            };
+
+            return await _channelExistsCache.GetAsync(cacheKey, context, cancellationToken);
 
         }
 
@@ -48,6 +62,11 @@ namespace RecordPoint.Connectors.SDK.Content
         {
             return await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
+                if (_directChannelAccess.IsEnabled)
+                {
+                    return await _directChannelAccess.ReadChannelAsync(connectorId, externalId, cancellationToken);
+                }
+
                 using var dbContext = _databaseClient.CreateDbContext();
                 return await dbContext.Channels
                     .FirstOrDefaultAsync(a => a.ConnectorId == connectorId && a.ExternalId == externalId, cancellationToken);
@@ -89,10 +108,61 @@ namespace RecordPoint.Connectors.SDK.Content
         }
 
         /// <inheritdoc/>
+        public IAsyncEnumerable<ChannelClassificationModel> GetChannelClassificationsAsync(
+            string connectorId,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(pageSize);
+
+            return GetChannelClassificationsIteratorAsync(connectorId, pageSize, cancellationToken);
+        }
+
+        private async IAsyncEnumerable<ChannelClassificationModel> GetChannelClassificationsIteratorAsync(
+            string connectorId,
+            int pageSize,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+
+            using var scope = _observabilityScope.BeginScope(GetDimensions(connectorId));
+
+            if (_directChannelAccess.IsEnabled)
+            {
+                await foreach (var channel in _directChannelAccess
+                    .ReadChannelClassificationsAsync(connectorId, pageSize, cancellationToken)
+                    .WithCancellation(cancellationToken)
+                    .ConfigureAwait(false))
+                {
+                    yield return channel;
+                }
+
+                yield break;
+            }
+
+            using var dbContext = _databaseClient.CreateDbContext();
+            var query = dbContext.Channels
+                .AsNoTracking()
+                .Where(a => a.ConnectorId == connectorId)
+                .Select(a => new ChannelClassificationModel
+                {
+                    ExternalId = a.ExternalId,
+                    MetaData = a.MetaData
+                })
+                .AsAsyncEnumerable();
+
+            await foreach (var channel in query.WithCancellation(cancellationToken).ConfigureAwait(false))
+            {
+                yield return channel;
+            }
+        }
+
+        /// <inheritdoc/>
         public async Task UpsertChannelAsync(ChannelModel channel, CancellationToken cancellationToken)
         {
             await _observabilityScope.Invoke(GetDimensions(null), async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 using var dbContext = _databaseClient.CreateDbContext();
 
                 var existingChannel = await dbContext.Channels
@@ -124,6 +194,8 @@ namespace RecordPoint.Connectors.SDK.Content
                 var connectorIdGroups = channels.GroupBy(a => a.ConnectorId, a => a);
                 foreach (var channelsGroupedByConnectorId in connectorIdGroups)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var externalIds = channelsGroupedByConnectorId.Select(a => a.ExternalId);
                     var existingChannels = await dbContext.Channels
                         .Where(a => a.ConnectorId == channelsGroupedByConnectorId.Key && externalIds.Contains(a.ExternalId))
@@ -166,6 +238,8 @@ namespace RecordPoint.Connectors.SDK.Content
                 var hasUpdates = false;
                 foreach (var channel in updateChannels)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var existingChannel = existingChannels.First(a => a.ExternalId == channel.ExternalId);
                     if (!channel.Equals(existingChannel))
                     {
@@ -180,19 +254,41 @@ namespace RecordPoint.Connectors.SDK.Content
         }
 
         /// <inheritdoc/>
+        public async Task PatchChannelAsync(string connectorId, string externalId, Action<ChannelModel> patchAction, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(patchAction);
+
+            await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using var dbContext = _databaseClient.CreateDbContext();
+                var channel = await dbContext.Channels
+                    .FirstOrDefaultAsync(a => a.ConnectorId == connectorId && a.ExternalId == externalId, cancellationToken);
+
+                if (channel == null) return;
+
+                patchAction(channel);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            });
+        }
+
+        /// <inheritdoc/>
         public async Task RemoveChannelAsync(string connectorId, string externalId, CancellationToken cancellationToken)
         {
             await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
-             {
-                 using var dbContext = _databaseClient.CreateDbContext();
-                 var channel = await dbContext.Channels
-                     .FirstOrDefaultAsync(a => a.ConnectorId == connectorId && a.ExternalId == externalId, cancellationToken);
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-                 if (channel == null) return;
+                using var dbContext = _databaseClient.CreateDbContext();
+                var channel = await dbContext.Channels
+                    .FirstOrDefaultAsync(a => a.ConnectorId == connectorId && a.ExternalId == externalId, cancellationToken);
 
-                 dbContext.Channels.Remove(channel);
-                 await dbContext.SaveChangesAsync(cancellationToken);
-             });
+                if (channel == null) return;
+
+                dbContext.Channels.Remove(channel);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            });
         }
 
         /// <inheritdoc/>
@@ -200,6 +296,8 @@ namespace RecordPoint.Connectors.SDK.Content
         {
             await _observabilityScope.Invoke(GetDimensions(connectorId), async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 using var dbContext = _databaseClient.CreateDbContext();
                 var channels = await dbContext.Channels
                     .Where(a => a.ConnectorId == connectorId && externalIds.Contains(a.ExternalId))
@@ -224,6 +322,8 @@ namespace RecordPoint.Connectors.SDK.Content
 
                 foreach (var channelGroup in groupedChannels)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var externalIds = channelGroup.Channels.Select(a => a.ExternalId);
                     var channels = await dbContext.Channels
                         .Where(a => a.ConnectorId == channelGroup.ConnectorId && externalIds.Contains(a.ExternalId))

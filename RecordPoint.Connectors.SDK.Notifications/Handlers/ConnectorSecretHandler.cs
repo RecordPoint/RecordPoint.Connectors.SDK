@@ -20,19 +20,19 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
 
         private readonly IConnectorConfigurationManager _connectorManager;
         private readonly IConnectorSecretAction _connectorSecretAction;
-        private readonly IR365ConfigurationClient _configurationClient;
+        private readonly IConnectorSecretDecryptor _secretDecryptor;
 
         /// <summary>
         /// Handler for a connector secret notification
         /// </summary>
         /// <param name="connectorManager"></param>
         /// <param name="connectorSecretAction"></param>
-        /// <param name="configurationClient"></param>
-        public ConnectorSecretHandler(IConnectorConfigurationManager connectorManager, IConnectorSecretAction connectorSecretAction, IR365ConfigurationClient configurationClient)
+        /// <param name="secretDecryptor"></param>
+        public ConnectorSecretHandler(IConnectorConfigurationManager connectorManager, IConnectorSecretAction connectorSecretAction, IConnectorSecretDecryptor secretDecryptor)
         {
             _connectorManager = connectorManager;
             _connectorSecretAction = connectorSecretAction;
-            _configurationClient = configurationClient;
+            _secretDecryptor = secretDecryptor;
         }
 
         /// <summary>
@@ -49,10 +49,9 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
         public override async Task<NotificationOutcome> HandleNotificationAsync(ConnectorNotificationModel notification, CancellationToken cancellationToken)
         {
             var connectorSecrets = notification.Context.ContextToList<ConnectorSecret>();
-            foreach (var secret in connectorSecrets)
-            {
-                secret.Value = DecryptSecret(secret, notification.ConnectorConfig);
-            }
+
+            // Shared with the connector request path, so the two cannot drift.
+            _secretDecryptor.DecryptInPlace(connectorSecrets, notification.ConnectorConfig);
 
             var connectorConfiguration = await _connectorManager.GetConnectorAsync(notification.ConnectorId, cancellationToken);
 
@@ -61,44 +60,5 @@ namespace RecordPoint.Connectors.SDK.Notifications.Handlers
             return NotificationOutcome.OK();
         }
 
-        /// <summary>
-        /// Decrypt secret from notification using ClientSecret as Key and ClientId as IV for AES algorithm.
-        /// Expects secret to be a Base64String for easy translation to byte array.
-        /// </summary>
-        /// <param name="secret">Base64string to decrypt.</param>
-        /// <param name="connectorConfig">Connector Config the notification belongs to.</param>
-        /// <returns>decrypted secret value.</returns>
-        /// <exception cref="RequiredValueNullException"></exception>
-        private string DecryptSecret(ConnectorSecret secret, ConnectorConfigModel connectorConfig)
-        {
-            // Fetch values for decryption
-            var r365Options = _configurationClient.GetR365Configuration(connectorConfig.ConnectorTypeConfigurationId);
-            var clientId = r365Options?.ClientId ?? throw new RequiredValueNullException(nameof(r365Options.ClientSecret));
-            var clientSecret = r365Options.ClientSecret ?? throw new RequiredValueNullException(nameof(r365Options.ClientId));
-
-            string secretValue;
-            using (Aes aes = Aes.Create())
-            {
-                // Setup Decryptor
-                var keyBytes = Encoding.ASCII.GetBytes(clientSecret);
-                var ivBytes = Encoding.ASCII.GetBytes(clientId);
-                var key = SHA256.Create().ComputeHash(keyBytes); // Ensures key is 32 bytes
-                var iv = MD5.Create().ComputeHash(ivBytes); // Ensures IV is 16 bytes
-                aes.Key = key;
-                aes.IV = iv;
-
-                var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-                var secretBytes = Convert.FromBase64String(secret.Value);
-
-                // Create the streams used for decryption.
-                using MemoryStream msDecrypt = new(secretBytes);
-                using CryptoStream csDecrypt = new(msDecrypt, decryptor, CryptoStreamMode.Read);
-                using StreamReader srDecrypt = new(csDecrypt);
-
-                // Read bytes to decrypt to string
-                secretValue = srDecrypt.ReadToEnd();
-            }
-            return secretValue;
-        }
     }
 }

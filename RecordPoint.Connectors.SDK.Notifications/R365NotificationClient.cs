@@ -1,7 +1,7 @@
-﻿using RecordPoint.Connectors.SDK.Client;
+﻿using Microsoft.Extensions.Options;
+using RecordPoint.Connectors.SDK.Client;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Configuration;
-using RecordPoint.Connectors.SDK.Connectors;
 using RecordPoint.Connectors.SDK.Observability;
 using RecordPoint.Connectors.SDK.Secrets;
 
@@ -9,15 +9,15 @@ namespace RecordPoint.Connectors.SDK.Notifications
 {
 
     /// <summary>
-    /// R365 Standard Client
+    /// R365 standard Notifications client.
     /// </summary>
     public class R365NotificationClient : IR365NotificationClient
     {
-
         private readonly IR365ConfigurationClient _r365ConfigurationClient;
-        private readonly IConnectorConfigurationManager _connectorConfigurationManager;
         private readonly IObservabilityScope _observabilityScope;
         private readonly ITelemetryTracker _telemetryTracker;
+        private readonly NotificationsPollerOptions _notificationsPollerOptions;
+        private readonly INotificationApiManager _notificationPullManager;
 
         /// <summary>
         /// 
@@ -25,13 +25,15 @@ namespace RecordPoint.Connectors.SDK.Notifications
         public R365NotificationClient(
             IR365ConfigurationClient r365ConfigurationClient,
             IObservabilityScope observabilityScope,
-            IConnectorConfigurationManager connectorConfigurationManager,
-            ITelemetryTracker telemetryTracker)
+            ITelemetryTracker telemetryTracker,
+            IOptions<NotificationsPollerOptions> notificationsPollerOptions,
+            INotificationApiManager notificationPullManager)
         {
             _r365ConfigurationClient = r365ConfigurationClient;
             _observabilityScope = observabilityScope;
             _telemetryTracker = telemetryTracker;
-            _connectorConfigurationManager = connectorConfigurationManager;
+            _notificationsPollerOptions = notificationsPollerOptions?.Value ?? throw new ArgumentNullException(nameof(notificationsPollerOptions));
+            _notificationPullManager = notificationPullManager;
         }
 
         private static Dimensions GetDimensions()
@@ -83,26 +85,32 @@ namespace RecordPoint.Connectors.SDK.Notifications
         }
 
         /// <summary>
-        /// Returns all the pull notifications for a tenant
+        /// Returns all the pull notifications for a configured connector types for a tenant
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>List<ConnectorNotificationModel/>></returns>
         public async Task<List<ConnectorNotificationModel>> GetAllPendingNotifications(CancellationToken cancellationToken)
         {
-            var connectorConfigs = await _connectorConfigurationManager.ListConnectorsAsync(cancellationToken);
+            var deployableConnectorTypes = _notificationsPollerOptions.ConnectorTypes;
             var notifications = new List<ConnectorNotificationModel>();
-            var pullManager = new NotificationPullManager();
-            foreach (var connector in connectorConfigs)
+
+            if (deployableConnectorTypes == null || deployableConnectorTypes.Length == 0)
+            {
+                return notifications;
+            }
+
+            foreach (var connectorType in deployableConnectorTypes)
             {
                 try
                 {
-                    var r365Configuration = LoadConfiguration(connector.ConnectorTypeConfigurationId);
+                    // Load default configuration
+                    var r365Configuration = LoadConfiguration();
                     var authenticationHelperSettings =
-                        GetAuthenticationHelperSettings(r365Configuration, connector.TenantDomainName);
+                        GetAuthenticationHelperSettings(r365Configuration, _notificationsPollerOptions.TenantDomainName);
                     var apiClientFactorySettings = GetApiClientFactorySettings(r365Configuration);
-                    var connectorNotifications = await pullManager.GetAllPendingConnectorNotifications(
+                    var connectorNotifications = await _notificationPullManager.GetAllPendingConnectorTypeNotifications(
                         apiClientFactorySettings, authenticationHelperSettings,
-                        connector.Id, cancellationToken);
+                        connectorType, cancellationToken);
                     notifications.AddRange(connectorNotifications);
                 }
                 catch (Exception ex)
@@ -130,8 +138,7 @@ namespace RecordPoint.Connectors.SDK.Notifications
                 GetDimensions(), async () =>
                 {
                     var r365Configuration = LoadConfiguration(notification.ConnectorConfig.ConnectorTypeConfigurationId);
-                    var pullManager = new NotificationPullManager();
-                    await pullManager.AcknowledgeNotification(
+                    await _notificationPullManager.AcknowledgeNotification(
                         GetApiClientFactorySettings(r365Configuration),
                         GetAuthenticationHelperSettings(r365Configuration, notification.ConnectorConfig.TenantDomainName),
                         notification.ToAcknowledge(result, message),

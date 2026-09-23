@@ -36,6 +36,11 @@
         public List<BinaryMetaInfo> Binaries { get; set; } = new List<BinaryMetaInfo>();
 
         /// <summary>
+        /// Username of the user who approved the record's disposal. Set on the disposal path only.
+        /// </summary>
+        public string? PreviousDisposalBy { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>

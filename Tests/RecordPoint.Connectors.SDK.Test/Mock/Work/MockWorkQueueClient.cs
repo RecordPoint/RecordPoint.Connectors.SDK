@@ -10,84 +10,47 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
     /// <summary>
     /// Manager for the work queue
     /// </summary>
-    public class MockWorkQueueClient : IWorkQueueClient
+    public class MockWorkQueueClient(IQueueableWorkManager queueableWorkManager, IOptions<MockWorkQueueOptions> options, IDateTimeProvider dateTimeProvider) : IWorkQueueClient
     {
-
-        // Injected services
-
-        private readonly IQueueableWorkManager _queueableWorkManager;
-        private readonly IOptions<MockWorkQueueOptions> _options;
-        private readonly IDateTimeProvider _dateTimeProvider;
-
         public const int MAX_RECENT_JOBS = 100000; // Maximum number of works that can be kept
         public const int MAX_RECENT_JOB_SECONDS = 24 * 60 * 60; // How long a work is recent for in seconds
-
-        public MockWorkQueueClient(IQueueableWorkManager queueableWorkManager, IOptions<MockWorkQueueOptions> options, IDateTimeProvider dateTimeProvider)
-        {
-            _queueableWorkManager = queueableWorkManager;
-            _options = options;
-            _dateTimeProvider = dateTimeProvider;
-
-            _recentWorkIds = new MemoryCache(new MemoryCacheOptions()
-            {
-                SizeLimit = MAX_RECENT_JOBS
-            });
-            _queuedRequests = new ConcurrentBag<WorkRequestState>();
-            CompleteRequestStates = new BlockingCollection<WorkRequestState>();
-            SubmittedRequestStates = new BlockingCollection<WorkRequestState>();
-        }
-
 
         /// <summary>
         /// Requests in the queue currently awaiting execution
         /// </summary>
-        private readonly ConcurrentBag<WorkRequestState> _queuedRequests;
-
-        // Memory cache to detect and discard duplicate works.
-        // TODO: Switch to an implementation that is not restricted to a single node
-        // which will work better in Server Restart/Multiple Node scenarios.
-        private readonly MemoryCache _recentWorkIds;
-
-        // Queryable state
+        private readonly ConcurrentBag<WorkRequestState> _queuedRequests = [];
 
         /// <summary>
         /// Sumitted requests
         /// </summary>
-        public BlockingCollection<WorkRequestState> SubmittedRequestStates { get; private set; }
+        public BlockingCollection<WorkRequestState> SubmittedRequestStates { get; private set; } = [];
 
         /// <summary>
         /// Submitted requests
         /// </summary>
-        public IEnumerable<WorkRequest> SubmittedRequests => SubmittedRequestStates.Select(ws => ws.WorkRequest);
+        public List<WorkRequest> SubmittedRequests => [..SubmittedRequestStates.Select(ws => ws.WorkRequest)];
 
         /// <summary>
         /// Complete requests
         /// </summary>
-        public BlockingCollection<WorkRequestState> CompleteRequestStates { get; private set; }
+        public BlockingCollection<WorkRequestState> CompleteRequestStates { get; private set; } = [];
 
         /// <summary>
         /// Completed requests
         /// </summary>
-        public IEnumerable<WorkRequest> CompletedRequests => CompleteRequestStates.Select(ws => ws.WorkRequest);
+        public List<WorkRequest> CompletedRequests => [..CompleteRequestStates.Select(ws => ws.WorkRequest)];
 
 
         public Task SubmitWorkAsync(WorkRequest workRequest, CancellationToken cancellationToken)
         {
-            // Submit work only if it isn't in the recent work list
-            var task = _recentWorkIds.GetOrCreate(workRequest.WorkId, entry =>
+            var workRequestState = new WorkRequestState()
             {
-                entry.SlidingExpiration = TimeSpan.FromSeconds(MAX_RECENT_JOB_SECONDS);
-                entry.Size = 1;
+                WorkRequest = workRequest,
+                EarliestTime = dateTimeProvider.UtcNow
+            };
+            SubmittedRequestStates.Add(workRequestState, cancellationToken);
+            _queuedRequests.Add(workRequestState);
 
-                var workRequestState = new WorkRequestState()
-                {
-                    WorkRequest = workRequest,
-                    EarliestTime = _dateTimeProvider.UtcNow
-                };
-                SubmittedRequestStates.Add(workRequestState);
-                _queuedRequests.Add(workRequestState);
-                return workRequest.WorkId;
-            });
             return Task.CompletedTask;
         }
 
@@ -109,7 +72,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
         protected async Task ExecuteWorkRequest(WorkRequestState input, CancellationToken cancellationToken)
         {
             // We can't execute yet so just add to back of the queue
-            var currentTime = _dateTimeProvider.UtcNow;
+            var currentTime = dateTimeProvider.UtcNow;
             if (input.EarliestTime > currentTime)
             {
                 _queuedRequests.Add(input);
@@ -120,7 +83,7 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
             Exception exception;
             try
             {
-                outcome = await _queueableWorkManager.HandleWorkRequestAsync(input.WorkRequest, cancellationToken).ConfigureAwait(false);
+                outcome = await queueableWorkManager.HandleWorkRequestAsync(input.WorkRequest, cancellationToken).ConfigureAwait(false);
                 exception = null;
             }
             catch (Exception ex)
@@ -131,9 +94,9 @@ namespace RecordPoint.Connectors.SDK.Test.Mock.Work
 
             // Work out the next request instance
             var retry = input.Retry + 1;
-            var maxRetriesReached = retry >= _options.Value.MaxRetries;
+            var maxRetriesReached = retry >= options.Value.MaxRetries;
             var isComplete = maxRetriesReached || outcome.ResultType == WorkResultType.Complete || outcome.ResultType == WorkResultType.Failed;
-            var retryTimeSpan = outcome.ResultType == WorkResultType.Deferred && outcome.WaitTill.HasValue ? outcome.WaitTill.Value - currentTime : _options.Value.RetryTimespan;
+            var retryTimeSpan = outcome.ResultType == WorkResultType.Deferred && outcome.WaitTill.HasValue ? outcome.WaitTill.Value - currentTime : options.Value.RetryTimespan;
             var earliestTime = currentTime + retryTimeSpan;
             var output = new WorkRequestState()
             {

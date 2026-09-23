@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,6 +8,7 @@ namespace RecordPoint.Connectors.SDK.Databases.LocalDb.Migrations
     /// <summary>
     /// The initial create.
     /// </summary>
+    [ExcludeFromCodeCoverage(Justification = "EF Core generated migration; only executed against a live database.")]
     public partial class InitialCreate : Migration
     {
         /// <summary>

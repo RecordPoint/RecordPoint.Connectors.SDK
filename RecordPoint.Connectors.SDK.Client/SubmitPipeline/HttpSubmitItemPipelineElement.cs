@@ -109,10 +109,11 @@ namespace RecordPoint.Connectors.SDK.SubmitPipeline
                 }
             }
             catch (HttpOperationException ex)
-                when (ex.Response?.StatusCode == System.Net.HttpStatusCode.Conflict)
             {
-                // Submitted item already exists! Nothing to do but continue with the submission pipeline
-                LogVerbose(submitContext, nameof(Submit), $"Submission returned {ex.Response.StatusCode} : Item already submitted.");
+                if (!TryHandleKnownHttpOperationException(submitContext, ex, "Item", out shouldContinue))
+                {
+                    throw;
+                }
             }
 
             if (shouldContinue)

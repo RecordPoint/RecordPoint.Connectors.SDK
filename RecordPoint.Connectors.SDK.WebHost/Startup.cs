@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
 using RecordPoint.Connectors.SDK.Context;
 using RecordPoint.Connectors.SDK.Work;
 using System.Reflection;
@@ -126,10 +125,10 @@ namespace RecordPoint.Connectors.SDK.WebHost
                         return;
                     }
 
-                    swaggerDoc.Servers = new List<OpenApiServer>()
-                    {
+                    swaggerDoc.Servers =
+                    [
                         new() { Url = prefix }
-                    };
+                    ];
                 });
             });
             app.UseSwaggerUI(c =>

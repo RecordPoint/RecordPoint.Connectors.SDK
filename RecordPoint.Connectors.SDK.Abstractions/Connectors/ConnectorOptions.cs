@@ -39,11 +39,17 @@
         /// <summary>
         /// The maximum number of times a failed work operation should be retried before being sent to the dead letter queue. This can be set to -1 for never being dead lettered (default: 5 times)
         /// </summary>
+        /// <remarks>
+        /// Only applies to long-running / repeated operations e.g. Content Sync.
+        /// </remarks>
         public int MaxRetries { get; set; } = 5;
 
         /// <summary>
         /// The maximum time a retry delay can be in seconds. This is to stop the exponential delay from getting too long. (default: 1 hour or 3600)
         /// </summary>
+        /// <remarks>
+        /// Only applies to long-running / repeated operations e.g. Content Sync.
+        /// </remarks>
         public int MaxRetryDelay { get; set; } = 3600;
 
         /// <summary>
@@ -55,6 +61,11 @@
         /// Enables an exponential backoff to retry attempts (default: true)
         /// </summary>
         public bool ExponentialRetryDelay { get; set; } = true;
+
+        /// <summary>
+        /// The amount of time in seconds that the connector configuration is cached for. A value of 0 means no caching (default: 0)
+        /// </summary>
+        public int ConnectorConfigurationCacheTtl { get; set; } = 0;
 
     }
 }

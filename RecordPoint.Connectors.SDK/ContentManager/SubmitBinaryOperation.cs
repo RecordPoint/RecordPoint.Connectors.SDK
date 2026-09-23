@@ -243,7 +243,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
                     throw new InvalidOperationException(_binaryRetrievalResult.Reason, _binaryRetrievalResult.Exception);
 
                 case BinaryRetrievalResultType.BackOff:
-                    await HandleBackOffResultAsync(_connectorConfiguration, BinaryMetaInfo, _binaryRetrievalResult.SemaphoreLockType, _binaryRetrievalResult.NextDelay, cancellationToken);
+                    await HandleBackOffResultAsync(_connectorConfiguration, BinaryMetaInfo, _binaryRetrievalResult.SemaphoreLockType, _binaryRetrievalResult.NextDelay, _binaryRetrievalResult.MaxNextDelay, cancellationToken);
                     return;
 
                 case BinaryRetrievalResultType.Abandoned:
@@ -263,12 +263,7 @@ namespace RecordPoint.Connectors.SDK.ContentManager
             {
                 var finalWaitUntil = submitResult.WaitUntilTime ??
                                      DateTimeProvider.UtcNow + TimeSpan.FromSeconds(DEFAULT_DEFERRAL_SECONDS);
-                await _workQueueClient.SubmitBinaryAsync(new ContentSynchronisationConfiguration()
-                {
-                    ConnectorConfigurationId = _connectorConfiguration.Id,
-                    TenantId = _connectorConfiguration.TenantId,
-                    TenantDomainName = _connectorConfiguration.TenantDomainName,
-                }, BinaryMetaInfo, finalWaitUntil, cancellationToken);
+                await _workQueueClient.SubmitBinaryAsync(_connectorConfiguration, BinaryMetaInfo, finalWaitUntil, cancellationToken);
             }
 
             await RecordOutcomeAsync(submitResult, cancellationToken);

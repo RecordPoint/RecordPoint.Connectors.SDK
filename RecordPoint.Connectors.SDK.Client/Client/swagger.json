@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Records365 vNext Connector API",
-    "description": "This is the Records365 vNext Connector API Home",
+    "title": "RecordPoint Connector API",
+    "description": "RecordPoint Connector API provides the ability to configure and control the connectors in RecordPoint.",
     "version": "v1"
   },
   "basePath": "/connector",
@@ -483,6 +483,63 @@
         }
       }
     },
+    "/api/Binaries/NotifyItemBinarySubmission": {
+      "post": {
+        "tags": [
+          "Binaries"
+        ],
+        "summary": "Notifies Records365 that a new Binary has been uploaded.",
+        "operationId": "POST_api/Binaries/NotifyItemBinarySubmission",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "default": "Bearer "
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The binary metadata information.",
+            "schema": {
+              "$ref": "#/definitions/ItemSubmissionInputModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "412": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponseModel"
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponseModel"
+            }
+          }
+        }
+      }
+    },
     "/api/ConnectorConfigurations/GetMultiTenanted": {
       "get": {
         "tags": [
@@ -804,7 +861,7 @@
         "tags": [
           "Notifications"
         ],
-        "summary": "Gets a collection of notifications that are awaiting processing and acknowledgement by the connector.",
+        "summary": "Gets a collection of notifications that are awaiting processing and acknowledgement by the connector.\r\nBy default, the pageSize of messages are 100 and all the core and source properties are selected.\r\nHowever, when pageSize is greater than default, the API will only return the default core and source properties to prevent the response payload from being too large.\r\nThe Default core, source properties of Destroyed Messages are: ExternalId, UniqueExternalId, Location.\r\nIf callers need more properties, they can specify them in selectCoreProperties and selectSourceProperties parameters.",
         "operationId": "GET_api/Notifications",
         "produces": [
           "application/json"
@@ -814,6 +871,32 @@
             "in": "query",
             "name": "connectorId",
             "description": "Connector ID for multi tenanted connections",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "receiveAll",
+            "description": "When true, retrieves both active and deferred messages. Default is false.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "The maximum number of notifications to return. Default is 100.",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "selectCoreProperties",
+            "description": "List of core properties to select (for eg: \"UniqueExternalId,Location\". Optional",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "selectSourceProperties",
+            "description": "List of source properties to select(for eg: \"ExternalId, SourceModifiedDate\". Optional",
             "type": "string"
           },
           {
@@ -902,7 +985,7 @@
         "tags": [
           "Notifications"
         ],
-        "summary": "Gets a collection of notifications that are awaiting processing and acknowledgement by the connector.",
+        "summary": "Gets a collection of notifications that are awaiting processing and acknowledgement by the connector.\r\nBy default, the pageSize of messages are 100 and all the core and source properties are selected.\r\nHowever, when pageSize is greater than default, the API will only return the default core and source properties to prevent the response payload from being too large.\r\nThe Default core, source properties of Destroyed Messages are: ExternalId, UniqueExternalId, Location.\r\nIf callers need more properties, they can specify them in selectCoreProperties and selectSourceProperties parameters.",
         "operationId": "GET_api/Notifications/{connectorId}",
         "produces": [
           "application/json"
@@ -911,8 +994,34 @@
           {
             "in": "path",
             "name": "connectorId",
-            "description": "The query information",
+            "description": "Connector ID",
             "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "receiveAll",
+            "description": "When true, retrieves both active and deferred messages. Default is false.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "The maximum number of notifications to return. Default is 100.",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "selectCoreProperties",
+            "description": "List of core properties to select, for eg: \"UniqueExternalId,Location\". Optional",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "selectSourceProperties",
+            "description": "List of source properties to select, for eg: \"ExternalId, SourceModifiedDate\". Optional",
             "type": "string"
           },
           {
@@ -937,6 +1046,154 @@
                 "$ref": "#/definitions/ConnectorNotificationModel"
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Notifications/ConnectorTypes/{connectorTypeId}/Notifications": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Gets a collection of notifications that are awaiting processing and acknowledgement by the connector type id\r\nThis endpoint is useful when system needs to poll notifications without knowing specific connector config ids",
+        "operationId": "GET_api/Notifications/ConnectorTypes/{connectorTypeId}/Notifications",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "connectorTypeId",
+            "description": "Connector Type Id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "default": "Bearer "
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConnectorNotificationModel"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponseModel"
+            }
+          }
+        }
+      }
+    },
+    "/api/Notifications/DisposalCallback": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Receives notification of completed disposal from connector.",
+        "description": "Only for asynchronous callback connectors. Most connectors use an AdminItemController endpoint.",
+        "operationId": "POST_api/Notifications/DisposalCallback",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "default": "Bearer "
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ItemNotificationDisposalCallbackModel"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/Notifications/ConnectorRequestCallback": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Receives a connector's answer to a request it was sent and stores it for the Management API\r\nto serve to the UI.",
+        "operationId": "POST_api/Notifications/ConnectorRequestCallback",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "default": "Bearer "
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The answer from the connector.",
+            "schema": {
+              "$ref": "#/definitions/ConnectorRequestResponseCallbackModel"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "413": {
+            "description": "Client Error"
           }
         }
       }
@@ -1124,7 +1381,8 @@
         "connectorId",
         "eventExternalId",
         "eventType",
-        "itemExternalId"
+        "itemExternalId",
+        "userId"
       ],
       "type": "object",
       "properties": {
@@ -1291,6 +1549,34 @@
         "context": { }
       }
     },
+    "ConnectorRequestResponseCallbackModel": {
+      "type": "object",
+      "properties": {
+        "connectorId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "requestType": {
+          "type": "string"
+        },
+        "correlationId": {
+          "type": "string"
+        },
+        "responseScope": {
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/definitions/RequestOutcome"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": { }
+      }
+    },
     "DirectBinarySubmissionInputModel": {
       "required": [
         "binaryExternalId",
@@ -1312,6 +1598,9 @@
         "sourceLastModifiedDate": {
           "format": "date-time",
           "type": "string"
+        },
+        "binaryBlobCreated": {
+          "type": "boolean"
         },
         "connectorId": {
           "type": "string"
@@ -1454,6 +1743,41 @@
         }
       }
     },
+    "ItemDisposalStatus": {
+      "format": "string",
+      "enum": [
+        "None",
+        "DestroyPending",
+        "Destroyed",
+        "DestroyFailed",
+        "DestroyNotificationFailed",
+        "DestroyNotificationSent",
+        "Transferred",
+        "Reviewed"
+      ],
+      "type": "string"
+    },
+    "ItemNotificationDisposalCallbackModel": {
+      "type": "object",
+      "properties": {
+        "externalId": {
+          "type": "string"
+        },
+        "disposalStatus": {
+          "$ref": "#/definitions/ItemDisposalStatus"
+        },
+        "connectorConfigId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "correlationId": {
+          "type": "string"
+        },
+        "statusMessage": {
+          "type": "string"
+        }
+      }
+    },
     "ItemSubmissionInputModel": {
       "required": [
         "author",
@@ -1462,7 +1786,6 @@
         "externalId",
         "location",
         "mediaType",
-        "parentExternalId",
         "sourceCreatedBy",
         "sourceCreatedDate",
         "sourceLastModifiedBy",
@@ -1552,7 +1875,6 @@
         "externalId",
         "location",
         "mediaType",
-        "parentExternalId",
         "sourceCreatedBy",
         "sourceCreatedDate",
         "sourceLastModifiedBy",
@@ -1721,6 +2043,14 @@
         }
       }
     },
+    "RequestOutcome": {
+      "format": "string",
+      "enum": [
+        "Ok",
+        "Failed"
+      ],
+      "type": "string"
+    },
     "SearchTermModel": {
       "required": [
         "fieldName"
@@ -1750,6 +2080,10 @@
         "categoricalValueType": {
           "format": "string",
           "type": "string"
+        },
+        "fieldInfo": {
+          "type": "object",
+          "additionalProperties": { }
         },
         "searchContextIdentifier": {
           "format": "string",

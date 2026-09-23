@@ -16,10 +16,10 @@ namespace RecordPoint.Connectors.SDK.WebHost.Api.Controllers
         private readonly IHealthCheckManager _healthCheckManager;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="HealthController"/> class.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="healthCheckManager"></param>
+        /// <param name="serviceProvider">Service provider used to resolve health check actions.</param>
+        /// <param name="healthCheckManager">Manager that tracks the current health state.</param>
         public HealthController(IServiceProvider serviceProvider, IHealthCheckManager healthCheckManager)
         {
             _serviceProvider = serviceProvider;
@@ -27,9 +27,9 @@ namespace RecordPoint.Connectors.SDK.WebHost.Api.Controllers
         }
 
         /// <summary>
-        /// Get the health check result
+        /// Gets the current health check result snapshot.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The current <see cref="HealthCheckResult"/>.</returns>
         [HttpGet]
         public HealthCheckResult Get()
         {

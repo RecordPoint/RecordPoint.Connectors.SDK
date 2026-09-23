@@ -48,6 +48,19 @@ public class TelemetryTracker(IObservabilityScope observabilityScope, IEnumerabl
     }
 
     /// <summary>
+    /// Track a pre-aggregated metric across all registered telemetry sinks.
+    /// Automatically enriches with System and Service dimensions from context.
+    /// </summary>
+    public void TrackMetric(string name, double value, string? dimensionName = null, string? dimensionValue = null)
+    {
+        var dimensions = GatherMetricDimensions(dimensionName, dimensionValue);
+        foreach (var telemetrySink in telemetrySinks)
+        {
+            telemetrySink.TrackMetric(name, value, dimensions);
+        }
+    }
+
+    /// <summary>
     /// Track a trace message across all registered telemetry sinks
     /// </summary>
     public void TrackTrace(string message, SeverityLevel severityLevel, Dimensions dimensions = null)
@@ -97,5 +110,31 @@ public class TelemetryTracker(IObservabilityScope observabilityScope, IEnumerabl
             .GroupBy(p => p.Key, StringComparer.OrdinalIgnoreCase)
             .Select(kp => KeyValuePair.Create(kp.Key, kp.Last().Value));
         return new Measures(pairs);
+    }
+
+    /// <summary>
+    /// Gather standard metric dimensions (System, Service) from context,
+    /// plus any caller-provided dimension.
+    /// </summary>
+    private Dimensions GatherMetricDimensions(string? dimensionName, string? dimensionValue)
+    {
+        var dimensions = new Dimensions();
+
+        foreach (var dim in systemContext.GetMetricDimensions())
+        {
+            dimensions[dim.Key] = dim.Value;
+        }
+
+        foreach (var dim in observabilityScope.GetMetricDimensions())
+        {
+            dimensions[dim.Key] = dim.Value;
+        }
+
+        if (dimensionName != null && dimensionValue != null)
+        {
+            dimensions[dimensionName] = dimensionValue;
+        }
+
+        return dimensions;
     }
 }

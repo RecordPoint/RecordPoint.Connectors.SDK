@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.DependencyInjection;
 using RecordPoint.Connectors.SDK.Caching;
 using RecordPoint.Connectors.SDK.Caching.Semaphore;
 using RecordPoint.Connectors.SDK.Client.Models;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.Manager;
 using RecordPoint.Connectors.SDK.Databases.Cosmos.SemephoreLock;
+using System.Net;
 
 namespace RecordPoint.Connectors.SDK.Databases.SemephoreLock;
 
@@ -98,6 +100,28 @@ public class CosmosSemaphoreLockManager : ISemaphoreLockManager
             : await GetScopedSemaphoreKeyAsync(workType, context, cancellationToken);
 
         if (string.IsNullOrEmpty(semaphoreKey)) throw new RequiredValueNullException(nameof(semaphoreKey));
+
+        // Fix 1: Check if lock already exists with time remaining.
+        // Note: There is a small race window between GetAsync and UpsertAsync where two instances
+        // could both see an expired lock and both upsert. This is acceptable for throttling —
+        // worst case the lock is reset to a slightly different expiry.
+        try
+        {
+            var existingLock = await _semaphoreDbManager.GetAsync(semaphoreKey, semaphoreKey, cancellationToken);
+            if (existingLock != null)
+            {
+                var remainingTime = existingLock.LockExpiry - DateTimeOffset.Now;
+                if (remainingTime.TotalSeconds > 0)
+                {
+                    // Lock already exists and hasn't expired, don't overwrite it
+                    return;
+                }
+            }
+        }
+        catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            // Item doesn't exist in Cosmos, continue to create new lock
+        }
 
         var semaphoreExpiry = DateTimeOffset.Now.AddSeconds(duration);
         var item = new SemaphoreLockCosmosDbItem()

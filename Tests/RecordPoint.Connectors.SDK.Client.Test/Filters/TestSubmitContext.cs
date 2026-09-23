@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RecordPoint.Connectors.SDK.SubmitPipeline;
-using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace RecordPoint.Connectors.SDK.Client.Test.Filters
 {

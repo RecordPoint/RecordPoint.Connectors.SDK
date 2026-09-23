@@ -18,7 +18,8 @@ namespace RecordPoint.Connectors.SDK.Client
     using System.Threading.Tasks;
 
     /// <summary>
-    /// This is the Records365 vNext Connector API Home
+    /// RecordPoint Connector API provides the ability to configure and control
+    /// the connectors in RecordPoint.
     /// </summary>
     public partial class ApiClient : ServiceClient<ApiClient>, IApiClient
     {
@@ -56,19 +57,6 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Gets the IPUT.
         /// </summary>
         public virtual IPUT PUT { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the ApiClient class.
-        /// </summary>
-        /// <param name='httpClient'>
-        /// HttpClient to be used
-        /// </param>
-        /// <param name='disposeHttpClient'>
-        /// True: will dispose the provided httpClient on calling ApiClient.Dispose(). False: will not dispose provided httpClient</param>
-        protected ApiClient(HttpClient httpClient, bool disposeHttpClient) : base(httpClient, disposeHttpClient)
-        {
-            Initialize();
-        }
 
         /// <summary>
         /// Initializes a new instance of the ApiClient class.
@@ -153,33 +141,6 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Thrown when a required parameter is null
         /// </exception>
         public ApiClient(ServiceClientCredentials credentials, params DelegatingHandler[] handlers) : this(handlers)
-        {
-            if (credentials == null)
-            {
-                throw new System.ArgumentNullException("credentials");
-            }
-            Credentials = credentials;
-            if (Credentials != null)
-            {
-                Credentials.InitializeServiceClient(this);
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ApiClient class.
-        /// </summary>
-        /// <param name='credentials'>
-        /// Required. Subscription credentials which uniquely identify client subscription.
-        /// </param>
-        /// <param name='httpClient'>
-        /// HttpClient to be used
-        /// </param>
-        /// <param name='disposeHttpClient'>
-        /// True: will dispose the provided httpClient on calling ApiClient.Dispose(). False: will not dispose provided httpClient</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        public ApiClient(ServiceClientCredentials credentials, HttpClient httpClient, bool disposeHttpClient) : this(httpClient, disposeHttpClient)
         {
             if (credentials == null)
             {
@@ -301,7 +262,7 @@ namespace RecordPoint.Connectors.SDK.Client
             GET = new GET(this);
             POST = new POST(this);
             PUT = new PUT(this);
-            BaseUri = new System.Uri("http://localhost/connector");
+            BaseUri = new System.Uri("/connector", System.UriKind.Relative);
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -351,7 +312,8 @@ namespace RecordPoint.Connectors.SDK.Client
     using System.Threading.Tasks;
 
     /// <summary>
-    /// This is the Records365 vNext Connector API Home
+    /// RecordPoint Connector API provides the ability to configure and control
+    /// the connectors in RecordPoint.
     /// </summary>
     public partial interface IApiClient : System.IDisposable
     {
@@ -1585,9 +1547,32 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <summary>
         /// Gets a collection of notifications that are awaiting processing and
         /// acknowledgement by the connector.
+        /// By default, the pageSize of messages are 100 and all the core and source
+        /// properties are selected.
+        /// However, when pageSize is greater than default, the API will only return
+        /// the default core and source properties to prevent the response payload from
+        /// being too large.
+        /// The Default core, source properties of Destroyed Messages are: ExternalId,
+        /// UniqueExternalId, Location.
+        /// If callers need more properties, they can specify them in
+        /// selectCoreProperties and selectSourceProperties parameters.
         /// </summary>
         /// <param name='connectorId'>
         /// Connector ID for multi tenanted connections
+        /// </param>
+        /// <param name='receiveAll'>
+        /// When true, retrieves both active and deferred messages. Default is false.
+        /// </param>
+        /// <param name='pageSize'>
+        /// The maximum number of notifications to return. Default is 100.
+        /// </param>
+        /// <param name='selectCoreProperties'>
+        /// List of core properties to select (for eg: "UniqueExternalId,Location".
+        /// Optional
+        /// </param>
+        /// <param name='selectSourceProperties'>
+        /// List of source properties to select(for eg: "ExternalId,
+        /// SourceModifiedDate". Optional
         /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
@@ -1606,7 +1591,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsWithHttpMessagesAsync(string connectorId = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsWithHttpMessagesAsync(string connectorId = default(string), bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1616,6 +1601,10 @@ namespace RecordPoint.Connectors.SDK.Client
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("connectorId", connectorId);
+                tracingParameters.Add("receiveAll", receiveAll);
+                tracingParameters.Add("pageSize", pageSize);
+                tracingParameters.Add("selectCoreProperties", selectCoreProperties);
+                tracingParameters.Add("selectSourceProperties", selectSourceProperties);
                 tracingParameters.Add("acceptLanguage", acceptLanguage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "ApiNotifications", tracingParameters);
@@ -1627,6 +1616,22 @@ namespace RecordPoint.Connectors.SDK.Client
             if (connectorId != null)
             {
                 _queryParameters.Add(string.Format("connectorId={0}", System.Uri.EscapeDataString(connectorId)));
+            }
+            if (receiveAll != null)
+            {
+                _queryParameters.Add(string.Format("receiveAll={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(receiveAll, Client.SerializationSettings).Trim('"'))));
+            }
+            if (pageSize != null)
+            {
+                _queryParameters.Add(string.Format("pageSize={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(pageSize, Client.SerializationSettings).Trim('"'))));
+            }
+            if (selectCoreProperties != null)
+            {
+                _queryParameters.Add(string.Format("selectCoreProperties={0}", System.Uri.EscapeDataString(selectCoreProperties)));
+            }
+            if (selectSourceProperties != null)
+            {
+                _queryParameters.Add(string.Format("selectSourceProperties={0}", System.Uri.EscapeDataString(selectSourceProperties)));
             }
             if (_queryParameters.Count > 0)
             {
@@ -1736,9 +1741,32 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <summary>
         /// Gets a collection of notifications that are awaiting processing and
         /// acknowledgement by the connector.
+        /// By default, the pageSize of messages are 100 and all the core and source
+        /// properties are selected.
+        /// However, when pageSize is greater than default, the API will only return
+        /// the default core and source properties to prevent the response payload from
+        /// being too large.
+        /// The Default core, source properties of Destroyed Messages are: ExternalId,
+        /// UniqueExternalId, Location.
+        /// If callers need more properties, they can specify them in
+        /// selectCoreProperties and selectSourceProperties parameters.
         /// </summary>
         /// <param name='connectorId'>
-        /// The query information
+        /// Connector ID
+        /// </param>
+        /// <param name='receiveAll'>
+        /// When true, retrieves both active and deferred messages. Default is false.
+        /// </param>
+        /// <param name='pageSize'>
+        /// The maximum number of notifications to return. Default is 100.
+        /// </param>
+        /// <param name='selectCoreProperties'>
+        /// List of core properties to select, for eg: "UniqueExternalId,Location".
+        /// Optional
+        /// </param>
+        /// <param name='selectSourceProperties'>
+        /// List of source properties to select, for eg: "ExternalId,
+        /// SourceModifiedDate". Optional
         /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
@@ -1763,7 +1791,7 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsconnectorIdWithHttpMessagesAsync(string connectorId, string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsconnectorIdWithHttpMessagesAsync(string connectorId, bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectorId == null)
             {
@@ -1777,6 +1805,10 @@ namespace RecordPoint.Connectors.SDK.Client
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("connectorId", connectorId);
+                tracingParameters.Add("receiveAll", receiveAll);
+                tracingParameters.Add("pageSize", pageSize);
+                tracingParameters.Add("selectCoreProperties", selectCoreProperties);
+                tracingParameters.Add("selectSourceProperties", selectSourceProperties);
                 tracingParameters.Add("acceptLanguage", acceptLanguage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "ApiNotificationsconnectorId", tracingParameters);
@@ -1785,6 +1817,27 @@ namespace RecordPoint.Connectors.SDK.Client
             var _baseUrl = Client.BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Notifications/{connectorId}").ToString();
             _url = _url.Replace("{connectorId}", System.Uri.EscapeDataString(connectorId));
+            List<string> _queryParameters = new List<string>();
+            if (receiveAll != null)
+            {
+                _queryParameters.Add(string.Format("receiveAll={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(receiveAll, Client.SerializationSettings).Trim('"'))));
+            }
+            if (pageSize != null)
+            {
+                _queryParameters.Add(string.Format("pageSize={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(pageSize, Client.SerializationSettings).Trim('"'))));
+            }
+            if (selectCoreProperties != null)
+            {
+                _queryParameters.Add(string.Format("selectCoreProperties={0}", System.Uri.EscapeDataString(selectCoreProperties)));
+            }
+            if (selectSourceProperties != null)
+            {
+                _queryParameters.Add(string.Format("selectSourceProperties={0}", System.Uri.EscapeDataString(selectSourceProperties)));
+            }
+            if (_queryParameters.Count > 0)
+            {
+                _url += "?" + string.Join("&", _queryParameters);
+            }
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -1868,6 +1921,169 @@ namespace RecordPoint.Connectors.SDK.Client
                 try
                 {
                     _result.Body = SafeJsonConvert.DeserializeObject<IList<ConnectorNotificationModel>>(_responseContent, Client.DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
+        /// <summary>
+        /// Gets a collection of notifications that are awaiting processing and
+        /// acknowledgement by the connector type id
+        /// This endpoint is useful when system needs to poll notifications without
+        /// knowing specific connector config ids
+        /// </summary>
+        /// <param name='connectorTypeId'>
+        /// Connector Type Id
+        /// </param>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<object>> ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(System.Guid connectorTypeId, string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("connectorTypeId", connectorTypeId);
+                tracingParameters.Add("acceptLanguage", acceptLanguage);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiNotificationsConnectorTypesconnectorTypeIdNotifications", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = Client.BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Notifications/ConnectorTypes/{connectorTypeId}/Notifications").ToString();
+            _url = _url.Replace("{connectorTypeId}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(connectorTypeId, Client.SerializationSettings).Trim('"')));
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("GET");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+            if (acceptLanguage != null)
+            {
+                if (_httpRequest.Headers.Contains("Accept-Language"))
+                {
+                    _httpRequest.Headers.Remove("Accept-Language");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
+            }
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            // Set Credentials
+            if (Client.Credentials != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 404)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<object>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 200)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<ConnectorNotificationModel>>(_responseContent, Client.DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 400)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2101,9 +2317,33 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <summary>
         /// Gets a collection of notifications that are awaiting processing and
         /// acknowledgement by the connector.
+        /// By default, the pageSize of messages are 100 and all the core and
+        /// source properties are selected.
+        /// However, when pageSize is greater than default, the API will only
+        /// return the default core and source properties to prevent the
+        /// response payload from being too large.
+        /// The Default core, source properties of Destroyed Messages are:
+        /// ExternalId, UniqueExternalId, Location.
+        /// If callers need more properties, they can specify them in
+        /// selectCoreProperties and selectSourceProperties parameters.
         /// </summary>
         /// <param name='connectorId'>
         /// Connector ID for multi tenanted connections
+        /// </param>
+        /// <param name='receiveAll'>
+        /// When true, retrieves both active and deferred messages. Default is
+        /// false.
+        /// </param>
+        /// <param name='pageSize'>
+        /// The maximum number of notifications to return. Default is 100.
+        /// </param>
+        /// <param name='selectCoreProperties'>
+        /// List of core properties to select (for eg:
+        /// "UniqueExternalId,Location". Optional
+        /// </param>
+        /// <param name='selectSourceProperties'>
+        /// List of source properties to select(for eg: "ExternalId,
+        /// SourceModifiedDate". Optional
         /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
@@ -2119,13 +2359,37 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsWithHttpMessagesAsync(string connectorId = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsWithHttpMessagesAsync(string connectorId = default(string), bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a collection of notifications that are awaiting processing and
         /// acknowledgement by the connector.
+        /// By default, the pageSize of messages are 100 and all the core and
+        /// source properties are selected.
+        /// However, when pageSize is greater than default, the API will only
+        /// return the default core and source properties to prevent the
+        /// response payload from being too large.
+        /// The Default core, source properties of Destroyed Messages are:
+        /// ExternalId, UniqueExternalId, Location.
+        /// If callers need more properties, they can specify them in
+        /// selectCoreProperties and selectSourceProperties parameters.
         /// </summary>
         /// <param name='connectorId'>
-        /// The query information
+        /// Connector ID
+        /// </param>
+        /// <param name='receiveAll'>
+        /// When true, retrieves both active and deferred messages. Default is
+        /// false.
+        /// </param>
+        /// <param name='pageSize'>
+        /// The maximum number of notifications to return. Default is 100.
+        /// </param>
+        /// <param name='selectCoreProperties'>
+        /// List of core properties to select, for eg:
+        /// "UniqueExternalId,Location". Optional
+        /// </param>
+        /// <param name='selectSourceProperties'>
+        /// List of source properties to select, for eg: "ExternalId,
+        /// SourceModifiedDate". Optional
         /// </param>
         /// <param name='acceptLanguage'>
         /// </param>
@@ -2144,7 +2408,31 @@ namespace RecordPoint.Connectors.SDK.Client
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsconnectorIdWithHttpMessagesAsync(string connectorId, string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<ConnectorNotificationModel>>> ApiNotificationsconnectorIdWithHttpMessagesAsync(string connectorId, bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Gets a collection of notifications that are awaiting processing and
+        /// acknowledgement by the connector type id
+        /// This endpoint is useful when system needs to poll notifications
+        /// without knowing specific connector config ids
+        /// </summary>
+        /// <param name='connectorTypeId'>
+        /// Connector Type Id
+        /// </param>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        Task<HttpOperationResponse<object>> ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(System.Guid connectorTypeId, string acceptLanguage = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
 // <auto-generated>
@@ -2490,6 +2778,15 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <summary>
             /// Gets a collection of notifications that are awaiting processing and
             /// acknowledgement by the connector.
+            /// By default, the pageSize of messages are 100 and all the core and source
+            /// properties are selected.
+            /// However, when pageSize is greater than default, the API will only return
+            /// the default core and source properties to prevent the response payload from
+            /// being too large.
+            /// The Default core, source properties of Destroyed Messages are: ExternalId,
+            /// UniqueExternalId, Location.
+            /// If callers need more properties, they can specify them in
+            /// selectCoreProperties and selectSourceProperties parameters.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -2497,31 +2794,68 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <param name='connectorId'>
             /// Connector ID for multi tenanted connections
             /// </param>
+            /// <param name='receiveAll'>
+            /// When true, retrieves both active and deferred messages. Default is false.
+            /// </param>
+            /// <param name='pageSize'>
+            /// The maximum number of notifications to return. Default is 100.
+            /// </param>
+            /// <param name='selectCoreProperties'>
+            /// List of core properties to select (for eg: "UniqueExternalId,Location".
+            /// Optional
+            /// </param>
+            /// <param name='selectSourceProperties'>
+            /// List of source properties to select(for eg: "ExternalId,
+            /// SourceModifiedDate". Optional
+            /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
-            public static IList<ConnectorNotificationModel> ApiNotifications(this IGET operations, string connectorId = default(string), string acceptLanguage = default(string))
+            public static IList<ConnectorNotificationModel> ApiNotifications(this IGET operations, string connectorId = default(string), bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string))
             {
-                return operations.ApiNotificationsAsync(connectorId, acceptLanguage).GetAwaiter().GetResult();
+                return operations.ApiNotificationsAsync(connectorId, receiveAll, pageSize, selectCoreProperties, selectSourceProperties, acceptLanguage).GetAwaiter().GetResult();
             }
 
             /// <summary>
             /// Gets a collection of notifications that are awaiting processing and
             /// acknowledgement by the connector.
+            /// By default, the pageSize of messages are 100 and all the core and source
+            /// properties are selected.
+            /// However, when pageSize is greater than default, the API will only return
+            /// the default core and source properties to prevent the response payload from
+            /// being too large.
+            /// The Default core, source properties of Destroyed Messages are: ExternalId,
+            /// UniqueExternalId, Location.
+            /// If callers need more properties, they can specify them in
+            /// selectCoreProperties and selectSourceProperties parameters.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='connectorId'>
             /// Connector ID for multi tenanted connections
+            /// </param>
+            /// <param name='receiveAll'>
+            /// When true, retrieves both active and deferred messages. Default is false.
+            /// </param>
+            /// <param name='pageSize'>
+            /// The maximum number of notifications to return. Default is 100.
+            /// </param>
+            /// <param name='selectCoreProperties'>
+            /// List of core properties to select (for eg: "UniqueExternalId,Location".
+            /// Optional
+            /// </param>
+            /// <param name='selectSourceProperties'>
+            /// List of source properties to select(for eg: "ExternalId,
+            /// SourceModifiedDate". Optional
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<ConnectorNotificationModel>> ApiNotificationsAsync(this IGET operations, string connectorId = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<ConnectorNotificationModel>> ApiNotificationsAsync(this IGET operations, string connectorId = default(string), bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiNotificationsWithHttpMessagesAsync(connectorId, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ApiNotificationsWithHttpMessagesAsync(connectorId, receiveAll, pageSize, selectCoreProperties, selectSourceProperties, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -2530,38 +2864,128 @@ namespace RecordPoint.Connectors.SDK.Client
             /// <summary>
             /// Gets a collection of notifications that are awaiting processing and
             /// acknowledgement by the connector.
+            /// By default, the pageSize of messages are 100 and all the core and source
+            /// properties are selected.
+            /// However, when pageSize is greater than default, the API will only return
+            /// the default core and source properties to prevent the response payload from
+            /// being too large.
+            /// The Default core, source properties of Destroyed Messages are: ExternalId,
+            /// UniqueExternalId, Location.
+            /// If callers need more properties, they can specify them in
+            /// selectCoreProperties and selectSourceProperties parameters.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='connectorId'>
-            /// The query information
+            /// Connector ID
+            /// </param>
+            /// <param name='receiveAll'>
+            /// When true, retrieves both active and deferred messages. Default is false.
+            /// </param>
+            /// <param name='pageSize'>
+            /// The maximum number of notifications to return. Default is 100.
+            /// </param>
+            /// <param name='selectCoreProperties'>
+            /// List of core properties to select, for eg: "UniqueExternalId,Location".
+            /// Optional
+            /// </param>
+            /// <param name='selectSourceProperties'>
+            /// List of source properties to select, for eg: "ExternalId,
+            /// SourceModifiedDate". Optional
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
-            public static IList<ConnectorNotificationModel> ApiNotificationsconnectorId(this IGET operations, string connectorId, string acceptLanguage = default(string))
+            public static IList<ConnectorNotificationModel> ApiNotificationsconnectorId(this IGET operations, string connectorId, bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string))
             {
-                return operations.ApiNotificationsconnectorIdAsync(connectorId, acceptLanguage).GetAwaiter().GetResult();
+                return operations.ApiNotificationsconnectorIdAsync(connectorId, receiveAll, pageSize, selectCoreProperties, selectSourceProperties, acceptLanguage).GetAwaiter().GetResult();
             }
 
             /// <summary>
             /// Gets a collection of notifications that are awaiting processing and
             /// acknowledgement by the connector.
+            /// By default, the pageSize of messages are 100 and all the core and source
+            /// properties are selected.
+            /// However, when pageSize is greater than default, the API will only return
+            /// the default core and source properties to prevent the response payload from
+            /// being too large.
+            /// The Default core, source properties of Destroyed Messages are: ExternalId,
+            /// UniqueExternalId, Location.
+            /// If callers need more properties, they can specify them in
+            /// selectCoreProperties and selectSourceProperties parameters.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='connectorId'>
-            /// The query information
+            /// Connector ID
+            /// </param>
+            /// <param name='receiveAll'>
+            /// When true, retrieves both active and deferred messages. Default is false.
+            /// </param>
+            /// <param name='pageSize'>
+            /// The maximum number of notifications to return. Default is 100.
+            /// </param>
+            /// <param name='selectCoreProperties'>
+            /// List of core properties to select, for eg: "UniqueExternalId,Location".
+            /// Optional
+            /// </param>
+            /// <param name='selectSourceProperties'>
+            /// List of source properties to select, for eg: "ExternalId,
+            /// SourceModifiedDate". Optional
             /// </param>
             /// <param name='acceptLanguage'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<ConnectorNotificationModel>> ApiNotificationsconnectorIdAsync(this IGET operations, string connectorId, string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<ConnectorNotificationModel>> ApiNotificationsconnectorIdAsync(this IGET operations, string connectorId, bool? receiveAll = false, int? pageSize = default(int?), string selectCoreProperties = default(string), string selectSourceProperties = default(string), string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ApiNotificationsconnectorIdWithHttpMessagesAsync(connectorId, receiveAll, pageSize, selectCoreProperties, selectSourceProperties, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Gets a collection of notifications that are awaiting processing and
+            /// acknowledgement by the connector type id
+            /// This endpoint is useful when system needs to poll notifications without
+            /// knowing specific connector config ids
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='connectorTypeId'>
+            /// Connector Type Id
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            public static object ApiNotificationsConnectorTypesconnectorTypeIdNotifications(this IGET operations, System.Guid connectorTypeId, string acceptLanguage = default(string))
+            {
+                return operations.ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync(connectorTypeId, acceptLanguage).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Gets a collection of notifications that are awaiting processing and
+            /// acknowledgement by the connector type id
+            /// This endpoint is useful when system needs to poll notifications without
+            /// knowing specific connector config ids
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='connectorTypeId'>
+            /// Connector Type Id
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> ApiNotificationsConnectorTypesconnectorTypeIdNotificationsAsync(this IGET operations, System.Guid connectorTypeId, string acceptLanguage = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiNotificationsConnectorTypesconnectorTypeIdNotificationsWithHttpMessagesAsync(connectorTypeId, acceptLanguage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -3457,6 +3881,175 @@ namespace RecordPoint.Connectors.SDK.Client
         }
 
         /// <summary>
+        /// Notifies Records365 that a new Binary has been uploaded.
+        /// </summary>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='body'>
+        /// The binary metadata information.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(string acceptLanguage = default(string), ItemSubmissionInputModel body = default(ItemSubmissionInputModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (body != null)
+            {
+                body.Validate();
+            }
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("acceptLanguage", acceptLanguage);
+                tracingParameters.Add("body", body);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiBinariesNotifyItemBinarySubmission", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = Client.BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Binaries/NotifyItemBinarySubmission").ToString();
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+            if (acceptLanguage != null)
+            {
+                if (_httpRequest.Headers.Contains("Accept-Language"))
+                {
+                    _httpRequest.Headers.Remove("Accept-Language");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
+            }
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            if(body != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
+            // Set Credentials
+            if (Client.Credentials != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200 && (int)_statusCode != 412 && (int)_statusCode != 429)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<ErrorResponseModel>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 412)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, Client.DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 429)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponseModel>(_responseContent, Client.DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
+        /// <summary>
         /// Submits an item to be managed by Records365 vNext.
         /// All records are to be submitted to this endpoint.
         /// </summary>
@@ -3831,6 +4424,263 @@ namespace RecordPoint.Connectors.SDK.Client
             return _result;
         }
 
+        /// <summary>
+        /// Receives notification of completed disposal from connector.
+        /// </summary>
+        /// <remarks>
+        /// Only for asynchronous callback connectors. Most connectors use an
+        /// AdminItemController endpoint.
+        /// </remarks>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='body'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse> ApiNotificationsDisposalCallbackWithHttpMessagesAsync(string acceptLanguage = default(string), ItemNotificationDisposalCallbackModel body = default(ItemNotificationDisposalCallbackModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("acceptLanguage", acceptLanguage);
+                tracingParameters.Add("body", body);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiNotificationsDisposalCallback", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = Client.BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Notifications/DisposalCallback").ToString();
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+            if (acceptLanguage != null)
+            {
+                if (_httpRequest.Headers.Contains("Accept-Language"))
+                {
+                    _httpRequest.Headers.Remove("Accept-Language");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
+            }
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            if(body != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
+            // Set Credentials
+            if (Client.Credentials != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 202 && (int)_statusCode != 400)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
+        /// <summary>
+        /// Receives a connector's answer to a request it was sent and stores it for
+        /// the Management API
+        /// to serve to the UI.
+        /// </summary>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='body'>
+        /// The answer from the connector.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse> ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(string acceptLanguage = default(string), ConnectorRequestResponseCallbackModel body = default(ConnectorRequestResponseCallbackModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("acceptLanguage", acceptLanguage);
+                tracingParameters.Add("body", body);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "ApiNotificationsConnectorRequestCallback", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = Client.BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Notifications/ConnectorRequestCallback").ToString();
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+            if (acceptLanguage != null)
+            {
+                if (_httpRequest.Headers.Contains("Accept-Language"))
+                {
+                    _httpRequest.Headers.Remove("Accept-Language");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
+            }
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            if(body != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
+            // Set Credentials
+            if (Client.Credentials != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 202 && (int)_statusCode != 400 && (int)_statusCode != 413)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
     }
 }
 // <auto-generated>
@@ -3960,6 +4810,27 @@ namespace RecordPoint.Connectors.SDK.Client
         /// </exception>
         Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyBinarySubmissionWithHttpMessagesAsync(string acceptLanguage = default(string), DirectBinarySubmissionInputModel body = default(DirectBinarySubmissionInputModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
+        /// Notifies Records365 that a new Binary has been uploaded.
+        /// </summary>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='body'>
+        /// The binary metadata information.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        Task<HttpOperationResponse<ErrorResponseModel>> ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(string acceptLanguage = default(string), ItemSubmissionInputModel body = default(ItemSubmissionInputModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
         /// Submits an item to be managed by Records365 vNext.
         /// All records are to be submitted to this endpoint.
         /// </summary>
@@ -4003,6 +4874,47 @@ namespace RecordPoint.Connectors.SDK.Client
         /// Thrown when unable to deserialize the response
         /// </exception>
         Task<HttpOperationResponse<ErrorResponseModel>> ApiNotificationsWithHttpMessagesAsync(string acceptLanguage = default(string), ConnectorNotificationAcknowledgeModel body = default(ConnectorNotificationAcknowledgeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Receives notification of completed disposal from connector.
+        /// </summary>
+        /// <remarks>
+        /// Only for asynchronous callback connectors. Most connectors use an
+        /// AdminItemController endpoint.
+        /// </remarks>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='body'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        Task<HttpOperationResponse> ApiNotificationsDisposalCallbackWithHttpMessagesAsync(string acceptLanguage = default(string), ItemNotificationDisposalCallbackModel body = default(ItemNotificationDisposalCallbackModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Receives a connector's answer to a request it was sent and stores
+        /// it for the Management API
+        /// to serve to the UI.
+        /// </summary>
+        /// <param name='acceptLanguage'>
+        /// </param>
+        /// <param name='body'>
+        /// The answer from the connector.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        Task<HttpOperationResponse> ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(string acceptLanguage = default(string), ConnectorRequestResponseCallbackModel body = default(ConnectorRequestResponseCallbackModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
 // <auto-generated>
@@ -4212,6 +5124,44 @@ namespace RecordPoint.Connectors.SDK.Client
             }
 
             /// <summary>
+            /// Notifies Records365 that a new Binary has been uploaded.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='body'>
+            /// The binary metadata information.
+            /// </param>
+            public static ErrorResponseModel ApiBinariesNotifyItemBinarySubmission(this IPOST operations, string acceptLanguage = default(string), ItemSubmissionInputModel body = default(ItemSubmissionInputModel))
+            {
+                return operations.ApiBinariesNotifyItemBinarySubmissionAsync(acceptLanguage, body).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Notifies Records365 that a new Binary has been uploaded.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='body'>
+            /// The binary metadata information.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ErrorResponseModel> ApiBinariesNotifyItemBinarySubmissionAsync(this IPOST operations, string acceptLanguage = default(string), ItemSubmissionInputModel body = default(ItemSubmissionInputModel), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiBinariesNotifyItemBinarySubmissionWithHttpMessagesAsync(acceptLanguage, body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Submits an item to be managed by Records365 vNext.
             /// All records are to be submitted to this endpoint.
             /// </summary>
@@ -4287,6 +5237,86 @@ namespace RecordPoint.Connectors.SDK.Client
                 {
                     return _result.Body;
                 }
+            }
+
+            /// <summary>
+            /// Receives notification of completed disposal from connector.
+            /// </summary>
+            /// <remarks>
+            /// Only for asynchronous callback connectors. Most connectors use an
+            /// AdminItemController endpoint.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            public static void ApiNotificationsDisposalCallback(this IPOST operations, string acceptLanguage = default(string), ItemNotificationDisposalCallbackModel body = default(ItemNotificationDisposalCallbackModel))
+            {
+                operations.ApiNotificationsDisposalCallbackAsync(acceptLanguage, body).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Receives notification of completed disposal from connector.
+            /// </summary>
+            /// <remarks>
+            /// Only for asynchronous callback connectors. Most connectors use an
+            /// AdminItemController endpoint.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task ApiNotificationsDisposalCallbackAsync(this IPOST operations, string acceptLanguage = default(string), ItemNotificationDisposalCallbackModel body = default(ItemNotificationDisposalCallbackModel), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.ApiNotificationsDisposalCallbackWithHttpMessagesAsync(acceptLanguage, body, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Receives a connector's answer to a request it was sent and stores it for
+            /// the Management API
+            /// to serve to the UI.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='body'>
+            /// The answer from the connector.
+            /// </param>
+            public static void ApiNotificationsConnectorRequestCallback(this IPOST operations, string acceptLanguage = default(string), ConnectorRequestResponseCallbackModel body = default(ConnectorRequestResponseCallbackModel))
+            {
+                operations.ApiNotificationsConnectorRequestCallbackAsync(acceptLanguage, body).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Receives a connector's answer to a request it was sent and stores it for
+            /// the Management API
+            /// to serve to the UI.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='acceptLanguage'>
+            /// </param>
+            /// <param name='body'>
+            /// The answer from the connector.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task ApiNotificationsConnectorRequestCallbackAsync(this IPOST operations, string acceptLanguage = default(string), ConnectorRequestResponseCallbackModel body = default(ConnectorRequestResponseCallbackModel), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.ApiNotificationsConnectorRequestCallbackWithHttpMessagesAsync(acceptLanguage, body, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }
@@ -4640,4 +5670,9 @@ namespace RecordPoint.Connectors.SDK.Client
 
     }
 }
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
 

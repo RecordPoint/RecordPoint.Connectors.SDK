@@ -20,9 +20,10 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
                 .UseMockConnectorDatabase()
                 .UseDatabaseChannelManager()
                 .ConfigureServices((context, svcs) => {
-                    var contentManagerConfiguration = context.Configuration.GetSection("ContentManager");
                     svcs
-                        .Configure<ContentManagerOptions>(contentManagerConfiguration)
+                        .Configure<ContentSynchronisationOperationOptions>(context.Configuration.GetSection(ContentSynchronisationOperationOptions.SECTION_NAME))
+                        .Configure<ContentManagerOptions>(context.Configuration.GetSection(ContentManagerOptions.SECTION_NAME))
+                        .Configure<RecordSubmissionOptions>(context.Configuration.GetSection(RecordSubmissionOptions.SECTION_NAME))
                         .AddScoped<ContentSynchronisationOperation>();
                 });
         }
@@ -35,11 +36,8 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
 
         public static ContentSynchronisationState CreateContentSynchronisationSyncState() => new();
 
-        public static ContentSynchronisationConfiguration CreateContentSynchronisationConfiguration(ConnectorConfigModel connectorConfig, ChannelModel channel) => new()
+        public static ContentSynchronisationConfiguration CreateContentSynchronisationConfiguration(ChannelModel channel) => new()
         {
-            ConnectorConfigurationId = connectorConfig.Id,
-            TenantId = connectorConfig.TenantId,
-            TenantDomainName = connectorConfig.TenantDomainName,
             ChannelExternalId = channel.ExternalId,
             ChannelTitle = channel.Title
         };
@@ -56,35 +54,22 @@ namespace RecordPoint.Connectors.SDK.Test.ContentManager
         public ManagedWorkStatusModel CreateContentSynchronisationManagedWorkStatusModel(ConnectorConfigModel connector, ChannelModel channel)
         {
             var state = CreateContentSynchronisationSyncState();
-            var config = CreateContentSynchronisationConfiguration(connector, channel);
-            var message = CreateContentSynchronisationManagedWorkStatusModel(config, state);
+            var config = CreateContentSynchronisationConfiguration(channel);
+            var message = CreateContentSynchronisationManagedWorkStatusModel(connector, config, state);
             return message;
         }
 
-        public ManagedWorkStatusModel CreateContentSynchronisationManagedWorkStatusModel(ContentSynchronisationConfiguration configuration, ContentSynchronisationState state) => new()
+        public ManagedWorkStatusModel CreateContentSynchronisationManagedWorkStatusModel(ConnectorConfigModel connector, ContentSynchronisationConfiguration configuration, ContentSynchronisationState state) => new()
         {
             WorkId = ContentSynchronisationOpterationWorkId1,
             WorkType = ContentSynchronisationOperation.WORK_TYPE,
             Configuration = configuration.Serialize(),
             ConfigurationType = ContentSynchronisationConfiguration.ConfigurationType,
             State = state.Serialize(),
-            StateType = ContentSynchronisationState.LatestStateType,
-            ConnectorId = configuration.ConnectorConfigurationId,
+            StateType = ContentSynchronisationState.StateType,
+            ConnectorId = connector.Id,
             Id = ContentSynchronisationOpterationWorkId1
         };
-
-        public async Task SetWorkRunning(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .AddWorkStatusAsync(workMessage, CancellationToken.None);
-        }
-
-        public async Task SetWorkContinue(ManagedWorkStatusModel workMessage)
-        {
-            await Services.GetRequiredService<IManagedWorkStatusManager>()
-                .SetWorkContinueAsync(workMessage.WorkId, workMessage.WorkId, string.Empty, CancellationToken.None);
-        }
-
         #endregion
 
     }

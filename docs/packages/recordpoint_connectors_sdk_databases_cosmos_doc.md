@@ -22,6 +22,7 @@
   - [DatabaseName](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-DatabaseName 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.DatabaseName')
   - [TlsVersion](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-TlsVersion 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.TlsVersion')
   - [UseCamelCaseNamingPolicy](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseCamelCaseNamingPolicy 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.UseCamelCaseNamingPolicy')
+  - [UseDirectReads](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseDirectReads 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.UseDirectReads')
   - [UseGateWayConnectionMode](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseGateWayConnectionMode 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions.UseGateWayConnectionMode')
 - [CosmosDbConnectorDatabaseProvider](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseProvider 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseProvider')
   - [#ctor(systemContext,configuration,telemetryTracker,toggleProvider,databaseOptions)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseProvider-#ctor-RecordPoint-Connectors-SDK-Context-ISystemContext,Microsoft-Extensions-Configuration-IConfiguration,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions}- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseProvider.#ctor(RecordPoint.Connectors.SDK.Context.ISystemContext,Microsoft.Extensions.Configuration.IConfiguration,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions})')
@@ -38,8 +39,11 @@
   - [#ctor(systemContext,configuration,telemetryTracker,toggleProvider,options)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-#ctor-RecordPoint-Connectors-SDK-Context-ISystemContext,Microsoft-Extensions-Configuration-IConfiguration,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker,RecordPoint-Connectors-SDK-Toggles-IToggleProvider,Microsoft-Extensions-Options-IOptions{RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions}- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.#ctor(RecordPoint.Connectors.SDK.Context.ISystemContext,Microsoft.Extensions.Configuration.IConfiguration,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker,RecordPoint.Connectors.SDK.Toggles.IToggleProvider,Microsoft.Extensions.Options.IOptions{RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbConnectorDatabaseOptions})')
   - [_configuration](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-_configuration 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1._configuration')
   - [_options](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-_options 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1._options')
+  - [_ruLoggerFactory](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-_ruLoggerFactory 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1._ruLoggerFactory')
   - [_toggleProvider](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-_toggleProvider 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1._toggleProvider')
   - [CheckDatabaseExists(cancellationToken)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-CheckDatabaseExists-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.CheckDatabaseExists(System.Threading.CancellationToken)')
+  - [Dispose()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Dispose 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.Dispose')
+  - [Dispose(disposing)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Dispose-System-Boolean- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.Dispose(System.Boolean)')
   - [Exists()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Exists 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.Exists')
   - [GetAdminContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-GetAdminContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.GetAdminContextOptionsBuilder')
   - [GetContextOptionsBuilder()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-GetContextOptionsBuilder 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.GetContextOptionsBuilder')
@@ -47,8 +51,6 @@
   - [PrepareAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-PrepareAsync-System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.PrepareAsync(System.Threading.CancellationToken)')
 - [CosmosDbManager\`1](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1')
   - [#ctor(cosmosClient,databaseId,containerId,telemetryTracker)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-#ctor-Microsoft-Azure-Cosmos-CosmosClient,System-String,System-String,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.#ctor(Microsoft.Azure.Cosmos.CosmosClient,System.String,System.String,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker)')
-  - [_container](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-_container 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1._container')
-  - [_telemetryTracker](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-_telemetryTracker 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1._telemetryTracker')
   - [DeleteAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-DeleteAsync-System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.DeleteAsync(System.String,System.String,System.Threading.CancellationToken)')
   - [GetAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-GetAsync-System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.GetAsync(System.String,System.String,System.Threading.CancellationToken)')
   - [GetContainerQuery()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-GetContainerQuery 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.GetContainerQuery')
@@ -58,8 +60,19 @@
   - [ReplaceAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-ReplaceAsync-System-String,`0- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.ReplaceAsync(System.String,`0)')
   - [UpsertAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-UpsertAsync-System-String,`0,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.UpsertAsync(System.String,`0,System.Threading.CancellationToken)')
   - [UpsertMatchingEtagAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-UpsertMatchingEtagAsync-System-String,`0- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1.UpsertMatchingEtagAsync(System.String,`0)')
+- [CosmosDirectChannelAccess](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess')
+  - [#ctor(databaseClient,telemetryTracker)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-#ctor-RecordPoint-Connectors-SDK-Databases-IConnectorDatabaseClient,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess.#ctor(RecordPoint.Connectors.SDK.Databases.IConnectorDatabaseClient,RecordPoint.Connectors.SDK.Observability.ITelemetryTracker)')
+  - [IsEnabled](#P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-IsEnabled 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess.IsEnabled')
+  - [ParseChannelDocument()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-ParseChannelDocument-System-IO-Stream- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess.ParseChannelDocument(System.IO.Stream)')
+  - [ReadChannelAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-ReadChannelAsync-System-String,System-String,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess.ReadChannelAsync(System.String,System.String,System.Threading.CancellationToken)')
+  - [ReadChannelClassificationsAsync()](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-ReadChannelClassificationsAsync-System-String,System-Int32,System-Threading-CancellationToken- 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess.ReadChannelClassificationsAsync(System.String,System.Int32,System.Threading.CancellationToken)')
 - [CosmosEndpointHelper](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-Helpers-CosmosEndpointHelper 'RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers.CosmosEndpointHelper')
   - [BuildCosmosAccountEndpoint(featureToggleProvider,cosmosDbAccountName)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-Helpers-CosmosEndpointHelper-BuildCosmosAccountEndpoint-RecordPoint-Connectors-SDK-Toggles-IToggleProvider,System-String- 'RecordPoint.Connectors.SDK.Databases.Cosmos.Helpers.CosmosEndpointHelper.BuildCosmosAccountEndpoint(RecordPoint.Connectors.SDK.Toggles.IToggleProvider,System.String)')
+- [CosmosMetricConstants](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosMetricConstants 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosMetricConstants')
+  - [ContainerDimension](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosMetricConstants-ContainerDimension 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosMetricConstants.ContainerDimension')
+  - [RequestCharge](#F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosMetricConstants-RequestCharge 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosMetricConstants.RequestCharge')
+- [CosmosRuTelemetryLogger](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-Telemetry-CosmosRuTelemetryLogger 'RecordPoint.Connectors.SDK.Databases.Cosmos.Telemetry.CosmosRuTelemetryLogger')
+- [CosmosRuTelemetryLoggerProvider](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-Telemetry-CosmosRuTelemetryLoggerProvider 'RecordPoint.Connectors.SDK.Databases.Cosmos.Telemetry.CosmosRuTelemetryLoggerProvider')
 - [CosmosSemaphoreLockBuilderExtensions](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-SemaphoreLock-CosmosSemaphoreLockBuilderExtensions 'RecordPoint.Connectors.SDK.Databases.Cosmos.SemaphoreLock.CosmosSemaphoreLockBuilderExtensions')
   - [UseCosmosSemaphoreLock(hostBuilder)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-SemaphoreLock-CosmosSemaphoreLockBuilderExtensions-UseCosmosSemaphoreLock-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Databases.Cosmos.SemaphoreLock.CosmosSemaphoreLockBuilderExtensions.UseCosmosSemaphoreLock(Microsoft.Extensions.Hosting.IHostBuilder)')
   - [UseCosmosSemaphoreLock\`\`1(hostBuilder)](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-SemaphoreLock-CosmosSemaphoreLockBuilderExtensions-UseCosmosSemaphoreLock``1-Microsoft-Extensions-Hosting-IHostBuilder- 'RecordPoint.Connectors.SDK.Databases.Cosmos.SemaphoreLock.CosmosSemaphoreLockBuilderExtensions.UseCosmosSemaphoreLock``1(Microsoft.Extensions.Hosting.IHostBuilder)')
@@ -296,6 +309,19 @@ Sets the serializer to use Camel Case naming policy
 
 Default: True
 
+<a name='P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseDirectReads'></a>
+### UseDirectReads `property`
+
+##### Summary
+
+When true, uses direct Cosmos SDK point reads for single-document lookups
+instead of EF Core queries. This bypasses EF Core query translation and
+reduces channel reads from ~3-5 RU to ~1 RU per call.
+
+##### Remarks
+
+Default: false (uses standard EF Core path)
+
 <a name='P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbConnectorDatabaseOptions-UseGateWayConnectionMode'></a>
 ### UseGateWayConnectionMode `property`
 
@@ -498,6 +524,13 @@ The configuration.
 
 The options.
 
+<a name='F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-_ruLoggerFactory'></a>
+### _ruLoggerFactory `constants`
+
+##### Summary
+
+Logger factory that captures Cosmos RU charges from EF Core operations.
+
 <a name='F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-_toggleProvider'></a>
 ### _toggleProvider `constants`
 
@@ -523,6 +556,31 @@ Check database exists.
 | Name | Description |
 | ---- | ----------- |
 | [RecordPoint.Connectors.SDK.Databases.ConnectorDatabaseException](#T-RecordPoint-Connectors-SDK-Databases-ConnectorDatabaseException 'RecordPoint.Connectors.SDK.Databases.ConnectorDatabaseException') |  |
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Dispose'></a>
+### Dispose() `method`
+
+##### Summary
+
+Disposes the logger factory created for RU telemetry capture.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Dispose-System-Boolean-'></a>
+### Dispose(disposing) `method`
+
+##### Summary
+
+Releases managed resources when called from [Dispose](#M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Dispose 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDbDatabaseProvider`1.Dispose').
+Override in subclasses to dispose additional resources.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| disposing | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | True when called from Dispose(); false from finalizer. |
 
 <a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDbDatabaseProvider`1-Exists'></a>
 ### Exists() `method`
@@ -631,20 +689,6 @@ Initializes a new instance of the class.
 | containerId | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The container id. |
 | telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | The telemetry tracker. |
 
-<a name='F-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-_container'></a>
-### _container `constants`
-
-##### Summary
-
-The container.
-
-<a name='F-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-_telemetryTracker'></a>
-### _telemetryTracker `constants`
-
-##### Summary
-
-The telemetry tracker.
-
 <a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1-DeleteAsync-System-String,System-String,System-Threading-CancellationToken-'></a>
 ### DeleteAsync() `method`
 
@@ -744,6 +788,78 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess'></a>
+## CosmosDirectChannelAccess `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.Cosmos
+
+##### Summary
+
+Cosmos-native implementation of [IDirectChannelAccess](#T-RecordPoint-Connectors-SDK-Content-IDirectChannelAccess 'RecordPoint.Connectors.SDK.Content.IDirectChannelAccess') that performs true point reads
+using `ReadItemStreamAsync` instead of EF Core queries.
+
+EF Core 8 cannot perform point reads for ChannelModel because the partition key (ConnectorId)
+is not part of the primary key (ExternalId only). Every EF Core query generates a SQL SELECT
+costing ~3-5 RU. A direct point read costs ~1 RU — saving 24-48M RU/day at scale.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-#ctor-RecordPoint-Connectors-SDK-Databases-IConnectorDatabaseClient,RecordPoint-Connectors-SDK-Observability-ITelemetryTracker-'></a>
+### #ctor(databaseClient,telemetryTracker) `constructor`
+
+##### Summary
+
+Initializes a new instance of the [CosmosDirectChannelAccess](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess 'RecordPoint.Connectors.SDK.Databases.Cosmos.CosmosDirectChannelAccess') class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| databaseClient | [RecordPoint.Connectors.SDK.Databases.IConnectorDatabaseClient](#T-RecordPoint-Connectors-SDK-Databases-IConnectorDatabaseClient 'RecordPoint.Connectors.SDK.Databases.IConnectorDatabaseClient') | Database client for obtaining the Cosmos client via DbContext |
+| telemetryTracker | [RecordPoint.Connectors.SDK.Observability.ITelemetryTracker](#T-RecordPoint-Connectors-SDK-Observability-ITelemetryTracker 'RecordPoint.Connectors.SDK.Observability.ITelemetryTracker') | Telemetry tracker for emitting RU metrics |
+
+<a name='P-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-IsEnabled'></a>
+### IsEnabled `property`
+
+##### Summary
+
+*Inherit from parent.*
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-ParseChannelDocument-System-IO-Stream-'></a>
+### ParseChannelDocument() `method`
+
+##### Summary
+
+Parses a Cosmos document stream into a [ChannelModel](#T-RecordPoint-Connectors-SDK-Content-ChannelModel 'RecordPoint.Connectors.SDK.Content.ChannelModel').
+Casing-resilient: tries PascalCase property names first, then falls back to camelCase.
+This eliminates silent null returns when `UseCamelCaseNamingPolicy` doesn't match the stored data.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-ReadChannelAsync-System-String,System-String,System-Threading-CancellationToken-'></a>
+### ReadChannelAsync() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosDirectChannelAccess-ReadChannelClassificationsAsync-System-String,System-Int32,System-Threading-CancellationToken-'></a>
+### ReadChannelClassificationsAsync() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-RecordPoint-Connectors-SDK-Databases-Cosmos-Helpers-CosmosEndpointHelper'></a>
 ## CosmosEndpointHelper `type`
 
@@ -772,6 +888,70 @@ Cosmos DB connection string
 | ---- | ---- | ----------- |
 | featureToggleProvider | [RecordPoint.Connectors.SDK.Toggles.IToggleProvider](#T-RecordPoint-Connectors-SDK-Toggles-IToggleProvider 'RecordPoint.Connectors.SDK.Toggles.IToggleProvider') |  |
 | cosmosDbAccountName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') |  |
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosMetricConstants'></a>
+## CosmosMetricConstants `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.Cosmos
+
+##### Summary
+
+Shared metric name and dimension constants for Cosmos DB RU telemetry.
+
+<a name='F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosMetricConstants-ContainerDimension'></a>
+### ContainerDimension `constants`
+
+##### Summary
+
+Dimension name identifying the Cosmos DB container that incurred the charge.
+
+<a name='F-RecordPoint-Connectors-SDK-Databases-Cosmos-CosmosMetricConstants-RequestCharge'></a>
+### RequestCharge `constants`
+
+##### Summary
+
+Metric name used to track Cosmos DB request charge (RU consumption).
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-Cosmos-Telemetry-CosmosRuTelemetryLogger'></a>
+## CosmosRuTelemetryLogger `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.Cosmos.Telemetry
+
+##### Summary
+
+Logger that intercepts EF Core Cosmos "Executed" events and emits RU charge telemetry.
+Thread-safe: this class has no mutable state and a single instance is shared across DbContexts.
+
+##### Remarks
+
+Targets these `CosmosEventId` events (all carry request charge data):
+
+The structured log state from EF Core contains `{charge}` (RU cost) and
+`{container}` (Cosmos container name) as named key-value pairs.
+
+<a name='T-RecordPoint-Connectors-SDK-Databases-Cosmos-Telemetry-CosmosRuTelemetryLoggerProvider'></a>
+## CosmosRuTelemetryLoggerProvider `type`
+
+##### Namespace
+
+RecordPoint.Connectors.SDK.Databases.Cosmos.Telemetry
+
+##### Summary
+
+Logger provider that captures Cosmos DB request charges (RU) from EF Core Cosmos operations
+and emits them as `Cosmos.RequestCharge` telemetry metrics.
+
+##### Remarks
+
+EF Core 8 Cosmos provider logs every executed operation at [Information](#F-Microsoft-Extensions-Logging-LogLevel-Information 'Microsoft.Extensions.Logging.LogLevel.Information')
+with structured data including request charge and container name. This provider intercepts
+those log events and extracts the RU cost, emitting the same `Cosmos.RequestCharge`
+metric with `Container` dimension that [CosmosDbManager\`1](#T-RecordPoint-Connectors-SDK-Databases-Cosmos-Manager-CosmosDbManager`1 'RecordPoint.Connectors.SDK.Databases.Cosmos.Manager.CosmosDbManager`1') uses
+for direct Cosmos SDK operations.
 
 <a name='T-RecordPoint-Connectors-SDK-Databases-Cosmos-SemaphoreLock-CosmosSemaphoreLockBuilderExtensions'></a>
 ## CosmosSemaphoreLockBuilderExtensions `type`

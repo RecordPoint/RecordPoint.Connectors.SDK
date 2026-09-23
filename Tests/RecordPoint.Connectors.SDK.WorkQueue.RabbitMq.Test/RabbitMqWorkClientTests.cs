@@ -41,12 +41,14 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
 
             var workRequest = new WorkRequest { SubmitDateTime = DateTime.UtcNow, WorkType = QueueName };
 
-            SUT?.MockRabbitMqClientFactory.RabbitMqModelMock.Setup(a => a.BasicPublish(It.IsAny<string>(),
+            SUT?.MockRabbitMqClientFactory.RabbitMqChannelMock.Setup(a => a.BasicPublishAsync(
+                It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<bool>(),
-                It.IsAny<IBasicProperties>(),
-                It.IsAny<ReadOnlyMemory<byte>>()))
-                  .Callback<string, string, bool, IBasicProperties, ReadOnlyMemory<byte>>((exchangeName, routingKey, mandatory, props, body) =>
+                It.IsAny<BasicProperties>(),
+                It.IsAny<ReadOnlyMemory<byte>>(),
+                It.IsAny<CancellationToken>()))
+                  .Callback<string, string, bool, BasicProperties, ReadOnlyMemory<byte>, CancellationToken>((exchangeName, routingKey, mandatory, props, body, _) =>
                 {
                     basicPublishCalled++;
                 });
@@ -72,17 +74,16 @@ namespace RecordPoint.Connectors.SDK.WorkQueue.RabbitMq.Test
 
             var workRequest = new WorkRequest { WaitTill = waitTill, WorkType = QueueName };
 
-            SUT?.MockRabbitMqClientFactory.RabbitMqBasicPropertiesMock.Setup(o => o.Headers)
-                                                                     .Returns(new Dictionary<string, object> { });
-
-            SUT?.MockRabbitMqClientFactory.RabbitMqModelMock.Setup(a => a.BasicPublish(It.IsAny<string>(),
+            SUT?.MockRabbitMqClientFactory.RabbitMqChannelMock.Setup(a => a.BasicPublishAsync(
+                It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<bool>(),
-                It.IsAny<IBasicProperties>(),
-                It.IsAny<ReadOnlyMemory<byte>>())).Callback<string, string, bool, IBasicProperties, ReadOnlyMemory<byte>>((exchangeName, routingKey, mandatory, props, body) =>
+                It.IsAny<BasicProperties>(),
+                It.IsAny<ReadOnlyMemory<byte>>(),
+                It.IsAny<CancellationToken>())).Callback<string, string, bool, BasicProperties, ReadOnlyMemory<byte>, CancellationToken>((exchangeName, routingKey, mandatory, props, body, _) =>
                 {
                     basicPublishCalled++;
-                    actualMilliseconds = Convert.ToDouble(props.Headers[ExchangeDelayHeader]);
+                    actualMilliseconds = Convert.ToDouble(props.Headers![ExchangeDelayHeader]);
                 });
 
             var workQueueClient = Services?.GetRequiredService<IWorkQueueClient>();
